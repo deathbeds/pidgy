@@ -1,8 +1,7 @@
 
 # coding: utf-8
 
-# ##### The First Convention
-# # Notebooks __import__
+# # by *convention* Notebooks __import__
 # 
 # `rites` will install the proper actions to import notebooks from their JSON source to compiled Python bytecode with proper __traceback__s.
 
@@ -258,14 +257,31 @@ with (
     .open()) as f: __doc__ = docify(read(f, 4))
 
 
+# In[19]:
+
+
+class Test(__import__('unittest').TestCase): 
+    def setUp(Test):
+        from nbformat import write, v4
+        load_ipython_extension()
+        with open('test_rites.ipynb', 'w') as file:
+            write(v4.new_notebook(cells=[]), file)
+    def runTest(Test):
+        import test_rites
+        assert test_rites.__file__.endswith('.ipynb')
+        
+    def tearDown(Test):
+        get_ipython().run_line_magic('rm', 'test_rites.ipynb')
+        unload_ipython_extension()
+
+
 # # Developer
 
-# In[15]:
+# In[20]:
 
 
 if 1 and __name__ ==  '__main__':
     __import__('doctest').testmod(verbose=2)
-    load_ipython_extension()
-    import rites
+    __import__('unittest').TextTestRunner().run(Test())
     get_ipython().system('jupyter nbconvert --to script rites.ipynb')
 
