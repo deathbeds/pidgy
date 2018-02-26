@@ -5,7 +5,6 @@
 
 
 from IPython import get_ipython
-
 from IPython.core.interactiveshell import InteractiveShell
 from IPython.core.inputsplitter import IPythonInputSplitter
 from IPython.core.compilerop import CachingCompiler
@@ -90,7 +89,7 @@ class Module(NotebookExporter):
         module.__doc__ = docify(nb)
         with capture_output() as output:
             for cell in nb.cells:
-                if cell['cell_type'] == 'code':    
+                if cell['cell_type'] == 'code':
                     try: eval(Module.compile(
                         cell['source'], lineno=cell['metadata'].get('lineno', 1), module=module),
                         *[module.__dict__]*2)
@@ -104,8 +103,11 @@ class Module(NotebookExporter):
     @property
     def parse(Module): return Module.ip.compile.ast_parse if Module.ip else ast.parse
     
-    @property
-    def transform(Module): return Module.ip.input_transformer_manager.transform_cell if Module.ip else identity
+    def transform(Module, source): 
+        if Module.ip:
+            return Module.ip.input_transformer_manager.transform_cell(
+                get_ipython().input_transformer_manager.transform_cell(source))
+        return identity
     
     def compile(Module, source, *, lineno=0, module=None): return compile(
         ast.increment_lineno(Module.parse(Module.transform(source), Module.filename, 'exec'), lineno), 
@@ -134,21 +136,17 @@ class NotebookLoader(SourceFileLoader):
 # In[8]:
 
 
-def update_hooks(*loaders):
+_NATIVE_HOOK = sys.path_hooks.copy()
+def update_hooks(loader=None):
     global _NATIVE_HOOK
     from importlib.machinery import FileFinder
-    if loaders:
+    if loader:
         for i, hook in enumerate(sys.path_hooks):
-            __closure__ = getattr(hook, '__closure__', None)
-            if __closure__ and issubclass(__closure__[0].cell_contents, FileFinder):
-                _NATIVE_HOOK = globals().get('_NATIVE_HOOK', (i, hook))
+            closure = getattr(hook, '__closure__', None)
+            if closure and closure[0].cell_contents is FileFinder:
                 sys.path_hooks[i] = FileFinder.path_hook(
-                    *_NATIVE_HOOK[1].__closure__[1].cell_contents,
-                    *((loader, loader.EXTENSION_SUFFIXES) for loader in loaders
-                ))
-    else:
-        sys.path_hooks[_NATIVE_HOOK[0]] = _NATIVE_HOOK[1]
-
+                    (loader, loader.EXTENSION_SUFFIXES), *closure[1].cell_contents)
+    else: sys.path_hooks = _NATIVE_HOOK
     sys.path_importer_cache.clear()
 
 
@@ -166,5 +164,7 @@ def unload_ipython_extension(ip=None):
 
 if 1 and __name__ ==  '__main__':
     __import__('doctest').testmod(verbose=2)
+    load_ipython_extension()
+    import testing
     get_ipython().system('jupyter nbconvert --to script __init__.ipynb')
 
