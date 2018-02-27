@@ -8,5 +8,5 @@ __import__('setuptools').setup(
     tests_require=['pytest', 'pytest-ipynb'],
     install_requires=['ipython', 'nbconvert', 'hypothesis'],
     include_package_data=True,
-    packages=['rites'],
+    packages=__import__('setuptools').find_packages(),
 )
