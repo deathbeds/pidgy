@@ -11,7 +11,7 @@ from IPython.core.compilerop import CachingCompiler
 from IPython.utils.capture import capture_output
 from textwrap import indent
 import ast, sys
-from json import load
+from json import load, loads
 from dataclasses import dataclass, field
 from nbformat import v4, NotebookNode, read
 from nbformat.v4 import new_notebook
@@ -24,6 +24,7 @@ from pathlib import Path
 from textwrap import dedent
 from nbconvert.exporters.markdown import MarkdownExporter
 from nbconvert.exporters.notebook import NotebookExporter
+from pathlib import Path
 
 
 # In[2]:
@@ -69,71 +70,126 @@ def docify(NotebookNode):
 
 
 @dataclass
-class Module(NotebookExporter):
+class Code(NotebookExporter):
     filename: str = '<module exporter>'
     name: str = '__main__'
-    ip: bool = get_ipython()
-    
-    def __post_init__(self): NotebookExporter.__init__(self)
+    ip: bool = field(default_factory=get_ipython)
+    decoder: type = LineNoDecoder
         
+    __post_init__ = NotebookExporter.__init__
+            
+    def from_file(Module,file_stream, resources=None, **dict): 
+        for str in ('name', 'filename'):
+            setattr(Compile, str, dict.pop(str, getattr(Compile, str)))
+        return Module.from_notebook_node(load(file_stream, cls=Module.decoder), resources, **dict)
+    
     def from_filename(Module,  filename, resources=None, **dict):
-        Module.filename, Module.name = filename, __import__('pathlib').Path(filename).stem
+        Module.filename, Module.name = filename, Path(filename).stem
         return super().from_filename(filename, resources, **dict)
-    
-    def from_file(Module,  file_stream, resources=None, **dict): return Module.from_notebook_node(
-        new_notebook(**load(file_stream, cls=LineNoDecoder)), resources)
 
-    def from_notebook_node(Module, nb: NotebookNode, resource: dict=None, *, module: ModuleType=None) -> ModuleType:            
-        if module is None: module = ModuleType(Module.name)
-        
-        module.__doc__ = docify(nb)
-        with capture_output() as output:
-            for cell in nb.cells:
-                if cell['cell_type'] == 'code':
-                    try: eval(Module.compile(
-                        cell['source'], lineno=cell['metadata'].get('lineno', 1), module=module),
-                        *[module.__dict__]*2)
-                    except BaseException as Exception: 
-                        module.__complete__ = Exception
-                        break
-            else: module.__complete__ = True
-        module.__output__ = output
-        return module   
     
     @property
-    def parse(Module): return Module.ip.compile.ast_parse if Module.ip else ast.parse
+    def compiler(Code): return Code.ip.compile if Code.ip else compile
+
+    @property
+    def parser(Code): return Code.compiler.ast_parse if Code.ip else ast.parse
     
-    def transform(Module, source): 
-        if Module.ip:
-            return Module.ip.input_transformer_manager.transform_cell(
-                get_ipython().input_transformer_manager.transform_cell(source))
-        return identity
+    @property
+    def transform(Code): 
+        return Code.ip.input_transformer_manager.transform_cell if Code.ip else identity
     
-    def compile(Module, source, *, lineno=0, module=None): return compile(
-        ast.increment_lineno(Module.parse(Module.transform(source), Module.filename, 'exec'), lineno), 
-        Module.filename, 'exec')
+    def compile(Loader, data, path): return Loader.compiler(data, path, 'exec')
+    
+    def parse(Module, source, *, lineno=0): 
+        return ast.increment_lineno(Module.parser(source, Module.filename, 'exec'), lineno)
+    
+    def from_code_cell(Module, cell, **dict):
+        if cell['cell_type'] == 'code': return Module.transform(cell['source'])
 
 
 # In[6]:
 
 
-def test():
-    module = Module().from_filename('SomeOutput.ipynb')
-    assert isinstance(module, ModuleType)
-    assert module.__complete__ is True
+class AST(Code):
+    def from_notebook_node(AST, nb: NotebookNode, resource: dict=None, **dict):         
+        module = ast.Module(body=[])
+        for cell in nb.cells:
+            nodes = AST.from_code_cell(cell, **dict)
+            nodes and module.body.extend(nodes.body)
+        return ast.fix_missing_locations(module)
+    
+    def from_code_cell(Module, cell, **dict):
+        code = super().from_code_cell(cell)
+        if code:
+            return Module.parse(code, lineno=cell['metadata'].get('lineno', 1))
 
 
 # In[7]:
 
 
-from importlib.machinery import SourceFileLoader
-class NotebookLoader(SourceFileLoader):
-    EXTENSION_SUFFIXES = '.ipynb',
-    def exec_module(Notebook, module): return module.__dict__.update(
-        vars(Module().from_filename(Notebook.path, module=module)))
+class Compile(AST):
+    def from_notebook_node(Compile, nb, resources: dict=None, **dict):
+        return Compile.compile(super().from_notebook_node(nb, resources, **dict), Compile.filename)
 
 
 # In[8]:
+
+
+def test():
+    module = Partial().from_filename('SomeOutput.ipynb')
+    assert isinstance(module, ModuleType)
+    assert module.__complete__ is True
+
+
+# In[9]:
+
+
+from importlib.machinery import SourceFileLoader
+class NotebookLoader(SourceFileLoader):
+    EXTENSION_SUFFIXES = '.ipynb',
+    
+    def source_to_code(Loader, data, path):
+        with __import__('io').BytesIO(data) as data:
+            return Compile().from_file(data, filename=Loader.path, name=Loader.name)
+
+
+# In[10]:
+
+
+def capture(module):
+    with capture_output() as output:
+        try:
+            super(type(Module), Module).exec_module(module)
+            module.__complete__ = True
+        except BaseException as Exception:
+            module.__complete__ = Exception
+    module.__output__ = output
+    return module
+
+
+# In[11]:
+
+
+def capture(loader, module):
+    with capture_output() as output:
+        try:
+            super(type(loader), loader).exec_module(module)
+            module.__complete__ = True
+        except BaseException as Exception:
+            module.__complete__ = Exception
+    module.__output__ = output
+    return module
+
+
+# In[12]:
+
+
+class Partial(NotebookLoader):
+    def exec_module(Module, module):
+        return capture(Module, module)
+
+
+# In[13]:
 
 
 _NATIVE_HOOK = sys.path_hooks.copy()
@@ -150,21 +206,21 @@ def update_hooks(loader=None):
     sys.path_importer_cache.clear()
 
 
-# In[9]:
+# In[14]:
 
 
 def load_ipython_extension(ip=None):
-    update_hooks(NotebookLoader)
+    update_hooks(Partial)
 def unload_ipython_extension(ip=None):
     update_hooks()
 
 
-# In[10]:
+# In[15]:
 
 
 if 1 and __name__ ==  '__main__':
     __import__('doctest').testmod(verbose=2)
     load_ipython_extension()
-    import testing
+    import rites
     get_ipython().system('jupyter nbconvert --to script rites.ipynb')
 
