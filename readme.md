@@ -75,7 +75,7 @@ driven testing with __behave__.  Abide by a conventions in your functions and cl
 
     ..
     ----------------------------------------------------------------------
-    Ran 2 tests in 0.004s
+    Ran 2 tests in 0.005s
     
     OK
 
@@ -108,7 +108,7 @@ In fact, any `class` containing a `runTest` method is as a FunctionTestCase.
 
     .
     ----------------------------------------------------------------------
-    Ran 1 test in 0.001s
+    Ran 1 test in 0.002s
     
     OK
 
@@ -130,11 +130,13 @@ __hypothesis__ will infer strategies for typed functions; typing functions is a 
 
     .
     ----------------------------------------------------------------------
-    Ran 1 test in 0.173s
+    Ran 1 test in 0.197s
     
     OK
 
 
+
+### The Narrative Should include real data
 
 The function __f__ was executed __`100`__ times because could infer a testing strategy from the type annotations.
 
@@ -211,20 +213,42 @@ The output below illustrates a valid traceback to the `ipython-input` and python
           7 >> If you saved recently, then forget about it.
 
 
-    ~/rites/rites/__init__.py in from_notebook_node(Module, nb, resource, module)
-         94                     try: eval(Module.compile(
-         95                         cell['source'], lineno=cell['metadata'].get('lineno', 1), module=module),
-    ---> 96                         *[module.__dict__]*2)
-         97                     except BaseException as Exception:
-         98                         module.__complete__ = Exception
+    ~/rites/rites/rites.py in capture(loader, module)
+        174     with capture_output() as output:
+        175         try:
+    --> 176             super(type(loader), loader).exec_module(module)
+        177             module.__complete__ = True
+        178         except BaseException as Exception:
+
+
+    ~/rites/rites/template.ipynb in exec_module(Loader, module)
+
+
+    ~/rites/rites/rites.py in from_file(Module, file_stream, resources, **dict)
+         82         for str in ('name', 'filename'):
+         83             setattr(Compile, str, dict.pop(str, getattr(Compile, str)))
+    ---> 84         return Module.from_notebook_node(load(file_stream, cls=Module.decoder), resources, **dict)
+         85 
+         86     def from_filename(Module,  filename, resources=None, **dict):
+
+
+    ~/rites/rites/rites.py in from_notebook_node(AST, nb, resource, **dict)
+        115         module = ast.Module(body=[])
+        116         for cell in nb.cells:
+    --> 117             nodes = AST.from_code_cell(cell, **dict)
+        118             nodes and module.body.extend(nodes.body)
+        119         return ast.fix_missing_locations(module)
+
+
+    ~/rites/rites/template.ipynb in from_code_cell(Incremental, cell, **dict)
 
 
     ~/rites/readme.ipynb in <module>()
-        202     "        \n",
-        203     "    else:\n",
-    --> 204     "        assert False\n",
-        205     "        \n",
-        206     "Otherwise, the module is being imported and we deliberately create an error.\n",
+        455     "        \n",
+        456     "    else:\n",
+    --> 457     "        assert False\n",
+        458     "        \n",
+        459     "Otherwise, the module is being imported and we deliberately create an error.\n",
 
 
     AssertionError: 
@@ -242,9 +266,14 @@ Convert a document into other formats; Restart, Run All, `nbconvert`.
 
 
     [NbConvertApp] Converting notebook readme.ipynb to markdown
-    [NbConvertApp] Writing 6211 bytes to readme.md
+    [NbConvertApp] Writing 7045 bytes to readme.md
     parsing rites/__init__.py...
     parsing /Users/tonyfast/rites/rites/__init__.py...
+    parsing /Users/tonyfast/rites/rites/all.py...
+    parsing /Users/tonyfast/rites/rites/rites.py...
+    Warning: Could not load "/Users/tonyfast/anaconda/envs/p6/lib/graphviz/libgvplugin_pango.6.dylib" - file not found
+    Warning: Could not load "/Users/tonyfast/anaconda/envs/p6/lib/graphviz/libgvplugin_pango.6.dylib" - file not found
+    Warning: Could not load "/Users/tonyfast/anaconda/envs/p6/lib/graphviz/libgvplugin_pango.6.dylib" - file not found
     Warning: Could not load "/Users/tonyfast/anaconda/envs/p6/lib/graphviz/libgvplugin_pango.6.dylib" - file not found
     Warning: Could not load "/Users/tonyfast/anaconda/envs/p6/lib/graphviz/libgvplugin_pango.6.dylib" - file not found
     Warning: Could not load "/Users/tonyfast/anaconda/envs/p6/lib/graphviz/libgvplugin_pango.6.dylib" - file not found
