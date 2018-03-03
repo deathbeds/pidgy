@@ -1,6 +1,11 @@
 
 # coding: utf-8
 
+# ##### The First Convention
+# # Notebooks __import__
+# 
+# A notebook that will __import__ is a necessary condition for a notebook to Restart and Run All.  The tool is meant to be using with IPython.
+
 # In[1]:
 
 
@@ -9,14 +14,17 @@ from IPython.core.interactiveshell import InteractiveShell
 from IPython.core.inputsplitter import IPythonInputSplitter
 from IPython.core.compilerop import CachingCompiler
 from IPython.utils.capture import capture_output
+
+
+# In[2]:
+
+
 from textwrap import indent
 import ast, sys
 from json import load, loads
 from dataclasses import dataclass, field
 from nbformat import v4, NotebookNode, read
 from nbformat.v4 import new_notebook
-from json.scanner import py_make_scanner
-from json.decoder import JSONObject, JSONDecoder, WHITESPACE, WHITESPACE_STR
 from traitlets import Unicode, Any, default, Bool
 from dataclasses import dataclass, field
 from types import ModuleType
@@ -27,16 +35,21 @@ from nbconvert.exporters.notebook import NotebookExporter
 from pathlib import Path
 
 
-# In[2]:
+# In[3]:
 
 
 def identity(object, *_, **__): return object
 
 
-# In[3]:
+# `rites` will provide a valid traceback to the source file, if the file is unchanged.    A custom JSONDecoder will track the line numbers in the source file, they are passed to the cell metadata. _There is no nbformat check yet._
+
+# In[ ]:
 
 
-from json.decoder import JSONDecoder
+from json.scanner import py_make_scanner    
+from json.decoder import JSONObject, JSONDecoder, WHITESPACE, WHITESPACE_STR
+from nbformat import v4, NotebookNode, read, reads
+from nbformat.v4 import new_notebook
 class LineNoDecoder(JSONDecoder):
     """A JSON Decoder to return a NotebookNode with lines numbers in the metadata.
     
@@ -55,18 +68,11 @@ class LineNoDecoder(JSONDecoder):
             
         for key in ('source', 'text'): 
             if key in object: object[key] = ''.join(object[key])
-        return NotebookNode(object), next
+        return object, next
     
 
 
-# In[4]:
-
-
-def docify(NotebookNode): 
-    return MarkdownExporter(config={'TemplateExporter': {'exclude_output': True}}).from_notebook_node(NotebookNode)[0]
-
-
-# In[5]:
+# In[ ]:
 
 
 @dataclass
@@ -81,7 +87,8 @@ class Code(NotebookExporter):
     def from_file(Module,file_stream, resources=None, **dict): 
         for str in ('name', 'filename'):
             setattr(Compile, str, dict.pop(str, getattr(Compile, str)))
-        return Module.from_notebook_node(load(file_stream, cls=Module.decoder), resources, **dict)
+        return Module.from_notebook_node(
+            NotebookNode(load(file_stream, cls=Module.decoder)), resources, **dict)
     
     def from_filename(Module,  filename, resources=None, **dict):
         Module.filename, Module.name = filename, Path(filename).stem
@@ -105,9 +112,11 @@ class Code(NotebookExporter):
     
     def from_code_cell(Module, cell, **dict):
         if cell['cell_type'] == 'code': return Module.transform(cell['source'])
+        
+        
 
 
-# In[6]:
+# In[ ]:
 
 
 class AST(Code):
@@ -124,7 +133,7 @@ class AST(Code):
             return Module.parse(code, lineno=cell['metadata'].get('lineno', 1))
 
 
-# In[7]:
+# In[ ]:
 
 
 class Compile(AST):
@@ -132,7 +141,7 @@ class Compile(AST):
         return Compile.compile(super().from_notebook_node(nb, resources, **dict), Compile.filename)
 
 
-# In[8]:
+# In[ ]:
 
 
 def test():
@@ -141,22 +150,24 @@ def test():
     assert module.__complete__ is True
 
 
-# In[9]:
+# In[ ]:
 
 
 from importlib.machinery import SourceFileLoader
 class NotebookLoader(SourceFileLoader):
     EXTENSION_SUFFIXES = '.ipynb',
-    
+    def exec_module(Loader, module):
+        module.__doc__ = docify(reads(Loader.get_source(Loader.name), 4))
+        return super().exec_module(module)
     def source_to_code(Loader, data, path):
         with __import__('io').BytesIO(data) as data:
             return Compile().from_file(data, filename=Loader.path, name=Loader.name)
 
 
-# In[10]:
+# In[ ]:
 
 
-def capture(module):
+def capture(Module, module):
     with capture_output() as output:
         try:
             super(type(Module), Module).exec_module(module)
@@ -167,32 +178,17 @@ def capture(module):
     return module
 
 
-# In[11]:
-
-
-def capture(loader, module):
-    with capture_output() as output:
-        try:
-            super(type(loader), loader).exec_module(module)
-            module.__complete__ = True
-        except BaseException as Exception:
-            module.__complete__ = Exception
-    module.__output__ = output
-    return module
-
-
-# In[12]:
+# In[ ]:
 
 
 class Partial(NotebookLoader):
-    def exec_module(Module, module):
-        return capture(Module, module)
+    def exec_module(Module, module): return capture(Module, module)            
 
 
-# In[13]:
+# In[ ]:
 
 
-_NATIVE_HOOK = sys.path_hooks.copy()
+_NATIVE_HOOK = sys.path_hooks
 def update_hooks(loader=None):
     global _NATIVE_HOOK
     from importlib.machinery import FileFinder
@@ -206,7 +202,7 @@ def update_hooks(loader=None):
     sys.path_importer_cache.clear()
 
 
-# In[14]:
+# In[ ]:
 
 
 def load_ipython_extension(ip=None):
@@ -215,7 +211,37 @@ def unload_ipython_extension(ip=None):
     update_hooks()
 
 
-# In[15]:
+# In[ ]:
+
+
+class md(str): 
+    """A string with a markdown repr."""
+    def _repr_markdown_(self): return str(self)
+
+
+# In[ ]:
+
+
+def docify(NotebookNode): 
+        """Create a markdown of the notebook input."""
+        return md(MarkdownExporter(config={'TemplateExporter': {'exclude_output': True}}).from_notebook_node(NotebookNode)[0])
+
+
+# Force the docstring for rites itself.
+
+# In[ ]:
+
+
+with (
+    Path(
+        globals()
+        .get('__file__', 'rites.ipynb')
+    ).with_suffix('.ipynb')
+    .open()
+) as f: __doc__ = docify(read(f, 4))
+
+
+# In[ ]:
 
 
 if 1 and __name__ ==  '__main__':
