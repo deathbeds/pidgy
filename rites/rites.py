@@ -43,7 +43,7 @@ def identity(object, *_, **__): return object
 
 # `rites` will provide a valid traceback to the source file, if the file is unchanged.    A custom JSONDecoder will track the line numbers in the source file, they are passed to the cell metadata. _There is no nbformat check yet._
 
-# In[ ]:
+# In[4]:
 
 
 from json.scanner import py_make_scanner    
@@ -72,7 +72,7 @@ class LineNoDecoder(JSONDecoder):
     
 
 
-# In[ ]:
+# In[5]:
 
 
 @dataclass
@@ -96,27 +96,29 @@ class Code(NotebookExporter):
 
     
     @property
-    def compiler(Code): return Code.ip.compile if Code.ip else compile
+    def compiler(Code): return Code.ip.compile if Code.ip else CachingCompiler()
 
     @property
-    def parser(Code): return Code.compiler.ast_parse if Code.ip else ast.parse
+    def parser(Code): return Code.compiler.ast_parse
     
     @property
     def transform(Code): 
         return Code.ip.input_transformer_manager.transform_cell if Code.ip else identity
     
-    def compile(Loader, data, path): return Loader.compiler(data, path, 'exec')
+    def compile(Loader, data): return Loader.compiler(data, Loader.filename, 'exec')
     
     def parse(Module, source, *, lineno=0): 
         return ast.increment_lineno(Module.parser(source, Module.filename, 'exec'), lineno)
     
     def from_code_cell(Module, cell, **dict):
-        if cell['cell_type'] == 'code': return Module.transform(cell['source'])
+        if cell['cell_type'] == 'code': 
+            return Module.transform(cell['source'])
+        return """"""
         
         
 
 
-# In[ ]:
+# In[6]:
 
 
 class AST(Code):
@@ -133,15 +135,15 @@ class AST(Code):
             return Module.parse(code, lineno=cell['metadata'].get('lineno', 1))
 
 
-# In[ ]:
+# In[7]:
 
 
 class Compile(AST):
     def from_notebook_node(Compile, nb, resources: dict=None, **dict):
-        return Compile.compile(super().from_notebook_node(nb, resources, **dict), Compile.filename)
+        return Compile.compile(super().from_notebook_node(nb, resources, **dict))
 
 
-# In[ ]:
+# In[8]:
 
 
 def test():
@@ -150,7 +152,7 @@ def test():
     assert module.__complete__ is True
 
 
-# In[ ]:
+# In[9]:
 
 
 from importlib.machinery import SourceFileLoader
@@ -164,7 +166,7 @@ class NotebookLoader(SourceFileLoader):
             return Compile().from_file(data, filename=Loader.path, name=Loader.name)
 
 
-# In[ ]:
+# In[10]:
 
 
 def capture(Module, module):
@@ -178,14 +180,14 @@ def capture(Module, module):
     return module
 
 
-# In[ ]:
+# In[11]:
 
 
 class Partial(NotebookLoader):
     def exec_module(Module, module): return capture(Module, module)            
 
 
-# In[ ]:
+# In[12]:
 
 
 _NATIVE_HOOK = sys.path_hooks
@@ -202,7 +204,7 @@ def update_hooks(loader=None):
     sys.path_importer_cache.clear()
 
 
-# In[ ]:
+# In[13]:
 
 
 def load_ipython_extension(ip=None):
@@ -211,7 +213,7 @@ def unload_ipython_extension(ip=None):
     update_hooks()
 
 
-# In[ ]:
+# In[14]:
 
 
 class md(str): 
@@ -219,7 +221,7 @@ class md(str):
     def _repr_markdown_(self): return str(self)
 
 
-# In[ ]:
+# In[15]:
 
 
 def docify(NotebookNode): 
@@ -229,7 +231,7 @@ def docify(NotebookNode):
 
 # Force the docstring for rites itself.
 
-# In[ ]:
+# In[16]:
 
 
 with (
@@ -241,7 +243,7 @@ with (
 ) as f: __doc__ = docify(read(f, 4))
 
 
-# In[ ]:
+# In[17]:
 
 
 if 1 and __name__ ==  '__main__':
