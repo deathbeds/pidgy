@@ -4,63 +4,31 @@
 # ##### The First Convention
 # # Notebooks __import__
 # 
-# A notebook that will __import__ is a necessary condition for a notebook to Restart and Run All.  The tool is meant to be using with IPython.
+# `rites` will install the proper actions to import notebooks from their JSON source to compiled Python bytecode with proper __traceback__s.
+
+# # Parsing
+
+# `LineNoDecoder` is a `JSONDecoder` that updates the cell metadata with line numbers.
 
 # In[1]:
 
 
-from IPython import get_ipython
-from IPython.core.interactiveshell import InteractiveShell
-from IPython.core.inputsplitter import IPythonInputSplitter
-from IPython.core.compilerop import CachingCompiler
-from IPython.utils.capture import capture_output
-
-
-# In[2]:
-
-
-from textwrap import indent
-import ast, sys
-from json import load, loads
-from dataclasses import dataclass, field
-from nbformat import v4, NotebookNode, read
-from nbformat.v4 import new_notebook
-from traitlets import Unicode, Any, default, Bool
-from dataclasses import dataclass, field
-from types import ModuleType
-from pathlib import Path
-from textwrap import dedent
-from nbconvert.exporters.markdown import MarkdownExporter
-from nbconvert.exporters.notebook import NotebookExporter
-from pathlib import Path
-
-
-# In[3]:
-
-
-def identity(object, *_, **__): return object
-
-
-# `rites` will provide a valid traceback to the source file, if the file is unchanged.    A custom JSONDecoder will track the line numbers in the source file, they are passed to the cell metadata. _There is no nbformat check yet._
-
-# In[4]:
-
-
-from json.scanner import py_make_scanner    
-from json.decoder import JSONObject, JSONDecoder, WHITESPACE, WHITESPACE_STR
-from nbformat import v4, NotebookNode, read, reads
-from nbformat.v4 import new_notebook
+from json.decoder import JSONObject, JSONDecoder, WHITESPACE, WHITESPACE_STR    
+from nbformat import NotebookNode
 class LineNoDecoder(JSONDecoder):
-    """A JSON Decoder to return a NotebookNode with lines numbers in the metadata.
-    
-    """
+    """A JSON Decoder to return a NotebookNode with lines numbers in the metadata."""
     def __init__(self, *, object_hook=None, parse_float=None, parse_int=None, parse_constant=None, strict=True, object_pairs_hook=None):
+        from json.scanner import py_make_scanner    
         super().__init__(object_hook=object_hook, parse_float=parse_float, parse_int=parse_int, parse_constant=parse_constant, strict=strict, 
                          object_pairs_hook=object_pairs_hook)
         self.parse_object = self.object
         self.scan_once = py_make_scanner(self)
         
-    def object(self, s_and_end, strict, scan_once, object_hook, object_pairs_hook, memo=None, _w=WHITESPACE.match, _ws=WHITESPACE_STR):
+    def object(
+        self, 
+        s_and_end, 
+        strict, scan_once, object_hook, object_pairs_hook, memo=None, _w=WHITESPACE.match, _ws=WHITESPACE_STR
+    ) -> (NotebookNode, int):
         object, next = JSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook, memo=memo, _w=_w, _ws=_ws)
 
         if 'cell_type' in object: object['metadata'].update(
@@ -68,91 +36,111 @@ class LineNoDecoder(JSONDecoder):
             
         for key in ('source', 'text'): 
             if key in object: object[key] = ''.join(object[key])
-        return object, next
+        return NotebookNode(object), next
+
+
+# `Shell` is reusable class that provides the attributes to:
+# 
+# * `transform` text to source text
+# * `parse` source text to `ast`
+# * `compile` `ast` to `bytecode`
+
+# In[2]:
+
+
+from dataclasses import dataclass, field
+
+@dataclass
+class Shell:
+    filename: str = '<rites.rites.Shell>'
+    @property
+    def ip(Shell): 
+        from IPython import get_ipython
+        from IPython.core.interactiveshell import InteractiveShell
+        return get_ipython() or InteractiveShell()
     
+    @property
+    def transform(Shell): return Shell.ip.input_transformer_manager.transform_cell
+    
+    def compile(Shell, data): return Shell.ip.compile(data, Shell.filename, 'exec')
+    
+    def parse(Shell, source, *, lineno=0): return ast.increment_lineno(
+        Shell.ip.compile.ast_parse(Shell.transform(source), Shell.filename, 'exec'), lineno)
+
+
+# In[3]:
+
+
+import ast, sys
+from json import load, loads
+from nbformat import NotebookNode, read, reads
+from dataclasses import dataclass, field
+from pathlib import Path
+from nbconvert.exporters.markdown import MarkdownExporter
+from nbconvert.exporters.notebook import NotebookExporter
+
+
+# # Compilation
+# 
+# Compilation occurs in the __3__ steps:
+# 
+# 1. Text is transformed into a valid source string.
+# 2. The sources string is parsed into an abstract syntax tree
+# 3. The abstract syntax compiles to valid bytecode 
+
+# In[4]:
+
+
+@dataclass
+class Code(NotebookExporter, Shell):
+    """>>> assert type(Code().from_filename('rites.ipynb')) is NotebookNode"""
+    filename: str = '<module exporter>'
+    name: str = '__main__'
+    decoder: type = LineNoDecoder
+        
+    __post_init__ = NotebookExporter.__init__
+            
+    def from_file(Code,file_stream, resources=None, **dict): 
+        for str in ('name', 'filename'):
+            setattr(Code, str, dict.pop(str, getattr(Code, str)))
+        return Code.from_notebook_node(
+            NotebookNode(**load(file_stream, cls=Code.decoder)), resources)
+    
+    def from_filename(Code,  filename, resources=None, **dict):
+        Code.filename, Code.name = filename, Path(filename).stem
+        return super().from_filename(filename, resources, **dict)
+    
+    def from_notebook_node(code, nb, resources=None, **dict): return nb
 
 
 # In[5]:
 
 
-@dataclass
-class Code(NotebookExporter):
-    filename: str = '<module exporter>'
-    name: str = '__main__'
-    ip: bool = field(default_factory=get_ipython)
-    decoder: type = LineNoDecoder
-        
-    __post_init__ = NotebookExporter.__init__
+class AST(Code):
+    """>>> assert type(AST().from_filename('rites.ipynb')) is ast.Module"""
+    def from_notebook_node(AST, nb: NotebookNode, resource: dict=None, **dict):         
+        module = ast.Module(body=[])
+        for cell in nb.cells: 
+            if cell['cell_type']=='code':
+                module.body.extend(AST.from_code_cell(cell, **dict).body)
+        return ast.fix_missing_locations(module)
             
-    def from_file(Module,file_stream, resources=None, **dict): 
-        for str in ('name', 'filename'):
-            setattr(Compile, str, dict.pop(str, getattr(Compile, str)))
-        return Module.from_notebook_node(
-            NotebookNode(load(file_stream, cls=Module.decoder)), resources, **dict)
-    
-    def from_filename(Module,  filename, resources=None, **dict):
-        Module.filename, Module.name = filename, Path(filename).stem
-        return super().from_filename(filename, resources, **dict)
-
-    
-    @property
-    def compiler(Code): return Code.ip.compile if Code.ip else CachingCompiler()
-
-    @property
-    def parser(Code): return Code.compiler.ast_parse
-    
-    @property
-    def transform(Code): 
-        return Code.ip.input_transformer_manager.transform_cell if Code.ip else identity
-    
-    def compile(Loader, data): return Loader.compiler(data, Loader.filename, 'exec')
-    
-    def parse(Module, source, *, lineno=0): 
-        return ast.increment_lineno(Module.parser(source, Module.filename, 'exec'), lineno)
-    
-    def from_code_cell(Module, cell, **dict):
-        if cell['cell_type'] == 'code': 
-            return Module.transform(cell['source'])
-        return """"""
-        
-        
+    def from_code_cell(AST, cell, **dict): return AST.parse(
+        cell['source'], lineno=cell['metadata'].get('lineno', 1))
 
 
 # In[6]:
 
 
-class AST(Code):
-    def from_notebook_node(AST, nb: NotebookNode, resource: dict=None, **dict):         
-        module = ast.Module(body=[])
-        for cell in nb.cells:
-            nodes = AST.from_code_cell(cell, **dict)
-            nodes and module.body.extend(nodes.body)
-        return ast.fix_missing_locations(module)
-    
-    def from_code_cell(Module, cell, **dict):
-        code = super().from_code_cell(cell)
-        if code:
-            return Module.parse(code, lineno=cell['metadata'].get('lineno', 1))
-
-
-# In[7]:
-
-
 class Compile(AST):
+    """>>> assert Compile().from_filename('rites.ipynb')"""
     def from_notebook_node(Compile, nb, resources: dict=None, **dict):
         return Compile.compile(super().from_notebook_node(nb, resources, **dict))
 
 
-# In[8]:
+# # Import System
 
-
-def test():
-    module = Partial().from_filename('SomeOutput.ipynb')
-    assert isinstance(module, ModuleType)
-    assert module.__complete__ is True
-
-
-# In[9]:
+# In[7]:
 
 
 from importlib.machinery import SourceFileLoader
@@ -166,28 +154,23 @@ class NotebookLoader(SourceFileLoader):
             return Compile().from_file(data, filename=Loader.path, name=Loader.name)
 
 
-# In[10]:
+# In[8]:
 
 
-def capture(Module, module):
-    with capture_output() as output:
-        try:
-            super(type(Module), Module).exec_module(module)
-            module.__complete__ = True
-        except BaseException as Exception:
-            module.__complete__ = Exception
-    module.__output__ = output
-    return module
+class Partial(NotebookLoader):    
+    def exec_module(Module, module):
+        from IPython.utils.capture import capture_output
+        with capture_output() as output:
+            try:
+                super(type(Module), Module).exec_module(module)
+                module.__complete__ = True
+            except BaseException as Exception:
+                module.__complete__ = Exception
+        module.__output__ = output
+        return module
 
 
-# In[11]:
-
-
-class Partial(NotebookLoader):
-    def exec_module(Module, module): return capture(Module, module)            
-
-
-# In[12]:
+# In[9]:
 
 
 _NATIVE_HOOK = sys.path_hooks
@@ -204,16 +187,20 @@ def update_hooks(loader=None):
     sys.path_importer_cache.clear()
 
 
-# In[13]:
+# In[15]:
 
 
-def load_ipython_extension(ip=None):
-    update_hooks(Partial)
-def unload_ipython_extension(ip=None):
-    update_hooks()
+# IPython Extensions
 
 
-# In[14]:
+# In[16]:
+
+
+def load_ipython_extension(ip=None): update_hooks(Partial)
+def unload_ipython_extension(ip=None): update_hooks()
+
+
+# In[17]:
 
 
 class md(str): 
@@ -221,7 +208,7 @@ class md(str):
     def _repr_markdown_(self): return str(self)
 
 
-# In[15]:
+# In[18]:
 
 
 def docify(NotebookNode): 
@@ -229,9 +216,9 @@ def docify(NotebookNode):
         return md(MarkdownExporter(config={'TemplateExporter': {'exclude_output': True}}).from_notebook_node(NotebookNode)[0])
 
 
-# Force the docstring for rites itself.
+# ### Force the docstring for rites itself.
 
-# In[16]:
+# In[19]:
 
 
 with (
@@ -243,7 +230,13 @@ with (
 ) as f: __doc__ = docify(read(f, 4))
 
 
-# In[17]:
+# In[20]:
+
+
+# Developer
+
+
+# In[ ]:
 
 
 if 1 and __name__ ==  '__main__':
