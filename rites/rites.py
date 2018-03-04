@@ -139,6 +139,8 @@ class Compile(AST):
 
 
 # # Import System
+# 
+# `rites` will exploit as much of the Python import system as it can.
 
 # In[7]:
 
@@ -153,6 +155,12 @@ class NotebookLoader(SourceFileLoader):
         with __import__('io').BytesIO(data) as data:
             return Compile().from_file(data, filename=Loader.path, name=Loader.name)
 
+
+# ## Partial Loading
+# 
+# A notebook may be a complete, or yet to be complete concept.  Unlike normal source code, notebooks are comprised of cells 
+# or miniature programs that may interact with other cells.  It is plausible that some code may evaluate before other code fails.  `rites` allows notebooks to partially evalue.  Each module contains `module.__complete__` to identify the loading
+# state of the notebook.
 
 # In[8]:
 
@@ -187,38 +195,32 @@ def update_hooks(loader=None):
     sys.path_importer_cache.clear()
 
 
-# In[15]:
+# # IPython Extensions
 
-
-# IPython Extensions
-
-
-# In[16]:
+# In[11]:
 
 
 def load_ipython_extension(ip=None): update_hooks(Partial)
 def unload_ipython_extension(ip=None): update_hooks()
 
 
-# In[17]:
+# ## Utilities
 
-
-class md(str): 
-    """A string with a markdown repr."""
-    def _repr_markdown_(self): return str(self)
-
-
-# In[18]:
+# In[20]:
 
 
 def docify(NotebookNode): 
         """Create a markdown of the notebook input."""
         return md(MarkdownExporter(config={'TemplateExporter': {'exclude_output': True}}).from_notebook_node(NotebookNode)[0])
+    
+class md(str): 
+    """A string with a markdown repr."""
+    def _repr_markdown_(self): return str(self)
 
 
 # ### Force the docstring for rites itself.
 
-# In[19]:
+# In[21]:
 
 
 with (
@@ -230,11 +232,7 @@ with (
 ) as f: __doc__ = docify(read(f, 4))
 
 
-# In[20]:
-
-
-# Developer
-
+# # Developer
 
 # In[ ]:
 
