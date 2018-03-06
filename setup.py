@@ -6,7 +6,7 @@ __import__('setuptools').setup(
     license="BSD-3-Clause",
     setup_requires=['pytest-runner'],
     tests_require=['pytest', 'pytest-ipynb'],
-    install_requires=['ipython', 'nbconvert', 'hypothesis'],
+    install_requires=['ipython', 'nbconvert', 'hypothesis', 'CommonMark', 'dataclasses'],
     include_package_data=True,
     packages=__import__('setuptools').find_packages(),
 )
