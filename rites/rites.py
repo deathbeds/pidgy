@@ -13,6 +13,12 @@
 # In[1]:
 
 
+def identity(x): return x
+
+
+# In[2]:
+
+
 from json.decoder import JSONObject, JSONDecoder, WHITESPACE, WHITESPACE_STR    
 from nbformat import NotebookNode
 class LineNoDecoder(JSONDecoder):
@@ -45,30 +51,44 @@ class LineNoDecoder(JSONDecoder):
 # * `parse` source text to `ast`
 # * `compile` `ast` to `bytecode`
 
-# In[2]:
+# In[3]:
+
+
+from IPython.core.inputsplitter import IPythonInputSplitter
+from IPython.core.compilerop import CachingCompiler
+
+
+# In[4]:
 
 
 from dataclasses import dataclass, field
 
-@dataclass
-class Shell:
-    filename: str = '<rites.rites.Shell>'
+
+class Compiler(CachingCompiler):
+    """{Shell} provides the IPython machinery to objects."""
+    filename: str = '<Shell>'
+    def __init__(self): 
+        CachingCompiler.__init__(self)
+        
     @property
-    def ip(Shell): 
+    def ip(Compiler): 
         from IPython import get_ipython
         from IPython.core.interactiveshell import InteractiveShell
         return get_ipython() or InteractiveShell()
     
     @property
-    def transform(Shell): return Shell.ip.input_transformer_manager.transform_cell
-    
-    def compile(Shell, data): return Shell.ip.compile(data, Shell.filename, 'exec')
-    
-    def parse(Shell, source, *, lineno=0): return ast.increment_lineno(
-        Shell.ip.compile.ast_parse(Shell.transform(source), Shell.filename, 'exec'), lineno)
+    def transform(Compiler): return Compiler.ip.input_transformer_manager.transform_cell
+
+    def compile(Compiler, ast): 
+        """Compile AST to bytecode using the an IPython compiler."""
+        return (Compiler.ip and Compiler.ip.compile or CachingCompiler())(ast, Compiler.filename, 'exec')
+            
+    def ast_parse(Compiler, source, filename='<unknown>', symbol='exec', lineno=0): 
+        return ast.increment_lineno(super().ast_parse(source, Compiler.filename, 'exec'), lineno)
 
 
-# In[3]:
+
+# In[5]:
 
 
 import ast, sys
@@ -88,52 +108,54 @@ from nbconvert.exporters.notebook import NotebookExporter
 # 2. The sources string is parsed into an abstract syntax tree
 # 3. The abstract syntax compiles to valid bytecode 
 
-# In[4]:
+# In[6]:
 
 
 @dataclass
-class Code(NotebookExporter, Shell):
+class Code(NotebookExporter, Compiler):
     """>>> assert type(Code().from_filename('rites.ipynb')) is NotebookNode"""
     filename: str = '<module exporter>'
     name: str = '__main__'
     decoder: type = LineNoDecoder
         
-    __post_init__ = NotebookExporter.__init__
+    def __post_init__(self): NotebookExporter.__init__(self) or Compiler.__init__(self)
             
     def from_file(Code,file_stream, resources=None, **dict): 
-        for str in ('name', 'filename'):
-            setattr(Code, str, dict.pop(str, getattr(Code, str)))
+        for str in ('name', 'filename'): setattr(Code, str, dict.pop(str, getattr(Code, str)))
         return Code.from_notebook_node(
-            NotebookNode(**load(file_stream, cls=Code.decoder)), resources)
+            NotebookNode(**load(file_stream, cls=Code.decoder)), resources, **dict)
     
     def from_filename(Code,  filename, resources=None, **dict):
         Code.filename, Code.name = filename, Path(filename).stem
         return super().from_filename(filename, resources, **dict)
+
+    def from_notebook_node(Code, nb, resources=None, **dict): 
+        for cell in nb['cells']:
+            if cell['cell_type'] == 'code':
+                cell.source = Code.from_code_cell(cell, **dict)
+        return nb
     
-    def from_notebook_node(code, nb, resources=None, **dict): return nb
+    def from_code_cell(Compiler, cell, **dict):  return Compiler.transform(cell['source'])
 
 
-# In[5]:
+# In[7]:
 
 
 class AST(Code):
     """>>> assert type(AST().from_filename('rites.ipynb')) is ast.Module"""
     def from_notebook_node(AST, nb: NotebookNode, resource: dict=None, **dict):         
-        module = ast.Module(body=[])
-        for cell in nb.cells: 
-            if cell['cell_type']=='code':
-                module.body.extend(AST.from_code_cell(cell, **dict).body)
-        return ast.fix_missing_locations(module)
-            
-    def from_code_cell(AST, cell, **dict): return AST.parse(
-        cell['source'], lineno=cell['metadata'].get('lineno', 1))
+        return ast.fix_missing_locations(ast.Module(body=sum((
+            AST.ast_parse(
+                AST.from_code_cell(cell, **dict), lineno=cell['metadata'].get('lineno', 1)
+            ).body for cell in nb.cells if cell['cell_type']=='code'
+        ), [])))
 
 
-# In[6]:
+# In[8]:
 
 
 class Compile(AST):
-    """>>> assert Compile().from_filename('rites.ipynb')"""
+    """>>> assert Compile().from_filename('rites.ipynb')"""        
     def from_notebook_node(Compile, nb, resources: dict=None, **dict):
         return Compile.compile(super().from_notebook_node(nb, resources, **dict))
 
@@ -142,7 +164,7 @@ class Compile(AST):
 # 
 # `rites` will exploit as much of the Python import system as it can.
 
-# In[7]:
+# In[9]:
 
 
 from importlib.machinery import SourceFileLoader
@@ -152,8 +174,8 @@ class NotebookLoader(SourceFileLoader):
         module.__doc__ = docify(reads(Loader.get_source(Loader.name), 4))
         return super().exec_module(module)
     def source_to_code(Loader, data, path):
-        with __import__('io').BytesIO(data) as data:
-            return Compile().from_file(data, filename=Loader.path, name=Loader.name)
+        with __import__('io').BytesIO(data) as stream:
+            return Compile().from_file(stream, filename=Loader.path, name=Loader.name)
 
 
 # ## Partial Loading
@@ -162,23 +184,23 @@ class NotebookLoader(SourceFileLoader):
 # or miniature programs that may interact with other cells.  It is plausible that some code may evaluate before other code fails.  `rites` allows notebooks to partially evalue.  Each module contains `module.__complete__` to identify the loading
 # state of the notebook.
 
-# In[8]:
+# In[10]:
 
 
 class Partial(NotebookLoader):    
     def exec_module(Module, module):
         from IPython.utils.capture import capture_output
         with capture_output() as output:
+            super(type(Module), Module).exec_module(module)
             try:
-                super(type(Module), Module).exec_module(module)
                 module.__complete__ = True
             except BaseException as Exception:
                 module.__complete__ = Exception
-        module.__output__ = output
+            module.__output__ = output
         return module
 
 
-# In[9]:
+# In[11]:
 
 
 _NATIVE_HOOK = sys.path_hooks
@@ -197,7 +219,7 @@ def update_hooks(loader=None):
 
 # # IPython Extensions
 
-# In[11]:
+# In[12]:
 
 
 def load_ipython_extension(ip=None): update_hooks(Partial)
@@ -206,7 +228,7 @@ def unload_ipython_extension(ip=None): update_hooks()
 
 # ## Utilities
 
-# In[20]:
+# In[13]:
 
 
 def docify(NotebookNode): 
@@ -220,7 +242,7 @@ class md(str):
 
 # ### Force the docstring for rites itself.
 
-# In[21]:
+# In[ ]:
 
 
 with (
@@ -228,8 +250,7 @@ with (
         globals()
         .get('__file__', 'rites.ipynb')
     ).with_suffix('.ipynb')
-    .open()
-) as f: __doc__ = docify(read(f, 4))
+    .open()) as f: __doc__ = docify(read(f, 4))
 
 
 # # Developer
