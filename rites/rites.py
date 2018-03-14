@@ -76,6 +76,11 @@ class Compiler(CachingCompiler):
         from IPython.core.interactiveshell import InteractiveShell
         return get_ipython() or InteractiveShell()
     
+    def ast_transform(Compiler, node):
+        for visitor in Compiler.ip.ast_transformers:
+            visitor.visit(node)
+        return node
+    
     @property
     def transform(Compiler): return Compiler.ip.input_transformer_manager.transform_cell
 
@@ -144,11 +149,11 @@ class Code(NotebookExporter, Compiler):
 class AST(Code):
     """>>> assert type(AST().from_filename('rites.ipynb')) is ast.Module"""
     def from_notebook_node(AST, nb: NotebookNode, resource: dict=None, **dict):         
-        return ast.fix_missing_locations(ast.Module(body=sum((
+        return AST.ast_transform(ast.fix_missing_locations(ast.Module(body=sum((
             AST.ast_parse(
                 AST.from_code_cell(cell, **dict), lineno=cell['metadata'].get('lineno', 1)
             ).body for cell in nb.cells if cell['cell_type']=='code'
-        ), [])))
+        ), []))))
 
 
 # In[8]:
@@ -190,7 +195,7 @@ class NotebookLoader(SourceFileLoader):
 class Partial(NotebookLoader):    
     def exec_module(Module, module):
         from IPython.utils.capture import capture_output
-        with capture_output() as output:
+        with capture_output(stdout=False, stderr=False) as output:
             super(type(Module), Module).exec_module(module)
             try:
                 module.__complete__ = True
@@ -242,7 +247,7 @@ class md(str):
 
 # ### Force the docstring for rites itself.
 
-# In[ ]:
+# In[14]:
 
 
 with (
@@ -255,7 +260,7 @@ with (
 
 # # Developer
 
-# In[ ]:
+# In[15]:
 
 
 if 1 and __name__ ==  '__main__':
