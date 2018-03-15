@@ -37,13 +37,13 @@ except:
 # 
 # > It is not possible to __import__ a notebook above the current directory so there no reason to implement higher-level __import__s.
 
-# In[4]:
+# In[14]:
 
 
 if o:
     try: from .. import object
-    except ValueError as Exception: 
-        assert Exception.args == ('attempted relative import beyond top-level package',)
+    except ValueError as Exception: assert Exception.args == (
+        'attempted relative import beyond top-level package',)
 
 
 # ---
@@ -99,14 +99,10 @@ if o:
     get_ipython().run_line_magic('rm', 'relative.py')
 
 
-# In[9]:
+# In[12]:
 
 
 from . import relative
-
-
-# In[ ]:
-
 
 __test__ = dict(
     imports=""">>> assert relative is relative.relative""",
@@ -118,7 +114,7 @@ __test__ = dict(
 # 
 # > Export the `relative.ipynb` as a python script because it does not rely on anything from `rites`.
 
-# In[ ]:
+# In[13]:
 
 
 if o:
