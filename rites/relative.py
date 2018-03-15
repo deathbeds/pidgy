@@ -6,7 +6,7 @@
 # In[1]:
 
 
-...,...,...; o = __name__ == '__main__'; ...,...,...;
+...; o = __name__ == '__main__'; ...;
 
 
 # Relative imports in the notebook are not allowed.
@@ -90,7 +90,7 @@ def load_ipython_extension(ip=get_ipython()): ip.ast_transformers = unload_ipyth
 # 
 # Test the `rites.relative` extension on itself; remove any python files for the test.
 
-# In[ ]:
+# In[8]:
 
 
 if o:
@@ -103,25 +103,25 @@ if o:
 
 
 from . import relative
-o and __import__('testing').load_ipython_extension()
 
 
-# In[10]:
+# In[ ]:
 
 
-""">>> assert relative is relative.relative"""
-""">>> assert relative.__file__.endswith('.ipynb')"""
-""">>> assert isinstance(relative, __import__('types').ModuleType)""";
+__test__ = dict(
+    imports=""">>> assert relative is relative.relative""",
+    file=""">>> assert relative.__file__.endswith('.ipynb')""",
+    type=""">>> assert isinstance(relative, __import__('types').ModuleType)""")
 
 
 # ### Tear Down
 # 
-# Export the notebook as a python script because it does not rely on anything from rites.
+# > Export the `relative.ipynb` as a python script because it does not rely on anything from `rites`.
 
-# In[11]:
+# In[ ]:
 
 
 if o:
-    __import__('testing').unload_ipython_extension()
+    __import__('doctest').testmod(verbose=2)
     get_ipython().system('jupyter nbconvert --to python relative.ipynb')
 
