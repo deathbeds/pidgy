@@ -5,23 +5,16 @@
 # 
 # `rites` will install the proper actions to import notebooks from their JSON source to compiled Python bytecode with proper __traceback__s.
 
-# # Parsing
-
-# `LineNoDecoder` is a `JSONDecoder` that updates the cell metadata with line numbers.
+# # Decoding
 
 # In[1]:
-
-
-def identity(x): return x
-
-
-# In[2]:
 
 
 from json.decoder import JSONObject, JSONDecoder, WHITESPACE, WHITESPACE_STR    
 from nbformat import NotebookNode
 class LineNoDecoder(JSONDecoder):
-    """A JSON Decoder to return a NotebookNode with lines numbers in the metadata."""
+    """A JSON Decoder to return a NotebookNode with lines numbers in the metadata.
+    """
     def __init__(self, *, object_hook=None, parse_float=None, parse_int=None, parse_constant=None, strict=True, object_pairs_hook=None):
         from json.scanner import py_make_scanner    
         super().__init__(object_hook=object_hook, parse_float=parse_float, parse_int=parse_int, parse_constant=parse_constant, strict=strict, 
@@ -44,24 +37,19 @@ class LineNoDecoder(JSONDecoder):
         return NotebookNode(object), next
 
 
-# `Shell` is reusable class that provides the attributes to:
+# # Compilation
 # 
-# * `transform` text to source text
-# * `parse` source text to `ast`
-# * `compile` `ast` to `bytecode`
+# Compilation occurs in the __3__ steps:
+# 
+# 1. Text is transformed into a valid source string.
+# 2. The sources string is parsed into an abstract syntax tree
+# 3. The abstract syntax compiles to valid bytecode 
 
-# In[3]:
+# In[2]:
 
 
-from IPython.core.inputsplitter import IPythonInputSplitter
 from IPython.core.compilerop import CachingCompiler
-
-
-# In[4]:
-
-
 from dataclasses import dataclass, field
-
 
 class Compiler(CachingCompiler):
     """{Shell} provides the IPython machinery to objects."""
@@ -76,8 +64,8 @@ class Compiler(CachingCompiler):
         return get_ipython() or InteractiveShell()
     
     def ast_transform(Compiler, node):
-        for visitor in Compiler.ip.ast_transformers:
-            visitor.visit(node)
+        for visitor in Compiler.ip.ast_transformers: 
+            node = visitor.visit(node)
         return node
     
     @property
@@ -92,32 +80,25 @@ class Compiler(CachingCompiler):
 
 
 
-# In[5]:
+# In[3]:
 
 
 import ast, sys
 from json import load, loads
 from nbformat import NotebookNode, read, reads
-from dataclasses import dataclass, field
 from pathlib import Path
 from nbconvert.exporters.markdown import MarkdownExporter
 from nbconvert.exporters.notebook import NotebookExporter
 
 
-# # Compilation
-# 
-# Compilation occurs in the __3__ steps:
-# 
-# 1. Text is transformed into a valid source string.
-# 2. The sources string is parsed into an abstract syntax tree
-# 3. The abstract syntax compiles to valid bytecode 
-
-# In[6]:
+# In[4]:
 
 
 @dataclass
 class Code(NotebookExporter, Compiler):
-    """>>> assert type(Code().from_filename('rites.ipynb')) is NotebookNode"""
+    """An exporter than returns a NotebookNode with the InputSplitter transforms applied.
+    
+    >>> assert type(Code().from_filename('rites.ipynb')) is NotebookNode"""
     filename: str = '<module exporter>'
     name: str = '__main__'
     decoder: type = LineNoDecoder
@@ -139,14 +120,16 @@ class Code(NotebookExporter, Compiler):
                 cell.source = Code.from_code_cell(cell, **dict)
         return nb
     
-    def from_code_cell(Compiler, cell, **dict):  return Compiler.transform(cell['source'])
+    def from_code_cell(Code, cell, **dict):  return Code.transform(cell['source'])
 
 
-# In[7]:
+# In[5]:
 
 
 class AST(Code):
-    """>>> assert type(AST().from_filename('rites.ipynb')) is ast.Module"""
+    """An exporter than returns parsed ast.
+    
+    >>> assert type(AST().from_filename('rites.ipynb')) is ast.Module"""
     def from_notebook_node(AST, nb: NotebookNode, resource: dict=None, **dict):         
         return AST.ast_transform(ast.fix_missing_locations(ast.Module(body=sum((
             AST.ast_parse(
@@ -155,11 +138,13 @@ class AST(Code):
         ), []))))
 
 
-# In[8]:
+# In[6]:
 
 
 class Compile(AST):
-    """>>> assert Compile().from_filename('rites.ipynb')"""        
+    """An exporter than returns compiled bytecode
+    
+    >>> assert Compile().from_filename('rites.ipynb')"""        
     def from_notebook_node(Compile, nb, resources: dict=None, **dict):
         return Compile.compile(super().from_notebook_node(nb, resources, **dict))
 
@@ -168,11 +153,12 @@ class Compile(AST):
 # 
 # `rites` will exploit as much of the Python import system as it can.
 
-# In[9]:
+# In[7]:
 
 
 from importlib.machinery import SourceFileLoader
 class NotebookLoader(SourceFileLoader):
+    """A SourceFileLoader for notebooks that provides line number debugginer in the JSON source."""
     EXTENSION_SUFFIXES = '.ipynb',
     def exec_module(Loader, module):
         module.__doc__ = docify(reads(Loader.get_source(Loader.name), 4))
@@ -188,27 +174,31 @@ class NotebookLoader(SourceFileLoader):
 # or miniature programs that may interact with other cells.  It is plausible that some code may evaluate before other code fails.  `rites` allows notebooks to partially evalue.  Each module contains `module.__complete__` to identify the loading
 # state of the notebook.
 
-# In[10]:
+# In[8]:
 
 
 class Partial(NotebookLoader):    
+    """A SourceFileLoader that will always work because it catches output and error.
+    
+    """
     def exec_module(Module, module):
         from IPython.utils.capture import capture_output
         with capture_output(stdout=False, stderr=False) as output:
             super(type(Module), Module).exec_module(module)
-            try:
-                module.__complete__ = True
-            except BaseException as Exception:
-                module.__complete__ = Exception
-            module.__output__ = output
+            try: module.__complete__ = True
+            except BaseException as Exception: module.__complete__ = Exception
+            finally: module.__output__ = output
         return module
 
 
-# In[11]:
+# In[9]:
 
 
 _NATIVE_HOOK = sys.path_hooks
 def update_hooks(loader=None):
+    """Update the sys.meta_paths with the PartialLoader.
+    
+    """
     global _NATIVE_HOOK
     from importlib.machinery import FileFinder
     if loader:
@@ -223,7 +213,7 @@ def update_hooks(loader=None):
 
 # # IPython Extensions
 
-# In[12]:
+# In[10]:
 
 
 def load_ipython_extension(ip=None): update_hooks(Partial)
@@ -232,7 +222,7 @@ def unload_ipython_extension(ip=None): update_hooks()
 
 # ## Utilities
 
-# In[13]:
+# In[11]:
 
 
 def docify(NotebookNode): 
@@ -246,18 +236,7 @@ class md(str):
 
 # ### Force the docstring for rites itself.
 
-# In[14]:
-
-
-with (
-    Path(
-        globals()
-        .get('__file__', 'rites.ipynb')
-    ).with_suffix('.ipynb')
-    .open()) as f: __doc__ = docify(read(f, 4))
-
-
-# In[19]:
+# In[12]:
 
 
 class Test(__import__('unittest').TestCase): 
@@ -265,10 +244,15 @@ class Test(__import__('unittest').TestCase):
         from nbformat import write, v4
         load_ipython_extension()
         with open('test_rites.ipynb', 'w') as file:
-            write(v4.new_notebook(cells=[]), file)
+            write(v4.new_notebook(cells=[
+                v4.new_code_cell("test = 42")
+            ]), file)
+            
     def runTest(Test):
         import test_rites
         assert test_rites.__file__.endswith('.ipynb')
+        assert test_rites.test is 42
+        assert isinstance(test_rites, __import__('types').ModuleType)
         
     def tearDown(Test):
         get_ipython().run_line_magic('rm', 'test_rites.ipynb')
@@ -277,11 +261,15 @@ class Test(__import__('unittest').TestCase):
 
 # # Developer
 
-# In[20]:
+# In[ ]:
 
 
-if 1 and __name__ ==  '__main__':
+if __name__ ==  '__main__':
+    del __doc__
     __import__('doctest').testmod(verbose=2)
     __import__('unittest').TextTestRunner().run(Test())
     get_ipython().system('jupyter nbconvert --to script rites.ipynb')
+
+__doc__ = docify(reads(Path(
+        globals().get('__file__', 'rites.ipynb')).with_suffix('.ipynb').read_text(), 4))
 
