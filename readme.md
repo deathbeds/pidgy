@@ -117,7 +117,7 @@ In testing mode, function definitions and class definitions are tested interacti
 
     .
     ----------------------------------------------------------------------
-    Ran 1 test in 0.002s
+    Ran 1 test in 0.001s
     
     OK
 
@@ -138,7 +138,7 @@ Function with definitions are inferred as [__hypothesis__]() strategies.  This a
 
     ..
     ----------------------------------------------------------------------
-    Ran 2 tests in 0.195s
+    Ran 2 tests in 0.245s
     
     OK
 
@@ -172,13 +172,15 @@ assert a == 42
 
 Start code with `graph` or `digraph`
 
+    !conda install -y graphviz
+
 
 ```python
     graph { {Ipython Julia R}--Jupyter}
 ```
 
 
-![svg](readme_files/readme_23_0.svg)
+![svg](readme_files/readme_24_0.svg)
 
 
 # Notebooks as source
@@ -207,7 +209,7 @@ The rites loader allows an author to import notebooks directly as source.  This 
     [NbConvertApp] Converting notebook readme.ipynb to markdown
     [NbConvertApp] Support files will be in readme_files/
     [NbConvertApp] Making directory readme_files
-    [NbConvertApp] Writing 4373 bytes to readme.md
+    [NbConvertApp] Writing 3836 bytes to readme.md
 
 
 
