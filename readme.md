@@ -115,7 +115,7 @@ In testing mode, function definitions and class definitions are tested interacti
 
     .
     ----------------------------------------------------------------------
-    Ran 1 test in 0.002s
+    Ran 1 test in 0.001s
     
     OK
 
@@ -134,19 +134,11 @@ Function with definitions are inferred as [__hypothesis__]() strategies.  This a
         assert ct > 0
 ```
 
-    F.
-    ======================================================================
-    FAIL: unittest.case.FunctionTestCase (test)
+    ..
     ----------------------------------------------------------------------
-    Traceback (most recent call last):
-      File "<ipython-input-10-57e7bfe64edb>", line 8, in test
-        assert ct > 0
-    AssertionError
+    Ran 2 tests in 0.211s
     
-    ----------------------------------------------------------------------
-    Ran 2 tests in 0.207s
-    
-    FAILED (failures=1)
+    OK
 
 
 
@@ -159,10 +151,9 @@ Function with definitions are inferred as [__hypothesis__]() strategies.  This a
     %rites conventions --off test
 ```
 
-
-```python
 ## Yaml
-```
+
+Start code with `---`
 
 
 ```python
@@ -175,21 +166,35 @@ Function with definitions are inferred as [__hypothesis__]() strategies.  This a
 assert a == 42
 ```
 
+## Graphviz
+
+Start code with `graph` or `digraph`
+
+
+```python
+    graph { {Ipython Julia R}--Jupyter}
+```
+
+
+![svg](readme_files/readme_22_0.svg)
+
+
 # Notebooks as source
 
 Rites uses notebooks as source; line numbers are retained so that the notebook source produces semi-sane tracebacks.
 
 
 ```python
-    %rites --off conventions
+    %rites template --off conventions
     from rites import markdown, template, conventions
 ```
 
-The rites loader allows an author to import notebooks directly as source.  This means all of the rites documents are importable.
+The rites loader allows an author to import notebooks directly as source.  This means all of the rites documents are importable
 
 
 ```python
     import readme
+    %rites --off template
 ```
 
     The rites extension is already loaded. To reload it, use:
@@ -199,7 +204,9 @@ The rites loader allows an author to import notebooks directly as source.  This 
     1
     2
     [NbConvertApp] Converting notebook readme.ipynb to markdown
-    [NbConvertApp] Writing 4172 bytes to readme.md
+    [NbConvertApp] Support files will be in readme_files/
+    [NbConvertApp] Making directory readme_files
+    [NbConvertApp] Writing 3725 bytes to readme.md
 
 
 
@@ -225,15 +232,4 @@ Use rites a cell magic to temporarily employ any convetions.
     
     if __name__ == '__main__':
         !jupyter nbconvert --to markdown readme.ipynb
-
-
-    [NbConvertApp] Converting notebook readme.ipynb to markdown
-    [NbConvertApp] Writing 4172 bytes to readme.md
-
-
-    ...
-    ----------------------------------------------------------------------
-    Ran 3 tests in 0.148s
-    
-    OK
 
