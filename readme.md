@@ -8,9 +8,6 @@
     %load_ext rites
 ```
 
-    The rites module is not an IPython extension.
-
-
 # Markdown Mode
 
 
@@ -141,7 +138,7 @@ Function with definitions are inferred as [__hypothesis__]() strategies.  This a
 
     ..
     ----------------------------------------------------------------------
-    Ran 2 tests in 0.207s
+    Ran 2 tests in 0.195s
     
     OK
 
@@ -201,7 +198,8 @@ The rites loader allows an author to import notebooks directly as source.  This 
     import readme
 ```
 
-    The rites module is not an IPython extension.
+    The rites extension is already loaded. To reload it, use:
+      %reload_ext rites
     foo is 42
     0
     1
@@ -209,7 +207,7 @@ The rites loader allows an author to import notebooks directly as source.  This 
     [NbConvertApp] Converting notebook readme.ipynb to markdown
     [NbConvertApp] Support files will be in readme_files/
     [NbConvertApp] Making directory readme_files
-    [NbConvertApp] Writing 3825 bytes to readme.md
+    [NbConvertApp] Writing 4373 bytes to readme.md
 
 
 
@@ -223,7 +221,7 @@ Convert a document into other formats; Restart, Run All, `nbconvert`.
 
 
 ```python
-%%rites markdown template test
+%%rites markdown template
 Use rites a cell magic to temporarily employ any convetions.
     
     if __name__ == '__main__':
