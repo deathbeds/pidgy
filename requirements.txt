@@ -3,5 +3,5 @@ nbconvert
 hypothesis
 CommonMark
 dataclasses
-yaml
+pyyaml
 graphviz
