@@ -4,13 +4,10 @@
 # In[ ]:
 
 
-try:
-    from .loader import load_ipython_extension, unload_ipython_extension 
-except:
-    from loader import load_ipython_extension, unload_ipython_extension 
-finally:
-    load_ipython_extension()
-    
+if __name__ == '__main__':
+    get_ipython().run_line_magic('load_ext', 'loader')
+else:
+    get_ipython().run_line_magic('load_ext', 'rites.loader')
 from rites.config import alias
     
 [alias.__setitem__(str, f"rites.{str}") for str in ('markdown', 'template', 'conventions', 'test')]
