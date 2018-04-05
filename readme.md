@@ -1,110 +1,117 @@
 
-
-# `rites` is a new convention for the notebook
-
-`rites` are IPython conventions for composing computable documents for humans.
-
-## Conventions
+`rites` is a collection of IPython magics for creating computable essays.
 
 
+```python
+    %load_ext rites
+```
+
+# Markdown Mode
 
 
-### Notebooks should Restart and Run All
+```python
+    %rites markdown 
+```
 
-An out of order notebook has <big><big>🚫🙅🏼</big></big> value to the future.  I don't wanna hear it,
-nope 🙉, a notebook that runs out of order is useless!
 
-`rites` will import notebooks as source.  If a notebooks imports, then it will _generally_ restart and run all.
+```python
+---
+With `rites.markdown`, code cells accept markdown.  Any indented code blocks are executed.
 
-    import rites, rites.testing, rites.markdown
-    assert all(_.__file__.endswith('.ipynb') for _ in (rites.testing, rites.markdown))
+    foo = 42
+    print(f"foo is {foo}")
 
-#### Expensive tasks?
+> Accepting the `rites.markdown` convetion means the author agrees to indent all their code at least once; and sometimes more in nested lists. 
 
-Learn to use caching, parallel execution, optimization, or write better code.  `requests_cache` is useful.
+---
+```
+
+
+---
+With `rites.markdown`, code cells accept markdown.  Any indented code blocks are executed.
+
+    foo = 42
+    print(f"foo is {foo}")
+
+> Accepting the `rites.markdown` convetion means the author agrees to indent all their code at least once; and sometimes more in nested lists. 
+
+---
+
+
+    foo is 42
+
+
+# Template Mode
+
+With templates real data can be inserted into the computational essay. An author should desire their notebook restart and run all during template mode.
+
+
+```python
     
-### Program For The People
-
-[Wilt Chamberlain]() holds the single season record for field percentage in the NBA 
-at [0.727 in the 1972–73 season]().  No professional baseball player has ever had batting average 
-over 0.500.  That sucks, you are to go to work everyday to fail better than others your peer.
-
-> Programming shouldn't be as boring as baseball.
-
-`rites.markdown` inspires literate programs written primarily in markdown; all code blocks
-are evaluted are normal source code.  This convention drafts documents for you and your colleagues,
-not computers.  Special care is take to provide the expected tracebacks in interactive mode. `rise.markdown`
-will have you feeling all...
-
-![](https://media.giphy.com/media/A0UK8ewpztydG/giphy.gif)
-
-> Suppress the display by starting any cell with a blank line.
+    %rites template
+Skipping the first line suppresses the markdown output.
+```
 
 
+```python
+---
+In template mode, `jinja2` may be invoked to template markdown and code.  We already know that `foo` is 42, but can test that assertion with
+
+    assert foo is {{foo}} is 42
+    {% for i in range(3) %}print({{i}})
+    {% endfor %}
+---
+```
 
 
-### Tests are the Future
+---
+In template mode, `jinja2` may be invoked to template markdown and code.  We already know that `foo` is 42, but can test that assertion with
 
-* If a document is available on all machines, its readable.
-* If a document executes on a few machines, it is reusable.
-* If a document executes on many machines, it is reproducible.
-* If a document works solely on your machine, its useless.
-
-    #### Share your work! Your ideas are great!
+    assert foo is 42 is 42
+    print(0)
+    print(1)
+    print(2)
     
-Tests will future proof your ideas so other people and machines can use them.
-
-`rites.testing` automates __doctest__, __unittest__, property based tests with __hypothesis__, and behavior
-driven testing with __behave__.  Abide by a conventions in your functions and classes to trigger tests
+---
 
 
+    0
+    1
+    2
 
 
-#### FunctionTestCase and DocTest
-    
-    def test():
-        """Functions without arguments are run as unittests
-        >>> assert globals(), 'This ran in doctest.'
-        
-        The doctests are ran too.
-        """
+
+```python
+# Turning off magics
+
+    %rites --off template markdown
+```
+
+
+# Turning off magics
+
+    %rites --off template markdown
+
+
+# Test Mode
+
+
+```python
+    %rites test
+```
+
+In testing mode, function definitions and class definitions are tested interactively.
+
+
+```python
+## A Function with no parameters is tested
+```
+
+
+```python
+    def f(): 
         assert True
----
-
-
-
-    ..
-    ----------------------------------------------------------------------
-    Ran 2 tests in 0.005s
-    
-    OK
-
-
-
-#### Unittest
-
-    class Test(__import__('unittest').TestCase):
-        def runTest(self):
-            self.assertTrue
----
-
-
-
-    .
-    ----------------------------------------------------------------------
-    Ran 1 test in 0.001s
-    
-    OK
-
-
-
-In fact, any `class` containing a `runTest` method is as a FunctionTestCase.
-
-    class meh:
-        def runTest(self): assert issubclass(self, meh)
----            
-
-
+```
 
     .
     ----------------------------------------------------------------------
@@ -113,173 +120,120 @@ In fact, any `class` containing a `runTest` method is as a FunctionTestCase.
     OK
 
 
-
-#### Propery based testing with *hypothesis*
-
-__hypothesis__ will infer strategies for typed functions; typing functions is a good thing.
+Function with definitions are inferred as [__hypothesis__]() strategies.  This approach promotes better annotations habits.
 
 
+```python
     ct = 0
-    def f(i:int): 
+    def f(x: int): 
         global ct
         ct += 1
-        return i
----
+        
+    def test():
+        global ct
+        assert ct > 0
+```
 
-
-
-    .
+    F.
+    ======================================================================
+    FAIL: unittest.case.FunctionTestCase (test)
     ----------------------------------------------------------------------
-    Ran 1 test in 0.197s
+    Traceback (most recent call last):
+      File "<ipython-input-10-57e7bfe64edb>", line 8, in test
+        assert ct > 0
+    AssertionError
     
-    OK
-
-
-
-### The Narrative Should include real data
-
-The function __f__ was executed __`100`__ times because could infer a testing strategy from the type annotations.
-
-
-
-
-#### Notebooks should __import__
-
-If one `rites.markdown` they may __import__ it.
-
-You'll notice that `__name__ == '__main__'` has become a convention.  This statement separates
-I(nteractive)Python from Python.
-    
-    o = __name__ == '__main__' # use o because it typographically l👀ks ok
-    if o:
-        import readme
-        def _test_():
-            assert readme.ct is 0
-            assert readme.__complete__ is not True
-            assert isinstance(readme.__complete__, AssertionError)
-        
-occurs in the Interactive context
-
-        
-    else:
-        assert False
-        
-Otherwise, the module is being imported and we deliberately create an error.
-        
-        
-        
-        
-
-
-
-    .
     ----------------------------------------------------------------------
-    Ran 1 test in 0.001s
+    Ran 2 tests in 0.207s
     
-    OK
+    FAILED (failures=1)
 
 
 
-> Advanced users may figure out how to use notebooks at CLI's.
-    
+```python
+# Extra conventions
+```
+
+
+```python
+    %rites conventions --off test
+```
+
+
+```python
+## Yaml
+```
+
+
+```python
+    ---
+    a: 42
+```
+
+
+```python
+assert a == 42
+```
+
+# Notebooks as source
+
+Rites uses notebooks as source; line numbers are retained so that the notebook source produces semi-sane tracebacks.
+
+
+```python
+    %rites --off conventions
+    from rites import markdown, template, conventions
+```
+
+The rites loader allows an author to import notebooks directly as source.  This means all of the rites documents are importable.
+
+
+```python
+    import readme
+```
+
+    The rites extension is already loaded. To reload it, use:
+      %reload_ext rites
+    foo is 42
+    0
+    1
+    2
+    [NbConvertApp] Converting notebook readme.ipynb to markdown
+    [NbConvertApp] Writing 4172 bytes to readme.md
 
 
 
-
-#### Tracebacks Are Important
-
-`rites` provides valid tracebacks to the source notebook of an imported document.    
-    
-    if o: raise readme.__complete__
-
->> If you saved recently, then forget about it.
-
-The output below illustrates a valid traceback to the `ipython-input` and python import, respectively.
-
----
-
-
-
-
-    ---------------------------------------------------------------------------
-
-    AssertionError                            Traceback (most recent call last)
-
-    <ipython-input-12-e947bc94e5ba> in <module>()
-          3 `rites` provides valid tracebacks to the source notebook of an imported document.
-          4 
-    ----> 5     if o: raise readme.__complete__
-          6 
-          7 >> If you saved recently, then forget about it.
-
-
-    ~/rites/rites/rites.py in capture(loader, module)
-        174     with capture_output() as output:
-        175         try:
-    --> 176             super(type(loader), loader).exec_module(module)
-        177             module.__complete__ = True
-        178         except BaseException as Exception:
-
-
-    ~/rites/rites/template.ipynb in exec_module(Loader, module)
-
-
-    ~/rites/rites/rites.py in from_file(Module, file_stream, resources, **dict)
-         82         for str in ('name', 'filename'):
-         83             setattr(Compile, str, dict.pop(str, getattr(Compile, str)))
-    ---> 84         return Module.from_notebook_node(load(file_stream, cls=Module.decoder), resources, **dict)
-         85 
-         86     def from_filename(Module,  filename, resources=None, **dict):
-
-
-    ~/rites/rites/rites.py in from_notebook_node(AST, nb, resource, **dict)
-        115         module = ast.Module(body=[])
-        116         for cell in nb.cells:
-    --> 117             nodes = AST.from_code_cell(cell, **dict)
-        118             nodes and module.body.extend(nodes.body)
-        119         return ast.fix_missing_locations(module)
-
-
-    ~/rites/rites/template.ipynb in from_code_cell(Incremental, cell, **dict)
-
-
-    ~/rites/readme.ipynb in <module>()
-        455     "        \n",
-        456     "    else:\n",
-    --> 457     "        assert False\n",
-        458     "        \n",
-        459     "Otherwise, the module is being imported and we deliberately create an error.\n",
-
-
-    AssertionError: 
-
-
+```python
+    assert all(file.__file__.endswith('.ipynb') for file in (markdown, template, conventions))
+```
 
 #### Everything Should Compute
 
 Convert a document into other formats; Restart, Run All, `nbconvert`.
 
-    if o:
-        !jupyter nbconvert --to markdown --MarkdownExporter.exclude_input=True readme.ipynb
-        !source activate p6 && pyreverse -o png -p rites -A rites
 
+```python
+%%rites markdown template test
+Use rites a cell magic to temporarily employ any convetions.
+    
+    if __name__ == '__main__':
+        !jupyter nbconvert --to markdown readme.ipynb
+```
+
+
+Use rites a cell magic to temporarily employ any convetions.
+    
+    if __name__ == '__main__':
+        !jupyter nbconvert --to markdown readme.ipynb
 
 
     [NbConvertApp] Converting notebook readme.ipynb to markdown
-    [NbConvertApp] Writing 7045 bytes to readme.md
-    parsing rites/__init__.py...
-    parsing /Users/tonyfast/rites/rites/__init__.py...
-    parsing /Users/tonyfast/rites/rites/all.py...
-    parsing /Users/tonyfast/rites/rites/rites.py...
-    Warning: Could not load "/Users/tonyfast/anaconda/envs/p6/lib/graphviz/libgvplugin_pango.6.dylib" - file not found
-    Warning: Could not load "/Users/tonyfast/anaconda/envs/p6/lib/graphviz/libgvplugin_pango.6.dylib" - file not found
-    Warning: Could not load "/Users/tonyfast/anaconda/envs/p6/lib/graphviz/libgvplugin_pango.6.dylib" - file not found
-    Warning: Could not load "/Users/tonyfast/anaconda/envs/p6/lib/graphviz/libgvplugin_pango.6.dylib" - file not found
-    Warning: Could not load "/Users/tonyfast/anaconda/envs/p6/lib/graphviz/libgvplugin_pango.6.dylib" - file not found
-    Warning: Could not load "/Users/tonyfast/anaconda/envs/p6/lib/graphviz/libgvplugin_pango.6.dylib" - file not found
+    [NbConvertApp] Writing 4172 bytes to readme.md
 
 
-
-![](classes_rites.png)
-
+    ...
+    ----------------------------------------------------------------------
+    Ran 3 tests in 0.148s
+    
+    OK
 
