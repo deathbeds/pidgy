@@ -1,0 +1,5 @@
+ipython
+nbconvert
+hypothesis
+CommonMark
+dataclasses

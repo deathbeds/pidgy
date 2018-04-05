@@ -1,10 +1,15 @@
 
 `rites` is a collection of IPython magics for creating computable essays.
 
+[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/deathbeds/rites/master?filepath=readme.ipynb)
+
 
 ```python
     %load_ext rites
 ```
+
+    The rites module is not an IPython extension.
+
 
 # Markdown Mode
 
@@ -134,19 +139,11 @@ Function with definitions are inferred as [__hypothesis__]() strategies.  This a
         assert ct > 0
 ```
 
-    F.
-    ======================================================================
-    FAIL: unittest.case.FunctionTestCase (test)
-    ----------------------------------------------------------------------
-    Traceback (most recent call last):
-      File "<ipython-input-10-57e7bfe64edb>", line 8, in test
-        assert ct > 0
-    AssertionError
-    
+    ..
     ----------------------------------------------------------------------
     Ran 2 tests in 0.207s
     
-    FAILED (failures=1)
+    OK
 
 
 
@@ -159,10 +156,9 @@ Function with definitions are inferred as [__hypothesis__]() strategies.  This a
     %rites conventions --off test
 ```
 
-
-```python
 ## Yaml
-```
+
+Start code with `---`
 
 
 ```python
@@ -174,6 +170,19 @@ Function with definitions are inferred as [__hypothesis__]() strategies.  This a
 ```python
 assert a == 42
 ```
+
+## Graphviz
+
+Start code with `graph` or `digraph`
+
+
+```python
+    graph { {Ipython Julia R}--Jupyter}
+```
+
+
+![svg](readme_files/readme_23_0.svg)
+
 
 # Notebooks as source
 
@@ -192,14 +201,15 @@ The rites loader allows an author to import notebooks directly as source.  This 
     import readme
 ```
 
-    The rites extension is already loaded. To reload it, use:
-      %reload_ext rites
+    The rites module is not an IPython extension.
     foo is 42
     0
     1
     2
     [NbConvertApp] Converting notebook readme.ipynb to markdown
-    [NbConvertApp] Writing 4172 bytes to readme.md
+    [NbConvertApp] Support files will be in readme_files/
+    [NbConvertApp] Making directory readme_files
+    [NbConvertApp] Writing 3825 bytes to readme.md
 
 
 
@@ -225,15 +235,4 @@ Use rites a cell magic to temporarily employ any convetions.
     
     if __name__ == '__main__':
         !jupyter nbconvert --to markdown readme.ipynb
-
-
-    [NbConvertApp] Converting notebook readme.ipynb to markdown
-    [NbConvertApp] Writing 4172 bytes to readme.md
-
-
-    ...
-    ----------------------------------------------------------------------
-    Ran 3 tests in 0.148s
-    
-    OK
 
