@@ -1,11 +1,11 @@
 channels:
 - conda-forge
 dependencies:
-- ipython
-- nbconvert
-- hypothesis
-- CommonMark
-- dataclasses
-- pyyaml
-- pip:
-    - graphviz
+- graphviz
+- pip:    
+    - dataclasses
+    - CommonMark
+    - pyyaml
+    - ipython
+    - nbconvert
+    - hypothesis
