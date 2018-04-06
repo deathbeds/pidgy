@@ -1,7 +1,0 @@
-ipython
-nbconvert
-hypothesis
-CommonMark
-dataclasses
-pyyaml
-graphviz
