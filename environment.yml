@@ -7,3 +7,4 @@ dependencies:
     - ipython
     - nbconvert
     - hypothesis
+    - graphviz
