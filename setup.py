@@ -6,5 +6,5 @@ __import__('setuptools').setup(
     license="BSD-3-Clause",
     install_requires=[],
     include_package_data=True,
-    packages=__import__('setuptools').find_packages(),
+    packages=['rites'],
 )

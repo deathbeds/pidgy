@@ -8,3 +8,5 @@ dependencies:
     - nbconvert
     - hypothesis
     - graphviz
+    - git+https://github.com/deathbeds/importnb
+    - git+https://github.com/deathbeds/sweet
