@@ -1,41 +1,41 @@
 
-`rites` is a collection of IPython magics for creating computable essays.
+`pidgin` is a collection of IPython magics for creating computable essays.
 
-[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/deathbeds/rites/master?filepath=readme.ipynb)
+[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/deathbeds/pidgin/master?filepath=readme.ipynb)
 
 
 ```python
-    %load_ext rites
+    %load_ext pidgin
 ```
 
 # Markdown Mode
 
 
 ```python
-    %rites markdown 
+    %pidgin markdown 
 ```
 
 
 ```python
 ---
-With `rites.markdown`, code cells accept markdown.  Any indented code blocks are executed.
+With `pidgin.markdown`, code cells accept markdown.  Any indented code blocks are executed.
 
     foo = 42
     print(f"foo is {foo}")
 
-> Accepting the `rites.markdown` convetion means the author agrees to indent all their code at least once; and sometimes more in nested lists. 
+> Accepting the `pidgin.markdown` convetion means the author agrees to indent all their code at least once; and sometimes more in nested lists. 
 
 ---
 ```
 
 
 ---
-With `rites.markdown`, code cells accept markdown.  Any indented code blocks are executed.
+With `pidgin.markdown`, code cells accept markdown.  Any indented code blocks are executed.
 
     foo = 42
     print(f"foo is {foo}")
 
-> Accepting the `rites.markdown` convetion means the author agrees to indent all their code at least once; and sometimes more in nested lists. 
+> Accepting the `pidgin.markdown` convetion means the author agrees to indent all their code at least once; and sometimes more in nested lists. 
 
 ---
 
@@ -50,7 +50,7 @@ With templates real data can be inserted into the computational essay. An author
 
 ```python
     
-    %rites template
+    %pidgin template
 Skipping the first line suppresses the markdown output.
 ```
 
@@ -86,20 +86,20 @@ In template mode, `jinja2` may be invoked to template markdown and code.  We alr
 ```python
 # Turning off magics
 
-    %rites --off template markdown
+    %pidgin --off template markdown
 ```
 
 
 # Turning off magics
 
-    %rites --off template markdown
+    %pidgin --off template markdown
 
 
 # Test Mode
 
 
 ```python
-    %rites test
+    %pidgin test
 ```
 
 In testing mode, function definitions and class definitions are tested interactively.
@@ -150,7 +150,7 @@ Function with definitions are inferred as [__hypothesis__]() strategies.  This a
 
 
 ```python
-    %rites conventions --off test
+    %pidgin conventions --off test
 ```
 
 ## Yaml
@@ -185,23 +185,23 @@ Start code with `graph` or `digraph`
 
 # Notebooks as source
 
-Rites uses notebooks as source; line numbers are retained so that the notebook source produces semi-sane tracebacks.
+pidgin uses notebooks as source; line numbers are retained so that the notebook source produces semi-sane tracebacks.
 
 
 ```python
-    %rites --off conventions
-    from rites import markdown, template, conventions
+    %pidgin --off conventions
+    from pidgin import markdown, template, conventions
 ```
 
-The rites loader allows an author to import notebooks directly as source.  This means all of the rites documents are importable.
+The pidgin loader allows an author to import notebooks directly as source.  This means all of the pidgin documents are importable.
 
 
 ```python
     import readme
 ```
 
-    The rites extension is already loaded. To reload it, use:
-      %reload_ext rites
+    The pidgin extension is already loaded. To reload it, use:
+      %reload_ext pidgin
     foo is 42
     0
     1
@@ -223,16 +223,22 @@ Convert a document into other formats; Restart, Run All, `nbconvert`.
 
 
 ```python
-%%rites markdown template
-Use rites a cell magic to temporarily employ any convetions.
+%%pidgin markdown template
+Use pidgin a cell magic to temporarily employ any convetions.
     
     if __name__ == '__main__':
         !jupyter nbconvert --to markdown readme.ipynb
 ```
 
 
-Use rites a cell magic to temporarily employ any convetions.
+Use pidgin a cell magic to temporarily employ any convetions.
     
     if __name__ == '__main__':
         !jupyter nbconvert --to markdown readme.ipynb
+
+
+    [NbConvertApp] Converting notebook readme.ipynb to markdown
+    [NbConvertApp] Support files will be in readme_files/
+    [NbConvertApp] Making directory readme_files
+    [NbConvertApp] Writing 4212 bytes to readme.md
 
