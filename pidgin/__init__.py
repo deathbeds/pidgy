@@ -6,11 +6,11 @@
 
 def load_ipython_extension(ip):
     get_ipython().run_line_magic('reload_ext', 'importnb')
-    from rites.config import alias
+    from pidgin.config import alias
     if __name__ == '__main__':
         get_ipython().run_line_magic('reload_ext', 'config')
     else:
-        get_ipython().run_line_magic('reload_ext', 'rites.config')
+        get_ipython().run_line_magic('reload_ext', 'pidgin.config')
 
 
 # In[ ]:
