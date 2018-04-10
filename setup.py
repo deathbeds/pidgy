@@ -8,6 +8,6 @@ __import__('setuptools').setup(
     include_package_data=True,
     packages=['pidgin'],
     dependency_links=[
-        'https://github.com/deathbeds/importnb/tarball/master',
-        'https://github.com/deathbeds/sweet/tarball/master'
+        'https://github.com/deathbeds/importnb/tarball/master#egg=importnb',
+        'https://github.com/deathbeds/sweet/tarball/master#egg=sweet'
     ])
