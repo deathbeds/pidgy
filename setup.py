@@ -4,7 +4,7 @@ __import__('setuptools').setup(
     author="deathbes", author_email="tony.fast@gmail.com",
     description="Macros for computable essays.",
     license="BSD-3-Clause",
-    install_requires=['importnb', 'sweet'],
+    install_requires=['importnb', 'sweet', 'CommonMark', 'graphviz', 'black' ,'pyyaml'],
     include_package_data=True,
     packages=['pidgin'],
     dependency_links=[
