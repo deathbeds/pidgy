@@ -1,2 +1,2 @@
-recursive-include pidgin *.ipynb 
-include LICENSE
+recursive-include pidgin *.ipynb
+include LICENSE readme.md
