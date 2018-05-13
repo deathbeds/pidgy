@@ -1,6 +1,5 @@
 dataclasses
 CommonMark
-pyyaml
 ipython
 nbconvert
 hypothesis
