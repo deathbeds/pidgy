@@ -1,6 +1,6 @@
 dependencies:
 - graphviz
-- pip:    
+- pip:
     - dataclasses
     - CommonMark
     - pyyaml
@@ -8,5 +8,5 @@ dependencies:
     - nbconvert
     - hypothesis
     - graphviz
-    - git+https://github.com/deathbeds/importnb
-    - git+https://github.com/deathbeds/sweet
+    - importnb
+    # - git+https://github.com/deathbeds/sweet

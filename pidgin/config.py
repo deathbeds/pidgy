@@ -1,0 +1,1 @@
+c.Exporter.preprocessors=['pidgin.markdown.Normalize']

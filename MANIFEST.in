@@ -1,1 +1,2 @@
-recursive-include pidgin *.ipynb LICENSE
+recursive-include pidgin *.ipynb 
+include LICENSE

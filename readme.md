@@ -5,7 +5,8 @@
 
 
 ```python
-    %load_ext pidgin
+    if __name__ == '__main__': 
+        %load_ext pidgin
 ```
 
 # Markdown Mode
@@ -95,67 +96,14 @@ In template mode, `jinja2` may be invoked to template markdown and code.  We alr
     %pidgin --off template markdown
 
 
-# Test Mode
-
-
-```python
-    %pidgin test
-```
-
-In testing mode, function definitions and class definitions are tested interactively.
-
-
-```python
-## A Function with no parameters is tested
-```
-
-
-```python
-    def f(): 
-        assert True
-```
-
-    .
-    ----------------------------------------------------------------------
-    Ran 1 test in 0.001s
-    
-    OK
-
-
-Function with definitions are inferred as [__hypothesis__]() strategies.  This approach promotes better annotations habits.
-
-
-```python
-    ct = 0
-    def f(x: int): 
-        global ct
-        ct += 1
-        
-    def test():
-        global ct
-        assert ct > 0
-```
-
-    ..
-    ----------------------------------------------------------------------
-    Ran 2 tests in 0.245s
-    
-    OK
-
-
-
-```python
-# Extra conventions
-```
-
-
-```python
-    %pidgin conventions --off test
-```
-
 ## Yaml
 
 Start code with `---`
+
+
+```python
+    %pidgin conventions
+```
 
 
 ```python
@@ -165,7 +113,7 @@ Start code with `---`
 
 
 ```python
-assert a == 42
+    assert a == 42
 ```
 
 ## Graphviz
@@ -180,7 +128,11 @@ Start code with `graph` or `digraph`
 ```
 
 
-![svg](readme_files/readme_24_0.svg)
+      File "<ipython-input-9-1661b3d05729>", line 1
+        graph { {Ipython Julia R}--Jupyter}
+              ^
+    SyntaxError: invalid syntax
+
 
 
 # Notebooks as source
@@ -189,7 +141,6 @@ pidgin uses notebooks as source; line numbers are retained so that the notebook 
 
 
 ```python
-    %pidgin --off conventions
     from pidgin import markdown, template, conventions
 ```
 
@@ -197,20 +148,9 @@ The pidgin loader allows an author to import notebooks directly as source.  This
 
 
 ```python
+    %%pidgin markdown template conventions
     import readme
 ```
-
-    The pidgin extension is already loaded. To reload it, use:
-      %reload_ext pidgin
-    foo is 42
-    0
-    1
-    2
-    [NbConvertApp] Converting notebook readme.ipynb to markdown
-    [NbConvertApp] Support files will be in readme_files/
-    [NbConvertApp] Making directory readme_files
-    [NbConvertApp] Writing 3836 bytes to readme.md
-
 
 
 ```python
@@ -229,16 +169,3 @@ Use pidgin a cell magic to temporarily employ any convetions.
     if __name__ == '__main__':
         !jupyter nbconvert --to markdown readme.ipynb
 ```
-
-
-Use pidgin a cell magic to temporarily employ any convetions.
-    
-    if __name__ == '__main__':
-        !jupyter nbconvert --to markdown readme.ipynb
-
-
-    [NbConvertApp] Converting notebook readme.ipynb to markdown
-    [NbConvertApp] Support files will be in readme_files/
-    [NbConvertApp] Making directory readme_files
-    [NbConvertApp] Writing 4212 bytes to readme.md
-
