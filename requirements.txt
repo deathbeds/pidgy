@@ -6,3 +6,4 @@ nbconvert
 hypothesis
 graphviz
 importnb
+git+https://github.com/yaml/pyyaml.git
