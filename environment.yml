@@ -9,4 +9,3 @@ dependencies:
     - hypothesis
     - graphviz
     - importnb
-    # - git+https://github.com/deathbeds/sweet
