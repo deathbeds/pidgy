@@ -1,9 +1,11 @@
 dataclasses
-CommonMark
+commonmark
 ipython
-nbconvert
+notebook
 hypothesis
 graphviz
 importnb
 tox
-git+https://github.com/yaml/pyyaml.git
+pyyaml
+toolz
+trio

@@ -30,7 +30,7 @@ setup_args = dict(
     ],
     tests_require=['pytest'],
     install_requires=[
-        "dataclasses", "CommonMark", "pyyaml", "ipython", "nbconvert", "hypothesis", "graphviz", "importnb"
+        "commonmark", "pyyaml", "notebook", "hypothesis", "graphviz", "importnb", "trio", "toolz", "vdom"
     ],
     include_package_data=True,
     packages=setuptools.find_packages(),
