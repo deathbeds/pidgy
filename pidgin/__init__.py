@@ -1,4 +1,4 @@
-from version import *
+from ._version import *
 
 with __import__('importnb').Notebook():
     from .markdown import MarkdownImporter
@@ -13,3 +13,10 @@ def load_ipython_extension(ip):
     # Jinja2MarkdownImporter().__enter__()
     for module in (magics, shell, kernel, stringdisplays):
         module.load_ipython_extension(ip)
+        
+def unload_ipython_extension(ip):
+    MarkdownImporter().__exit__()
+    # Jinja2Importer().__enter__()
+    # Jinja2MarkdownImporter().__enter__()
+    for module in (magics, shell, kernel, stringdisplays):
+        module.unload_ipython_extension(ip)
