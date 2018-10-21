@@ -9,3 +9,4 @@ tox
 pyyaml
 toolz
 trio
+vdom
