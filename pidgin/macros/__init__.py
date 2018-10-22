@@ -3,11 +3,12 @@ with __import__('importnb').Notebook():
     from . import _doctest
     from . import _graphviz
     from . import _matplotlib
+    from . import _pidgin
     from . import phrases
     from . import embed
     from . import flexlist
     
-modules = _doctest, _graphviz, base, _matplotlib, flexlist, embed, phrases
+modules = _doctest, _graphviz, base, _matplotlib, flexlist, embed, phrases, _pidgin
 
 def load_ipython_extension(ip):
     for module in modules:
