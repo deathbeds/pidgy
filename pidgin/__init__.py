@@ -1,29 +1,27 @@
 from ._version import *
+loader = __import__('importnb').Notebook()
 
-with __import__('importnb').Notebook():
-    from .markdown import MarkdownImporter
+with loader:
     from . import shell
     from . import kernel
-    from . import macros
-    
-_ipython_display_ = shell._ipython_display_
+    from . import strings
 
 import IPython
-
+    
 def load_ipython_extension(ip=None):
     ip = ip or IPython.get_ipython()
-    MarkdownImporter().__enter__()
-    # Jinja2Importer().__enter__()
-    # Jinja2MarkdownImporter().__enter__()
-    for module in (shell, kernel, macros):
-        module.load_ipython_extension(ip)
-    return __import__(__name__)
+    for module in (shell, strings): module.load_ipython_extension(ip)
+    try:
+        kernel.load_ipython_extension(ip)
+    except AttributeError: "There is no kernel to replace"
+
 load = load_ipython_extension
+
 def unload_ipython_extension(ip):
-    MarkdownImporter().__exit__()
-    # Jinja2Importer().__enter__()
-    # Jinja2MarkdownImporter().__enter__()
-    for module in (shell, kernel, macros):
+    for module in (shell, strings):
         module.unload_ipython_extension(ip)
-        
+    try:
+        kernel.unload_ipython_extension(ip)
+    except: "There is no kernel to replace"
+
 unload = unload_ipython_extension

@@ -1,1 +1,0 @@
-{"name": "pidgin", "version": "3.6.6", "mimetype": "text/x-python", "codemirror_mode": {"name": "ipython", "version": 3}, "pygments_lexer": "ipython3", "nbconvert_exporter": "python", "file_extension": ".md.ipynb", "display_name": "pidgin", "argv": ["python", "-m", "pidgin.kernel", "-f", "{connection_file}"]}
