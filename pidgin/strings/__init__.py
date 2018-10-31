@@ -1,5 +1,6 @@
 with __import__('importnb').Notebook():
     from . import base
+    from . import environment
     from . import _doctest
     from . import _graphviz
     from . import _matplotlib
@@ -10,11 +11,9 @@ with __import__('importnb').Notebook():
 modules = _doctest, _graphviz, base, _matplotlib, flexlist, embed, phrases
 
 def load_ipython_extension(ip):
-    from . import _pidgin
-    for module in modules + (_pidgin,):
+    for module in modules:
         getattr(module, 'load_ipython_extension', lambda x: x)(ip)
 
 def unload_ipython_extension(ip):
-    from . import _pidgin
-    for module in modules + (_pidgin,):
+    for module in modules:
         getattr(module, 'unload_ipython_extension', lambda x: x)(ip)

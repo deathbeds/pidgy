@@ -4,13 +4,14 @@ loader = __import__('importnb').Notebook()
 with loader:
     from . import shell
     from . import kernel
-    from . import strings
+    from . import display
+    from . import flexlist
 
 import IPython
     
 def load_ipython_extension(ip=None):
     ip = ip or IPython.get_ipython()
-    for module in (shell, strings): module.load_ipython_extension(ip)
+    for module in (shell, display): module.load_ipython_extension(ip)
     try:
         kernel.load_ipython_extension(ip)
     except AttributeError: "There is no kernel to replace"
@@ -18,7 +19,7 @@ def load_ipython_extension(ip=None):
 load = load_ipython_extension
 
 def unload_ipython_extension(ip):
-    for module in (shell, strings):
+    for module in (shell, display):
         module.unload_ipython_extension(ip)
     try:
         kernel.unload_ipython_extension(ip)
