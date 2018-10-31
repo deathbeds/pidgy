@@ -2,10 +2,15 @@ dependencies:
 - graphviz
 - pip:
     - dataclasses
-    - CommonMark
+    - commonmark
     - pyyaml
+    - notebook
     - ipython
     - nbconvert
     - hypothesis
     - graphviz
     - importnb
+    - tox
+    - toolz
+    - trio
+    - vdom
