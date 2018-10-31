@@ -13,4 +13,5 @@ dependencies:
     - tox
     - toolz
     - trio
-    - vdom
+    - git+https://github.com/nteract/vdom@master
+    # - vdom
