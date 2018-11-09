@@ -1,13 +1,15 @@
 from ._version import *
 loader = __import__('importnb').Notebook()
 
+from .loader import PidginLoader
+
 with loader:
     from . import shell
     from . import kernel
     from . import formatter
 
 import IPython
-    
+
 def load_ipython_extension(ip=None):
     ip = ip or IPython.get_ipython()
     for module in (shell, formatter): module.load_ipython_extension(ip)
