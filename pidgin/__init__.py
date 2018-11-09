@@ -1,10 +1,7 @@
 from ._version import *
 from .loader import PidginImporter
-loader = __import__('importnb').Notebook()
 
-
-
-with loader:
+with __import__('importnb').Notebook():
     from . import shell
     from . import kernel
     from . import formatter
