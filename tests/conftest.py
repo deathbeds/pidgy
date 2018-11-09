@@ -1,0 +1,1 @@
+collect_ignore = ["essay.md.ipynb"]
