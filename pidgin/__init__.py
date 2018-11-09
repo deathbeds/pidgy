@@ -1,7 +1,8 @@
 from ._version import *
+from .loader import PidginImporter
 loader = __import__('importnb').Notebook()
 
-from .loader import PidginLoader
+
 
 with loader:
     from . import shell
