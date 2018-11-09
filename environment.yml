@@ -2,8 +2,7 @@ dependencies:
 - graphviz
 - pip:
     - dataclasses
-    - commonmark
-    - pyyaml
+    - mistletoe
     - notebook
     - ipython
     - nbconvert
@@ -12,6 +11,5 @@ dependencies:
     - importnb
     - tox
     - toolz
-    - trio
     - git+https://github.com/nteract/vdom@master
     # - vdom

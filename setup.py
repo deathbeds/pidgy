@@ -22,15 +22,10 @@ setup_args = dict(
     url="https://github.com/deathbeds/pidgin",
     python_requires=">=3.6",
     license="BSD-3-Clause",
-    setup_requires=[
-        'pytest-runner',
-        'wheel>=0.31.0',
-        'twine>=1.11.0',
-        'setuptools>=38.6.',
-    ],
+    setup_requires=['pytest-runner'],
     tests_require=['pytest'],
     install_requires=[
-        "commonmark", "pyyaml", "notebook", "hypothesis", "graphviz", "importnb", "trio", "toolz", "vdom"
+        "commonmark", "notebook", "hypothesis", "graphviz", "importnb", "toolz", "vdom", "mistletoe"
     ],
     include_package_data=True,
     packages=setuptools.find_packages(),
