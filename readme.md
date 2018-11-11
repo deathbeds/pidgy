@@ -52,4 +52,9 @@ assert essay.__file__.endswith(&#x27;.md.ipynb&#x27;), &quot;Something failed on
 </code></pre></li></ul></div>
 
 
+
+<div><h2><code>pidgin</code> design choices</h2><ul><li><p><code>vdom</code> is used to render <strong>HTML</strong> and <strong>Markdown</strong>  because it represents the display as data in the <code>nbformat</code>.</p></li><li><p><code>mistletoe</code> is used for parsing <strong>Markdown</strong> to both the display and source.</p></li><li><p><code>jinja2</code> is used for templating because it is a dependency of <code>nbformat</code>.</p><ul><li><p>After some testing, F-strings and <code>string.Template</code> did not provide a friendly user experience without comprimise.</p><pre><code>  import mistletoe, nbformat, string, vdom
+</code></pre></li></ul></li></ul></div>
+
+
     !jupyter nbconvert --to markdown --TemplateExporter.exclude_input=True --execute readme.ipynb
