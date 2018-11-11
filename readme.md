@@ -9,6 +9,17 @@
 
 
 
+<div><h2>Executing cells.</h2><ol start=""><li><p>A minimally lossly transform from <strong>Markdown</strong> to <strong>Python</strong> where markdown content is preserved in strings.</p></li><li><p>Any block code in the <strong>Markdown</strong> is evaluated as normal.  Evaluatation <strong>breaks</strong> if any <code>Exception</code>s are raised.</p><ul><li><p><strong>Code Fences</strong> are not executed, but may include <code>doctest</code>s.</p></li></ul></li><li><p>Any <code>doctest.Example</code> is evaluated; upon failure the evaluation breaks.</p></li><li><p>Expressions in the the inline code cells are evaluated.</p><ul><li><p><code>IPython.core.interactiveshell.InteractiveShell.user_expressions</code> inspires this step.  <code>pidgin</code> only allows for expressions except for <strong>assert</strong> statements; magic syntaxes may be used in inline expressions.</p></li><li><p>All code in code cells should work.</p></li></ul></li></ol><h3>Note on execution</h3><p>Statements and expressions in (1. and 2.) must suceed before evaluating the <code>doctest</code>s and inline expressions.</p><pre><code>import doctest, IPython
+</code></pre></div>
+
+
+
+<div><h2>Templates</h2><p><code>pidgin</code> has some really cool templating features; it allows <code>IPython</code> users to template the output the display system.  <code>jinja2</code> is the current templating engine because it
+is a dependency of <code>nbconvert</code></p><pre><code>import jinja2, nbconvert
+</code></pre></div>
+
+
+
 <div><h2>Docstrings</h2><p>A latent feature of <code>pidgin</code> is the ability to compose docstrings as markdown.</p><pre><code>class MyClass:
 </code></pre><p>This is the docstring for <code>MyClass</code>.  <code>pidgin</code> will automatically wrap this expression in quotes because it follows a class defintion.</p></div>
 
