@@ -1,10 +1,10 @@
 from ._version import *
-from .loader import PidginImporter
-
 with __import__('importnb').Notebook():
     from . import shell
     from . import kernel
     from . import display
+    from .loader import PidginImporter
+
 
 import IPython
 
