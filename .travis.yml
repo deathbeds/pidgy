@@ -11,6 +11,7 @@ install:
 - python -m pip install dist/pidgin-*.tar.gz --ignore-installed --no-deps
 script:
 - tox
+- jupyter nbconvert --to markdown --execute --stdout --TemplateExporter.exclude_input=True readme.md.ipynb > readme.md
 deploy:
 - provider: pypi
   user: docfast
