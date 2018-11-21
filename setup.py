@@ -23,10 +23,13 @@ setup_args = dict(
     python_requires=">=3.6",
     license="BSD-3-Clause",
     setup_requires=['pytest-runner'],
-    tests_require=['pytest'],
+    tests_require=['pytest', "hypothesis"],
     install_requires=[
-        "commonmark", "notebook", "hypothesis", "graphviz", "importnb", "toolz", "vdom", "mistletoe"
+        "notebook", "graphviz", "importnb", "toolz"
     ],
+    extras_require={
+        'graphviz':  ["graphviz"],
+    },
     include_package_data=True,
     packages=setuptools.find_packages(),
     classifiers=(

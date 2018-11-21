@@ -1,5 +1,4 @@
 dataclasses
-commonmark
 ipython
 notebook
 hypothesis
@@ -8,5 +7,3 @@ importnb
 tox
 pyyaml
 toolz
-trio
-vdom
