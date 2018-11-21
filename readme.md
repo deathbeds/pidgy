@@ -1,60 +1,83 @@
 
-`pidgin` is a collection of `IPython` utilities for creating computable essays.
+`pidgin` is a collection of `IPython` extensions for creating computable essays.
 
-[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/deathbeds/pidgin/master?filepath=readme.ipynb)
+    #Execute this cell to install pidgin.
+    #!pip install pidgin
+    !pip install git+https://github.com/deathbeds/pidgin@mistune
 
-
-<div><pre><code>import pidgin
-</code></pre><p><code>pidgin</code> contains IPython extensions for creating human readable inputs and outputs.  When <code>pidgin</code> is activated, all code cells accept Markdown as input.  The input code is converted to valid Python, non-code objects are included in the source as strings.</p><blockquote><p><code>pidgin</code> is designed to eventually be Jupyter kernel, just not yet.</p></blockquote></div>
-
-
-
-<div><h2>Executing cells.</h2><ol start=""><li><p>A minimally lossy transform from <strong>Markdown</strong> to <strong>Python</strong> creates valid source code; non-code objects are properly indented strings.</p></li><li><p>Any block code in the <strong>Markdown</strong> is evaluated as normal.  Evaluatation <strong>breaks</strong> if any <code>Exception</code>s are raised.</p><ul><li><p><strong>Code Fences</strong> are not executed, but may include <code>doctest</code>s.</p></li></ul></li><li><p>Any <code>doctest.Example</code> is evaluated; upon failure the evaluation breaks.</p></li><li><p>Expressions in the the inline code cells are evaluated.</p><ul><li><p><code>IPython.core.interactiveshell.InteractiveShell.user_expressions</code> inspires this step.  <code>pidgin</code> only allows for expressions except for <strong>assert</strong> statements; magic syntaxes may be used in inline expressions.</p></li><li><p>All code in code cells should work.</p></li></ul></li></ol><h3>Note on execution</h3><p>Statements and expressions in (1. and 2.) must suceed before evaluating the <code>doctest</code>s and inline expressions.</p><pre><code>import doctest, IPython
-</code></pre></div>
+Then load the `pidgin` extension.
 
 
-
-<div><h2>Templates</h2><p><code>pidgin</code> has some really cool templating features; it allows <code>IPython</code> users to template the output the display system.  <code>jinja2</code> is the current templating engine because it
-is a dependency of <code>nbconvert</code></p><pre><code>import jinja2, nbconvert
-</code></pre></div>
-
-
-
-<div><h2>Docstrings</h2><p>A latent feature of <code>pidgin</code> is the ability to compose docstrings as markdown.</p><pre><code>class MyClass:
-</code></pre><p>This is the docstring for <code>MyClass</code>.  <code>pidgin</code> will automatically wrap this expression in quotes because it follows a class defintion.</p></div>
+<pre><code>    import pidgin, IPython
+</code></pre>
+<p><code>pidgin</code> allows <strong>Markdown</strong> as <strong>Code Cell</strong> source in <code>IPython</code>.</p>
+<ol>
+<li>The <strong>Markdown</strong> is converted to valid <strong>Python</strong> source.</li>
+<li>The <strong>Python</strong> source is executed.</li>
+<li>Any <code>"doctest"</code>s are evaluated.</li>
+<li>All inline code is evaluated.</li>
+<li>The <strong>Markdown</strong> source is display with special rules defined in <code>pidgin.display</code> including <code>"jinja2"</code> templates
+for including data in the display.</li>
+</ol>
+<p>Each stuff must succeed without raising an <code>Exception</code>.</p>
 
 
 
-<div><pre><code>def my_function(x):
-</code></pre><p>Functions may have their docstring written in markdown. <code>pidgin</code> now transparently tests doctests in the docstring.</p><h2><code>my_function</code> tests</h2><pre><code>&gt;&gt;&gt; assert my_function(10) == 10
+<h2>Benefits of <code>pidgin</code></h2>
+<ul>
+<li><code>pidgin</code> requires that all code in a document is valid.</li>
+<li><code>pidgin</code> places tighter constraints on the <strong>Run All-ability</strong> of the document.</li>
+<li><p><code>pidgin</code> encourages tighter weaving of code and narrative.</p>
+<pre><code>  import jinja2
+</code></pre>
+<p>Use <code>jinja2</code> syntaxes in <strong>Code Cells</strong>.  On the last display step with include 
+  pretty representations of template expression.  The <code>jinja2.Environment</code> returns <strong>html</strong> formatted
+  display <code>object</code>s including <code>"pandas"</code> tables and <code>"matplotlib"</code> figures.</p>
+</li>
+<li><code>pidgin</code> separates display statements from compute statements.</li>
+<li><p><code>pidgin</code> documents are importable because of <code>import importnb</code></p>
+<pre><code>  with pidgin.PidginImporter():
+      import readme
+</code></pre>
+<p><code>pidgin</code> introduces <strong>.md.ipynb</strong>, a hybird file extension, to identity <strong>Markdown</strong> forward computational essays. When
+  this document (<code>readme</code>) is imported we can <code>assert readme.__file__.endswith('.md.ipynb')</code>.</p>
+</li>
+</ul>
 
-</code></pre><pre><code>    return x
-</code></pre><p>... and don&#x27;t forget that all inline functions must evaluate.</p></div>
 
 
-    C:\Users\deathbeds\pidgin\tests
-    C:\Users\deathbeds\pidgin
-    popd -> ~\pidgin
+<h2><code>pidgin</code> works on</h2>
+<ul>
+<li><strong><em>Binder</em></strong> <a href="https://mybinder.org/v2/gh/deathbeds/pidgin/master?filepath=readme.ipynb"><img src="https://mybinder.org/badge.svg" alt="Binder"></a> </li>
+<li><strong><em>Jupyter</em></strong> <a href="https://github.com/jupyterlab"><img src="https://avatars1.githubusercontent.com/u/7388996?s=40" alt=""></a> </li>
+<li><strong><em>JupyterLab</em></strong> <a href="https://github.com/jupyterlab"><img src="https://avatars1.githubusercontent.com/u/22800682?s=40" alt=""></a> </li>
+<li><strong><em>Google Colaboratory</em></strong> <a href="https://colab.research.google.com/github/deathbeds/pidgin/blob/mistune/readme.ipynb"><img src="https://avatars0.githubusercontent.com/u/33467679?s=40" alt=""></a></li>
+<li><strong><em>nteract</em></strong> <a href="https://nteract.io"><img src="https://avatars0.githubusercontent.com/u/12401040?s=40" alt=""></a></li>
+</ul>
+
+
+## Architecture
     
+    %reload_ext pidgin
+    
+Is equivalent to 
+
+    %reload_ext pidgin.tangle
+    %reload_ext pidgin.display
+    %reload_ext pidgin.inspector
+    %reload_ext pidgin.post_run_cell
 
 
-<div><h2>Importing pidgin documents.</h2><pre><code>import jupyter
-</code></pre><blockquote><p><code>pidgin</code> uses <code>jupyter</code> notebooks as source files, at least for the earliest proof-of-concept there are few python source files.</p></blockquote><p><code>pidgin</code> defines that conventional that literate documents have a complex files extension <strong>.md.ipynb</strong>; indicating that the code cells are support <strong>markdown</strong>.  <code>pidgin</code>&#x27;s literate documents are importable.</p><pre><code>%pushd tests
-with pidgin.PidginImporter():
-    import essay
-%popd
-assert essay.__file__.endswith(&#x27;.md.ipynb&#x27;), &quot;Something failed on importing.&quot;
-</code></pre></div>
+<h2>Roadmap</h2>
+<ul>
+<li><code>pidgin</code> should become an <code>import ipykernel</code>.</li>
+<li><code>pidgin</code> should extend to other ipykernels.</li>
+<li><code>pidgin</code> should become an <code>import nbconvert.nbconvertapp</code>.</li>
+<li><code>pidgin</code> should work with <code>import pytest</code></li>
+</ul>
 
 
+## Developer
 
-<div><h2>Conventions for pidgin</h2><ul><li><p>Documents should restart and run all.</p></li><li><p><strong>inline</strong> and <strong>block</strong> cells should evaluate.</p></li><li><p>All <strong>block</strong> code is indented.</p></li><li><p><strong>code</strong> &amp; <strong>markdown</strong> become <strong>on</strong> and <strong>off</strong> cells, respectively.</p></li><li><p>output is more important than input, <code>nbconvert</code> should be used with <span><code>TemplateExporter.exclude_input=True</code></span></p><pre><code>  import nbconvert
-</code></pre></li></ul></div>
-
-
-
-<div><h2><code>pidgin</code> design choices</h2><ul><li><p><code>vdom</code> is used to render <strong>HTML</strong> and <strong>Markdown</strong>  because it represents the display as data in the <code>nbformat</code>.</p></li><li><p><code>mistletoe</code> is used for parsing <strong>Markdown</strong> to both the display and source.</p></li><li><p><code>jinja2</code> is used for templating because it is a dependency of <code>nbformat</code>.</p><ul><li><p>After some testing, F-strings and <code>string.Template</code> did not provide a friendly user experience without comprimise.</p><pre><code>  import mistletoe, nbformat, string, vdom
-</code></pre></li></ul></li></ul></div>
-
-
-    !jupyter nbconvert --to markdown --TemplateExporter.exclude_input=True --execute readme.ipynb
+    # Uncomment this cell the convert the readme file.
+    !jupyter nbconvert --to markdown --execute --stdout --TemplateExporter.exclude_input=True readme.md.ipynb > readme.md
