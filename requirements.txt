@@ -1,9 +1,8 @@
 dataclasses
-ipython
+ipython>7
 notebook
 hypothesis
 graphviz
 importnb
 tox
 pyyaml
-toolz

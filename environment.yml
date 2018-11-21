@@ -3,10 +3,9 @@ dependencies:
 - pip:
     - dataclasses
     - notebook
-    - ipython
+    - ipython>7
     - nbconvert
     - hypothesis
     - graphviz
     - importnb
     - tox
-    - toolz

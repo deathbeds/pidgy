@@ -25,7 +25,7 @@ setup_args = dict(
     setup_requires=['pytest-runner'],
     tests_require=['pytest', "hypothesis"],
     install_requires=[
-        "notebook", "graphviz", "importnb", "toolz"
+        "nbconvert", "importnb", "IPython>7"
     ],
     extras_require={
         'graphviz':  ["graphviz"],
