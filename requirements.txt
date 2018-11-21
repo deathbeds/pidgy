@@ -6,3 +6,5 @@ graphviz
 importnb
 tox
 pyyaml
+jupyter_client 
+nbval
