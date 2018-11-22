@@ -23,7 +23,7 @@ setup_args = dict(
     python_requires=">=3.6",
     license="BSD-3-Clause",
     setup_requires=['pytest-runner'],
-    tests_require=['pytest', "hypothesis"],
+    tests_require=['pytest', "hypothesis", 'nbval'],
     install_requires=[
         "nbconvert", "importnb", "IPython>7", 'dataclasses'
     ],
@@ -32,6 +32,9 @@ setup_args = dict(
     },
     include_package_data=True,
     packages=setuptools.find_packages(),
+    entry_points = {
+        'pytest11': ['pytest-pidgin = pidgin.pytest_plugin',],
+    },
     classifiers=(
         "Development Status :: 4 - Beta",
         "Framework :: IPython",
