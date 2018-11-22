@@ -1,16 +1,22 @@
-
-# coding: utf-8
-
-# In[1]:
-
-
+from ._version import *
 with __import__('importnb').Notebook():
-    from .markdown import MarkdownImporter
-    # from .template import Jinja2Importer, Jinja2MarkdownImporter
+    from . import post_run_cell
+    from . import tangle
+    from . import inspector
+    from . import display
+    from .loader import PidginImporter
 
-def load_ipython_extension(ip):
-    MarkdownImporter().__enter__()
-    # Jinja2Importer().__enter__()
-    # Jinja2MarkdownImporter().__enter__()
-    from .extensions import load_ipython_extension
-    load_ipython_extension(ip)
+
+import IPython
+
+def load_ipython_extension(ip=None):
+    ip = ip or IPython.get_ipython()
+    for module in (post_run_cell, inspector, display, tangle): module.load_ipython_extension(ip)
+
+load = load_ipython_extension
+
+def unload_ipython_extension(ip):
+    for module in (post_run_cell, inspector, display, tangle):
+        module.unload_ipython_extension(ip)
+
+unload = unload_ipython_extension

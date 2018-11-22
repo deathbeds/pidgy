@@ -1,9 +1,10 @@
 dataclasses
-CommonMark
-ipython
+ipython>7
 nbconvert
 hypothesis
 graphviz
 importnb
 tox
-git+https://github.com/yaml/pyyaml.git
+pyyaml
+jupyter_client 
+nbval

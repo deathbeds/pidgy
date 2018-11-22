@@ -22,18 +22,19 @@ setup_args = dict(
     url="https://github.com/deathbeds/pidgin",
     python_requires=">=3.6",
     license="BSD-3-Clause",
-    setup_requires=[
-        'pytest-runner',
-        'wheel>=0.31.0',
-        'twine>=1.11.0',
-        'setuptools>=38.6.',
-    ],
-    tests_require=['pytest'],
+    setup_requires=['pytest-runner'],
+    tests_require=['pytest', "hypothesis", 'nbval'],
     install_requires=[
-        "dataclasses", "CommonMark", "pyyaml", "ipython", "nbconvert", "hypothesis", "graphviz", "importnb"
+        "nbconvert", "importnb", "IPython>7", 'dataclasses'
     ],
+    extras_require={
+        'graphviz':  ["graphviz"],
+    },
     include_package_data=True,
     packages=setuptools.find_packages(),
+    entry_points = {
+        'pytest11': ['pytest-pidgin = pidgin.pytest_plugin',],
+    },
     classifiers=(
         "Development Status :: 4 - Beta",
         "Framework :: IPython",

@@ -1,171 +1,83 @@
 
-`pidgin` is a collection of IPython magics for creating computable essays.
+`pidgin` is a collection of `IPython` extensions for creating computable essays.
 
-[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/deathbeds/pidgin/master?filepath=readme.ipynb)
+    #Execute this cell to install pidgin.
+    #!pip install pidgin
+    !pip install git+https://github.com/deathbeds/pidgin@mistune
 
-
-```python
-    if __name__ == '__main__': 
-        %load_ext pidgin
-```
-
-# Markdown Mode
+Then load the `pidgin` extension.
 
 
-```python
-    %pidgin markdown 
-```
+<pre><code>    import pidgin, IPython
+</code></pre>
+<p><code>pidgin</code> allows <strong>Markdown</strong> as <strong>Code Cell</strong> source in <code>IPython</code>.</p>
+<ol>
+<li>The <strong>Markdown</strong> is converted to valid <strong>Python</strong> source.</li>
+<li>The <strong>Python</strong> source is executed.</li>
+<li>Any <code>"doctest"</code>s are evaluated.</li>
+<li>All inline code is evaluated.</li>
+<li>The <strong>Markdown</strong> source is display with special rules defined in <code>pidgin.display</code> including <code>"jinja2"</code> templates
+for including data in the display.</li>
+</ol>
+<p>Each stuff must succeed without raising an <code>Exception</code>.</p>
 
 
-```python
----
-With `pidgin.markdown`, code cells accept markdown.  Any indented code blocks are executed.
 
-    foo = 42
-    print(f"foo is {foo}")
-
-> Accepting the `pidgin.markdown` convetion means the author agrees to indent all their code at least once; and sometimes more in nested lists. 
-
----
-```
-
-
----
-With `pidgin.markdown`, code cells accept markdown.  Any indented code blocks are executed.
-
-    foo = 42
-    print(f"foo is {foo}")
-
-> Accepting the `pidgin.markdown` convetion means the author agrees to indent all their code at least once; and sometimes more in nested lists. 
-
----
-
-
-    foo is 42
+<h2>Benefits of <code>pidgin</code></h2>
+<ul>
+<li><code>pidgin</code> requires that all code in a document is valid.</li>
+<li><code>pidgin</code> places tighter constraints on the <strong>Run All-ability</strong> of the document.</li>
+<li><p><code>pidgin</code> encourages tighter weaving of code and narrative.</p>
+<pre><code>  import jinja2
+</code></pre>
+<p>Use <code>jinja2</code> syntaxes in <strong>Code Cells</strong>.  On the last display step with include 
+  pretty representations of template expression.  The <code>jinja2.Environment</code> returns <strong>html</strong> formatted
+  display <code>object</code>s including <code>"pandas"</code> tables and <code>"matplotlib"</code> figures.</p>
+</li>
+<li><code>pidgin</code> separates display statements from compute statements.</li>
+<li><p><code>pidgin</code> documents are importable because of <code>import importnb</code></p>
+<pre><code>  with pidgin.PidginImporter():
+      import readme
+</code></pre>
+<p><code>pidgin</code> introduces <strong>.md.ipynb</strong>, a hybird file extension, to identity <strong>Markdown</strong> forward computational essays. When
+  this document (<code>readme</code>) is imported we can <code>assert readme.__file__.endswith('.md.ipynb')</code>.</p>
+</li>
+</ul>
 
 
-# Template Mode
 
-With templates real data can be inserted into the computational essay. An author should desire their notebook restart and run all during template mode.
+<h2><code>pidgin</code> works on</h2>
+<ul>
+<li><strong><em>Binder</em></strong> <a href="https://mybinder.org/v2/gh/deathbeds/pidgin/master?filepath=readme.ipynb"><img src="https://mybinder.org/badge.svg" alt="Binder"></a> </li>
+<li><strong><em>Jupyter</em></strong> <a href="https://github.com/jupyterlab"><img src="https://avatars1.githubusercontent.com/u/7388996?s=40" alt=""></a> </li>
+<li><strong><em>JupyterLab</em></strong> <a href="https://github.com/jupyterlab"><img src="https://avatars1.githubusercontent.com/u/22800682?s=40" alt=""></a> </li>
+<li><strong><em>Google Colaboratory</em></strong> <a href="https://colab.research.google.com/github/deathbeds/pidgin/blob/mistune/readme.ipynb"><img src="https://avatars0.githubusercontent.com/u/33467679?s=40" alt=""></a></li>
+<li><strong><em>nteract</em></strong> <a href="https://nteract.io"><img src="https://avatars0.githubusercontent.com/u/12401040?s=40" alt=""></a></li>
+</ul>
 
 
-```python
+## Architecture
     
-    %pidgin template
-Skipping the first line suppresses the markdown output.
-```
-
-
-```python
----
-In template mode, `jinja2` may be invoked to template markdown and code.  We already know that `foo` is 42, but can test that assertion with
-
-    assert foo is {{foo}} is 42
-    {% for i in range(3) %}print({{i}})
-    {% endfor %}
----
-```
-
-
----
-In template mode, `jinja2` may be invoked to template markdown and code.  We already know that `foo` is 42, but can test that assertion with
-
-    assert foo is 42 is 42
-    print(0)
-    print(1)
-    print(2)
+    %reload_ext pidgin
     
----
+Is equivalent to 
+
+    %reload_ext pidgin.tangle
+    %reload_ext pidgin.display
+    %reload_ext pidgin.inspector
+    %reload_ext pidgin.post_run_cell
 
 
-    0
-    1
-    2
+<h2>Roadmap</h2>
+<ul>
+<li><code>pidgin</code> should become an <code>import ipykernel</code>.</li>
+<li><code>pidgin</code> should extend to other ipykernels.</li>
+<li><code>pidgin</code> should become an <code>import nbconvert.nbconvertapp</code>.</li>
+<li><code>pidgin</code> should work with <code>import pytest</code></li>
+</ul>
 
 
+## Developer
 
-```python
-# Turning off magics
-
-    %pidgin --off template markdown
-```
-
-
-# Turning off magics
-
-    %pidgin --off template markdown
-
-
-## Yaml
-
-Start code with `---`
-
-
-```python
-    %pidgin conventions
-```
-
-
-```python
-    ---
-    a: 42
-```
-
-
-```python
-    assert a == 42
-```
-
-## Graphviz
-
-Start code with `graph` or `digraph`
-
-    !conda install -y graphviz
-
-
-```python
-    graph { {Ipython Julia R}--Jupyter}
-```
-
-
-      File "<ipython-input-9-1661b3d05729>", line 1
-        graph { {Ipython Julia R}--Jupyter}
-              ^
-    SyntaxError: invalid syntax
-
-
-
-# Notebooks as source
-
-pidgin uses notebooks as source; line numbers are retained so that the notebook source produces semi-sane tracebacks.
-
-
-```python
-    from pidgin import markdown, template, conventions
-```
-
-The pidgin loader allows an author to import notebooks directly as source.  This means all of the pidgin documents are importable.
-
-
-```python
-    %%pidgin markdown template conventions
-    import readme
-```
-
-
-```python
-    assert all(file.__file__.endswith('.ipynb') for file in (markdown, template, conventions))
-```
-
-#### Everything Should Compute
-
-Convert a document into other formats; Restart, Run All, `nbconvert`.
-
-
-```python
-%%pidgin markdown template
-Use pidgin a cell magic to temporarily employ any convetions.
-    
-    if __name__ == '__main__':
-        !jupyter nbconvert --to markdown readme.ipynb
-```
+    # Uncomment this cell the convert the readme file.
+    !jupyter nbconvert --to markdown --execute --stdout --TemplateExporter.exclude_input=True readme.md.ipynb > readme.md

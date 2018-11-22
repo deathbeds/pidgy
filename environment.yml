@@ -2,10 +2,10 @@ dependencies:
 - graphviz
 - pip:
     - dataclasses
-    - CommonMark
-    - pyyaml
-    - ipython
+    - notebook
+    - ipython>7
     - nbconvert
     - hypothesis
     - graphviz
     - importnb
+    - tox
