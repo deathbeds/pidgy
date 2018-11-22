@@ -3,7 +3,7 @@
 
     #Execute this cell to install pidgin.
     #!pip install pidgin
-    !pip install git+https://github.com/deathbeds/pidgin@mistune
+    !pip install git+https://github.com/deathbeds/pidgin
 
 Then load the `pidgin` extension.
 
@@ -23,49 +23,35 @@ for including data in the display.</li>
 
 
 
-<h2>Benefits of <code>pidgin</code></h2>
-<ul>
-<li><code>pidgin</code> requires that all code in a document is valid.</li>
-<li><code>pidgin</code> places tighter constraints on the <strong>Run All-ability</strong> of the document.</li>
-<li><p><code>pidgin</code> encourages tighter weaving of code and narrative.</p>
-<pre><code>  import jinja2
+<p><h2>Benefits of <code>pidgin</code></h2></p><p><ul></p><p><li><code>pidgin</code> requires that all code in a document is valid.</li></p><p><li><code>pidgin</code> places tighter constraints on the <strong>Run All-ability</strong> of the document.</li></p><p><li><p><code>pidgin</code> encourages tighter weaving of code and narrative.</p></p><p><pre><code>  import jinja2</code></pre></p><p>Use <code>jinja2</code> syntaxes in <strong>Code Cells</strong>.  On the last display step with includepretty representations of template expression.  The <code>jinja2.Environment</code> returns <strong>html</strong> formatteddisplay <code>object</code>s including <code>"pandas"</code> tables and <code>"matplotlib"</code> figures.</p></li><li><code>pidgin</code> separates display statements from compute statements.</li><li><p><code>pidgin</code> documents are importable because of <code>import importnb</code></p><pre><code>  with pidgin.PidginImporter(position=1):import readme_pidgin as readme</code></pre></li></ul><p><code>pidgin</code> introduces <strong>.md.ipynb</strong>, a hybird file extension, to identity <strong>Markdown</strong> forward computational essays. Whenthis document (<code>readme</code>) is imported we can <code>assert readme.<strong>file</strong>.endswith('.md.ipynb')</code>.</p>
+
+
+
+<p><h2>Benefits of <code>pidgin</code></h2></p><p><ul></p><p><li><code>pidgin</code> requires that all code in a document is valid.</li></p><p><li><code>pidgin</code> places tighter constraints on the <strong>Run All-ability</strong> of the document.</li></p><p><li><p><code>pidgin</code> encourages tighter weaving of code and narrative.</p></p><p><pre><code>  import jinja2</code></pre></p><p>Use <code>jinja2</code> syntaxes in <strong>Code Cells</strong>.  On the last display step with includepretty representations of template expression.  The <code>jinja2.Environment</code> returns <strong>html</strong> formatteddisplay <code>object</code>s including <code>"pandas"</code> tables and <code>"matplotlib"</code> figures.</p></li><li><code>pidgin</code> separates display statements from compute statements.</li><li><p><code>pidgin</code> documents are importable because of <code>import importnb</code></p><pre><code>  with pidgin.PidginImporter(position=1):import readme_pidgin as readme</code></pre></li></ul><p><code>pidgin</code> introduces <strong>.md.ipynb</strong>, a hybird file extension, to identity <strong>Markdown</strong> forward computational essays. Whenthis document (<code>readme</code>) is imported we can <code>assert readme.<strong>file</strong>.endswith('.md.ipynb')</code>.</p>
+
+
+
+<p><h2><code>pidgin</code> works with</h2></p><ul><li><strong><em>Binder</em></strong> <a href="https://mybinder.org/v2/gh/deathbeds/pidgin/master?filepath=readme.ipynb"><img src="https://mybinder.org/badge.svg" alt="Binder"></a> </li><li><strong><em>Pytest</em></strong> <a href="https://github.com/pytest-dev"><img src="https://avatars1.githubusercontent.com/u/8897583?s=40&amp;v=4" alt=""></a> </li><li><strong><em>Jupyter</em></strong> <a href="https://github.com/jupyterlab"><img src="https://avatars1.githubusercontent.com/u/7388996?s=40" alt=""></a> </li><li><strong><em>JupyterLab</em></strong> <a href="https://github.com/jupyterlab"><img src="https://avatars1.githubusercontent.com/u/22800682?s=40" alt=""></a> </li><li><strong><em>Google Colaboratory</em></strong> <a href="https://colab.research.google.com/github/deathbeds/pidgin/blob/mistune/readme.ipynb"><img src="https://avatars0.githubusercontent.com/u/33467679?s=40" alt=""></a></li><li><strong><em>nteract</em></strong> <a href="https://nteract.io"><img src="https://avatars0.githubusercontent.com/u/12401040?s=40" alt=""></a></li></ul>
+
+
+
+<p><h2><code>pidgin</code> works with</h2></p><ul><li><strong><em>Binder</em></strong> <a href="https://mybinder.org/v2/gh/deathbeds/pidgin/master?filepath=readme.ipynb"><img src="https://mybinder.org/badge.svg" alt="Binder"></a> </li><li><strong><em>Pytest</em></strong> <a href="https://github.com/pytest-dev"><img src="https://avatars1.githubusercontent.com/u/8897583?s=40&amp;v=4" alt=""></a> </li><li><strong><em>Jupyter</em></strong> <a href="https://github.com/jupyterlab"><img src="https://avatars1.githubusercontent.com/u/7388996?s=40" alt=""></a> </li><li><strong><em>JupyterLab</em></strong> <a href="https://github.com/jupyterlab"><img src="https://avatars1.githubusercontent.com/u/22800682?s=40" alt=""></a> </li><li><strong><em>Google Colaboratory</em></strong> <a href="https://colab.research.google.com/github/deathbeds/pidgin/blob/mistune/readme.ipynb"><img src="https://avatars0.githubusercontent.com/u/33467679?s=40" alt=""></a></li><li><strong><em>nteract</em></strong> <a href="https://nteract.io"><img src="https://avatars0.githubusercontent.com/u/12401040?s=40" alt=""></a></li></ul>
+
+
+
+<h2>Architecture</h2>
+<pre><code>ip = IPython.get_ipython()
 </code></pre>
-<p>Use <code>jinja2</code> syntaxes in <strong>Code Cells</strong>.  On the last display step with include 
-  pretty representations of template expression.  The <code>jinja2.Environment</code> returns <strong>html</strong> formatted
-  display <code>object</code>s including <code>"pandas"</code> tables and <code>"matplotlib"</code> figures.</p>
-</li>
-<li><code>pidgin</code> separates display statements from compute statements.</li>
-<li><p><code>pidgin</code> documents are importable because of <code>import importnb</code></p>
-<pre><code>  with pidgin.PidginImporter():
-      import readme
+<p><code>pidgin</code> is architected as a collection of <code>IPython</code> extensions that modify <code>ip = IPython.get_ipython()</code> and <code>ip.kernel</code>.</p>
+<pre><code>%reload_ext pidgin
 </code></pre>
-<p><code>pidgin</code> introduces <strong>.md.ipynb</strong>, a hybird file extension, to identity <strong>Markdown</strong> forward computational essays. When
-  this document (<code>readme</code>) is imported we can <code>assert readme.__file__.endswith('.md.ipynb')</code>.</p>
-</li>
-</ul>
+<p>Each component of <code>pidgin</code> can be loaded individually.</p>
+<pre><code>%reload_ext pidgin.tangle
+%reload_ext pidgin.display
+%reload_ext pidgin.inspector
+%reload_ext pidgin.post_run_cell
+</code></pre>
 
-
-
-<h2><code>pidgin</code> works on</h2>
-<ul>
-<li><strong><em>Binder</em></strong> <a href="https://mybinder.org/v2/gh/deathbeds/pidgin/master?filepath=readme.ipynb"><img src="https://mybinder.org/badge.svg" alt="Binder"></a> </li>
-<li><strong><em>Jupyter</em></strong> <a href="https://github.com/jupyterlab"><img src="https://avatars1.githubusercontent.com/u/7388996?s=40" alt=""></a> </li>
-<li><strong><em>JupyterLab</em></strong> <a href="https://github.com/jupyterlab"><img src="https://avatars1.githubusercontent.com/u/22800682?s=40" alt=""></a> </li>
-<li><strong><em>Google Colaboratory</em></strong> <a href="https://colab.research.google.com/github/deathbeds/pidgin/blob/mistune/readme.ipynb"><img src="https://avatars0.githubusercontent.com/u/33467679?s=40" alt=""></a></li>
-<li><strong><em>nteract</em></strong> <a href="https://nteract.io"><img src="https://avatars0.githubusercontent.com/u/12401040?s=40" alt=""></a></li>
-</ul>
-
-
-## Architecture
-    
-    %reload_ext pidgin
-    
-Is equivalent to 
-
-    %reload_ext pidgin.tangle
-    %reload_ext pidgin.display
-    %reload_ext pidgin.inspector
-    %reload_ext pidgin.post_run_cell
 
 
 <h2>Roadmap</h2>
@@ -73,11 +59,33 @@ Is equivalent to
 <li><code>pidgin</code> should become an <code>import ipykernel</code>.</li>
 <li><code>pidgin</code> should extend to other ipykernels.</li>
 <li><code>pidgin</code> should become an <code>import nbconvert.nbconvertapp</code>.</li>
-<li><code>pidgin</code> should work with <code>import pytest</code></li>
 </ul>
 
 
 ## Developer
+    
 
-    # Uncomment this cell the convert the readme file.
-    !jupyter nbconvert --to markdown --execute --stdout --TemplateExporter.exclude_input=True readme.md.ipynb > readme.md
+    !ipython -m readme -- --uml=True --nbconvert=True --test=True
+
+### Test `pidgin`
+
+    if __name__ == '__main__':
+        !ipython -m pytest -- --nbval
+
+
+<h3>Run tests</h3>
+<pre><code>test = False
+</code></pre>
+
+
+
+<h3>UML diagrams</h3>
+<pre><code>uml = False
+</code></pre>
+
+
+
+<h3>Convert to the <strong>readme.md</strong></h3>
+<pre><code>nbconvert=False
+</code></pre>
+
