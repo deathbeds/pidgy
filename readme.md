@@ -35,15 +35,15 @@ for including data in the display.</li>
   display <code>object</code>s including <code>"pandas"</code> tables and <code>"matplotlib"</code> figures.</p>
 </li>
 <li><code>pidgin</code> separates display statements from compute statements.</li>
-<li><p><code>pidgin</code> documents are importable because of <code>import importnb</code></p>
-<pre><code>  with pidgin.PidginImporter(position=1):
-      import readme_pidgin as readme
-</code></pre>
-</li>
+<li><code>pidgin</code> documents are importable because of <code>import importnb</code>        </li>
 </ul>
-<p><code>pidgin</code> introduces <strong>.md.ipynb</strong>, a hybird file extension, to identity <strong>Markdown</strong> forward computational essays. When
-this document (<code>readme</code>) is imported we can <code>assert readme.__file__.endswith('.md.ipynb')</code>.</p>
+<pre><code class="lang-python">with pidgin.PidginImporter(position=1):
+    import readme_pidgin as readme
+</code></pre>
 
+
+`pidgin` introduces __.md.ipynb__, a hybird file extension, to identity __Markdown__ forward computational essays. When
+this document (`readme`) is imported we can `assert readme.__file__.endswith('.md.ipynb')`.
 
 
 <h2><code>pidgin</code> works with</h2>
@@ -57,20 +57,19 @@ this document (<code>readme</code>) is imported we can <code>assert readme.__fil
 </ul>
 
 
+## Architecture
 
-<h2>Architecture</h2>
-<pre><code>ip = IPython.get_ipython()
-</code></pre>
-<p><code>pidgin</code> is architected as a collection of <code>IPython</code> extensions that modify <code>ip = IPython.get_ipython()</code> and <code>ip.kernel</code>.</p>
-<pre><code>%reload_ext pidgin
-</code></pre>
-<p>Each component of <code>pidgin</code> can be loaded individually.</p>
-<pre><code>%reload_ext pidgin.tangle
-%reload_ext pidgin.display
-%reload_ext pidgin.inspector
-%reload_ext pidgin.post_run_cell
-</code></pre>
+    ip = IPython.get_ipython()
+`pidgin` is architected as a collection of `IPython` extensions that modify `ip = IPython.get_ipython()` and `ip.kernel`.
+    
+    %reload_ext pidgin
+    
+Each component of `pidgin` can be loaded individually.
 
+    %reload_ext pidgin.tangle
+    %reload_ext pidgin.display
+    %reload_ext pidgin.inspector
+    %reload_ext pidgin.post_run_cell
 
 
 <h2>Roadmap</h2>
