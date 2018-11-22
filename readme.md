@@ -23,19 +23,38 @@ for including data in the display.</li>
 
 
 
-<p><h2>Benefits of <code>pidgin</code></h2></p><p><ul></p><p><li><code>pidgin</code> requires that all code in a document is valid.</li></p><p><li><code>pidgin</code> places tighter constraints on the <strong>Run All-ability</strong> of the document.</li></p><p><li><p><code>pidgin</code> encourages tighter weaving of code and narrative.</p></p><p><pre><code>  import jinja2</code></pre></p><p>Use <code>jinja2</code> syntaxes in <strong>Code Cells</strong>.  On the last display step with includepretty representations of template expression.  The <code>jinja2.Environment</code> returns <strong>html</strong> formatteddisplay <code>object</code>s including <code>"pandas"</code> tables and <code>"matplotlib"</code> figures.</p></li><li><code>pidgin</code> separates display statements from compute statements.</li><li><p><code>pidgin</code> documents are importable because of <code>import importnb</code></p><pre><code>  with pidgin.PidginImporter(position=1):import readme_pidgin as readme</code></pre></li></ul><p><code>pidgin</code> introduces <strong>.md.ipynb</strong>, a hybird file extension, to identity <strong>Markdown</strong> forward computational essays. Whenthis document (<code>readme</code>) is imported we can <code>assert readme.<strong>file</strong>.endswith('.md.ipynb')</code>.</p>
+<h2>Benefits of <code>pidgin</code></h2>
+<ul>
+<li><code>pidgin</code> requires that all code in a document is valid.</li>
+<li><code>pidgin</code> places tighter constraints on the <strong>Run All-ability</strong> of the document.</li>
+<li><p><code>pidgin</code> encourages tighter weaving of code and narrative.</p>
+<pre><code>  import jinja2
+</code></pre>
+<p>Use <code>jinja2</code> syntaxes in <strong>Code Cells</strong>.  On the last display step with include 
+  pretty representations of template expression.  The <code>jinja2.Environment</code> returns <strong>html</strong> formatted
+  display <code>object</code>s including <code>"pandas"</code> tables and <code>"matplotlib"</code> figures.</p>
+</li>
+<li><code>pidgin</code> separates display statements from compute statements.</li>
+<li><p><code>pidgin</code> documents are importable because of <code>import importnb</code></p>
+<pre><code>  with pidgin.PidginImporter(position=1):
+      import readme_pidgin as readme
+</code></pre>
+</li>
+</ul>
+<p><code>pidgin</code> introduces <strong>.md.ipynb</strong>, a hybird file extension, to identity <strong>Markdown</strong> forward computational essays. When
+this document (<code>readme</code>) is imported we can <code>assert readme.__file__.endswith('.md.ipynb')</code>.</p>
 
 
 
-<p><h2>Benefits of <code>pidgin</code></h2></p><p><ul></p><p><li><code>pidgin</code> requires that all code in a document is valid.</li></p><p><li><code>pidgin</code> places tighter constraints on the <strong>Run All-ability</strong> of the document.</li></p><p><li><p><code>pidgin</code> encourages tighter weaving of code and narrative.</p></p><p><pre><code>  import jinja2</code></pre></p><p>Use <code>jinja2</code> syntaxes in <strong>Code Cells</strong>.  On the last display step with includepretty representations of template expression.  The <code>jinja2.Environment</code> returns <strong>html</strong> formatteddisplay <code>object</code>s including <code>"pandas"</code> tables and <code>"matplotlib"</code> figures.</p></li><li><code>pidgin</code> separates display statements from compute statements.</li><li><p><code>pidgin</code> documents are importable because of <code>import importnb</code></p><pre><code>  with pidgin.PidginImporter(position=1):import readme_pidgin as readme</code></pre></li></ul><p><code>pidgin</code> introduces <strong>.md.ipynb</strong>, a hybird file extension, to identity <strong>Markdown</strong> forward computational essays. Whenthis document (<code>readme</code>) is imported we can <code>assert readme.<strong>file</strong>.endswith('.md.ipynb')</code>.</p>
-
-
-
-<p><h2><code>pidgin</code> works with</h2></p><ul><li><strong><em>Binder</em></strong> <a href="https://mybinder.org/v2/gh/deathbeds/pidgin/master?filepath=readme.ipynb"><img src="https://mybinder.org/badge.svg" alt="Binder"></a> </li><li><strong><em>Pytest</em></strong> <a href="https://github.com/pytest-dev"><img src="https://avatars1.githubusercontent.com/u/8897583?s=40&amp;v=4" alt=""></a> </li><li><strong><em>Jupyter</em></strong> <a href="https://github.com/jupyterlab"><img src="https://avatars1.githubusercontent.com/u/7388996?s=40" alt=""></a> </li><li><strong><em>JupyterLab</em></strong> <a href="https://github.com/jupyterlab"><img src="https://avatars1.githubusercontent.com/u/22800682?s=40" alt=""></a> </li><li><strong><em>Google Colaboratory</em></strong> <a href="https://colab.research.google.com/github/deathbeds/pidgin/blob/mistune/readme.ipynb"><img src="https://avatars0.githubusercontent.com/u/33467679?s=40" alt=""></a></li><li><strong><em>nteract</em></strong> <a href="https://nteract.io"><img src="https://avatars0.githubusercontent.com/u/12401040?s=40" alt=""></a></li></ul>
-
-
-
-<p><h2><code>pidgin</code> works with</h2></p><ul><li><strong><em>Binder</em></strong> <a href="https://mybinder.org/v2/gh/deathbeds/pidgin/master?filepath=readme.ipynb"><img src="https://mybinder.org/badge.svg" alt="Binder"></a> </li><li><strong><em>Pytest</em></strong> <a href="https://github.com/pytest-dev"><img src="https://avatars1.githubusercontent.com/u/8897583?s=40&amp;v=4" alt=""></a> </li><li><strong><em>Jupyter</em></strong> <a href="https://github.com/jupyterlab"><img src="https://avatars1.githubusercontent.com/u/7388996?s=40" alt=""></a> </li><li><strong><em>JupyterLab</em></strong> <a href="https://github.com/jupyterlab"><img src="https://avatars1.githubusercontent.com/u/22800682?s=40" alt=""></a> </li><li><strong><em>Google Colaboratory</em></strong> <a href="https://colab.research.google.com/github/deathbeds/pidgin/blob/mistune/readme.ipynb"><img src="https://avatars0.githubusercontent.com/u/33467679?s=40" alt=""></a></li><li><strong><em>nteract</em></strong> <a href="https://nteract.io"><img src="https://avatars0.githubusercontent.com/u/12401040?s=40" alt=""></a></li></ul>
+<h2><code>pidgin</code> works with</h2>
+<ul>
+<li><strong><em>Binder</em></strong> <a href="https://mybinder.org/v2/gh/deathbeds/pidgin/master?filepath=readme.ipynb"><img src="https://mybinder.org/badge.svg" alt="Binder"></a> </li>
+<li><strong><em>Pytest</em></strong> <a href="https://github.com/pytest-dev"><img src="https://avatars1.githubusercontent.com/u/8897583?s=40&amp;v=4" alt=""></a> </li>
+<li><strong><em>Jupyter</em></strong> <a href="https://github.com/jupyterlab"><img src="https://avatars1.githubusercontent.com/u/7388996?s=40" alt=""></a> </li>
+<li><strong><em>JupyterLab</em></strong> <a href="https://github.com/jupyterlab"><img src="https://avatars1.githubusercontent.com/u/22800682?s=40" alt=""></a> </li>
+<li><strong><em>Google Colaboratory</em></strong> <a href="https://colab.research.google.com/github/deathbeds/pidgin/blob/mistune/readme.ipynb"><img src="https://avatars0.githubusercontent.com/u/33467679?s=40" alt=""></a></li>
+<li><strong><em>nteract</em></strong> <a href="https://nteract.io"><img src="https://avatars0.githubusercontent.com/u/12401040?s=40" alt=""></a></li>
+</ul>
 
 
 
