@@ -11,7 +11,7 @@ install:
 - python -m pip install dist/pidgin-*.tar.gz --ignore-installed --no-deps
 script:
 - ipython -m pytest -- --capture=no
-- ipython -m pytest -- --nbval
+- ipython -m pytest -- --nbval --capture=no
 - jupyter nbconvert --to markdown --execute --stdout --TemplateExporter.exclude_input=True readme.md.ipynb > readme.md
 deploy:
 - provider: pypi
