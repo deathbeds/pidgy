@@ -1,5 +1,4 @@
-language: python
-cache: pip
+
 python:
 - '3.6'
 - 3.6-dev
@@ -12,7 +11,7 @@ install:
 script:
 - ipython -m pytest
 - ipython -m pytest -- --nbval
-- jupyter nbconvert --to markdown --execute --stdout --TemplateExporter.exclude_input=True readme.md.ipynb > readme.md
+- jupyter nbconvert --to markdown --execute --stdout --TemplateExporter.exclude_input=True readme_pidgin.md.ipynb > readme.md
 deploy:
 - provider: pypi
   user: docfast
