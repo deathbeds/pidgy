@@ -48,8 +48,14 @@ this document (`readme`) is imported we can `assert readme.__file__.endswith('.m
 
 <h2><code>pidgin</code> works with</h2>
 <ul>
-<li><strong><em>Binder</em></strong> <a href="https://mybinder.org/v2/gh/deathbeds/pidgin/master?filepath=readme.ipynb"><img src="https://mybinder.org/badge.svg" alt="Binder"></a> </li>
-<li><strong><em>Pytest</em></strong> <a href="https://github.com/pytest-dev"><img src="https://avatars1.githubusercontent.com/u/8897583?s=40&amp;v=4" alt=""></a> </li>
+<li><p><strong><em>Binder</em></strong> <a href="https://mybinder.org/v2/gh/deathbeds/pidgin/master?filepath=readme.ipynb"><img src="https://mybinder.org/badge.svg" alt="Binder"></a></p>
+<p>Take <code>pidgin</code> for a spin on <a href="https://mybinder.org/v2/gh/deathbeds/pidgin/master?filepath=readme.ipynb"><strong><em>Binder</em></strong></a>.</p>
+</li>
+<li><p><strong><em>Pytest</em></strong> <a href="https://github.com/pytest-dev"><img src="https://avatars1.githubusercontent.com/u/8897583?s=40&amp;v=4" alt=""></a></p>
+<p><code>pidgin</code> works great with the <a href=""><strong>nbval</strong></a> and <a href=""><strong>importnb</strong></a> pytest extensions.  <code>pidgin</code> itself is a <code>import pytest</code>
+  plugin that permits tests with <strong>.md.ipynb</strong> and <strong>.md</strong> files.</p>
+<p><strong><em>Pro Tip</em></strong> test <code>IPython</code> specific features using <strong>ipython</strong> as a cmd instead of <strong>python</strong> <code>#!ipython -m pytest -- --collect-only</code></p>
+</li>
 <li><strong><em>Jupyter</em></strong> <a href="https://github.com/jupyterlab"><img src="https://avatars1.githubusercontent.com/u/7388996?s=40" alt=""></a> </li>
 <li><strong><em>JupyterLab</em></strong> <a href="https://github.com/jupyterlab"><img src="https://avatars1.githubusercontent.com/u/22800682?s=40" alt=""></a> </li>
 <li><strong><em>Google Colaboratory</em></strong> <a href="https://colab.research.google.com/github/deathbeds/pidgin/blob/mistune/readme.ipynb"><img src="https://avatars0.githubusercontent.com/u/33467679?s=40" alt=""></a></li>
@@ -58,6 +64,10 @@ this document (`readme`) is imported we can `assert readme.__file__.endswith('.m
 
 
 ## Architecture
+
+The `pidgin` source is written almost entirely in Jupyter notebooks.  The hope is that the notebooks will serve as an important
+interactive resourcing in the early development.  As the project matures, `pidgin` will adopt different combinations of python
+and notebook files.
 
     ip = IPython.get_ipython()
 `pidgin` is architected as a collection of `IPython` extensions that modify `ip = IPython.get_ipython()` and `ip.kernel`.
@@ -76,14 +86,14 @@ Each component of `pidgin` can be loaded individually.
 <ul>
 <li><code>pidgin</code> should become an <code>import ipykernel</code>.</li>
 <li><code>pidgin</code> should extend to other ipykernels.</li>
-<li><code>pidgin</code> should become an <code>import nbconvert.nbconvertapp</code>.</li>
+<li><code>pidgin</code> should become an <code>import nbconvert.nbconvertapp</code> and <code>nbconvert.preprocessors</code>.</li>
 </ul>
 
 
 ## Developer
     
 
-    !ipython -m readme -- --uml=True --nbconvert=True --test=True
+    !ipython -m readme_pidgin.md.ipynb -- --uml=True --nbconvert=True --test=True
 
 ### Test `pidgin`
 
