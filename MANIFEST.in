@@ -1,2 +1,3 @@
 recursive-include pidgin *.ipynb
+recursive-include pidgin_contrib *.ipynb
 include LICENSE readme.md
