@@ -8,16 +8,19 @@
 Then load the `pidgin` extension.
 
 
-<pre><code>    import pidgin, IPython
+<pre><code>    %reload_ext pidgin
 </code></pre>
-<p><code>pidgin</code> allows <strong>Markdown</strong> as <strong>Code Cell</strong> source in <code>IPython</code>.</p>
+<p><code>import pidgin</code> allows <strong>Markdown</strong> as <strong>Code Cell</strong> source in <code>IPython</code>.</p>
 <ol>
 <li>The <strong>Markdown</strong> is converted to valid <strong>Python</strong> source.</li>
 <li>The <strong>Python</strong> source is executed.</li>
 <li>Any <code>"doctest"</code>s are evaluated.</li>
 <li>All inline code is evaluated.</li>
-<li>The <strong>Markdown</strong> source is display with special rules defined in <code>pidgin.display</code> including <code>"jinja2"</code> templates
-for including data in the display.</li>
+<li><p>The <strong>Markdown</strong> source is display with special rules defined in <code>pidgin.display</code> including <code>"jinja2"</code> templates
+for including data in the display.</p>
+<pre><code> import IPython
+</code></pre>
+</li>
 </ol>
 <p>Each stuff must succeed without raising an <code>Exception</code>.</p>
 
