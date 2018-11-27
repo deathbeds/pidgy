@@ -1,11 +1,12 @@
 
 `pidgin` is a collection of `IPython` extensions for creating computable essays.
 
-    #Execute this cell to install pidgin.
-    #!pip install pidgin
-    !pip install git+https://github.com/deathbeds/pidgin
+    #Install pidgin
+    !pip install pidgin
 
-Then load the `pidgin` extension.
+Load the `pidgin` extension.
+
+Write code in __Markdown__.
 
 
 <pre><code>    %reload_ext pidgin
