@@ -8,8 +8,8 @@
 Then load the `pidgin` extension.
 
 
-<div class="highlight"><pre><span></span>    <span class="kn">import</span> <span class="nn">pidgin</span><span class="o">,</span> <span class="nn">IPython</span>
-</pre></div>
+<pre><code>    import pidgin, IPython
+</code></pre>
 <p><code>pidgin</code> allows <strong>Markdown</strong> as <strong>Code Cell</strong> source in <code>IPython</code>.</p>
 <ol>
 <li>The <strong>Markdown</strong> is converted to valid <strong>Python</strong> source.</li>
@@ -28,8 +28,8 @@ for including data in the display.</li>
 <li><code>pidgin</code> requires that all code in a document is valid.</li>
 <li><code>pidgin</code> places tighter constraints on the <strong>Run All-ability</strong> of the document.</li>
 <li><p><code>pidgin</code> encourages tighter weaving of code and narrative.</p>
-<div class="highlight"><pre><span></span>  <span class="kn">import</span> <span class="nn">jinja2</span>
-</pre></div>
+<pre><code>  import jinja2
+</code></pre>
 <p>Use <code>jinja2</code> syntaxes in <strong>Code Cells</strong>.  On the last display step with include 
   pretty representations of template expression.  The <code>jinja2.Environment</code> returns <strong>html</strong> formatted
   display <code>object</code>s including <code>"pandas"</code> tables and <code>"matplotlib"</code> figures.</p>
@@ -37,9 +37,9 @@ for including data in the display.</li>
 <li><code>pidgin</code> separates display statements from compute statements.</li>
 <li><code>pidgin</code> documents are importable because of <code>import importnb</code>        </li>
 </ul>
-<div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pidgin</span><span class="o">.</span><span class="n">PidginImporter</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="nn">readme_pidgin</span> <span class="kn">as</span> <span class="nn">readme</span>
-</pre></div>
+<pre><code class="lang-ipython">with pidgin.PidginImporter(position=1):
+    import readme_pidgin as readme
+</code></pre>
 
 
 `pidgin` introduces __.md.ipynb__, a hybird file extension, to identity __Markdown__ forward computational essays. When
@@ -68,29 +68,19 @@ this document (`readme`) is imported we can `assert readme.__file__.endswith('.m
 <p>The <code>pidgin</code> source is written almost entirely in Jupyter notebooks.  The hope is that the notebooks will serve as an important
 interactive resourcing in the early development.  As the project matures, <code>pidgin</code> will adopt different combinations of python
 and notebook files.</p>
-<div class="highlight"><pre><span></span><span class="n">ip</span> <span class="o">=</span> <span class="n">IPython</span><span class="o">.</span><span class="n">get_ipython</span><span class="p">()</span>
-</pre></div>
+<pre><code>ip = IPython.get_ipython()
+</code></pre>
 <p><code>pidgin</code> is architected as a collection of <code>IPython</code> extensions that modify <code>ip = IPython.get_ipython()</code> and <code>ip.kernel</code>.</p>
-<div class="highlight"><pre><span></span><span class="k">if</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="o">%</span><span class="k">reload_ext</span> pidgin
-</pre></div>
+<pre><code>if 0:
+    %reload_ext pidgin
+</code></pre>
 <p>Each component of <code>pidgin</code> can be loaded individually.</p>
-<div class="highlight"><pre><span></span>    <span class="o">%</span><span class="k">reload_ext</span> pidgin.tangle
-    <span class="o">%</span><span class="k">reload_ext</span> pidgin.display
-    <span class="o">%</span><span class="k">reload_ext</span> pidgin.inspector
-    <span class="o">%</span><span class="k">reload_ext</span> pidgin.post_run_cell
-</pre></div>
+<pre><code>    %reload_ext pidgin.tangle
+    %reload_ext pidgin.display
+    %reload_ext pidgin.inspector
+    %reload_ext pidgin.post_run_cell
+</code></pre>
 
-
-    C:\Anaconda3\lib\site-packages\nbconvert\exporters\exporter_locator.py:28: DeprecationWarning: `nbconvert.exporters.exporter_locator` is deprecated in favor of `nbconvert.exporters.base` since nbconvert 5.0.
-      DeprecationWarning)
-    C:\Anaconda3\lib\site-packages\nbconvert\preprocessors\regexremove.py:41: DeprecationWarning: Traits should be given as instances, not types (for example, `Int()`, not `Int`). Passing types is deprecated in traitlets 4.1.
-      patterns = List(Unicode, default_value=[r'\Z']).tag(config=True)
-    C:\Anaconda3\lib\site-packages\traitlets\traitlets.py:2367: DeprecationWarning: Traits should be given as instances, not types (for example, `Int()`, not `Int`). Passing types is deprecated in traitlets 4.1.
-      super(Set, self).__init__(trait, default_value, minlen, maxlen, **kwargs)
-    C:\Anaconda3\lib\site-packages\tornado\web.py:1747: DeprecationWarning: @asynchronous is deprecated, use coroutines instead
-      DeprecationWarning)
-    
 
 
 <h2>Roadmap</h2>
@@ -113,20 +103,20 @@ and notebook files.</p>
 
 
 <h3>Run tests</h3>
-<div class="highlight"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="bp">False</span>
-</pre></div>
+<pre><code>test = False
+</code></pre>
 
 
 
 <h3>UML diagrams</h3>
-<div class="highlight"><pre><span></span><span class="n">uml</span> <span class="o">=</span> <span class="bp">False</span>
-</pre></div>
+<pre><code>uml = False
+</code></pre>
 
 
 
 <h3>Convert to the <strong>readme.md</strong></h3>
-<div class="highlight"><pre><span></span><span class="n">nbconvert</span><span class="o">=</span><span class="bp">False</span>
-</pre></div>
+<pre><code>convert=False
+</code></pre>
 
 
     %%file markdown_readme.py
