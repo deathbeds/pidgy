@@ -1,5 +1,10 @@
 language: python
 cache: pip
+addons:
+    apt:
+        packages:
+            - graphviz
+
 python:
 - '3.6'
 - 3.6-dev
@@ -23,3 +28,4 @@ deploy:
     distributions: sdist bdist_wheel
     repo: deathbeds/pidgin
     python: '3.6'
+
