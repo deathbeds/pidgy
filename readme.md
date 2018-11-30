@@ -1,128 +1,119 @@
+This application is used to convert notebook files (*.ipynb) to various other
+formats.
 
-`pidgin` is a collection of `IPython` extensions for creating computable essays.
+WARNING: THE COMMANDLINE INTERFACE MAY CHANGE IN FUTURE RELEASES.
 
-    #Install pidgin
-    !pip install pidgin
+Options
+-------
+
+Arguments that take values are actually convenience aliases to full
+Configurables, whose aliases are listed on the help line. For more information
+on full configurables, see '--help-all'.
 
-Load the `pidgin` extension.
+--debug
+    set log level to logging.DEBUG (maximize logging output)
+--generate-config
+    generate default config file
+-y
+    Answer yes to any questions instead of prompting.
+--execute
+    Execute the notebook prior to export.
+--allow-errors
+    Continue notebook execution even if one of the cells throws an error and include the error message in the cell output (the default behaviour is to abort conversion). This flag is only relevant if '--execute' was specified, too.
+--stdin
+    read a single notebook file from stdin. Write the resulting notebook with default basename 'notebook.*'
+--stdout
+    Write notebook output to stdout instead of files.
+--inplace
+    Run nbconvert in place, overwriting the existing notebook (only 
+    relevant when converting to notebook format)
+--clear-output
+    Clear output of current file and save in place, 
+    overwriting the existing notebook.
+--no-prompt
+    Exclude input and output prompts from converted document.
+--log-level=<Enum> (Application.log_level)
+    Default: 30
+    Choices: (0, 10, 20, 30, 40, 50, 'DEBUG', 'INFO', 'WARN', 'ERROR', 'CRITICAL')
+    Set the log level by value or name.
+--config=<Unicode> (JupyterApp.config_file)
+    Default: ''
+    Full path of a config file.
+--to=<Unicode> (NbConvertApp.export_format)
+    Default: 'html'
+    The export format to be used, either one of the built-in formats, or a
+    dotted object name that represents the import path for an `Exporter` class
+--template=<Unicode> (TemplateExporter.template_file)
+    Default: ''
+    Name of the template file to use
+--writer=<DottedObjectName> (NbConvertApp.writer_class)
+    Default: 'FilesWriter'
+    Writer class used to write the  results of the conversion
+--post=<DottedOrNone> (NbConvertApp.postprocessor_class)
+    Default: ''
+    PostProcessor class used to write the results of the conversion
+--output=<Unicode> (NbConvertApp.output_base)
+    Default: ''
+    overwrite base name use for output files. can only be used when converting
+    one notebook at a time.
+--output-dir=<Unicode> (FilesWriter.build_directory)
+    Default: ''
+    Directory to write output(s) to. Defaults to output to the directory of each
+    notebook. To recover previous default behaviour (outputting to the current
+    working directory) use . as the flag value.
+--reveal-prefix=<Unicode> (SlidesExporter.reveal_url_prefix)
+    Default: ''
+    The URL prefix for reveal.js. This can be a a relative URL for a local copy
+    of reveal.js, or point to a CDN.
+    For speaker notes to work, a local reveal.js prefix must be used.
+--nbformat=<Enum> (NotebookExporter.nbformat_version)
+    Default: 4
+    Choices: [1, 2, 3, 4]
+    The nbformat version to write. Use this to downgrade notebooks.
 
-Write code in __Markdown__.
+To see all available configurables, use `--help-all`
 
+Examples
+--------
 
-<pre><code>    %reload_ext pidgin
-</code></pre>
-<p><code>import pidgin</code> allows <strong>Markdown</strong> as <strong>Code Cell</strong> source in <code>IPython</code>.</p>
-<ol>
-<li>The <strong>Markdown</strong> is converted to valid <strong>Python</strong> source.</li>
-<li>The <strong>Python</strong> source is executed.</li>
-<li>Any <code>"doctest"</code>s are evaluated.</li>
-<li>All inline code is evaluated.</li>
-<li><p>The <strong>Markdown</strong> source is display with special rules defined in <code>pidgin.display</code> including <code>"jinja2"</code> templates
-for including data in the display.</p>
-<pre><code> import IPython
-</code></pre>
-</li>
-</ol>
-<p>Each stuff must succeed without raising an <code>Exception</code>.</p>
-
-
-
-<h2>Benefits of <code>pidgin</code></h2>
-<ul>
-<li><code>pidgin</code> requires that all code in a document is valid.</li>
-<li><code>pidgin</code> places tighter constraints on the <strong>Run All-ability</strong> of the document.</li>
-<li><p><code>pidgin</code> encourages tighter weaving of code and narrative.</p>
-<pre><code>  import jinja2
-</code></pre>
-<p>Use <code>jinja2</code> syntaxes in <strong>Code Cells</strong>.  On the last display step with include 
-  pretty representations of template expression.  The <code>jinja2.Environment</code> returns <strong>html</strong> formatted
-  display <code>object</code>s including <code>"pandas"</code> tables and <code>"matplotlib"</code> figures.</p>
-</li>
-<li><code>pidgin</code> separates display statements from compute statements.</li>
-<li><code>pidgin</code> documents are importable because of <code>import importnb</code>        </li>
-</ul>
-<pre><code class="lang-ipython">with pidgin.PidginImporter(position=1):
-    import readme_pidgin as readme
-</code></pre>
-
-
-`pidgin` introduces __.md.ipynb__, a hybird file extension, to identity __Markdown__ forward computational essays. When
-this document (`readme`) is imported we can `assert readme.__file__.endswith('.md.ipynb')`.
-
-
-<h2><code>pidgin</code> works with</h2>
-<ul>
-<li><p><strong><em>Binder</em></strong> <a href="https://mybinder.org/v2/gh/deathbeds/pidgin/master?filepath=readme.ipynb"><img src="https://mybinder.org/badge.svg" alt="Binder"></a></p>
-<p>Take <code>pidgin</code> for a spin on <a href="https://mybinder.org/v2/gh/deathbeds/pidgin/master?filepath=readme.ipynb"><strong><em>Binder</em></strong></a>.</p>
-</li>
-<li><p><strong><em>Pytest</em></strong> <a href="https://github.com/pytest-dev"><img src="https://avatars1.githubusercontent.com/u/8897583?s=40&amp;v=4" alt=""></a></p>
-<p><code>pidgin</code> works great with the <a href="https://github.com/computationalmodelling/nbval"><strong>nbval</strong></a> and <a href="https://github.com/deathbeds/importnb"><strong>importnb</strong></a> notebook specific pytest extensions.  <code>pidgin</code> itself is a <code>import pytest</code>
-  plugin that permits tests with <strong>.md.ipynb</strong> and <strong>.md</strong> extensions.</p>
-<p><strong><em>Pro Tip</em></strong> test <code>IPython</code> specific features using <strong>ipython</strong> as the <code>pytest</code> runner instead of <strong>python</strong> <code>#!ipython -m pytest -- --collect-only</code></p>
-</li>
-<li><strong><em>Jupyter</em></strong> <a href="https://github.com/jupyterlab"><img src="https://avatars1.githubusercontent.com/u/7388996?s=40" alt=""></a> </li>
-<li><strong><em>JupyterLab</em></strong> <a href="https://github.com/jupyterlab"><img src="https://avatars1.githubusercontent.com/u/22800682?s=40" alt=""></a> </li>
-<li><strong><em>Google Colaboratory</em></strong> <a href="https://colab.research.google.com/github/deathbeds/pidgin/blob/mistune/readme.ipynb"><img src="https://avatars0.githubusercontent.com/u/33467679?s=40" alt=""></a></li>
-<li><strong><em>nteract</em></strong> <a href="https://nteract.io"><img src="https://avatars0.githubusercontent.com/u/12401040?s=40" alt=""></a></li>
-</ul>
-
-
-
-<h2>Architecture</h2>
-<p>The <code>pidgin</code> source is written almost entirely in Jupyter notebooks.  The hope is that the notebooks will serve as an important
-interactive resourcing in the early development.  As the project matures, <code>pidgin</code> will adopt different combinations of python
-and notebook files.</p>
-<pre><code>ip = IPython.get_ipython()
-</code></pre>
-<p><code>pidgin</code> is architected as a collection of <code>IPython</code> extensions that modify <code>ip = IPython.get_ipython()</code> and <code>ip.kernel</code>.</p>
-<pre><code>if 0:
-    %reload_ext pidgin
-</code></pre>
-<p>Each component of <code>pidgin</code> can be loaded individually.</p>
-<pre><code>    %reload_ext pidgin.tangle
-    %reload_ext pidgin.display
-    %reload_ext pidgin.inspector
-    %reload_ext pidgin.post_run_cell
-</code></pre>
-
-
-
-<h2>Roadmap</h2>
-<ul>
-<li><code>pidgin</code> should become an <code>import ipykernel</code>.</li>
-<li><code>pidgin</code> should extend to other ipykernels.</li>
-<li><code>pidgin</code> should become an <code>import nbconvert.nbconvertapp</code> and <code>nbconvert.preprocessors</code>.</li>
-</ul>
-
-
-## Developer
+    The simplest way to use nbconvert is
     
+    > jupyter nbconvert mynotebook.ipynb
+    
+    which will convert mynotebook.ipynb to the default format (probably HTML).
+    
+    You can specify the export format with `--to`.
+    Options include ['asciidoc', 'custom', 'html', 'latex', 'markdown', 'notebook', 'pdf', 'python', 'rst', 'script', 'slides']
+    
+    > jupyter nbconvert --to latex mynotebook.ipynb
+    
+    Both HTML and LaTeX support multiple output templates. LaTeX includes
+    'base', 'article' and 'report'.  HTML includes 'basic' and 'full'. You
+    can specify the flavor of the format used.
+    
+    > jupyter nbconvert --to html --template basic mynotebook.ipynb
+    
+    You can also pipe the output to stdout, rather than a file
+    
+    > jupyter nbconvert mynotebook.ipynb --stdout
+    
+    PDF is generated via latex
+    
+    > jupyter nbconvert mynotebook.ipynb --to pdf
+    
+    You can get (and serve) a Reveal.js-powered slideshow
+    
+    > jupyter nbconvert myslides.ipynb --to slides --post serve
+    
+    Multiple notebooks can be given at the command line in a couple of 
+    different ways:
+    
+    > jupyter nbconvert notebook*.ipynb
+    > jupyter nbconvert notebook1.ipynb notebook2.ipynb
+    
+    or you can specify the notebooks list in a config file, containing::
+    
+        c.NbConvertApp.notebooks = ["my_notebook.ipynb"]
+    
+    > jupyter nbconvert --config mycfg.py
 
-    !ipython -m readme_pidgin.md.ipynb -- --uml=True --nbconvert=True --test=True
-
-### Test `pidgin`
-
-    if __name__ == '__main__':
-        !ipython -m pytest -- --nbval
-
-
-<h3>Run tests</h3>
-<pre><code>test = False
-</code></pre>
-
-
-
-<h3>UML diagrams</h3>
-<pre><code>uml = False
-</code></pre>
-
-
-
-<h3>Convert to the <strong>readme.md</strong></h3>
-<pre><code>convert=False
-</code></pre>
-
-
-    %%file markdown_readme.py
-    c.MarkdownExporter.raw_mimetypes = ['text/markdown']
-    c.TemplateExporter.exclude_input=True
