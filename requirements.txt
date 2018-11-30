@@ -1,6 +1,7 @@
 dataclasses
 ipython>7
 nbconvert
+notebook
 hypothesis
 graphviz
 importnb
