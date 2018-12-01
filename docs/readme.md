@@ -83,7 +83,8 @@ publication closer to a <code>IPython</code> author.</p>
 <p>A <code>pidgin</code> author is composing their compute and portions (or <a href="http://nytlabs.com/blog/2015/10/20/particles/">particles</a>) of the published document
 while interactively computing.  <code>import nbconvert</code> can be used against a <code>pidgin</code> <code>notebook</code>.</p>
 <pre><code>if __name__ == '__main__':
-    !jupyter nbconvert --to markdown --TemplateExporter.exclude_input=True --stdout readme.md.ipynb &gt; readme.md
+    output = !jupyter nbconvert --to markdown --TemplateExporter.exclude_input=True --stdout readme.md.ipynb &gt; readme.md
+    print(output[0])
 </code></pre>
 <p>The hybrid <strong>Markdown</strong>, templates, and <strong>Python</strong> in code cells encourage authors to encode 
 the final layout in the output.  The input cells are excluded in the published document.</p>
@@ -95,10 +96,10 @@ the final layout in the output.  The input cells are excluded in the published d
 essay should be the first consumer of their work.  <code>pidgin</code> extends <code>import importnb</code> to
 <strong>import</strong> them as modules.</p>
 <pre><code>with pidgin.PidginImporter(): 
-    if __name__ == '__main__':
-        from . import readme
-    else:
+    if __import__('os').environ.get('PYTEST_CURRENT_TEST', None):
         from docs import readme
+    else:
+        from . import readme
 </code></pre>
 <p>Importing essays will allow authors to consume their work as software.  When authors
 reuse their own tools and code then will be motivated to make them more usable by
