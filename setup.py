@@ -31,7 +31,7 @@ setup_args = dict(
         'graphviz':  ["graphviz"],
     },
     include_package_data=True,
-    packages=setuptools.find_packages(where='src'),
+    packages=setuptools.find_packages(where='src') + ['pidgin_+contrib'],
     package_dir={
         '':'src',
     },
