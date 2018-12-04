@@ -75,7 +75,7 @@ publishable material.  <code>pidgin</code> modifies features to <code>IPython</c
 publication closer to a <code>IPython</code> author.</p>
 
 
-    The process cannot access the file because it is being used by another process.
+    [NbConvertApp] Converting notebook readme.md.ipynb to markdown
     
 
 
@@ -96,36 +96,9 @@ the final layout in the output.  The input cells are excluded in the published d
 essay should be the first consumer of their work.  <code>pidgin</code> extends <code>import importnb</code> to
 <strong>import</strong> them as modules.</p>
 <pre><code>with pidgin.PidginImporter(): 
-    if __import__('os').environ.get('PYTEST_CURRENT_TEST', None):
-        from docs import readme
-    else:
-        from . import readme
+    from . import readme
 </code></pre>
 <p>Importing essays will allow authors to consume their work as software.  When authors
 reuse their own tools and code then will be motivated to make them more usable by
 adding documentation and testing.</p>
-
-
-
-<h3>reproducibility</h3>
-<p><code>import importnb, \</code> and <code>pidgin, \</code> have <code>pytest, \</code> extensions complement the <code>nbval</code> tool.  These extensions together
-encourage notebooks to be reused as tests; literate computing tests computational ideas thereby they ought
-to be used as tests.  They provide targets for the quality of a notebook.</p>
-<ul>
-<li><code>nbval</code> ensures that the display for an output is the same a the 🥇 standard.</li>
-<li><code>importnb</code> permits authors to write test functions in notebooks that are discoverable through the traditional <code>pytest</code> configurations.</li>
-<li><code>pidgin</code> tests <strong>Markdown</strong> files.  It is important for code in documentation to work. <code>pidgin</code>
-tests file as literate programs that should evaluated.</li>
-</ul>
-<h4><a href="https://github.com/noffle/art-of-readme">The Art of the README</a></h4>
-<p>The <strong>README</strong> is a modern convention that is a literate program.  <strong>README</strong>'s generally require human intervention
-to create compute.  It is critical for user facing code to work.  <code>pidgin</code> considers 
-the <strong>README</strong> to be a critical test for the success of a computational technology.</p>
-<blockquote><p><a href="https://github.com/noffle/art-of-readme">The Art of the README</a> can be used as a useful style guide for writing readable computational essays.</p>
-<p><a href="http://liber118.com/pxn/">Paco Nathan</a>'s <a href="http://nbviewer.jupyter.org/github/jupyterday-atlanta-2016/oriole_jupyterday_atl/blob/master/oriole_talk.ipynb"><em>Oriole: a new learning medium based on Jupyter + Docker</em></a> 
-given at <a href="https://jupyterday-atlanta-2016.github.io">Jupyter Day Atlanta 2016</a>. In Paco's <em>unofficial</em> <a href="http://nbviewer.jupyter.org/github/jupyterday-atlanta-2016/oriole_jupyterday_atl/blob/master/oriole_talk.ipynb#What-we-learned-about-teaching-with-notebooks">styleguide for authoring Jupyter notebooks</a> 
-he reminds of a valuable principle for <code>notebook</code> authors:</p>
-<blockquote><h2>clear all output then "Run All" -- or it didn't happen</h2>
-</blockquote>
-</blockquote>
 
