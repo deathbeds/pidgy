@@ -7,7 +7,7 @@ __version__ = None
 
 here = Path(__file__).parent
 
-exec((here / name / "_version.py").read_text())
+exec((here / 'src'/ name / "_version.py").read_text())
 
 setup_args = dict(
     name=name,
@@ -31,7 +31,10 @@ setup_args = dict(
         'graphviz':  ["graphviz"],
     },
     include_package_data=True,
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(where='src') + ['pidgin_contrib'],
+    package_dir={
+        '':'src',
+    },
     entry_points = {
         'pytest11': ['pytest-pidgin = pidgin.pytest_plugin',],
     },
