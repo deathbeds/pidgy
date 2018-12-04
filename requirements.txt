@@ -9,3 +9,4 @@ tox
 pyyaml
 jupyter_client 
 nbval
+nbsphinx
