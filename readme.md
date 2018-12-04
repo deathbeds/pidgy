@@ -1,7 +1,8 @@
 
 `pidgin` is a collection of `IPython` extensions for creating computable essays.
 
-[![Build Status](https://travis-ci.org/deathbeds/pidgin.svg?branch=master)](https://travis-ci.org/deathbeds/pidgin)
+[![Build Status](https://travis-ci.org/deathbeds/pidgin.svg?branch=master)](https://travis-ci.org/deathbeds/pidgin)[![Documentation Status](https://readthedocs.org/projects/pidgin-notebook/badge/?version=latest)](https://pidgin-notebook.readthedocs.io/en/latest/?badge=latest)
+
 
     #Install pidgin
     !pip install pidgin
