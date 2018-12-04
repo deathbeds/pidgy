@@ -10,3 +10,4 @@ pyyaml
 jupyter_client 
 nbval
 nbsphinx
+sphinx_bootstrap_theme
