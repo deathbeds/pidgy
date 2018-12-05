@@ -1,4 +1,4 @@
-from importnb.utils.pytest_plugin import AlternativeModule, AlternativeSourceText
+from importnb.utils.pytest_importnb import AlternativeModule, AlternativeSourceText
 from .loader import PidginImporter, MarkdownImporter
 
 class PidginModule(AlternativeModule):
