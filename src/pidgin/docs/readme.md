@@ -3,6 +3,20 @@
 
 
 <style>
+.input .input_area, .nbinput .input_area {
+    text-decoration: line-through wavy;    
+    font-weight: bold;
+
+}
+.input:hover .input_area, .nbinput:hover .input_area {
+    text-decoration: none;
+    font-weight: normal;
+}
+</style>
+
+
+
+<style>
 /**Sure we can write inline css.**/
 p img, p svg {
     vertical-align: middle;
@@ -90,6 +104,17 @@ while interactively computing.  <code>import nbconvert</code> can be used agains
 </code></pre>
 <p>The hybrid <strong>Markdown</strong>, templates, and <strong>Python</strong> in code cells encourage authors to encode 
 the final layout in the output.  The input cells are excluded in the published document.</p>
+
+
+
+<style>.input_area {
+    text-decoration: line-through wavy;    
+    font-weight: bold;
+}
+.input:hover, .nbinput:hover {
+    text-decoration: none;
+    font-weight: normal;
+}</style>
 
 
 
