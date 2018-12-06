@@ -181,4 +181,3 @@ intersphinx_mapping = {'https://docs.python.org/': None}
 
 def setup(app):
     __import__('os').system("nikola build --conf=confblog.py")
-    raise SystemExit(0)
