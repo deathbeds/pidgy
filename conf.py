@@ -231,9 +231,11 @@ for folder, *item in POSTS:
                 slug=str(file.name),
                 description=''.join(nb['cells'][0]['source']),
                 type='text',
-                date=__import__('datetime').datetime.utcfromtimestamp(pathlib.Path().stat().st_mtime).strftime('%Y-%m-%d 12:00:00 UTC')
+                date=__import__('datetime').datetime.utcfromtimestamp(
+                    pathlib.Path(file).stat().st_mtime
+                ).strftime('%Y-%m-%d 12:00:00 UTC')
             ))
-        file.write_text(json.dumps(nb))
+            file.write_text(json.dumps(nb))
 
 PAGES = tuple()
 
