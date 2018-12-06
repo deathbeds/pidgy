@@ -17,15 +17,15 @@ import time
 
 # Data about this site
 BLOG_AUTHOR = "Deathbeds"  # (translatable)
-BLOG_TITLE = "Subroutine"  # (translatable)
+BLOG_TITLE = "pidgin"  # (translatable)
 # This is the main URL for your site. It will be used
 # in a prominent link. Don't forget the protocol (http/https)!
-SITE_URL = "http://github.com/deathbeds/subroutine/"
+SITE_URL = "http://github.com/deathbeds/pidgin/"
 # This is the URL where Nikola's output will be deployed.
 # If not set, defaults to SITE_URL
 # BASE_URL = "http://github.com/deathbeds/subroutine/"
 BLOG_EMAIL = "tony.fast@gmail.com"
-BLOG_DESCRIPTION = "A Zine"  # (translatable)
+BLOG_DESCRIPTION = "A Markdown forward interactive programming interface."  # (translatable)
 
 # Nikola is multilingual!
 #
@@ -150,7 +150,7 @@ NAVIGATION_ALT_LINKS = {
 }
 
 # Name of the theme to use.
-THEME = "bootblog4"
+THEME = "bootstrap4"
 
 # Primary color of your theme. This will be used to customize your theme.
 # Must be a HEX value.
@@ -213,13 +213,29 @@ THEME_CONFIG = {
 #         ("pages/*.md", {"en": "pages", "de": "seiten"}, "page.tmpl"),
 #     )
 
+
+
 POSTS = (
-    ("zero/*.ipynb", "posts", "post.tmpl"),
+    #("src/pidgin/docs/*.ipynb", "posts", "post.tmpl"),
+    ("src/pidgin/*.ipynb", "posts", "post.tmpl"),
 )
-POSTS = tuple()
-PAGES = (
-    ("src/subroutine/zero/docs/*.ipynb", "pages", "page.tmpl"),
-)
+
+import glob, pathlib, json
+for folder, *item in POSTS:
+    for file in glob.glob(folder):
+        file = pathlib.Path(file)
+        nb = json.loads(file.read_text(encoding='UTF-8'))
+        if 'nikola' not in nb['metadata']:
+            nb['metadata'].update(nikola=dict(
+                title=str(file.name),
+                slug=str(file.name),
+                description=''.join(nb['cells'][0]['source']),
+                type='text',
+                date=__import__('datetime').datetime.utcfromtimestamp(pathlib.Path().stat().st_mtime).strftime('%Y-%m-%d 12:00:00 UTC')
+            ))
+        file.write_text(json.dumps(nb))
+
+PAGES = tuple()
 
 
 # Below this point, everything is optional
@@ -874,7 +890,7 @@ IMAGE_FOLDERS = {'images': 'images'}
 # )
 
 # Show teasers (instead of full posts) in indexes? Defaults to False.
-# INDEX_TEASERS = False
+INDEX_TEASERS = True
 
 # HTML fragments with the Read more... links.
 # The following tags exist and are replaced for you:
@@ -1330,12 +1346,18 @@ WARN_ABOUT_TAG_METADATA = False
 
 # Put in global_context things you want available on all your templates.
 # It can be anything, data, functions, modules, etc.
-GLOBAL_CONTEXT = {}
+GLOBAL_CONTEXT = {
+    'exclude_index_content': True
+}
 
 # Add functions here and they will be called with template
 # GLOBAL_CONTEXT as parameter when the template is about to be
 # rendered
 GLOBAL_CONTEXT_FILLER = []
+
+import re
+# <div class="cell border-box-sizing code_cell rendered">
+TEASER_REGEXP = re.compile('(<div[^<>].*code_cell)', re.IGNORECASE)
 
 def setup(app):
     __import__('os').system("nikola build")
