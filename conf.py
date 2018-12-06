@@ -234,7 +234,6 @@ for folder, *item in POSTS:
             'date': __import__('datetime').datetime.utcfromtimestamp(
                 file.stat().st_mtime
             ).strftime('%Y-%m-%d 12:00:00 UTC'), **nb['metadata']['nikola']})
-        )
         file.write_text(json.dumps(nb))
 
 PAGES = tuple()
