@@ -7,7 +7,8 @@ graphviz
 importnb
 tox
 pyyaml
-jupyter_client 
+jupyter_client
 nbval
 nbsphinx
+nikola
 sphinx_bootstrap_theme
