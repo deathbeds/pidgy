@@ -225,17 +225,17 @@ for folder, *item in POSTS:
     for file in glob.glob(folder):
         file = pathlib.Path(file)
         nb = json.loads(file.read_text(encoding='UTF-8'))
-        if 'nikola' not in nb['metadata']:
-            nb['metadata'].update(nikola=dict(
-                title=str(file.name),
-                slug=str(file.name),
-                description=''.join(nb['cells'][0]['source']),
-                type='text',
-                date=__import__('datetime').datetime.utcfromtimestamp(
-                    pathlib.Path(file).stat().st_mtime
-                ).strftime('%Y-%m-%d 12:00:00 UTC')
-            ))
-            file.write_text(json.dumps(nb))
+        nb['metadata'].update(nikola=nb['metadata'].get('nikola', {}))
+        nb['metadata']['nikola'].update({
+            'title':str(file.name),
+            'slug': str(file.name),
+            'description': ''.join(nb['cells'][0]['source']),
+            'type': 'text',
+            'date': __import__('datetime').datetime.utcfromtimestamp(
+                file.stat().st_mtime
+            ).strftime('%Y-%m-%d 12:00:00 UTC'), **nb['metadata']['nikola']})
+        )
+        file.write_text(json.dumps(nb))
 
 PAGES = tuple()
 
