@@ -221,7 +221,9 @@ POSTS = (
 )
 
 import glob, pathlib, json
-for folder, *item in POSTS:
+for folder, *item in POSTS + (
+    ("src/pidgin/docs/*.ipynb", "posts", "post.tmpl"),
+):
     for file in glob.glob(folder):
         file = pathlib.Path(file)
         nb = json.loads(file.read_text(encoding='UTF-8'))
