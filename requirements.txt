@@ -12,3 +12,4 @@ nbval
 nbsphinx
 nikola
 sphinx_bootstrap_theme
+gitpython
