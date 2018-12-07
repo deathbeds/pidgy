@@ -213,12 +213,25 @@ THEME_CONFIG = {
 #         ("pages/*.md", {"en": "pages", "de": "seiten"}, "page.tmpl"),
 #     )
 
+def author_date(repo, object):
+    date = 0
+    authors = set()
+    any = False
+    for object in repo.blame_incremental('HEAD', object):
+        any = True
+        date = max(date, object.commit.committed_date)
+        if ' ' in object.commit.author.name:
+            authors.add(object.commit.author.name)
 
+    if any: return (
+        __import__('datetime').datetime.utcfromtimestamp(date).strftime(
+            '%Y-%m-%d %H:%M:%S UTC'
+        ), ', '.join(authors))
 
-POSTS = (
-    #("src/pidgin/docs/*.ipynb", "posts", "post.tmpl"),
-    ("src/pidgin/*.ipynb", "posts", "post.tmpl"),
-)
+import git
+repo = git.Repo()
+
+POSTS = ("src/pidgin/*.ipynb", "posts", "post.tmpl"),
 
 import glob, pathlib, json
 for folder, *item in POSTS + (
@@ -228,14 +241,21 @@ for folder, *item in POSTS + (
         file = pathlib.Path(file)
         nb = json.loads(file.read_text(encoding='UTF-8'))
         nb['metadata'].update(nikola=nb['metadata'].get('nikola', {}))
+        try:
+            updated_date, author_name = author_date(repo, str(file))
+        except:
+            updated_date = __import__('datetime').datetime.utcfromtimestamp(
+                file.stat().st_mtime
+            ).strftime('%Y-%m-%d %H:%M:%S UTC')
+            author_name = 'Guest'
         nb['metadata']['nikola'].update({
             'title':str(file.name),
             'slug': str(file.name),
+            'author': author_name,
             'description': ''.join(nb['cells'][0]['source']),
             'type': 'text',
-            'date': __import__('datetime').datetime.utcfromtimestamp(
-                file.stat().st_mtime
-            ).strftime('%Y-%m-%d 12:00:00 UTC'), **nb['metadata']['nikola']})
+            'date': updated_date,
+        })
         file.write_text(json.dumps(nb))
 
 PAGES = tuple()
@@ -833,7 +853,7 @@ IMAGE_FOLDERS = {'images': 'images'}
 #
 # If the following is True, INDEXES_PAGES is also displayed on the main (the
 # newest) index page (index.html):
-# INDEXES_PAGES_MAIN = False
+INDEXES_PAGES_MAIN = True
 #
 # If the following is True, index-1.html has the oldest posts, index-2.html the
 # second-oldest posts, etc., and index.html has the newest posts. This ensures

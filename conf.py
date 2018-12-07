@@ -181,3 +181,7 @@ intersphinx_mapping = {'https://docs.python.org/': None}
 
 def setup(app):
     __import__('os').system("nikola build --conf=confblog.py")
+
+# Load the other configuration so that the Nikola CLI still works.
+if not __import__('os').environ.get('READTHEDOCS', None):
+    from confblog import *
