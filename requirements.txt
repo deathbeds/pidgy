@@ -11,5 +11,7 @@ jupyter_client
 nbval
 nbsphinx
 nikola
-sphinx_bootstrap_theme
 gitpython
+pandas
+matplotlib
+sympy
