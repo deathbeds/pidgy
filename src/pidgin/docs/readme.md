@@ -3,20 +3,6 @@
 
 
 <style>
-.input .input_area, .nbinput .input_area {
-    text-decoration: line-through wavy;    
-    font-weight: bold;
-
-}
-.input:hover .input_area, .nbinput:hover .input_area {
-    text-decoration: none;
-    font-weight: normal;
-}
-</style>
-
-
-
-<style>
 /**Sure we can write inline css.**/
 p img, p svg {
     vertical-align: middle;
@@ -41,8 +27,9 @@ is a specific implementation that hot rods running <code>IPython</code> kernels 
 <li><strong>Weave</strong> <strong>Python</strong> <code>object</code>s and <code>jinja2</code> templates into the computational narrative.</li>
 </ol>
 <p>The resulting documents created by <code>pidgin</code> are <a href="https://blog.stephenwolfram.com/2017/11/what-is-a-computational-essay/">computational essays</a> that connect 
-<svg width="63pt" height="44pt"viewBox="0.00 0.00 62.60 44.00" xmlns="http://www.w3.org/2000/svg" ><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 40)"><title>%3</title><polygon fill="white" stroke="none" points="-4,4 -4,-40 58.5952,-40 58.5952,4 -4,4"/><!-- Text --><g id="node1" class="node"><title>Text</title><ellipse fill="none" stroke="black" cx="27.2976" cy="-18" rx="27.0966" ry="18"/><text text-anchor="middle" x="27.2976" y="-14.3" font-family="Times New Roman,serif" font-size="14.00">Text</text></g></g></svg> <svg width="68pt" height="44pt"viewBox="0.00 0.00 67.79 44.00" xmlns="http://www.w3.org/2000/svg" ><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 40)"><title>%3</title><polygon fill="white" stroke="none" points="-4,4 -4,-40 63.7947,-40 63.7947,4 -4,4"/><!-- Input --><g id="node1" class="node"><title>Input</title><ellipse fill="none" stroke="black" cx="29.8973" cy="-18" rx="29.795" ry="18"/><text text-anchor="middle" x="29.8973" y="-14.3" font-family="Times New Roman,serif" font-size="14.00">Input</text></g></g></svg> and <svg width="81pt" height="44pt"viewBox="0.00 0.00 80.79 44.00" xmlns="http://www.w3.org/2000/svg" ><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 40)"><title>%3</title><polygon fill="white" stroke="none" points="-4,4 -4,-40 76.7935,-40 76.7935,4 -4,4"/><!-- Output --><g id="node1" class="node"><title>Output</title><ellipse fill="none" stroke="black" cx="36.3968" cy="-18" rx="36.2938" ry="18"/><text text-anchor="middle" x="36.3968" y="-14.3" font-family="Times New Roman,serif" font-size="14.00">Output</text></g></g></svg> composed interactively in <code>IPython</code>.</p>
-<p><svg width="365pt" height="150pt"viewBox="0.00 0.00 365.39 150.00" xmlns="http://www.w3.org/2000/svg" ><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 146)"><title>%3</title><polygon fill="white" stroke="none" points="-4,4 -4,-146 361.389,-146 361.389,4 -4,4"/><g id="clust1" class="cluster"><title>cluster</title><polygon fill="none" stroke="black" points="8,-8 8,-134 349.389,-134 349.389,-8 8,-8"/><text text-anchor="middle" x="178.694" y="-118.8" font-family="Times New Roman,serif" font-size="14.00">Computational Essays</text></g><!-- Text --><g id="node1" class="node"><title>Text</title><ellipse fill="none" stroke="black" cx="43.2976" cy="-60" rx="27.0966" ry="18"/><text text-anchor="middle" x="43.2976" y="-56.3" font-family="Times New Roman,serif" font-size="14.00">Text</text></g><!-- Input --><g id="node2" class="node"><title>Input</title><ellipse fill="none" stroke="black" cx="169.595" cy="-34" rx="29.795" ry="18"/><text text-anchor="middle" x="169.595" y="-30.3" font-family="Times New Roman,serif" font-size="14.00">Input</text></g><!-- Text&#45;&gt;Input --><g id="edge1" class="edge"><title>Text&#45;&gt;Input</title><path fill="none" stroke="black" d="M69.451,-54.7385C87.0902,-51.0488 110.981,-46.0516 130.89,-41.887"/><polygon fill="black" stroke="black" points="131.813,-45.2699 140.884,-39.7965 130.379,-38.4181 131.813,-45.2699"/></g><!-- Output --><g id="node3" class="node"><title>Output</title><ellipse fill="none" stroke="black" cx="304.992" cy="-59" rx="36.2938" ry="18"/><text text-anchor="middle" x="304.992" y="-55.3" font-family="Times New Roman,serif" font-size="14.00">Output</text></g><!-- Input&#45;&gt;Output --><g id="edge2" class="edge"><title>Input&#45;&gt;Output</title><path fill="none" stroke="black" d="M198.235,-39.18C216.253,-42.5569 240.144,-47.0342 260.658,-50.8788"/><polygon fill="black" stroke="black" points="260.249,-54.363 270.723,-52.765 261.539,-47.4828 260.249,-54.363"/></g><!-- Output&#45;&gt;Text --><g id="edge3" class="edge"><title>Output&#45;&gt;Text</title><path fill="none" stroke="black" d="M268.646,-60.1719C256.863,-60.5104 243.665,-60.8333 231.595,-61 176.489,-61.761 162.705,-61.4353 107.595,-61 99.0005,-60.9321 89.75,-60.8124 81.0464,-60.6788"/><polygon fill="black" stroke="black" points="80.8377,-57.1751 70.782,-60.5116 80.7236,-64.1741 80.8377,-57.1751"/><text text-anchor="middle" x="169.595" y="-64.8" font-family="Times New Roman,serif" font-size="14.00">Interactive Computing</text></g></g></svg></p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>&#xA;<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"&#xA; "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">&#xA;<!-- Generated by graphviz version 2.38.0 (20140413.2041)&#xA; -->&#xA;<!-- Title: %3 Pages: 1 -->&#xA;<svg width="63pt" height="44pt"&#xA; viewBox="0.00 0.00 62.60 44.00"  >&#xA;<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 40)">&#xA;<title>%3</title>&#xA;<polygon fill="white" stroke="none" points="-4,4 -4,-40 58.5952,-40 58.5952,4 -4,4"/>&#xA;<!-- Text -->&#xA;<g id="node1" class="node"><title>Text</title>&#xA;<ellipse fill="none" stroke="black" cx="27.2976" cy="-18" rx="27.0966" ry="18"/>&#xA;<text text-anchor="middle" x="27.2976" y="-14.3" font-family="Times New Roman,serif" font-size="14.00">Text</text>&#xA;</g>&#xA;</g>&#xA;</svg> <?xml version="1.0" encoding="UTF-8" standalone="no"?>&#xA;<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"&#xA; "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">&#xA;<!-- Generated by graphviz version 2.38.0 (20140413.2041)&#xA; -->&#xA;<!-- Title: %3 Pages: 1 -->&#xA;<svg width="68pt" height="44pt"&#xA; viewBox="0.00 0.00 67.79 44.00"  >&#xA;<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 40)">&#xA;<title>%3</title>&#xA;<polygon fill="white" stroke="none" points="-4,4 -4,-40 63.7947,-40 63.7947,4 -4,4"/>&#xA;<!-- Input -->&#xA;<g id="node1" class="node"><title>Input</title>&#xA;<ellipse fill="none" stroke="black" cx="29.8973" cy="-18" rx="29.795" ry="18"/>&#xA;<text text-anchor="middle" x="29.8973" y="-14.3" font-family="Times New Roman,serif" font-size="14.00">Input</text>&#xA;</g>&#xA;</g>&#xA;</svg> and <?xml version="1.0" encoding="UTF-8" standalone="no"?>&#xA;<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"&#xA; "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">&#xA;<!-- Generated by graphviz version 2.38.0 (20140413.2041)&#xA; -->&#xA;<!-- Title: %3 Pages: 1 -->&#xA;<svg width="81pt" height="44pt"&#xA; viewBox="0.00 0.00 80.79 44.00"  >&#xA;<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 40)">&#xA;<title>%3</title>&#xA;<polygon fill="white" stroke="none" points="-4,4 -4,-40 76.7935,-40 76.7935,4 -4,4"/>&#xA;<!-- Output -->&#xA;<g id="node1" class="node"><title>Output</title>&#xA;<ellipse fill="none" stroke="black" cx="36.3968" cy="-18" rx="36.2938" ry="18"/>&#xA;<text text-anchor="middle" x="36.3968" y="-14.3" font-family="Times New Roman,serif" font-size="14.00">Output</text>&#xA;</g>&#xA;</g>&#xA;</svg> composed interactively in <code>IPython</code>.</p>
+<p><?xml version="1.0" encoding="UTF-8" standalone="no"?>&#xA;<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"&#xA; "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">&#xA;<!-- Generated by graphviz version 2.38.0 (20140413.2041)&#xA; -->&#xA;<!-- Title: %3 Pages: 1 -->&#xA;<svg width="365pt" height="150pt"&#xA; viewBox="0.00 0.00 365.39 150.00"  >&#xA;<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 146)">&#xA;<title>%3</title>&#xA;<polygon fill="white" stroke="none" points="-4,4 -4,-146 361.389,-146 361.389,4 -4,4"/>&#xA;<g id="clust1" class="cluster"><title>cluster</title>&#xA;<polygon fill="none" stroke="black" points="8,-8 8,-134 349.389,-134 349.389,-8 8,-8"/>&#xA;<text text-anchor="middle" x="178.694" y="-118.8" font-family="Times New Roman,serif" font-size="14.00">Computational Essays</text>&#xA;</g>&#xA;<!-- Text -->&#xA;<g id="node1" class="node"><title>Text</title>&#xA;<ellipse fill="none" stroke="black" cx="43.2976" cy="-60" rx="27.0966" ry="18"/>&#xA;<text text-anchor="middle" x="43.2976" y="-56.3" font-family="Times New Roman,serif" font-size="14.00">Text</text>&#xA;</g>&#xA;<!-- Input -->&#xA;<g id="node2" class="node"><title>Input</title>&#xA;<ellipse fill="none" stroke="black" cx="169.595" cy="-34" rx="29.795" ry="18"/>&#xA;<text text-anchor="middle" x="169.595" y="-30.3" font-family="Times New Roman,serif" font-size="14.00">Input</text>&#xA;</g>&#xA;<!-- Text&#45;&gt;Input -->&#xA;<g id="edge1" class="edge"><title>Text&#45;&gt;Input</title>&#xA;<path fill="none" stroke="black" d="M69.451,-54.7385C87.0902,-51.0488 110.981,-46.0516 130.89,-41.887"/>&#xA;<polygon fill="black" stroke="black" points="131.813,-45.2699 140.884,-39.7965 130.379,-38.4181 131.813,-45.2699"/>&#xA;</g>&#xA;<!-- Output -->&#xA;<g id="node3" class="node"><title>Output</title>&#xA;<ellipse fill="none" stroke="black" cx="304.992" cy="-59" rx="36.2938" ry="18"/>&#xA;<text text-anchor="middle" x="304.992" y="-55.3" font-family="Times New Roman,serif" font-size="14.00">Output</text>&#xA;</g>&#xA;<!-- Input&#45;&gt;Output -->&#xA;<g id="edge2" class="edge"><title>Input&#45;&gt;Output</title>&#xA;<path fill="none" stroke="black" d="M198.235,-39.18C216.253,-42.5569 240.144,-47.0342 260.658,-50.8788"/>&#xA;<polygon fill="black" stroke="black" points="260.249,-54.363 270.723,-52.765 261.539,-47.4828 260.249,-54.363"/>&#xA;</g>&#xA;<!-- Output&#45;&gt;Text -->&#xA;<g id="edge3" class="edge"><title>Output&#45;&gt;Text</title>&#xA;<path fill="none" stroke="black" d="M268.646,-60.1719C256.863,-60.5104 243.665,-60.8333 231.595,-61 176.489,-61.761 162.705,-61.4353 107.595,-61 99.0005,-60.9321 89.75,-60.8124 81.0464,-60.6788"/>&#xA;<polygon fill="black" stroke="black" points="80.8377,-57.1751 70.782,-60.5116 80.7236,-64.1741 80.8377,-57.1751"/>&#xA;<text text-anchor="middle" x="169.595" y="-64.8" font-family="Times New Roman,serif" font-size="14.00">Interactive Computing</text>&#xA;</g>&#xA;</g>&#xA;</svg></p>
+
 
 
 
@@ -54,6 +41,7 @@ on everyone who hears the term; surely nobody wants to admit writing an illitera
 and most specifically interactive computing, has changed significantly.  Other contemporaries of <code>pidgin</code> are <strong>RMarkdown</strong>
 and <strong>Mathematica</strong> computational essays.</p>
 <p><code>pidgin</code> focuses on the core value of <strong>literate programming</strong> that one should <em>never write an illiterate program</em>.</p>
+
 
 
 
@@ -78,6 +66,7 @@ programming.  <code>pidgin</code> assists authors during the act of literate com
 
 
 
+
 <h2>Literate Computing vs. Literate Programming</h2>
 <p>In <a href="http://blog.fperez.org/2013/04/literate-computing-and-computational.html"><strong>"Literate computing" and computational reproducibility: IPython in the age of data-driven journalism</strong></a>, Fernando Perez comments on <strong>Literate Programming</strong>:</p>
 <blockquote><p>I don't take any issue with this approach per se, but I don't personally use it because it's not
@@ -89,6 +78,7 @@ exploratory computing, which is the bread and butter of many practicing scientis
 It is not sufficient for practicing scientist to focus on exploratory computing without creating
 publishable material.  <code>pidgin</code> modifies features to <code>IPython</code> that bring document, testing, and 
 publication closer to a <code>IPython</code> author.</p>
+
 
 
     [NbConvertApp] Converting notebook readme.md.ipynb to markdown
@@ -107,16 +97,6 @@ the final layout in the output.  The input cells are excluded in the published d
 
 
 
-<style>.input_area {
-    text-decoration: line-through wavy;    
-    font-weight: bold;
-}
-.input:hover, .nbinput:hover {
-    text-decoration: none;
-    font-weight: normal;
-}</style>
-
-
 
 <h3>reusability</h3>
 <p>Computational thinking evolves over different time scales.  An author of a computational
@@ -128,6 +108,7 @@ essay should be the first consumer of their work.  <code>pidgin</code> extends <
 <p>Importing essays will allow authors to consume their work as software.  When authors
 reuse their own tools and code then will be motivated to make them more usable by
 adding documentation and testing.</p>
+
 
 
 
@@ -152,4 +133,5 @@ he reminds of a valuable principle for <code>notebook</code> authors:</p>
 <blockquote><h2>clear all output then "Run All" -- or it didn't happen</h2>
 </blockquote>
 </blockquote>
+
 
