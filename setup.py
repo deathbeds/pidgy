@@ -31,12 +31,14 @@ setup_args = dict(
         'graphviz':  ["graphviz"],
     },
     include_package_data=True,
-    packages=setuptools.find_packages(where='src') + ['pidgin_contrib'],
+    packages=setuptools.find_packages(where='src'),
     package_dir={
         '':'src',
     },
     entry_points = {
-        'pytest11': ['pytest-pidgin = pidgin.pytest_plugin',],
+        'pytest11': [
+            'pidgin = pidgin.pytest_plugin',
+        ],
     },
     classifiers=(
         "Development Status :: 4 - Beta",
