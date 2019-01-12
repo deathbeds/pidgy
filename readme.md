@@ -22,11 +22,10 @@ Write code in __Markdown__.
 <li>All inline code is evaluated.</li>
 <li><p>The <strong>Markdown</strong> source is display with special rules defined in <code>pidgin.display</code> including <code>"jinja2"</code> templates
 for including data in the display.</p>
-<pre><code> import IPython
-</code></pre>
+
 </li>
 </ol>
-<p>Each stuff must succeed without raising an <code>Exception</code>.</p>
+<p>Each of the above steps must succeed without raising an <code>Exception</code>.</p>
 
 
 
@@ -35,22 +34,22 @@ for including data in the display.</p>
 <li><code>pidgin</code> requires that all code in a document is valid.</li>
 <li><code>pidgin</code> places tighter constraints on the <strong>Run All-ability</strong> of the document.</li>
 <li><p><code>pidgin</code> encourages tighter weaving of code and narrative.</p>
-<pre><code>  import jinja2
-</code></pre>
-<p>Use <code>jinja2</code> syntaxes in <strong>Code Cells</strong>.  On the last display step with include 
+
+<p>Use <code>jinja2</code> syntax in <strong>Code Cells</strong>.  On the last display step with include
   pretty representations of template expression.  The <code>jinja2.Environment</code> returns <strong>html</strong> formatted
   display <code>object</code>s including <code>"pandas"</code> tables and <code>"matplotlib"</code> figures.</p>
 </li>
 <li><code>pidgin</code> separates display statements from compute statements.</li>
 <li><code>pidgin</code> documents are importable because of <code>import importnb</code>        </li>
 </ul>
+
+
+`pidgin` introduces __.md.ipynb__, a hybrid file extension, to identify __Markdown__-forward computational essays. When
+this document (`readme`) is imported without
 <pre><code class="lang-ipython">with pidgin.PidginImporter(position=1):
     from . import readme as readme
 </code></pre>
-
-
-`pidgin` introduces __.md.ipynb__, a hybird file extension, to identity __Markdown__ forward computational essays. When
-this document (`readme`) is imported we can `assert readme.__file__.endswith('.md.ipynb')`.
+we can `assert readme.__file__.endswith('.md.ipynb')`.
 
 
 <h2><code>pidgin</code> works with</h2>
@@ -61,7 +60,7 @@ this document (`readme`) is imported we can `assert readme.__file__.endswith('.m
 <li><p><strong><em>Pytest</em></strong> <a href="https://github.com/pytest-dev"><img src="https://avatars1.githubusercontent.com/u/8897583?s=40&amp;v=4" alt=""></a></p>
 <p><code>pidgin</code> works great with the <a href="https://github.com/computationalmodelling/nbval"><strong>nbval</strong></a> and <a href="https://github.com/deathbeds/importnb"><strong>importnb</strong></a> notebook specific pytest extensions.  <code>pidgin</code> itself is a <code>import pytest</code>
   plugin that permits tests with <strong>.md.ipynb</strong> and <strong>.md</strong> extensions.</p>
-<p><strong><em>Pro Tip</em></strong> test <code>IPython</code> specific features using <strong>ipython</strong> as the <code>pytest</code> runner instead of <strong>python</strong> <code>#!ipython -m pytest -- --collect-only</code></p>
+<p><strong><em>Pro Tip</em></strong>: test <code>IPython</code>-specific features using <strong>ipython</strong> as the <code>pytest</code> runner instead of <strong>python</strong> <code>#!ipython -m pytest -- --collect-only</code></p>
 </li>
 <li><strong><em>Jupyter</em></strong> <a href="https://github.com/jupyterlab"><img src="https://avatars1.githubusercontent.com/u/7388996?s=40" alt=""></a> </li>
 <li><strong><em>JupyterLab</em></strong> <a href="https://github.com/jupyterlab"><img src="https://avatars1.githubusercontent.com/u/22800682?s=40" alt=""></a> </li>
@@ -73,14 +72,12 @@ this document (`readme`) is imported we can `assert readme.__file__.endswith('.m
 
 <h2>Architecture</h2>
 <p>The <code>pidgin</code> source is written almost entirely in Jupyter notebooks.  The hope is that the notebooks will serve as an important
-interactive resourcing in the early development.  As the project matures, <code>pidgin</code> will adopt different combinations of python
+interactive resource in the early development.  As the project matures, <code>pidgin</code> will adopt different combinations of python
 and notebook files.</p>
 <pre><code>ip = IPython.get_ipython()
 </code></pre>
 <p><code>pidgin</code> is architected as a collection of <code>IPython</code> extensions that modify <code>ip = IPython.get_ipython()</code> and <code>ip.kernel</code>.</p>
-<pre><code>if 0:
-    %reload_ext pidgin
-</code></pre>
+
 <p>Each component of <code>pidgin</code> can be loaded individually.</p>
 <pre><code>    %reload_ext pidgin.tangle
     %reload_ext pidgin.display
@@ -99,7 +96,7 @@ and notebook files.</p>
 
 
 ## Developer
-    
+
 
     !ipython -m readme_pidgin.md.ipynb -- --uml=True --nbconvert=True --test=True
 
@@ -118,8 +115,8 @@ and notebook files.</p>
     [skip_graphviz]
     regex: <svg(.|\n)*</svg>w
     replace: ---
-        
-        
+
+
 
 
 <h3>UML diagrams</h3>
