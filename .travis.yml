@@ -15,7 +15,7 @@ install:
 - pip install -r requirements.txt
 - python -m pip install dist/pidgin-*.tar.gz --ignore-installed --no-deps
 script:
-- ipython -m pytest -- --verbose --nbval --sanitize-with sanitize.cfg src/pidgin/docs/test_empty.md.ipynb
+- python -m pytest --verbose --nbval --sanitize-with sanitize.cfg src/pidgin/docs/test_empty.md.ipynb
 - jupyter nbconvert --to markdown --execute --stdout --TemplateExporter.exclude_input=True readme_pidgin.md.ipynb > readme.md
 deploy:
 - provider: pypi
