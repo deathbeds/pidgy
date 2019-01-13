@@ -15,4 +15,5 @@ gitpython
 pandas
 matplotlib
 sympy
+python-slugify
 git+https://github.com/nteract/vdom
