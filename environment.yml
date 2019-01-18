@@ -1,5 +1,6 @@
 dependencies:
 - graphviz
+- ipywidgets
 - pip:
     - dataclasses
     - notebook
