@@ -10,3 +10,4 @@ dependencies:
     - graphviz
     - importnb
     - tox
+    - pyyaml

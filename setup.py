@@ -25,7 +25,7 @@ setup_args = dict(
     setup_requires=['pytest-runner'],
     tests_require=['pytest', "hypothesis", 'nbval'],
     install_requires=[
-        "nbconvert", "importnb", "IPython>7", 'dataclasses'
+        "nbconvert", "importnb", "IPython>7", 'dataclasses', "pyyaml"
     ],
     extras_require={
         'graphviz':  ["graphviz"],
