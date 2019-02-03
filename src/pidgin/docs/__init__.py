@@ -1,4 +1,4 @@
 import pidgin
 
-with pidgin.loader.PidginImporter():
-    from . import readme
+with pidgin.Pidgin(lazy=True):
+    from . import readme, testing_notebooks
