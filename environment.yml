@@ -1,31 +1,30 @@
 dependencies:
 - graphviz
 - ipywidgets
-- pip: [
-    dataclasses
-    ipython>7
-    nbconvert
-    notebook
-    hypothesis
-    graphviz
-    importnb
-    tox
-    pyyaml
-    jupyter_client
-    nbval
-    nbsphinx
-    nikola
-    gitpython
-    pandas
-    matplotlib
-    sympy
-    python-slugify
-    git+https://github.com/nteract/vdom
-    pyld 
-    jsonpointer
-    jsonschema
-    emoji
-    black
-    pytest
-    python-slugify
-    ]
+- pip: 
+    - dataclasses
+    - ipython>7
+    - nbconvert
+    - notebook
+    - hypothesis
+    - graphviz
+    - importnb
+    - tox
+    - pyyaml
+    - jupyter_client
+    - nbval
+    - nbsphinx
+    - nikola
+    - gitpython
+    - pandas
+    - matplotlib
+    - sympy
+    - python-slugify
+    - git+https://github.com/nteract/vdom
+    - pyld 
+    - jsonpointer
+    - jsonschema
+    - emoji
+    - black
+    - pytest
+    - python-slugify
