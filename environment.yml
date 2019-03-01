@@ -26,4 +26,6 @@ dependencies:
     jsonschema
     emoji
     black
+    pytest
+    python-slugify
     ]
