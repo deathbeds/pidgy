@@ -25,4 +25,5 @@ dependencies:
     jsonpointer
     jsonschema
     emoji
+    black
     ]

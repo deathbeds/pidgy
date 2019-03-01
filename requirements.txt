@@ -21,3 +21,4 @@ pyld
 jsonpointer
 jsonschema
 emoji
+black
