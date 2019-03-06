@@ -25,7 +25,6 @@ dependencies:
     - jsonpointer
     - jsonschema
     - emoji
-    - black
     - pytest
     - python-slugify
     - webcolors

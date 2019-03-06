@@ -25,7 +25,7 @@ setup_args = dict(
     setup_requires=['pytest-runner'],
     tests_require=['pytest', "hypothesis", 'nbval'],
     install_requires=[
-        "nbconvert", "importnb", "IPython>7", 'dataclasses', "pyyaml", "pyld", "jsonpointer", "jsonschema", "emoji", "black", "webcolors"
+        "nbconvert", "importnb", "IPython>7", 'dataclasses', "pyyaml", "pyld", "jsonpointer", "jsonschema", "emoji", "webcolors"
     ],
     extras_require={
         'graphviz':  ["graphviz"],
@@ -37,7 +37,7 @@ setup_args = dict(
     },
     entry_points = {
         'pytest11': [
-            'pidgin = pidgin.testing',
+            'pidgin = pidgin.specifications.testing',
         ],
     },
     classifiers=(
