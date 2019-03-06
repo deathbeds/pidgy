@@ -4,5 +4,5 @@ with __import__('importnb').Notebook():
 with tangle.Pidgin():
     from .. import shell
     from . import emojis, yaml_, json, transform_ast
-    from . import  testing, markdown, template
+    from . import  testing, markdown, template, colors
     

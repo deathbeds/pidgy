@@ -28,3 +28,4 @@ dependencies:
     - black
     - pytest
     - python-slugify
+    - webcolors
