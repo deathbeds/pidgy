@@ -11,6 +11,7 @@ with Pidgin():
     
 from . import applications, specifications
 from .applications import *
+from .specifications import *
 
     
     
