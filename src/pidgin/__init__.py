@@ -13,9 +13,4 @@ from . import applications, specifications
 from .applications import *
 from .specifications import *
 
-    
-    
-with PidginWeave(lazy=True): 
-    from .docs import references
-
 present = publishing.present
