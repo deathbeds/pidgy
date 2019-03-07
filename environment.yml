@@ -28,3 +28,4 @@ dependencies:
     - pytest
     - python-slugify
     - webcolors
+    - attrs>=17.4.0
