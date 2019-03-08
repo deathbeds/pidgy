@@ -37,7 +37,7 @@ setup_args = dict(
     },
     entry_points = {
         'pytest11': [
-            'pidgin = pidgin.specifications.testing',
+            'pidgin = pidgin.applications.pytest',
         ],
     },
     classifiers=(
