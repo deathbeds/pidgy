@@ -4,4 +4,3 @@ with __import__('importnb').Notebook():
 with tangle.Pidgin(): 
     from . import do_inspect, do_execute, do_complete, publishing, loaders
     from .loaders import *
-    from . import pytest

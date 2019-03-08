@@ -13,4 +13,7 @@ from . import applications, specifications
 from .applications import *
 from .specifications import *
 
+with Pidgin():
+    from .applications import pytest
+
 present = publishing.present
