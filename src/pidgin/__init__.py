@@ -14,6 +14,6 @@ from .applications import *
 from .specifications import *
 
 with Pidgin():
-    from .applications import pytest
+    from .applications import pytest_
 
 present = publishing.present
