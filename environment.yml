@@ -10,7 +10,7 @@ dependencies:
     - graphviz
     - importnb
     - tox
-    - pyyaml
+    - ruamel.yaml
     - jupyter_client
     - nbval
     - nbsphinx
