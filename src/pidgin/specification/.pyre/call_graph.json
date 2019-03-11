@@ -1,0 +1,50 @@
+{
+  "_heapq.heappop": [
+    "IndexError.__init__"
+  ],
+  "_heapq.heapreplace": [
+    "IndexError.__init__"
+  ],
+  "_tracemalloc._get_traces": [
+    "MemoryError.__init__"
+  ],
+  "_tracemalloc.start": [
+    "ValueError.__init__"
+  ],
+  "signal.default_int_handler": [
+    "KeyboardInterrupt.__init__"
+  ],
+  "signal.getsignal": [
+    "ValueError.__init__"
+  ],
+  "signal.pthread_kill": [
+    "OSError.__init__"
+  ],
+  "signal.pthread_sigmask": [
+    "OSError.__init__"
+  ],
+  "signal.siginterrupt": [
+    "OSError.__init__"
+  ],
+  "signal.signal": [
+    "OSError.__init__"
+  ],
+  "signal.sigpending": [
+    "OSError.__init__"
+  ],
+  "signal.sigtimedwait": [
+    "OSError.__init__"
+  ],
+  "signal.sigwait": [
+    "OSError.__init__"
+  ],
+  "signal.sigwaitinfo": [
+    "OSError.__init__"
+  ],
+  "sys.exit": [
+    "SystemExit.__init__"
+  ],
+  "string.Formatter.get_value": [
+    "IndexError.__init__"
+  ]
+}
