@@ -32,6 +32,7 @@ setup_args = dict(
     },
     include_package_data=True,
     packages=setuptools.find_packages(where='src'),
+    py_modules=['jason'],
     package_dir={
         '':'src',
     },
