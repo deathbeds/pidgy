@@ -164,14 +164,12 @@ class Object:
         return object
 
     __add__ = functools.partialmethod(__attr__, attr="add", in_place=True)
-    __iadd__ = functools.partialmethod(__attr__, attr="iadd", in_place=True)
+    __iadd__ = functools.partialmethod(__attr__, attr="add", in_place=True)
     __sub__ = functools.partialmethod(__attr__, attr="sub", op="remove")
-    __isub__ = functools.partialmethod(
-        __attr__, attr="isub", op="remove", in_place=True
-    )
+    __isub__ = functools.partialmethod(__attr__, attr="sub", op="remove", in_place=True)
     __truediv__ = functools.partialmethod(__attr__, attr="floordiv", op="replace")
     __itruediv__ = functools.partialmethod(
-        __attr__, attr="ifloordiv", op="replace", in_place=True
+        __attr__, attr="floordiv", op="replace", in_place=True
     )
 
     def __or__(O, object):
@@ -181,7 +179,7 @@ class Object:
         return O.update({"@context": object}) or O
 
     def __matmul__(O, object):
-        return Context(object) @ O
+        return Context(object)(O)
 
     def __mod__(O, object):
         return Context(object) % O
