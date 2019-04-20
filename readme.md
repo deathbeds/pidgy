@@ -1,34 +1,58 @@
 
-`pidgin` is a literate computing tool for composing computational essays and documents with IPython/Jupyter notebooks. 
-
-[![Build Status](https://travis-ci.org/deathbeds/pidgin.svg?branch=master)](https://travis-ci.org/deathbeds/pidgin)[![Documentation Status](https://readthedocs.org/projects/pidgin-notebook/badge/?version=latest)](https://pidgin-notebook.readthedocs.io/en/latest/?badge=latest)
-
-#### [References](src/pidgin/docs/references.md.ipynb)
-
     !pip install pidgin ### Install `pidgin` from pypi.
 
-Activate `pidgin` to start programming in [__Markdown__][]
+Activate `pidgin` to start programming in __Markdown__.
+
+    %load_ext pidgin
+
+
+<blockquote><p>Programming in <strong>Markdown</strong> ⁉ What d🤔es that even mean❓</p>
+</blockquote>
+<p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
+</code></span> executes code within indented <strong>Markdown</strong> code blocks.<a href="#" title="Special rules apply for ordered and unordered lists.">🎩</a><a href="https://coffeescript.org/#literate" title="Literate coffee is a significant inspiration for `pidgin`.">☕️</a></p>
+<table class="highlighttable"><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%">5</pre></div></td><td style="text-align: left;" class="code"><div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #BA2121">&quot;I am code! 👂 me rawrrrr🦁!&quot;</span>
+</pre></div>
+</td></tr></table><blockquote><p>An author will recoginize code by it's <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #BA2121">&quot;monospaced&quot;</span>
+</code></span> typesetting.</p>
+</blockquote>
+<p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
+</code></span> encourages authors to capture computational thinking in human and computational logic.</p>
+<ul>
+<li><p>Human logic produces <strong>readable</strong> publications of a computational essay.</p>
+</li>
+<li><p>Computational logic ensures replicability; <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
+</code></span>s specific focus on testing allows an author to reinforce their ideas.</p>
+</li>
+<li><p>Human and computational logic allows others to understand and <strong>reuse</strong> a program for what could be exciting new discoveries.</p>
+</li>
+</ul>
+<p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
+</code></span> is a literate computing implementation that customizes the interactive <a href="https://jupyter.readthedocs.io/en/latest/"><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>jupyter
+</code></span> <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>notebook
+</code></span></a> experience.</p>
+<p><a href="https://travis-ci.org/deathbeds/pidgin"><img src="https://travis-ci.org/deathbeds/pidgin.svg?branch=master" alt="Build Status"></a><a href="https://pidgin-notebook.readthedocs.io/en/latest/?badge=latest"><img src="https://readthedocs.org/projects/pidgin-notebook/badge/?version=latest" alt="Documentation Status"></a></p>
+
+
 
 
 <p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> is a document-forward approach to writing in <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>IPython
-</code></span> where authors combine narrative and code within notebook cells.  <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> relies
-on several common syntax opinions to create computational essays and literate programs.</p>
-<a href="#Features"><h2 id="Features">Features</h2></a><ul>
+</code></span> is a document-forward approach to <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>notebook
+</code></span> authoring.  Authors will combine languages within cells to narrate the computational logic underlying the source code. Below is a list of <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
+</code></span> features 🔽</p>
+<ul>
 <li><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
 </code></span> is <strong>Markdown</strong> first; <strong>indented code blocks</strong> execute as normal code.  _The only modification to your workflow is to indenting your code;
 a notebook of indented code cells will execute with normal behavior.</p>
+</li>
+<li><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
+</code></span> executes <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #008000">all</span>
+</code></span> code!  Inline code and code fences execute code, and it must work.</p>
 </li>
 <li><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
 </code></span> promotes <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>doctest
 </code></span>ing within cells.  <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>doctest
 </code></span> is trigger by the familiar <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #BA2121">&quot;&gt;&gt;&gt;&quot;</span> <span style="color: #AA22FF; font-weight: bold">and</span> <span style="color: #BA2121">&quot;...&quot;</span>
 </code></span> syntax.</p>
-</li>
-<li><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> executes <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #008000">all</span>
-</code></span> code!  Inline code and code fences execute code, and it must work.</p>
 </li>
 <li><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
 </code></span> documents are readable and reusable.  <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
@@ -58,23 +82,46 @@ the published output.</p>
 
 
 <a href="#Writing-code-in-span-class-highlight-code-style-display-inline-block-vertical-align-middle-line-height-125-span-span-pidgin-code-span"><h3 id="Writing-code-in-span-class-highlight-code-style-display-inline-block-vertical-align-middle-line-height-125-span-span-pidgin-code-span">Writing code in <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span></h3></a><table class="highlighttable"><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%">3</pre></div></td><td style="text-align: left;" class="code"><div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #BA2121">&quot;I am code, 🦁, rawwwwrrr&quot;</span>
+</code></span></h3></a><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #666666">...</span>
+</code></span> is not much different than composing normal <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>notebook
+</code></span>s; just indent the source code once.</p>
+<table class="highlighttable"><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%">5</pre></div></td><td style="text-align: left;" class="code"><div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #BA2121">&quot;I am code, 🦁, rawwwwrrr&quot;</span>
 </pre></div>
-</td></tr></table><ul>
-<li><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> cells tangle standard <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>IPython
-</code></span> from indented <strong>Markdown</strong> code.</p>
-</li>
-<li><p>If any other <strong>Markdown</strong> features exist, the cell is rendered as rich HTML.</p>
+</td></tr></table><blockquote><p>To reiterate, code objects are identified by their <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #BA2121">&quot;monospace&quot;</span>
+</code></span> typesetting.</p>
+</blockquote>
+<ul>
+<li><p>If any other <strong>Markdown</strong> features exist, the cell is rendered as rich HTML; cells only containing code are not rendered.</p>
 </li>
 <li><p>A note: code in list blocks must be carry an extra indent to be registered.</p>
-<table class="highlighttable"><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%">10</pre></div></td><td style="text-align: left;" class="code"><div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #BA2121">&quot;Indented code within a list requires an extra for each level.&quot;</span>
+<table class="highlighttable"><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%">12</pre></div></td><td style="text-align: left;" class="code"><div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #BA2121">&quot;Indented code within a list requires an extra for each level.&quot;</span>
 </pre></div>
 </td></tr></table></li>
-<li><p>Indents are aligned to the first indented code block..  Spwcifically, the source for this cell is indented twice to avoid an <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #D2413A; font-weight: bold">IndentationError</span>
+<li><p>Indents are aligned to the first indented code block..  Specifically, the source for this cell is indented twice to avoid an <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #D2413A; font-weight: bold">IndentationError</span>
 </code></span>.</p>
 </li>
 </ul>
+<a href="#span-class-highlight-code-style-display-inline-block-vertical-align-middle-line-height-125-span-span-span-style-color-BA2121-docstring-span-code-span-s-for-code-class-code-code-function-def-code-initions"><h4 id="span-class-highlight-code-style-display-inline-block-vertical-align-middle-line-height-125-span-span-span-style-color-BA2121-docstring-span-code-span-s-for-code-class-code-code-function-def-code-initions"><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #BA2121">&quot;docstring&quot;</span>
+</code></span>s for <code>class</code> &amp; <code>function def</code>initions.</h4></a><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
+</code></span> converts all non-source code to strings so it is consumed by the python <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>ast
+</code></span>.  When a <strong>_Markdown</strong> <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #008000">str</span>
+</code></span>ing following a <code>class</code> or <code>def</code> statement becomes the docstring; <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>doctest
+</code></span>s included.</p>
+<table class="highlighttable"><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%">21</pre></div></td><td style="text-align: left;" class="code"><div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">a_function_with_a_markdown_docstring</span>():
+</pre></div>
+</td></tr></table><p>This is the <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #BA2121">&quot;docstring&quot;</span>
+</code></span> for <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>a_function_with_a_markdown_docstring
+</code></span>.  It is a function that returns <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #008000">None</span>
+</code></span>.</p>
+<pre><code>&gt;&gt;&gt; assert a_function_with_a_markdown_docstring() is None
+</code></pre>
+<table class="highlighttable"><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%">26
+27</pre></div></td><td style="text-align: left;" class="code"><div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #666666">...</span> <span style="color: #408080; font-style: italic"># A line break is required above to define code</span>
+<span style="color: #408080; font-style: italic"># otherwise Markdown assumes the paragraph is being continued</span>
+</pre></div>
+</td></tr></table><pre><code>&gt;&gt;&gt; a_function_with_a_markdown_docstring.__doc__
+'This is the `"docstring"` for ... assert a_function_with_a_markdown_docstring() is None'
+</code></pre>
 
 
 
@@ -83,8 +130,25 @@ the published output.</p>
 </code></span> code are tests!</p>
 </blockquote>
 <p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> provides <strong>3</strong> ways to run tests: inline code is execute, code fences are executed, and <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>doctest
-</code></span>s are evaluated.  Heavy use of code woven within a document will create more reliable documentation over time.</p>
+</code></span> provides <strong>3</strong> ways to run tests:</p>
+<ol>
+<li><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #BA2121">&quot;Inline code is identified by a tick&quot;</span> <span style="color: #AA22FF; font-weight: bold">and</span> <span style="color: #BA2121">&quot;It must raise an Exception&quot;</span>
+</code></span></p>
+</li>
+<li><p>Code fences without a language specification are evaluated.</p>
+<table class="highlighttable"><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%">12
+13
+14</pre></div></td><td style="text-align: left;" class="code"><div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">_document_</span>
+ _document_<span style="color: #666666">.</span><span style="color: #19177C">__dict__</span><span style="color: #666666">.</span>update({<span style="color: #BA2121">&quot;I run&quot;</span>: <span style="color: #008000">None</span>})
+ <span style="color: #008000; font-weight: bold">assert</span> <span style="color: #BA2121">&quot;I run&quot;</span> <span style="color: #AA22FF; font-weight: bold">in</span> _document_<span style="color: #666666">.</span><span style="color: #19177C">__dict__</span>
+</pre></div>
+</td></tr></table></li>
+<li><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>doctest
+</code></span> are evaluated.</p>
+</li>
+</ol>
+<pre><code>&gt;&gt;&gt; assert doctest
+</code></pre>
 
 
 
@@ -122,7 +186,8 @@ the published output.</p>
 
 
 
-<a href="#Documents-as-documents"><h4 id="Documents-as-documents">Documents as documents</h4></a><ul>
+<a href="#Ways-to-use-span-class-highlight-code-style-display-inline-block-vertical-align-middle-line-height-125-span-span-pidgin-code-span"><h4 id="Ways-to-use-span-class-highlight-code-style-display-inline-block-vertical-align-middle-line-height-125-span-span-pidgin-code-span">Ways to use <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
+</code></span></h4></a><ul>
 <li><p><strong><em>Binder</em></strong> <a href="https://mybinder.org/v2/gh/deathbeds/pidgin/master?filepath=readme_pidgin.md.ipynb"><img src="https://mybinder.org/badge.svg" alt="Binder"></a></p>
 <p>Take <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
 </code></span> for a spin on <a href="https://mybinder.org/v2/gh/deathbeds/pidgin/master?filepath=readme.ipynb"><strong><em>Binder</em></strong></a>.</p>
@@ -163,14 +228,15 @@ the published output.</p>
 </code></span> and <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>nbconvert<span style="color: #666666">.</span>preprocessors
 </code></span>.</p>
 </li>
+<li><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
+</code></span> should become python source code eventually.</p>
+</li>
 </ul>
 
 
 
 ## Developer
     
-
-    !ipython -m readme_pidgin.md.ipynb -- --uml=True --nbconvert=True --test=True
 
 ### Test `pidgin`
 
