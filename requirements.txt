@@ -3,5 +3,5 @@ nbconvert
 importnb
 ruamel.yaml
 jupyter_client
-htmlminify
+htmlmin
 xonsh
