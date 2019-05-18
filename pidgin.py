@@ -44,23 +44,6 @@ shell = get_ipython()
 pidgin = 10 and _run_as_interactive and __import__("pidgin").load()
 
 
-# ## Vocab
-#
-# ## Pidgin programming
-#
-# * The input generates the output, but is ignored in publishing.
-
-"""
-## The `IPython` pidgin implementation
-
-### `IPython` as a literate computing implementation.
-
-"""
-
-
-## Markup application language
-
-
 input_formats = get_ipython().getoutput("pandoc --list-input-formats")
 output_formats = get_ipython().getoutput("pandoc --list-output-formats    ")
 
@@ -259,9 +242,6 @@ class Tangle(Extension):
 ]
 
 
-# ### Bash as a systems level language
-
-
 class Bash(Extension):
     def load_ipython_extension(self, shell):
         remove_system_assign(shell), xonsh.main.setup()
@@ -364,9 +344,6 @@ def should_not_transform_source(str):
     return str.startswith("%%")
 
 
-### Documentation testing
-
-
 def run_docstring_examples(str, shell, verbose=False, compileflags=None):
     runner = doctest.DocTestRunner(verbose=verbose, optionflags=doctest.ELLIPSIS)
     globs = vars(shell.user_module)
@@ -417,14 +394,6 @@ class InlineDoctestParser(doctest.DocTestParser):
 class Doctest(Extension):
     def post_run_cell(self, result, *a, **kwargs):
         return run_docstring_examples(result.info.raw_cell, self.shell)
-
-
-"""
-### Formatting and Weaving pidgin programs.
-
-Modifies the application language.
-
-"""
 
 
 class Formatter(IPython.core.formatters.DisplayFormatter):
@@ -651,18 +620,11 @@ class Pidgin(PidginMixin, importnb.Notebook):
     ...
 
 
-# #### Command line usage.
-
-
 class PidginParameterize(PidginMixin, importnb.Parameterize):
     ...
 
 
 if _run_as_script:
-    """
-Command line usage.
-
-    """
     sys.argv = sys.argv[1:]
     PidginParameterize.load(sys.argv[0])
 
@@ -688,8 +650,6 @@ class InteractiveShell(Extension):
 
 pidgin_shell = InteractiveShell(enabled=False, shell=shell)
 
-
-## Developer
 
 if _run_as_interactive:
     get_ipython().system(
