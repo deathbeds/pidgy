@@ -1,0 +1,14 @@
+hypothesis
+graphviz
+importnb
+tox
+nbval
+nbsphinx
+nikola
+gitpython
+pandas
+matplotlib
+sympy
+pytest
+black
+isort
