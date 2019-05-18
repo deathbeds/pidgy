@@ -244,7 +244,7 @@ the published output.</p>
 ### Test `pidgin`
 
     if __name__ == '__main__':
-        !python -m pytest -- --nbval
+        !python -m pytest --nbval
 
 
 <a href="#Run-tests"><h3 id="Run-tests">Run tests</h3></a><table class="highlighttable"><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%">3</pre></div></td><td style="text-align: left;" class="code"><div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span>test <span style="color: #666666">=</span> <span style="color: #008000">False</span>

@@ -7,11 +7,9 @@ __version__ = None
 
 here = Path(__file__).parent
 
-exec((here / 'src'/ name / "_version.py").read_text())
-
 setup_args = dict(
     name=name,
-    version=__version__,
+    version='0.1.0',
     author="deathbeds",
     author_email="tony.fast@gmail.com",
     description="Conventions for writing code in the notebook.",
@@ -27,18 +25,12 @@ setup_args = dict(
     install_requires=[
         "nbconvert", "importnb", "IPython>7", 'dataclasses', "ruamel.yaml", "pyld", "jsonpointer", "jsonschema", "emoji", "webcolors", "attrs>=17.4.0"
     ],
-    extras_require={
-        'graphviz':  ["graphviz"],
-    },
     include_package_data=True,
-    packages=setuptools.find_packages(where='src'),
-    package_dir={
-        '':'src',
-    },
+    py_modules=['pidgin'],
+    #packages=setuptools.find_packages(where='src'),
+    #package_dir={'':'src',},
     entry_points = {
-        'pytest11': [
-            'pidgin = pidgin.application.pytest_',
-        ],
+        'pytest11': [],
     },
     classifiers=(
         "Development Status :: 4 - Beta",
