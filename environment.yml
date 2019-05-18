@@ -2,30 +2,6 @@ dependencies:
 - graphviz
 - ipywidgets
 - pip: 
-    - dataclasses
-    - ipython>7
-    - nbconvert
-    - notebook
-    - hypothesis
-    - graphviz
-    - importnb
-    - tox
-    - ruamel.yaml
-    - jupyter_client
-    - nbval
-    - nbsphinx
-    - nikola
-    - gitpython
-    - pandas
-    - matplotlib
-    - sympy
-    - python-slugify
-    - git+https://github.com/nteract/vdom
-    - pyld 
-    - jsonpointer
-    - jsonschema
-    - emoji
-    - pytest
-    - python-slugify
-    - webcolors
-    - attrs>=17.4.0
+    - rrequirements.txt
+    - rrequirements-test.txt
+    
