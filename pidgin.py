@@ -72,6 +72,7 @@ def translate(
 
 
 def python(source, input="markdown"):
+
     if should_not_transform_source(source):
         return source
 
@@ -113,7 +114,7 @@ def python(source, input="markdown"):
                 if not last_line.endswith(
                     ('"' * 3, "'" * 3, "-" * 3, '"' * 3 + "\\", "'" * 3 + "\\")
                 ):
-                    body = quote(body, "")
+                    body = quote(body)
 
                 definition = last_line.rstrip().endswith(":")
 
@@ -160,22 +161,26 @@ def remove_doctest_cleanup(input_transformer_manager):
             ...
 
 
-def quote(str: str, punc: str = "") -> str:
+def quote(str: str) -> str:
+    if not str.strip():
+        return str
     str, leading_ws = "".join(str), []
     lines = str.splitlines(True)
-    _ = '"' * 3
-    if _ in str:
-        _ = "'" * 3  # it seems quotes are a problem
-    if not str.strip():
-        _ = punc = ""
     while lines and (not lines[0].strip()):
         leading_ws.append(lines.pop(0))
     str = "".join(lines)
     end = len(str.rstrip())
     str, ending_ws = str[:end], str[end:]
-    if str and str.endswith(_[0]):
+
+    _ = '"' * 3
+    if str.startswith(('"' * 3, "'" * 3)) and str.endswith(('"' * 3, "'" * 3)):
+        _ = ""
+    elif _ in str:
+        _ = "'" * 3
+
+    if str and str.endswith(("'", '"')):
         str += " "
-    return f"{''.join(leading_ws)}{_}{str}{_}{punc}{ending_ws}"
+    return f"{''.join(leading_ws)}{_}{str}{_}{ending_ws}"
 
 
 def get_first_line(lines: (str, list), line: str = "") -> str:
@@ -230,6 +235,11 @@ def should_not_transform_source(str):
 
 
 class Shell(traitlets.HasTraits):
+    """
+what
+
+    """
+
     input = traitlets.Enum(input_formats, "markdown")
     enabled = traitlets.Bool(False, help="""""", allow_none=True)
 
@@ -312,10 +322,12 @@ def run_docstring_examples(str, shell=shell, verbose=False, compileflags=None):
     runner = doctest.DocTestRunner(verbose=verbose, optionflags=doctest.ELLIPSIS)
     globs = vars(shell.user_module)
     tests = []
-    for finder in [
-        doctest.DocTestFinder(verbose)
-    ]:  # (doctest.DocTestFinder(verbose, InlineDoctestParser()), doctest.DocTestFinder(verbose)):
+    for finder in (
+        doctest.DocTestFinder(verbose),
+        doctest.DocTestFinder(verbose, InlineDoctestParser()),
+    ):
         tests.extend(finder.find(str, name=shell.user_module.__name__))
+
     with wrapped_compiler(shell):
         for test in tests:
             test.globs = globs
@@ -348,93 +360,10 @@ def wrapped_compiler(shell):
 
 class InlineDoctestParser(doctest.DocTestParser):
     _tick_ = "`"
-    _EXAMPLE_RE = re.compile(
-        _tick_ + "{1}(?P<indent>)(?P<source>[^{" + _tick_ + "}]+)" + _tick_ + "{1}"
-    )
+    _EXAMPLE_RE = re.compile(_tick_ + "(?P<indent>)(?P<source>.*?)" + _tick_)
 
     def _parse_example(self, m, name, lineno):
         return m.group("source"), None, "...", None
-
-
-class TemplateFormatter(IPython.core.formatters.DisplayFormatter):
-    def __init__(self, *a, **k):
-        super().__init__(*a, **k)
-        for _, formatter in self.formatters.items():
-            formatter.enabled = True
-
-    @traitlets.default("mimebundle_formatter")
-    def _default_mime_formatter(self):
-        formatter = super()._default_mime_formatter()
-        [
-            formatter.for_type_by_name(*object)
-            for object in (
-                ("matplotlib.figure", "Axes", _show_axes),
-                ("matplotlib.figure", "Figure", _show_axes),
-                ("matplotlib.axes._subplots", "AxesSubplot", _show_axes),
-                ("sympy.plotting.plot", "Plot", _show_sympy_axes),
-            )
-        ]
-        return formatter
-
-    def format(self, object) -> str:
-        if isinstance(object, str):
-            new = self.parent.user_ns.get(object, object)
-            if new == object:
-                return object
-            if isinstance(new, str):
-                return super().format(new)
-        bundle, metadata = super().format(object)
-        for type in [str for str in reversed(self.active_types) if str != "text/plain"]:
-            if type in bundle:
-                object = bundle[type]
-                if type.startswith("image") and ("svg" not in type):
-                    object = _format_images(type, bundle)
-                if type == "text/latex":
-                    if object.startswith("$$") and object.endswith("$$"):
-                        object = object[1:-1]
-                if type == "text/html":
-                    object = htmlmin.minify(object, remove_empty_space=True)
-                break
-        return object
-
-
-def _show_axes(object):
-    import matplotlib.backends.backend_svg
-
-    bytes = __import__("io").BytesIO()
-    matplotlib.backends.backend_agg.FigureCanvasAgg(
-        getattr(object, "figure", object)
-    ).print_png(bytes)
-    return _format_bytes(bytes.getvalue(), object)
-
-
-def _show_sympy_axes(object):
-    s = __import__("io").BytesIO()
-    object.save(s)
-    return _format_bytes(s.getvalue(), object)
-
-
-def _format_bytes(bytes, object):
-    return (
-        {
-            "text/html": _format_images("image/png", {"image/png": bytes}),
-            "text/plain": repr(object),
-        },
-        {},
-    )
-
-
-def _format_images(type, bundle):
-    str = bundle[type]
-    if isinstance(str, bytes):
-        str = __import__("base64").b64encode(str).decode("utf-8")
-    if type in ("image/svg+xml", "text/html"):
-        ...
-    elif str.startswith("http"):
-        str = f"""<img src="{str}"/>"""
-    else:
-        str = f"""<img src="data:{type};base64,{str}"/>"""
-    return str
 
 
 def import_yaml():
@@ -458,17 +387,6 @@ def front_matter(source):
     except ValueError:
         ...
     return source, {}
-
-
-class Observable(Shell, traitlets.config.SingletonConfigurable):
-    def post_execute(self):
-        [
-            setattr(self, trait, self.parent.user_ns.get(trait))
-            for trait in self.traits()
-            if trait not in self._config_traits and trait in self.parent.user_ns
-        ]
-
-    _config_traits = set(traitlets.config.SingletonConfigurable().traits())
 
 
 class Weave(
@@ -496,9 +414,8 @@ class Weave(
         return Observable.instance()
 
     def post_run_cell(self, result):
-        result.info.raw_cell.splitlines()[0].strip() and self.format(
-            result.info.raw_cell
-        )
+        if result.info.raw_cell.splitlines()[0].strip():
+            self.format(result.info.raw_cell)
 
     def format(self, source, **k):
         if source in self.parent.user_ns and isinstance(
@@ -566,16 +483,119 @@ class Weave(
 Weave.enabled.default_value = False
 
 
+class Observable(Shell, traitlets.config.SingletonConfigurable):
+    def post_execute(self):
+        [
+            setattr(self, trait, self.parent.user_ns.get(trait))
+            for trait in self.traits()
+            if trait not in self._config_traits and trait in self.parent.user_ns
+        ]
+
+    _config_traits = set(traitlets.config.SingletonConfigurable().traits())
+
+
+class TemplateFormatter(IPython.core.formatters.DisplayFormatter):
+    def __init__(self, *a, **k):
+        super().__init__(*a, **k)
+        for _, formatter in self.formatters.items():
+            formatter.enabled = True
+
+    @traitlets.default("mimebundle_formatter")
+    def _default_mime_formatter(self):
+        formatter = super()._default_mime_formatter()
+        for object in (
+            ("matplotlib.figure", "Axes", _show_axes),
+            ("matplotlib.figure", "Figure", _show_axes),
+            ("matplotlib.axes._subplots", "AxesSubplot", _show_axes),
+            ("sympy.plotting.plot", "Plot", _show_sympy_axes),
+        ):
+            formatter.for_type_by_name(*object)
+        formatter.enabled = True
+        return formatter
+
+    def format(self, object) -> str:
+        if isinstance(object, str):
+            new = self.parent.user_ns.get(object, object)
+            if new == object:
+                return object
+            if isinstance(new, str):
+                return super().format(new)
+        bundle, metadata = super().format(object)
+        for type in [str for str in reversed(self.active_types) if str != "text/plain"]:
+            if type in bundle:
+                object = bundle[type]
+                if type.startswith("image") and ("svg" not in type):
+                    object = _format_images(type, bundle)
+                if type == "text/latex":
+                    if object.startswith("$$") and object.endswith("$$"):
+                        object = object[1:-1]
+                if type == "text/html":
+                    object = htmlmin.minify(object, remove_empty_space=True)
+                break
+        return object
+
+
+def _show_axes(object):
+    import matplotlib.backends.backend_svg
+
+    bytes = __import__("io").BytesIO()
+    matplotlib.backends.backend_agg.FigureCanvasAgg(
+        getattr(object, "figure", object)
+    ).print_png(bytes)
+    return _format_bytes(bytes.getvalue(), object)
+
+
+def _show_sympy_axes(object):
+    bytes = __import__("io").BytesIO()
+    object.save(bytes)
+    return _format_bytes(bytes.getvalue(), object)
+
+
+def _format_bytes(bytes, object):
+    return (
+        {
+            "text/html": _format_images("image/png", {"image/png": bytes}),
+            "text/plain": repr(object),
+        },
+        {},
+    )
+
+
+def _format_images(type, bundle):
+    str = bundle[type]
+    if isinstance(str, bytes):
+        str = __import__("base64").b64encode(str).decode("utf-8")
+    if type in ("image/svg+xml", "text/html"):
+        ...
+    elif str.startswith("http"):
+        str = f"""<img src="{str}"/>"""
+    else:
+        str = f"""<img src="data:{type};base64,{str}"/>"""
+    return str
+
+
 class PreProcessor(nbconvert.preprocessors.Preprocessor):
     target = traitlets.Any(default_value="rst")
 
     def preprocess_cell(self, cell, metadata, id):
         if cell["cell_type"] in {"code", "markdown"}:
-            _, source = metadata["metadata"]["name"].rsplit(".", 1)
+            try:
+                _, source = metadata["metadata"]["name"].rsplit(".", 1)
+            except:
+                source = "markdown"
             if source == "md":
                 source = "markdown"
             cell["source"] = translate(cell["source"], source, self.target)
         return cell, metadata
+
+    @classmethod
+    def export(cls, format, source, **kwargs):
+        kwargs["preprocessors"] = kwargs.get("preprocessors", [])
+        kwargs["preprocessors"].append(
+            cls(target=kwargs.pop("target", cls.target.default_value))
+        )
+        str, dict = nbconvert.get_exporter(format)(**kwargs).from_filename(source)
+        return str
 
 
 class PidginMixin:
