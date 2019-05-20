@@ -28,13 +28,13 @@ import sys
 import textwrap
 
 import htmlmin
+import ipykernel
 import IPython
 import jinja2.ext
 import jinja2.meta
 import nbconvert
 import pandocfilters
 import traitlets
-import xonsh
 
 import importnb
 
@@ -78,7 +78,9 @@ def python(source, input="markdown"):
     def action(type, value, format, metadata):
         nonlocal code, remaining, min_indent
         if type == "CodeBlock":
-            if "".join(value[0][1]) == "ipython":
+            if ("".join(value[0][1]) or "ipython") == "ipython" and (
+                not value[1].lstrip().startswith(">>>")
+            ):
                 splitter = re.compile(
                     "".join(
                         "\\s{0,4}%s\\s*" % re.escape(x)
@@ -146,123 +148,6 @@ def python(source, input="markdown"):
     if remaining.strip():
         code += textwrap.indent(quote(remaining), " " * min_indent).rstrip() + ";"
     return textwrap.dedent(code)
-
-
-class Extension(traitlets.HasTraits):
-    """
-Extension
-
-IPython extension
-IPython events
-Magics
-Transformers
-Observable objects.
-
-"""
-
-    shell = traitlets.Instance(IPython.InteractiveShell, help="""""", allow_none=True)
-    enabled = traitlets.Bool(True, help="""""")
-
-    def __init__(self, shell=None, **kwargs):
-        traitlets.HasTraits.__init__(self, **kwargs)
-        self.is_extension() and self.load_ipython_extension(self.shell)
-        for trigger in self.triggers():
-            self.shell.events.register(trigger, getattr(self, trigger))
-
-    @traitlets.default("shell")
-    def _default_shell(self):
-        return IPython.get_ipython()
-
-    @traitlets.observe("enabled")
-    def _observe_enabled(self, change=None):
-        if self.is_extension():
-            self.load_ipython_extension(self.shell) if change[
-                "new"
-            ] else self.unload_ipython_extension(self.shell)
-
-    def __enter__(self):
-        self.enabled or self.load_ipython_extension(self.shell)
-
-    def __exit__(self, *e):
-        self.enabled or self.unload_ipython_extension(self.shell)
-
-    def is_extension(self):
-        return hasattr(self, "load_ipython_extension") and self.enabled
-
-    def triggers(self):
-        return list(
-            object
-            for object in IPython.core.events.available_events
-            if hasattr(self, object)
-        )
-
-
-def load_ipython_extension(shell):
-    pidgin_shell.enabled = True
-
-
-load = functools.partial(load_ipython_extension, shell)
-
-
-def unload_ipython_extension(shell):
-    pidgin_shell.enabled = False
-
-
-class Tangle(Extension):
-    input = traitlets.Enum(input_formats, "markdown")
-
-    def translate(self, source, target):
-        return (
-            target(source)
-            if callable(target)
-            else translate(source, self.input, target)
-        )
-
-    python = functools.partialmethod(translate, target=python)
-
-    def __call__(self, lines):
-        return self.python("".join(lines)).splitlines(True)
-
-    def load_ipython_extension(self, shell):
-        remove_doctest_cleanup(
-            shell.input_transformer_manager
-        ), shell.input_transformer_manager.cleanup_transforms.insert(0, self)
-
-    def unload_ipython_extension(self, shell):
-        shell.input_transformer_manager.cleanup_transforms = [
-            object
-            for object in shell.input_transformer_manager.cleanup_transforms
-            if not isinstance(object, Tangle)
-        ]
-
-
-[
-    setattr(Tangle, object, functools.partialmethod(Tangle.translate, target=object))
-    for object in input_formats
-]
-
-
-class Bash(Extension):
-    def load_ipython_extension(self, shell):
-        remove_system_assign(shell), xonsh.main.setup()
-        shell.compile = self.CachingCompiler()
-
-    def unload_ipython_extension(self, shell):
-        shell.compile = IPython.core.compilerop.CachingCompiler()
-
-    class CachingCompiler(IPython.core.compilerop.CachingCompiler):
-        def ast_parse(self, source, filename="<unknown>", symbol="exec"):
-            return __import__("builtins").__xonsh__.execer._parse_ctx_free(
-                source, symbol, filename
-            )[0]
-
-
-def remove_system_assign(shell):
-    for i, transformer in enumerate(shell.input_transformer_manager.token_transformers):
-        isinstance(transformer, type) and issubclass(
-            transformer, IPython.core.inputtransformer2.SystemAssign
-        ) and shell.input_transformer_manager.token_transformers.pop(i)
-        break
 
 
 def remove_doctest_cleanup(input_transformer_manager):
@@ -344,14 +229,92 @@ def should_not_transform_source(str):
     return str.startswith("%%")
 
 
-def run_docstring_examples(str, shell, verbose=False, compileflags=None):
+class Shell(traitlets.HasTraits):
+    input = traitlets.Enum(input_formats, "markdown")
+    enabled = traitlets.Bool(False, help="""""", allow_none=True)
+
+    @traitlets.observe("enabled")
+    def _observe_enabled(self, change=None):
+        if self.is_ipython_extension():
+            self.load_ipython_extension(self.parent) if change[
+                "new"
+            ] else self.unload_ipython_extension(self.parent)
+
+    parent = traitlets.Instance(IPython.InteractiveShell, allow_none=True)
+
+    @traitlets.default("parent")
+    def _default_parent(self):
+        return IPython.get_ipython()
+
+    def _wrap_enabled(self, callable):
+        def wraps(*a):
+            self.enabled and callable(*a)
+
+        return functools.wraps(callable)(wraps)
+
+    def is_ipython_extension(self):
+        return hasattr(self, "load_ipython_extension") and self.enabled
+
+    def triggers(self):
+        return list(
+            object
+            for object in IPython.core.events.available_events
+            if hasattr(self, object)
+        )
+
+    def __init__(self, **kwargs):
+        traitlets.HasTraits.__init__(self, **kwargs), self.parent
+        self.is_ipython_extension() and self.load_ipython_extension(self.parent)
+        for trigger in self.triggers():
+            self.parent.events.register(
+                trigger, self._wrap_enabled(getattr(self, trigger))
+            )
+
+
+class Tangle(Shell, traitlets.config.SingletonConfigurable):
+    def translate(self, source, target):
+        return (
+            target(source)
+            if callable(target)
+            else translate(source, self.input, target)
+        )
+
+    python = functools.partialmethod(translate, target=python)
+
+    def __call__(self, lines):
+        return self.python("".join(lines)).splitlines(True) if self.enabled else lines
+
+    def load_ipython_extension(self, shell):
+        remove_doctest_cleanup(
+            shell.input_transformer_manager
+        ), shell.input_transformer_manager.cleanup_transforms.insert(0, self)
+
+    def unload_ipython_extension(self, shell):
+        shell.input_transformer_manager.cleanup_transforms = [
+            object
+            for object in shell.input_transformer_manager.cleanup_transforms
+            if not isinstance(object, Tangle)
+        ]
+
+
+[
+    setattr(Tangle, object, functools.partialmethod(Tangle.translate, target=object))
+    for object in input_formats
+]
+
+
+class Doctest(Shell, traitlets.config.SingletonConfigurable):
+    def post_run_cell(self, result, *a, **kwargs):
+        return run_docstring_examples(result.info.raw_cell, self.parent)
+
+
+def run_docstring_examples(str, shell=shell, verbose=False, compileflags=None):
     runner = doctest.DocTestRunner(verbose=verbose, optionflags=doctest.ELLIPSIS)
     globs = vars(shell.user_module)
     tests = []
-    for finder in (
-        doctest.DocTestFinder(verbose, InlineDoctestParser()),
-        doctest.DocTestFinder(verbose),
-    ):
+    for finder in [
+        doctest.DocTestFinder(verbose)
+    ]:  # (doctest.DocTestFinder(verbose, InlineDoctestParser()), doctest.DocTestFinder(verbose)):
         tests.extend(finder.find(str, name=shell.user_module.__name__))
     with wrapped_compiler(shell):
         for test in tests:
@@ -385,37 +348,42 @@ def wrapped_compiler(shell):
 
 class InlineDoctestParser(doctest.DocTestParser):
     _tick_ = "`"
-    _EXAMPLE_RE = re.compile(f"{_tick_}(?P<indent>)(?P<source>[^{_tick_}]+){_tick_}")
+    _EXAMPLE_RE = re.compile(
+        _tick_ + "{1}(?P<indent>)(?P<source>[^{" + _tick_ + "}]+)" + _tick_ + "{1}"
+    )
 
     def _parse_example(self, m, name, lineno):
         return m.group("source"), None, "...", None
 
 
-class Doctest(Extension):
-    def post_run_cell(self, result, *a, **kwargs):
-        return run_docstring_examples(result.info.raw_cell, self.shell)
-
-
-class Formatter(IPython.core.formatters.DisplayFormatter):
+class TemplateFormatter(IPython.core.formatters.DisplayFormatter):
     def __init__(self, *a, **k):
         super().__init__(*a, **k)
-        for object in (
-            ("matplotlib.figure", "Axes", _show_axes),
-            ("matplotlib.figure", "Figure", _show_axes),
-            ("matplotlib.axes._subplots", "AxesSubplot", _show_axes),
-            ("sympy.plotting.plot", "Plot", _show_sympy_axes),
-        ):
-            self.mimebundle_formatter.for_type_by_name(*object)
+        for _, formatter in self.formatters.items():
+            formatter.enabled = True
 
-    def finalize(self, object) -> str:
+    @traitlets.default("mimebundle_formatter")
+    def _default_mime_formatter(self):
+        formatter = super()._default_mime_formatter()
+        [
+            formatter.for_type_by_name(*object)
+            for object in (
+                ("matplotlib.figure", "Axes", _show_axes),
+                ("matplotlib.figure", "Figure", _show_axes),
+                ("matplotlib.axes._subplots", "AxesSubplot", _show_axes),
+                ("sympy.plotting.plot", "Plot", _show_sympy_axes),
+            )
+        ]
+        return formatter
+
+    def format(self, object) -> str:
         if isinstance(object, str):
             new = self.parent.user_ns.get(object, object)
             if new == object:
                 return object
             if isinstance(new, str):
-                return self.finalize(new)
-
-        bundle, metadata = self.format(object)
+                return super().format(new)
+        bundle, metadata = super().format(object)
         for type in [str for str in reversed(self.active_types) if str != "text/plain"]:
             if type in bundle:
                 object = bundle[type]
@@ -469,9 +437,6 @@ def _format_images(type, bundle):
     return str
 
 
-__formatter__ = Formatter(parent=shell)
-
-
 def import_yaml():
     try:
         from ruamel import yaml
@@ -495,38 +460,62 @@ def front_matter(source):
     return source, {}
 
 
-class Weave(Extension):
-    display_formatter = traitlets.Instance(IPython.core.formatters.DisplayFormatter)
-    observable = traitlets.Instance(traitlets.HasTraits)
+class Observable(Shell, traitlets.config.SingletonConfigurable):
+    def post_execute(self):
+        [
+            setattr(self, trait, self.parent.user_ns.get(trait))
+            for trait in self.traits()
+            if trait not in self._config_traits and trait in self.parent.user_ns
+        ]
+
+    _config_traits = set(traitlets.config.SingletonConfigurable().traits())
+
+
+class Weave(
+    IPython.core.formatters.IPythonDisplayFormatter,
+    Shell,
+    traitlets.config.SingletonConfigurable,
+):
     environment = traitlets.Instance(jinja2.Environment, allow_none=True)
-    input = traitlets.Enum(input_formats, "markdown")
 
     @traitlets.default("environment")
     def _default_environment(self):
-        return create_environment()
+        return nbconvert.TemplateExporter().environment
+
+    display_formatter = traitlets.Instance(IPython.core.formatters.DisplayFormatter)
+
+    @traitlets.default("display_formatter")
+    def _default_display_formatter(self):
+        return TemplateFormatter(parent=self.parent)
+
+    observable = traitlets.Instance(traitlets.HasTraits)
 
     @traitlets.default("observable")
     def _default_observable(self):
-        global __observable__
-        return __observable__
+        traitlets.dlink((self, "enabled"), (Observable.instance(), "enabled"))
+        return Observable.instance()
 
-    @traitlets.default("display_formatter")
-    def _default_formatter(self):
-        global __formatter__
-        return __formatter__
+    def post_run_cell(self, result):
+        result.info.raw_cell.splitlines()[0].strip() and self.format(
+            result.info.raw_cell
+        )
 
-    def render(self, source, **k):
+    def format(self, source, **k):
+        if source in self.parent.user_ns and isinstance(
+            self.parent.user_ns.get(source), str
+        ):
+            source = self.parent.user_ns.get(source)
+        self.environment.filters.update(
+            {k: v for k, v in self.parent.user_ns.items() if callable(v)}
+        )
         source, metadata = front_matter(source)
 
         def finalize(ctx, object):
-            return self.display_formatter.finalize(object)
+            return self.display_formatter.format(object)
 
         finalize.contextfunction = (
             finalize.evalcontextfunction
         ) = finalize.environmentfunction = True
-
-        template = self.environment.overlay(finalize=finalize).from_string(source)
-        display_id = IPython.display.DisplayHandle()
 
         def update(change=None, init=False):
             nonlocal source, self, display_id, template, k, metadata
@@ -534,19 +523,33 @@ class Weave(Extension):
                 **collections.ChainMap(
                     k,
                     metadata,
-                    self.shell.user_ns,
-                    self.shell.user_ns.get("__annotations__", {}),
+                    self.parent.user_ns,
+                    self.parent.user_ns.get("__annotations__", {}),
                     vars(__import__("builtins")),
                 )
             )
-            data = {
-                "text/html": translate(object, self.input, "html"),
-                "text/plain": source,
-            }
+            if len(object.splitlines()) == 1 and object.startswith("http"):
+                data = {
+                    "text/html": IPython.display.IFrame(
+                        object, "100%", 600
+                    )._repr_html_(),
+                    "text/plain": object,
+                }
+            elif object in self.parent.user_ns:
+                data = self.display_formatter.format(self.parent.user_ns[object])[0]
+            else:
+                data = {
+                    "text/html": translate(object, self.input, "html"),
+                    "text/plain": source,
+                }
             getattr(display_id, init and "display" or "update")(
                 data, metadata=metadata, raw=True
             )
 
+        template, display_id = (
+            self.environment.overlay(finalize=finalize).from_string(source),
+            IPython.display.DisplayHandle(),
+        )
         update(init=True)
 
         undeclared = jinja2.meta.find_undeclared_variables(
@@ -559,33 +562,8 @@ class Weave(Extension):
                 )
             self.observable.observe(update, undeclared)
 
-    def post_run_cell(self, result):
-        self.enabled and result.info.raw_cell.splitlines()[0].strip() and self.render(
-            result.info.raw_cell
-        )
 
-
-def create_environment():
-    return nbconvert.TemplateExporter().environment
-
-
-class Observable(traitlets.HasTraits):
-    shell = traitlets.Instance(IPython.InteractiveShell)
-
-    def __init__(self, *a, **k):
-        super().__init__(*a, **k), self.shell.events.register("post_execute", self)
-
-    def __call__(self, change=None):
-        [
-            setattr(self, trait, self.shell.user_ns.get(trait, None))
-            for trait in self.traits()
-        ]
-
-
-__observable__ = Observable(shell=shell)
-
-
-# ### Readable and reusable pidgin docs.
+Weave.enabled.default_value = False
 
 
 class PreProcessor(nbconvert.preprocessors.Preprocessor):
@@ -629,26 +607,55 @@ if _run_as_script:
     PidginParameterize.load(sys.argv[0])
 
 
-class InteractiveShell(Extension):
-    extensions = traitlets.List()
+class PidginShell(ipykernel.zmqshell.ZMQInteractiveShell, Shell):
+    def __init__(self, *a, **k):
+        super().__init__(*a, **k), self.init_pidgin()
 
-    @traitlets.default("extensions")
-    def _default_extensions(self):
-        return [
-            object(enabled=False, shell=self.shell)
-            for object in (Tangle, Bash, Doctest, Weave)
-        ]
+    def init_pidgin(self):
+        for object in (Tangle, Doctest, Weave):
+            name = object.__name__.lower()
+            self.add_traits(**{name: traitlets.Instance(object)})
+            object = object.instance()
+            self.set_trait(name, object)
+            traitlets.dlink((self, "enabled"), (object, "enabled"))
+            traitlets.link((self, "input"), (object, "input"))
 
     def load_ipython_extension(self, shell, bool=True):
-        for object in self.extensions:
-            object.enabled = bool
+        self.enabled = bool
 
     unload_ipython_extension = functools.partialmethod(
         load_ipython_extension, bool=False
     )
 
 
-pidgin_shell = InteractiveShell(enabled=False, shell=shell)
+class PidginKernel(ipykernel.kernelapp.IPythonKernel):
+    input = traitlets.Enum(input_formats, default_value="markdown")
+
+    def __init__(self, *a, **k):
+        super().__init__(*a, **k), traitlets.link(
+            (self, "input"), (self.shell, "input")
+        )
+
+    shell_class = traitlets.Type(PidginShell)
+
+
+# we probably need to link to the input
+
+
+def load_ipython_extension(shell):
+    if not shell.has_trait("pidgin"):
+        shell.add_traits(
+            **{"pidgin": traitlets.Instance(IPython.InteractiveShell)}
+        ), shell.set_trait("pidgin", PidginShell(parent=shell))
+    shell.pidgin.enabled = True
+
+
+def unload_ipython_extension(shell):
+    shell.pidgin.enabled = False
+
+
+load = functools.partial(load_ipython_extension, shell)
+unload = functools.partial(unload_ipython_extension, shell)
 
 
 if _run_as_interactive:
