@@ -351,18 +351,26 @@ class Doctest(Shell, traitlets.config.SingletonConfigurable):
         return run_docstring_examples(result.info.raw_cell, self.parent)
 
 
+class InlineOutputCheck(doctest.OutputChecker):
+    def check_output(self, *e):
+        return True
+
+
 def run_docstring_examples(str, shell=shell, verbose=False, compileflags=None):
     runner = doctest.DocTestRunner(verbose=verbose, optionflags=doctest.ELLIPSIS)
     globs = shell.user_ns
-    tests = []
-    for finder in (
-        doctest.DocTestFinder(verbose),
-        doctest.DocTestFinder(verbose, InlineDoctestParser()),
-    ):
-        tests.extend(finder.find(str, name=shell.user_module.__name__))
-
     with wrapped_compiler(shell):
-        for test in tests:
+        for test in doctest.DocTestFinder(verbose).find(
+            str, name=shell.user_module.__name__
+        ):
+            test.globs = globs
+            runner.run(test, compileflags=compileflags, clear_globs=False)
+
+    runner._checker = InlineOutputCheck()
+    with wrapped_compiler(shell):
+        for test in doctest.DocTestFinder(verbose, InlineDoctestParser()).find(
+            str, name=shell.user_module.__name__
+        ):
             test.globs = globs
             runner.run(test, compileflags=compileflags, clear_globs=False)
     return runner
@@ -683,7 +691,7 @@ if _run_as_script:
     PidginParameterize.load(sys.argv[0])
 
 
-class PidginShell(ipykernel.zmqshell.ZMQInteractiveShell, Shell):
+class PidginShell(Shell):  # ipykernel.zmqshell.ZMQInteractiveShell,
     @traitlets.observe("enabled")
     def _observe_enabled(self, change):
         for object in (Tangle, Doctest, Weave):
@@ -718,9 +726,9 @@ class PidginKernel(ipykernel.kernelapp.IPythonKernel):
 
 def load_ipython_extension(shell):
     if not shell.has_trait("pidgin"):
-        shell.add_traits(
-            **{"pidgin": traitlets.Instance(IPython.InteractiveShell)}
-        ), shell.set_trait("pidgin", PidginShell(parent=shell))
+        shell.add_traits(**{"pidgin": traitlets.Instance(Shell)}), shell.set_trait(
+            "pidgin", PidginShell(parent=shell)
+        )
     shell.pidgin.enabled = True
 
 
