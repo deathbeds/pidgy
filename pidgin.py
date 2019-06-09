@@ -7,7 +7,7 @@ Pidgin is a literate computing implementation in IPython.  It allows authors to 
 """
 
 
-__all__ = ("Pidgin",)
+__all__ = ("PidginLoader",)
 
 
 _run_as_main = __name__ == "__main__"
@@ -28,7 +28,8 @@ import sys
 import textwrap
 
 import htmlmin
-import ipykernel
+import ipykernel.kernelapp
+import ipykernel.zmqshell
 import IPython
 import jinja2.ext
 import jinja2.meta
@@ -41,7 +42,10 @@ import importnb
 get_ipython = IPython.get_ipython
 shell = get_ipython()
 
-pidgin = 10 and _run_as_interactive and __import__("pidgin").load()
+pidgin = 0 and _run_as_interactive and __import__("pidgin").load()
+
+
+shell = get_ipython()
 
 
 input_formats = get_ipython().getoutput("pandoc --list-input-formats")
@@ -58,9 +62,9 @@ def translate(
     process = subprocess.Popen(
         [
             "pandoc",
-            f"--read={input}",
+            f"""--read={input}{args}""",
             f"--write={target}",
-            *f"--indented-code-classes={lang} {args}".rstrip().split(),
+            *f"--indented-code-classes={lang}".rstrip().split(),
         ],
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
@@ -72,7 +76,6 @@ def translate(
 
 
 def python(source, input="markdown"):
-
     if should_not_transform_source(source):
         return source
 
@@ -250,6 +253,9 @@ what
                 "new"
             ] else self.unload_ipython_extension(self.parent)
 
+    #             self.parent.display_formatter.mimebundle_formatter.enabled = self.parent.display_formatter.ipython_display_formatter.enabled = True
+    #             for type in self.parent.display_formatter.active_types: self.parent.display_formatter.formatters[type].enabled=True
+
     parent = traitlets.Instance(IPython.InteractiveShell, allow_none=True)
 
     @traitlets.default("parent")
@@ -286,7 +292,7 @@ class Tangle(Shell, traitlets.config.SingletonConfigurable):
         return (
             target(source)
             if callable(target)
-            else translate(source, self.input, target)
+            else translate(source, self.input, target, args="-footnotes")
         )
 
     python = functools.partialmethod(translate, target=python)
@@ -313,6 +319,33 @@ class Tangle(Shell, traitlets.config.SingletonConfigurable):
 ]
 
 
+@IPython.core.magics.magics_class
+class TangleMagic(IPython.core.magics.Magics):
+    @IPython.core.magic.cell_magic
+    def tangle(self, line, cell):
+        import black
+
+        enabled = Tangle.instance().enabled
+        Tangle.instance().enabled = True
+        cell = self.shell.input_transformer_manager.transform_cell(cell)
+        IPython.display.display(IPython.display.Code(cell, language="python"))
+        IPython.display.display(
+            IPython.display.Code(
+                black.format_str(
+                    ast.dump(
+                        self.shell.transform_ast(self.shell.compile.ast_parse(cell))
+                    ),
+                    mode=black.FileMode(),
+                )
+            )
+        )
+
+        Tangle.instance().enabled = enabled
+
+
+Tangle.instance().parent.register_magics(TangleMagic(Tangle.instance().parent))
+
+
 class Doctest(Shell, traitlets.config.SingletonConfigurable):
     def post_run_cell(self, result, *a, **kwargs):
         return run_docstring_examples(result.info.raw_cell, self.parent)
@@ -320,7 +353,7 @@ class Doctest(Shell, traitlets.config.SingletonConfigurable):
 
 def run_docstring_examples(str, shell=shell, verbose=False, compileflags=None):
     runner = doctest.DocTestRunner(verbose=verbose, optionflags=doctest.ELLIPSIS)
-    globs = vars(shell.user_module)
+    globs = shell.user_ns
     tests = []
     for finder in (
         doctest.DocTestFinder(verbose),
@@ -366,6 +399,9 @@ class InlineDoctestParser(doctest.DocTestParser):
         return m.group("source"), None, "...", None
 
 
+Doctest.instance()
+
+
 def import_yaml():
     try:
         from ruamel import yaml
@@ -379,7 +415,7 @@ def import_yaml():
 
 def front_matter(source):
     try:
-        if source.startswith("---\n") and (source.rindex("\n---\n") > 0):
+        if source.startswith("---\n") and (source.rindex("\n---\n")):
             data, sep, rest = source.lstrip("-").partition("\n---\n")
             data = import_yaml().safe_load(__import__("io").StringIO(data))
             if isinstance(data, dict):
@@ -389,22 +425,30 @@ def front_matter(source):
     return source, {}
 
 
-class Weave(
-    IPython.core.formatters.IPythonDisplayFormatter,
-    Shell,
-    traitlets.config.SingletonConfigurable,
-):
+class Observable(Shell, traitlets.config.SingletonConfigurable):
+    def _post_execute(self):
+        with self.hold_trait_notifications():
+            for trait in self.traits():
+                if trait not in self._config_traits and trait in self.parent.user_ns:
+                    if getattr(self, trait, None) is not self.parent.user_ns.get(
+                        trait, None
+                    ):
+                        setattr(self, trait, self.parent.user_ns.get(trait, None))
+
+    _config_traits = set(traitlets.config.SingletonConfigurable().traits())
+
+
+Observable.instance().parent.events.register(
+    "post_execute", Observable.instance()._post_execute
+)
+
+
+class Weave(Shell, traitlets.config.SingletonConfigurable):
     environment = traitlets.Instance(jinja2.Environment, allow_none=True)
 
     @traitlets.default("environment")
     def _default_environment(self):
         return nbconvert.TemplateExporter().environment
-
-    display_formatter = traitlets.Instance(IPython.core.formatters.DisplayFormatter)
-
-    @traitlets.default("display_formatter")
-    def _default_display_formatter(self):
-        return TemplateFormatter(parent=self.parent)
 
     observable = traitlets.Instance(traitlets.HasTraits)
 
@@ -417,6 +461,30 @@ class Weave(
         if result.info.raw_cell.splitlines()[0].strip():
             self.format(result.info.raw_cell)
 
+    def finalize(self, object):
+        if isinstance(object, str):
+            object = self.parent.user_ns.get(object, object)
+            if isinstance(object, str):
+                return object
+
+        known = dispatch_extras(object)
+        if known:
+            return known
+
+        bundle, metadata = self.parent.display_formatter.format(object)
+        for type in reversed(self.parent.display_formatter.active_types):
+            if type in bundle:
+                object = bundle[type]
+                if type.startswith("image") and ("svg" not in type):
+                    object = _format_images(type, bundle)
+                if type == "text/latex":
+                    if object.startswith("$$") and object.endswith("$$"):
+                        object = object[1:-1]
+                if type == "text/html":
+                    object = htmlmin.minify(object, remove_empty_space=True)
+                break
+        return object
+
     def format(self, source, **k):
         if source in self.parent.user_ns and isinstance(
             self.parent.user_ns.get(source), str
@@ -426,13 +494,6 @@ class Weave(
             {k: v for k, v in self.parent.user_ns.items() if callable(v)}
         )
         source, metadata = front_matter(source)
-
-        def finalize(ctx, object):
-            return self.display_formatter.format(object)
-
-        finalize.contextfunction = (
-            finalize.evalcontextfunction
-        ) = finalize.environmentfunction = True
 
         def update(change=None, init=False):
             nonlocal source, self, display_id, template, k, metadata
@@ -464,7 +525,7 @@ class Weave(
             )
 
         template, display_id = (
-            self.environment.overlay(finalize=finalize).from_string(source),
+            self.environment.overlay(finalize=self.finalize).from_string(source),
             IPython.display.DisplayHandle(),
         )
         update(init=True)
@@ -472,6 +533,11 @@ class Weave(
         undeclared = jinja2.meta.find_undeclared_variables(
             template.environment.parse(source)
         )
+        for key in list(undeclared):
+            if isinstance(
+                self.parent.user_ns.get(key, None), __import__("types").ModuleType
+            ):
+                undeclared.remove(key)
         if undeclared:
             for var in undeclared:
                 self.observable.has_trait(var) or self.observable.add_traits(
@@ -483,56 +549,49 @@ class Weave(
 Weave.enabled.default_value = False
 
 
-class Observable(Shell, traitlets.config.SingletonConfigurable):
-    def post_execute(self):
-        [
-            setattr(self, trait, self.parent.user_ns.get(trait))
-            for trait in self.traits()
-            if trait not in self._config_traits and trait in self.parent.user_ns
-        ]
+@IPython.core.magics.magics_class
+class WeaveMagic(IPython.core.magics.Magics):
+    @IPython.core.magic.cell_magic
+    def weave(self, line, cell):
+        Weave.instance(parent=self.shell).format(cell)
+        self.shell.events.trigger("post_execute")
 
-    _config_traits = set(traitlets.config.SingletonConfigurable().traits())
+    @IPython.core.magic.cell_magic
+    def object(self, line, cell):
+        class Cell:
+            def _ipython_display_(x):
+                nonlocal self, cell
+                Weave.instance(parent=self.shell).format(cell)
+
+        self.shell.user_ns[line.strip()] = Cell()
+        return self.shell.user_ns[line.strip()]
 
 
-class TemplateFormatter(IPython.core.formatters.DisplayFormatter):
-    def __init__(self, *a, **k):
-        super().__init__(*a, **k)
-        for _, formatter in self.formatters.items():
-            formatter.enabled = True
+Weave.instance().parent.register_magics(WeaveMagic(Weave.instance().parent))
 
-    @traitlets.default("mimebundle_formatter")
-    def _default_mime_formatter(self):
-        formatter = super()._default_mime_formatter()
-        for object in (
-            ("matplotlib.figure", "Axes", _show_axes),
-            ("matplotlib.figure", "Figure", _show_axes),
-            ("matplotlib.axes._subplots", "AxesSubplot", _show_axes),
-            ("sympy.plotting.plot", "Plot", _show_sympy_axes),
-        ):
-            formatter.for_type_by_name(*object)
-        formatter.enabled = True
-        return formatter
 
-    def format(self, object) -> str:
-        if isinstance(object, str):
-            new = self.parent.user_ns.get(object, object)
-            if new == object:
-                return object
-            if isinstance(new, str):
-                return super().format(new)
-        bundle, metadata = super().format(object)
-        for type in [str for str in reversed(self.active_types) if str != "text/plain"]:
-            if type in bundle:
-                object = bundle[type]
-                if type.startswith("image") and ("svg" not in type):
-                    object = _format_images(type, bundle)
-                if type == "text/latex":
-                    if object.startswith("$$") and object.endswith("$$"):
-                        object = object[1:-1]
-                if type == "text/html":
-                    object = htmlmin.minify(object, remove_empty_space=True)
-                break
-        return object
+def dispatch_extras(object):
+    if "matplotlib" in sys.modules:
+        import matplotlib
+
+        try:
+            if isinstance(
+                object,
+                (
+                    matplotlib.figure.Axes,
+                    matplotlib.figure.Figure,
+                    getattr(matplotlib.axes._subplots, "AxesSubplot", type),
+                ),
+            ):
+                return _show_axes(object)
+        except:
+            ...
+
+    if "sympy.plotting" in sys.modules:
+        from sympy.plotting.plot import Plot
+
+        if isinstance(object, Plot):
+            return _show_sympy_axes(object)
 
 
 def _show_axes(object):
@@ -542,23 +601,23 @@ def _show_axes(object):
     matplotlib.backends.backend_agg.FigureCanvasAgg(
         getattr(object, "figure", object)
     ).print_png(bytes)
-    return _format_bytes(bytes.getvalue(), object)
+    try:
+        return _format_bytes(bytes.getvalue(), object)
+    finally:
+        matplotlib.pyplot.clf()
 
 
 def _show_sympy_axes(object):
     bytes = __import__("io").BytesIO()
     object.save(bytes)
-    return _format_bytes(bytes.getvalue(), object)
+    try:
+        return _format_bytes(bytes.getvalue(), object)
+    finally:
+        __import__("matplotlib").pyplot.clf()
 
 
 def _format_bytes(bytes, object):
-    return (
-        {
-            "text/html": _format_images("image/png", {"image/png": bytes}),
-            "text/plain": repr(object),
-        },
-        {},
-    )
+    return _format_images("image/png", {"image/png": bytes})
 
 
 def _format_images(type, bundle):
@@ -605,16 +664,13 @@ class PidginMixin:
 
     def code(self, str: str) -> str:
         global splitter
-        try:
-            _, format, __ = self.path.rsplit(".")
-        except:
-            format = "markdown"
+        _, format, __ = self.path.rsplit(".")
         if format == "md":
             format = "markdown"
         return self.splitter.transform_cell(python(str))
 
 
-class Pidgin(PidginMixin, importnb.Notebook):
+class PidginLoader(PidginMixin, importnb.Notebook):
     ...
 
 
@@ -628,17 +684,15 @@ if _run_as_script:
 
 
 class PidginShell(ipykernel.zmqshell.ZMQInteractiveShell, Shell):
-    def __init__(self, *a, **k):
-        super().__init__(*a, **k), self.init_pidgin()
-
-    def init_pidgin(self):
+    @traitlets.observe("enabled")
+    def _observe_enabled(self, change):
         for object in (Tangle, Doctest, Weave):
             name = object.__name__.lower()
             self.add_traits(**{name: traitlets.Instance(object)})
             object = object.instance()
             self.set_trait(name, object)
-            traitlets.dlink((self, "enabled"), (object, "enabled"))
-            traitlets.link((self, "input"), (object, "input"))
+            object.enabled = change["new"]
+            object.input = self.input
 
     def load_ipython_extension(self, shell, bool=True):
         self.enabled = bool
@@ -674,7 +728,12 @@ def unload_ipython_extension(shell):
     shell.pidgin.enabled = False
 
 
-load = functools.partial(load_ipython_extension, shell)
+def load(input="markdown"):
+    load_ipython_extension(shell)
+    loader = PidginLoader()
+    return loader
+
+
 unload = functools.partial(unload_ipython_extension, shell)
 
 
