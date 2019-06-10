@@ -13,10 +13,11 @@ install:
 - python setup.py sdist
 - python setup.py bdist_wheel
 - pip install -r requirements.txt
+- pip install -r requirements-test.txt
 - python -m pip install dist/pidgin-*.tar.gz --ignore-installed --no-deps
 script:
-- ipython -m pytest -- --nbval --sanitize-with sanitize.cfg
-- jupyter nbconvert --to markdown --execute --stdout --TemplateExporter.exclude_input=True readme_pidgin.md.ipynb > readme.md
+- pytest --nbval --current-env -v --sanitize-with sanitize.cfg src
+- jupyter nbconvert --to markdown --execute --ExecutePreprocessor.kernel_name=python --stdout --TemplateExporter.exclude_input=True readme_pidgin.md.ipynb > readme.md
 deploy:
 - provider: pypi
   user: docfast

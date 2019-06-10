@@ -1,11 +1,26 @@
 dependencies:
 - graphviz
+- ipywidgets
+- pandas
+- matplotlib
+
 - pip:
-    - dataclasses
-    - notebook
-    - ipython>7
-    - nbconvert
-    - hypothesis
-    - graphviz
-    - importnb
-    - tox
+  - ipython>7
+  - nbconvert
+  - importnb
+  - ruamel.yaml
+  - jupyter_client
+  - htmlmin
+  - xonsh
+
+  - hypothesis
+  - importnb
+  - tox
+  - nbval
+  - nbsphinx
+  - nikola
+  - gitpython
+  - sympy
+  - pytest
+  - black
+  - isort
