@@ -4,6 +4,7 @@ addons:
     apt:
         packages:
             - graphviz
+            - pandoc
 
 python:
 - '3.6'
