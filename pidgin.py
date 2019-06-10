@@ -721,9 +721,6 @@ class PidginKernel(ipykernel.kernelapp.IPythonKernel):
     shell_class = traitlets.Type(PidginShell)
 
 
-# we probably need to link to the input
-
-
 def load_ipython_extension(shell):
     if not shell.has_trait("pidgin"):
         shell.add_traits(**{"pidgin": traitlets.Instance(Shell)}), shell.set_trait(
