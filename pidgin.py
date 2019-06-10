@@ -82,7 +82,7 @@ def python(source, input="markdown"):
     def action(type, value, format, metadata):
         nonlocal code, remaining, min_indent
         if type == "CodeBlock":
-            if ("".join(value[0][1]) or "ipython") == "ipython" and (
+            if (value[0][1] and value[0][1][-1] or "ipython") == "ipython" and (
                 not value[1].lstrip().startswith(">>>")
             ):
                 splitter = re.compile(
@@ -298,7 +298,11 @@ class Tangle(Shell, traitlets.config.SingletonConfigurable):
     python = functools.partialmethod(translate, target=python)
 
     def __call__(self, lines):
-        return self.python("".join(lines)).splitlines(True) if self.enabled else lines
+        return (
+            python("".join(lines), self.input).splitlines(True)
+            if self.enabled
+            else lines
+        )
 
     def load_ipython_extension(self, shell):
         remove_doctest_cleanup(
@@ -672,10 +676,13 @@ class PidginMixin:
 
     def code(self, str: str) -> str:
         global splitter
-        _, format, __ = self.path.rsplit(".")
+        try:
+            _, format, __ = self.path.rsplit(".")
+        except:
+            format = "md"
         if format == "md":
             format = "markdown"
-        return self.splitter.transform_cell(python(str))
+        return self.splitter.transform_cell(python(str, format))
 
 
 class PidginLoader(PidginMixin, importnb.Notebook):
@@ -701,6 +708,8 @@ class PidginShell(Shell):  # ipykernel.zmqshell.ZMQInteractiveShell,
             self.set_trait(name, object)
             object.enabled = change["new"]
             object.input = self.input
+        traitlets.dlink((self, "input"), (self.tangle, "input"))
+        traitlets.dlink((self, "input"), (self.weave, "input"))
 
     def load_ipython_extension(self, shell, bool=True):
         self.enabled = bool
