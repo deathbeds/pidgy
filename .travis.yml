@@ -4,13 +4,16 @@ addons:
     apt:
         packages:
         - graphviz
-        - pandoc
-        update: true
+        - haskell-platform
 
 python:
 - '3.6'
 - 3.6-dev
 - 3.7-dev
+before_install:
+- cabal update
+- cabal install pandoc
+- pandoc --version
 install:
 - python setup.py sdist
 - python setup.py bdist_wheel
