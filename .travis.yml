@@ -3,8 +3,9 @@ cache: pip
 addons:
     apt:
         packages:
-            - graphviz
-            - pandoc
+        - graphviz
+        - pandoc
+        update: true
 
 python:
 - '3.6'
