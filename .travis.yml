@@ -4,14 +4,13 @@ addons:
     apt:
         packages:
         - graphviz
+        - pandoc
+        update: true
 python:
 - '3.6'
 - 3.6-dev
 - 3.7-dev
 before_install:
-- pip install pypandoc
-- python -c "from pypandoc import download_pandoc as dp; dp(targetfolder='~/bin/');"
-- export PATH=~/bin:$PATH
 - pandoc --version
 install:
 - python setup.py sdist
