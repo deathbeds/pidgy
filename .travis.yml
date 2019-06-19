@@ -1,12 +1,12 @@
 language: python
-cache: pip
-dist: trusty
-pandoc_version: 1.19.2
+cache:
+- pip
+- packages
 addons:
     apt:
         packages:
         - graphviz
-        - pandoc
+        - haskell-platform
         update: true
 python:
 - '3.6'
