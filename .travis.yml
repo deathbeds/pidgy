@@ -15,7 +15,7 @@ python:
 before_install:
 - cabal update
 - cabal --version
-- cabal install pandoc
+- cabal install --force-reinstalls pandoc 
 - pandoc --version
 install:
 - python setup.py sdist
