@@ -13,6 +13,7 @@ python:
 - 3.6-dev
 - 3.7-dev
 before_install:
+- cabal install pandoc
 - pandoc --version
 install:
 - python setup.py sdist
