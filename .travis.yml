@@ -1,35 +1,19 @@
-language: python
-cache: pip
-addons:
-    apt:
-        packages:
-        - graphviz
-python:
-- '3.6'
-- 3.6-dev
-- 3.7-dev
+---
+language: nix
+cache:
+  directories:
+    - $STORE
+env:
+  global:
+    - STORE=$HOME/nix-store
 before_install:
-- pip install pypandoc
-- python -c "from pypandoc import download_pandoc as dp; dp(targetfolder='~/bin/');"
-- export PATH=~/bin:$PATH
-- pandoc --version
+  - sudo mkdir -p /etc/nix
+  - echo "binary-caches = https://cache.nixos.org/ file://$STORE" | sudo tee -a /etc/nix/nix.conf > /dev/null
+  - echo 'require-sigs = false' | sudo tee -a /etc/nix/nix.conf > /dev/null
+before_cache:
+  - mkdir -p $STORE
+  - nix copy --to file://$STORE -f default.nix buildInputs
 install:
-- python setup.py sdist
-- python setup.py bdist_wheel
-- pip install -r requirements.txt
-- pip install -r requirements-test.txt
-- python -m pip install dist/pidgin-*.tar.gz --ignore-installed --no-deps
+  - nix-shell --pure --command "echo 'run nix-shell'"
 script:
-- pytest --nbval --current-env -v --sanitize-with sanitize.cfg -p no:importnb test_pidgin.ipynb
-# - jupyter nbconvert --to markdown --execute --ExecutePreprocessor.kernel_name=python --stdout --TemplateExporter.exclude_input=True readme_pidgin.md.ipynb > readme.md
-deploy:
-- provider: pypi
-  user: docfast
-  skip_cleanup: true
-  password:
-    secure: IRhlogsNSZULCdVeypSho6Bp/2Kg8O5p6ZNW8D+yQ7+yS5ThCNevS1ZVnEabGz3qQwoaquRdYXyBtyf0X6jUUgMqUUZff0IOzrQnQo9F9JFHKVje2N25gdN2dpQFN2R8uqIKN5KVaHGWU9L4+q6LWIzynAz2bKUTKzEkELMpSte0fK7WiDYkSKUkQWNvd30AEvNFwH90G8/4ft3lVDgaAlN/+wMpSHLoJpnl/FmVbx2ea/se89akOKEprbFhH8ZJpfKXZY1NELMUCvd6noOllMDg91E/ma/MYZgRkQC8i+wXCu+SYTD9z+p+imtBXG6V7KKUQFcBEQ1Sy3IEiYe6IgmMl841FPjn29O+qxD7lwyFClNE6KvKFlCWmMaQViwO25xfXKk/Ni5P2dZeJgORscQTRL64FCOzkC/mKy4zDkrwuS9pkKyIjS1kJ07QvNalA2/3f6kp5isXgr+nGEH9TiWCzX3phPRZbSewQdLybw3xYbjOiDVebWkMoRKatD7JrzeZThl+D7BHznSP5AV6DgMNB/91PmHj1oI5yAOTgEyVyCnwkhiXLZ/nHoR24mulfQSgG/UosaxsB6DAFzTUYaS+boe57UorbxyEhkfW7FupzJPE13nnwYwH37q0MOujQ6jKp97kdPr8wzTdf3ORIQIS/EYkq1twj6qEkcsiVBI=
-  on:
-    tags: true
-    distributions: sdist bdist_wheel
-    repo: deathbeds/pidgin
-    python: '3.6'
+  - nix-shell --pure --command "export PYMKS_USE_FFTW=$PYMKS_USE_FFTW; py.test"
