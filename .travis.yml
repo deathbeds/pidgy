@@ -16,4 +16,4 @@ before_cache:
 install:
   - nix-shell --pure --command "echo 'run nix-shell'"
 script:
-  - nix-shell --pure --command "export PYMKS_USE_FFTW=$PYMKS_USE_FFTW; py.test"
+  - nix-shell --pure --command "py.test"
