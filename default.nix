@@ -52,7 +52,6 @@ in
       (pypkgs.pandas.overridePythonAttrs { doCheck=false; })
       nixpkgs.pkgs.graphviz
       pypkgs.graphviz
-
     ];
     propagatedBuildInputs=nativeBuildInputs;
     src=builtins.filterSource (path: type: type != "directory" || baseNameOf path != ".git") ./.;
