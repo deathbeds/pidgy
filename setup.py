@@ -26,9 +26,7 @@ setup_args = dict(
         "nbconvert", "importnb", "IPython>7", 'dataclasses', "ruamel.yaml", "pyld", "jsonpointer", "jsonschema", "emoji", "htmlmin", "webcolors", "attrs>=17.4.0"
     ],
     include_package_data=True,
-    py_modules=['pidgin'],
-    #packages=setuptools.find_packages(where='src'),
-    #package_dir={'':'src',},
+    packages=setuptools.find_packages(),
     entry_points = {
         'pytest11': [],
     },
