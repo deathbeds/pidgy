@@ -1,1 +1,2 @@
 python setup.py develop
+python -m pidgin kernel install
