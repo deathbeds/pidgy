@@ -1,7 +1,6 @@
 ipython>7
 nbconvert
 importnb
-ruamel.yaml
 jupyter_client
 htmlmin
-xonsh
+pytest
