@@ -24,4 +24,4 @@ dependencies:
   - pytest
   - black
   - isort
-  - rrequirements.txt
+  - -rrequirements.txt
