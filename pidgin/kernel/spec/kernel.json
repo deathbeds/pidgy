@@ -1,0 +1,13 @@
+{
+ "argv": [
+  "/Users/tonyfast/anaconda3/bin/python",
+  "-m",
+  "ipykernel_launcher",
+ "--kernel_class",
+  "pidgin.kernel.PidginKernel",
+  "-f",
+  "{connection_file}"
+ ],
+ "display_name": "Pidgin 3",
+ "language": "python"
+}
