@@ -1,9 +1,9 @@
 ## The `pidgin` implementation
 ### An `IPython` extension.
 
-    def extension(shell):
+    def load_ipython_extension(shell):
         """
-The `pidgin` `extension`'s primary function transforms the `jupyter`
+The `pidgin` `load_ipython_extension`'s primary function transforms the `jupyter`
 `notebook`s into a literate computing interfaces.
 `markdown` becomes the primary plain-text format for submitting code,
 and the `markdown` is translated to `python` source code
@@ -34,25 +34,36 @@ The `pidgin` translation is managed by a custom `IPython.core.inputtransformer2.
         """"""
 
 The `shell.input_transformer_manager` applies string transformations to clean up the `input`
-to be valid `python`.  For example, `IPython` applies line transformations
-that strip whitespace and terminal prompts.
+to be valid `python`.  There are three stages of line of transforms.
+
+1. Cleanup transforms that operate on the entire cell `input`.
 
         """"""
-        >>> assert shell.input_transformer_manager.cleanup_transforms is shell.input_transformers_cleanup
         >>> shell.input_transformers_cleanup
         [<...leading_empty_lines...>, <...leading_indent...>, <...PromptStripper...>, ...]
         
         """"""
         
-Another feature of the `shell.input_transformer_manager` are transforms that operate on the entire cell.
+2. Line transforms that are applied the cell `input` with split lines. 
+This is where `IPython` introduces their bespoke cell magic syntaxes.
         
         """"""
         >>> shell.input_transformer_manager.line_transforms
         [...<...cell_magic...>...]
         
         """"""
-Once the input source has passed been translated by the `shell.input_transformer_manager`, 
-it is sent to the `shell.compile` method.
+        
+3. Token transformers that look for specific tokens at the like level.  `IPython`'s default
+behavior introduces new symbols into the programming language.
+
+        """"""
+        >>> shell.input_transformer_manager.token_transformers
+        [<...MagicAssign...SystemAssign...EscapedCommand...HelpEnd...>]
+        
+        """"""
+
+After all of the `input` transformations are complete, the `input` should be valid source that `ast.parse, compile or shell.compile` 
+may accept.
 
         """"""
         >>> shell.ast_transformers
@@ -64,16 +75,16 @@ it is sent to the `shell.compile` method.
 
     class PidginTransformer(IPython.core.inputtransformer2.TransformerManager):
         def pidgin_transform(self, cell: str) -> str: 
-            tokens = self.tokenizer.parse(cell)
+            tokens = self.tokenizer.parse(''.join(cell))
             return self.tokenizer.untokenize(tokens)
-
-        def transform_cell(self, cell: str) -> str: 
-            translated_cell = self.pidgin_transform(cell)
-            return super().transform_cell(translated_cell)
+        
+        def pidgin_cleanup(self, cell: str) -> list: 
+            return self.pidgin_transform(cell).splitlines(True)
         
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.tokenizer = Tokenizer()
+            self.cleanup_transforms.insert(0, self.pidgin_cleanup)
             self.line_transforms.append(demojize)
 
         def pidgin_magic(self, *text): 
@@ -88,104 +99,123 @@ it is sent to the `shell.compile` method.
 
 
 
+
+
+
+</details>&nbsp;
+
+
+
+
+
+
     class Tokenizer(markdown.BlockLexer):
-        """Tokenize `input` text into `"code" and not "code"` tokens that will be translated into valid `python` source.
+            """
+### Tokenizer
+
+<details>
+<summary>Tokenize `input` text into `"code" and not "code"` tokens that will be translated into valid `python` source.</summary>
         
-        """
-        class grammar_class(markdown.BlockGrammar):
-            doctest = doctest.DocTestParser._EXAMPLE_RE
+            """
+            class grammar_class(markdown.BlockGrammar):
+                doctest = doctest.DocTestParser._EXAMPLE_RE
 
-        def parse(self, text: str, default_rules=None) -> typing.List[dict]:
-            if not self.depth: self.tokens = []
-            with self: tokens = super().parse(whiten(text), default_rules)
-            if not self.depth: tokens = self.compact(text, tokens)
-            return tokens
+            def parse(self, text: str, default_rules=None) -> typing.List[dict]:
+                if not self.depth: self.tokens = []
+                with self: tokens = super().parse(whiten(text), default_rules)
+                if not self.depth: tokens = self.compact(text, tokens)
+                return tokens
 
-        def parse_doctest(self, m): self.tokens.append({'type': 'paragraph', 'text': m.group(0)})
-            
-        def parse_fences(self, m):
-            if m.group(2): self.tokens.append({'type': 'paragraph', 'text': m.group(0)})
-            else: super().parse_fences(m)
-            
-        def parse_hrule(self, m):
-            self.tokens.append({'type': 'hrule', 'text': m.group(0)})
-            
-        def compact(self, text, tokens):
-            """Combine non-code tokens into contiguous blocks."""
-            compacted = []
-            while tokens:
-                token = tokens.pop(0)
-                if 'text' not in token: continue
-                else: 
-                    if not token['text'].strip(): continue
-                    block, body = token['text'].splitlines(), ""
-                while block:
-                    line = block.pop(0)
-                    if line:
-                        before, line, text = text.partition(line)
-                        body += before + line
-                if token['type']=='code':
-                    compacted.append({'type': 'code', 'lang': None, 'text': body})
-                else:
-                    if compacted and compacted[-1]['type'] == 'paragraph':
-                        compacted[-1]['text'] += body
-                    else: compacted.append({'type': 'paragraph', 'text': body})
-            if compacted and compacted[-1]['type'] == 'paragraph':
-                compacted[-1]['text'] += text
-            elif text.strip():
-                compacted.append({'type': 'paragraph', 'text': text})
-            return compacted
-        
-        depth = 0
-        def __enter__(self): self.depth += 1
-        def __exit__(self, *e): self.depth -= 1
-        
-        def untokenize(self, tokens: τ.List[dict], source: str = """""", last: int =0) -> str:
-            INDENT = indent = base_indent(tokens) or 4
-            for i, token in enumerate(tokens):
-                object = token['text']
-                if token and token['type'] == 'code':
-                    object = '\n'.join(map(str.rstrip, object.splitlines()))
-                    if object.lstrip().startswith(FENCE):
+            def parse_doctest(self, m): self.tokens.append({'type': 'paragraph', 'text': m.group(0)})
 
-                        object = ''.join(''.join(object.partition(FENCE)[::2]).rpartition(FENCE)[::2])
-                        indent = INDENT + num_first_indent(object)
-                        object = textwrap.indent(object, INDENT*SPACE)
+            def parse_fences(self, m):
+                if m.group(2): self.tokens.append({'type': 'paragraph', 'text': m.group(0)})
+                else: super().parse_fences(m)
 
-                    if object.lstrip().startswith(MAGIC):  ...
-                    else: indent = num_last_indent(object)
-                elif not object: ...
-                else:
-                    object = textwrap.indent(object, indent*SPACE)
-                    for next in tokens[i+1:]:
-                        if next['type'] == 'code':
-                            next = num_first_indent(next['text'])
-                            break
-                    else: next = indent       
-                    Δ = max(next-indent, 0)
+            def parse_hrule(self, m):
+                self.tokens.append({'type': 'hrule', 'text': m.group(0)})
 
-                    if not Δ and source.rstrip().rstrip(CONTINUATION).endswith(COLON): 
-                        Δ += 4
+            def compact(self, text, tokens):
+                """Combine non-code tokens into contiguous blocks."""
+                compacted = []
+                while tokens:
+                    token = tokens.pop(0)
+                    if 'text' not in token: continue
+                    else: 
+                        if not token['text'].strip(): continue
+                        block, body = token['text'].splitlines(), ""
+                    while block:
+                        line = block.pop(0)
+                        if line:
+                            before, line, text = text.partition(line)
+                            body += before + line
+                    if token['type']=='code':
+                        compacted.append({'type': 'code', 'lang': None, 'text': body})
+                    else:
+                        if compacted and compacted[-1]['type'] == 'paragraph':
+                            compacted[-1]['text'] += body
+                        else: compacted.append({'type': 'paragraph', 'text': body})
+                if compacted and compacted[-1]['type'] == 'paragraph':
+                    compacted[-1]['text'] += text
+                elif text.strip():
+                    compacted.append({'type': 'paragraph', 'text': text})
+                return compacted
 
-                    spaces = num_whitespace(object)
-                    "what if the spaces are ling enough"
-                    object = object[:spaces] + Δ*SPACE+ object[spaces:]
-                    if not source.rstrip().rstrip(CONTINUATION).endswith(QUOTES): 
-                        object = quote(object)
-                source += object
+            depth = 0
+            def __enter__(self): self.depth += 1
+            def __exit__(self, *e): self.depth -= 1
 
-            for token in reversed(tokens):
-                if token['text'].strip():
-                    if token['type'] != 'code': 
-                        source = source.rstrip() + SEMI
-                    break
+            def untokenize(self, tokens: τ.List[dict], source: str = """""", last: int =0) -> str:
+                INDENT = indent = base_indent(tokens) or 4
+                for i, token in enumerate(tokens):
+                    object = token['text']
+                    if token and token['type'] == 'code':
+                        object = '\n'.join(map(str.rstrip, object.splitlines()))
+                        if object.lstrip().startswith(FENCE):
 
-            return source 
+                            object = ''.join(''.join(object.partition(FENCE)[::2]).rpartition(FENCE)[::2])
+                            indent = INDENT + num_first_indent(object)
+                            object = textwrap.indent(object, INDENT*SPACE)
+
+                        if object.lstrip().startswith(MAGIC):  ...
+                        else: indent = num_last_indent(object)
+                    elif not object: ...
+                    else:
+                        object = textwrap.indent(object, indent*SPACE)
+                        for next in tokens[i+1:]:
+                            if next['type'] == 'code':
+                                next = num_first_indent(next['text'])
+                                break
+                        else: next = indent       
+                        Δ = max(next-indent, 0)
+
+                        if not Δ and source.rstrip().rstrip(CONTINUATION).endswith(COLON): 
+                            Δ += 4
+
+                        spaces = num_whitespace(object)
+                        "what if the spaces are ling enough"
+                        object = object[:spaces] + Δ*SPACE+ object[spaces:]
+                        if not source.rstrip().rstrip(CONTINUATION).endswith(QUOTES): 
+                            object = quote(object)
+                    source += object
+
+                for token in reversed(tokens):
+                    if token['text'].strip():
+                        if token['type'] != 'code': 
+                            source = source.rstrip() + SEMI
+                        break
+
+                return source 
             
     for x in "default_rules footnote_rules list_rules".split():
         setattr(Tokenizer, x, list(getattr(Tokenizer, x)))
         getattr(Tokenizer, x).insert(getattr(Tokenizer, x).index('block_code'), 'doctest')
-    
+        
+    ...
+    """
+</details>&nbsp;
+
+    """
 
 
 
@@ -271,9 +301,9 @@ A custom shell and kernel for `pidgin`
 [📓](imports.ipynb)
 
 
-    def extension(shell):
+    def load_ipython_extension(shell):
         """
-The `pidgin` `extension`'s primary function transforms the `jupyter`
+The `pidgin` `load_ipython_extension`'s primary function transforms the `jupyter`
 `notebook`s into a literate computing interfaces.
 `markdown` becomes the primary plain-text format for submitting code,
 and the `markdown` is translated to `python` source code
@@ -304,25 +334,36 @@ The `pidgin` translation is managed by a custom `IPython.core.inputtransformer2.
         """"""
 
 The `shell.input_transformer_manager` applies string transformations to clean up the `input`
-to be valid `python`.  For example, `IPython` applies line transformations
-that strip whitespace and terminal prompts.
+to be valid `python`.  There are three stages of line of transforms.
+
+1. Cleanup transforms that operate on the entire cell `input`.
 
         """"""
-        >>> assert shell.input_transformer_manager.cleanup_transforms is shell.input_transformers_cleanup
         >>> shell.input_transformers_cleanup
         [<...leading_empty_lines...>, <...leading_indent...>, <...PromptStripper...>, ...]
         
         """"""
         
-Another feature of the `shell.input_transformer_manager` are transforms that operate on the entire cell.
+2. Line transforms that are applied the cell `input` with split lines. 
+This is where `IPython` introduces their bespoke cell magic syntaxes.
         
         """"""
         >>> shell.input_transformer_manager.line_transforms
         [...<...cell_magic...>...]
         
         """"""
-Once the input source has passed been translated by the `shell.input_transformer_manager`, 
-it is sent to the `shell.compile` method.
+        
+3. Token transformers that look for specific tokens at the like level.  `IPython`'s default
+behavior introduces new symbols into the programming language.
+
+        """"""
+        >>> shell.input_transformer_manager.token_transformers
+        [<...MagicAssign...SystemAssign...EscapedCommand...HelpEnd...>]
+        
+        """"""
+
+After all of the `input` transformations are complete, the `input` should be valid source that `ast.parse, compile or shell.compile` 
+may accept.
 
         """"""
         >>> shell.ast_transformers
@@ -334,16 +375,16 @@ it is sent to the `shell.compile` method.
 
     class PidginTransformer(IPython.core.inputtransformer2.TransformerManager):
         def pidgin_transform(self, cell: str) -> str: 
-            tokens = self.tokenizer.parse(cell)
+            tokens = self.tokenizer.parse(''.join(cell))
             return self.tokenizer.untokenize(tokens)
-
-        def transform_cell(self, cell: str) -> str: 
-            translated_cell = self.pidgin_transform(cell)
-            return super().transform_cell(translated_cell)
+        
+        def pidgin_cleanup(self, cell: str) -> list: 
+            return self.pidgin_transform(cell).splitlines(True)
         
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.tokenizer = Tokenizer()
+            self.cleanup_transforms.insert(0, self.pidgin_cleanup)
             self.line_transforms.append(demojize)
 
         def pidgin_magic(self, *text): 
@@ -358,104 +399,123 @@ it is sent to the `shell.compile` method.
 
 
 
+
+
+
+</details>&nbsp;
+
+
+
+
+
+
     class Tokenizer(markdown.BlockLexer):
-        """Tokenize `input` text into `"code" and not "code"` tokens that will be translated into valid `python` source.
+            """
+### Tokenizer
+
+<details>
+<summary>Tokenize `input` text into `"code" and not "code"` tokens that will be translated into valid `python` source.</summary>
         
-        """
-        class grammar_class(markdown.BlockGrammar):
-            doctest = doctest.DocTestParser._EXAMPLE_RE
+            """
+            class grammar_class(markdown.BlockGrammar):
+                doctest = doctest.DocTestParser._EXAMPLE_RE
 
-        def parse(self, text: str, default_rules=None) -> typing.List[dict]:
-            if not self.depth: self.tokens = []
-            with self: tokens = super().parse(whiten(text), default_rules)
-            if not self.depth: tokens = self.compact(text, tokens)
-            return tokens
+            def parse(self, text: str, default_rules=None) -> typing.List[dict]:
+                if not self.depth: self.tokens = []
+                with self: tokens = super().parse(whiten(text), default_rules)
+                if not self.depth: tokens = self.compact(text, tokens)
+                return tokens
 
-        def parse_doctest(self, m): self.tokens.append({'type': 'paragraph', 'text': m.group(0)})
-            
-        def parse_fences(self, m):
-            if m.group(2): self.tokens.append({'type': 'paragraph', 'text': m.group(0)})
-            else: super().parse_fences(m)
-            
-        def parse_hrule(self, m):
-            self.tokens.append({'type': 'hrule', 'text': m.group(0)})
-            
-        def compact(self, text, tokens):
-            """Combine non-code tokens into contiguous blocks."""
-            compacted = []
-            while tokens:
-                token = tokens.pop(0)
-                if 'text' not in token: continue
-                else: 
-                    if not token['text'].strip(): continue
-                    block, body = token['text'].splitlines(), ""
-                while block:
-                    line = block.pop(0)
-                    if line:
-                        before, line, text = text.partition(line)
-                        body += before + line
-                if token['type']=='code':
-                    compacted.append({'type': 'code', 'lang': None, 'text': body})
-                else:
-                    if compacted and compacted[-1]['type'] == 'paragraph':
-                        compacted[-1]['text'] += body
-                    else: compacted.append({'type': 'paragraph', 'text': body})
-            if compacted and compacted[-1]['type'] == 'paragraph':
-                compacted[-1]['text'] += text
-            elif text.strip():
-                compacted.append({'type': 'paragraph', 'text': text})
-            return compacted
-        
-        depth = 0
-        def __enter__(self): self.depth += 1
-        def __exit__(self, *e): self.depth -= 1
-        
-        def untokenize(self, tokens: τ.List[dict], source: str = """""", last: int =0) -> str:
-            INDENT = indent = base_indent(tokens) or 4
-            for i, token in enumerate(tokens):
-                object = token['text']
-                if token and token['type'] == 'code':
-                    object = '\n'.join(map(str.rstrip, object.splitlines()))
-                    if object.lstrip().startswith(FENCE):
+            def parse_doctest(self, m): self.tokens.append({'type': 'paragraph', 'text': m.group(0)})
 
-                        object = ''.join(''.join(object.partition(FENCE)[::2]).rpartition(FENCE)[::2])
-                        indent = INDENT + num_first_indent(object)
-                        object = textwrap.indent(object, INDENT*SPACE)
+            def parse_fences(self, m):
+                if m.group(2): self.tokens.append({'type': 'paragraph', 'text': m.group(0)})
+                else: super().parse_fences(m)
 
-                    if object.lstrip().startswith(MAGIC):  ...
-                    else: indent = num_last_indent(object)
-                elif not object: ...
-                else:
-                    object = textwrap.indent(object, indent*SPACE)
-                    for next in tokens[i+1:]:
-                        if next['type'] == 'code':
-                            next = num_first_indent(next['text'])
-                            break
-                    else: next = indent       
-                    Δ = max(next-indent, 0)
+            def parse_hrule(self, m):
+                self.tokens.append({'type': 'hrule', 'text': m.group(0)})
 
-                    if not Δ and source.rstrip().rstrip(CONTINUATION).endswith(COLON): 
-                        Δ += 4
+            def compact(self, text, tokens):
+                """Combine non-code tokens into contiguous blocks."""
+                compacted = []
+                while tokens:
+                    token = tokens.pop(0)
+                    if 'text' not in token: continue
+                    else: 
+                        if not token['text'].strip(): continue
+                        block, body = token['text'].splitlines(), ""
+                    while block:
+                        line = block.pop(0)
+                        if line:
+                            before, line, text = text.partition(line)
+                            body += before + line
+                    if token['type']=='code':
+                        compacted.append({'type': 'code', 'lang': None, 'text': body})
+                    else:
+                        if compacted and compacted[-1]['type'] == 'paragraph':
+                            compacted[-1]['text'] += body
+                        else: compacted.append({'type': 'paragraph', 'text': body})
+                if compacted and compacted[-1]['type'] == 'paragraph':
+                    compacted[-1]['text'] += text
+                elif text.strip():
+                    compacted.append({'type': 'paragraph', 'text': text})
+                return compacted
 
-                    spaces = num_whitespace(object)
-                    "what if the spaces are ling enough"
-                    object = object[:spaces] + Δ*SPACE+ object[spaces:]
-                    if not source.rstrip().rstrip(CONTINUATION).endswith(QUOTES): 
-                        object = quote(object)
-                source += object
+            depth = 0
+            def __enter__(self): self.depth += 1
+            def __exit__(self, *e): self.depth -= 1
 
-            for token in reversed(tokens):
-                if token['text'].strip():
-                    if token['type'] != 'code': 
-                        source = source.rstrip() + SEMI
-                    break
+            def untokenize(self, tokens: τ.List[dict], source: str = """""", last: int =0) -> str:
+                INDENT = indent = base_indent(tokens) or 4
+                for i, token in enumerate(tokens):
+                    object = token['text']
+                    if token and token['type'] == 'code':
+                        object = '\n'.join(map(str.rstrip, object.splitlines()))
+                        if object.lstrip().startswith(FENCE):
 
-            return source 
+                            object = ''.join(''.join(object.partition(FENCE)[::2]).rpartition(FENCE)[::2])
+                            indent = INDENT + num_first_indent(object)
+                            object = textwrap.indent(object, INDENT*SPACE)
+
+                        if object.lstrip().startswith(MAGIC):  ...
+                        else: indent = num_last_indent(object)
+                    elif not object: ...
+                    else:
+                        object = textwrap.indent(object, indent*SPACE)
+                        for next in tokens[i+1:]:
+                            if next['type'] == 'code':
+                                next = num_first_indent(next['text'])
+                                break
+                        else: next = indent       
+                        Δ = max(next-indent, 0)
+
+                        if not Δ and source.rstrip().rstrip(CONTINUATION).endswith(COLON): 
+                            Δ += 4
+
+                        spaces = num_whitespace(object)
+                        "what if the spaces are ling enough"
+                        object = object[:spaces] + Δ*SPACE+ object[spaces:]
+                        if not source.rstrip().rstrip(CONTINUATION).endswith(QUOTES): 
+                            object = quote(object)
+                    source += object
+
+                for token in reversed(tokens):
+                    if token['text'].strip():
+                        if token['type'] != 'code': 
+                            source = source.rstrip() + SEMI
+                        break
+
+                return source 
             
     for x in "default_rules footnote_rules list_rules".split():
         setattr(Tokenizer, x, list(getattr(Tokenizer, x)))
         getattr(Tokenizer, x).insert(getattr(Tokenizer, x).index('block_code'), 'doctest')
-    
+        
+    ...
+    """
+</details>&nbsp;
+
+    """
 
 
 
@@ -662,80 +722,64 @@ Markdown input can fail to render when jinja2 is used in correctly.  Markdown is
 
 
 
+    ---------------------------------------------------------------------------
+
+    UndefinedError                            Traceback (most recent call last)
+
+    ~/anaconda3/lib/python3.7/site-packages/jinja2/asyncsupport.py in render(self, *args, **kwargs)
+         74     def render(self, *args, **kwargs):
+         75         if not self.environment.is_async:
+    ---> 76             return original_render(self, *args, **kwargs)
+         77         loop = asyncio.get_event_loop()
+         78         return loop.run_until_complete(self.render_async(*args, **kwargs))
+
+
+    ~/anaconda3/lib/python3.7/site-packages/jinja2/environment.py in render(self, *args, **kwargs)
+       1006         except Exception:
+       1007             exc_info = sys.exc_info()
+    -> 1008         return self.environment.handle_exception(exc_info, True)
+       1009 
+       1010     def render_async(self, *args, **kwargs):
+
+
+    ~/anaconda3/lib/python3.7/site-packages/jinja2/environment.py in handle_exception(self, exc_info, rendered, source_hint)
+        778             self.exception_handler(traceback)
+        779         exc_type, exc_value, tb = traceback.standard_exc_info
+    --> 780         reraise(exc_type, exc_value, tb)
+        781 
+        782     def join_path(self, template, parent):
+
+
+    ~/anaconda3/lib/python3.7/site-packages/jinja2/_compat.py in reraise(tp, value, tb)
+         35     def reraise(tp, value, tb=None):
+         36         if value.__traceback__ is not tb:
+    ---> 37             raise value.with_traceback(tb)
+         38         raise value
+         39 
+
+
+    <template> in top-level template code()
+
+
+    ~/anaconda3/lib/python3.7/site-packages/jinja2/environment.py in getattr(self, obj, attribute)
+        432             pass
+        433         try:
+    --> 434             return obj[attribute]
+        435         except (TypeError, LookupError, AttributeError):
+        436             return self.undefined(obj=obj, name=attribute)
+
+
+    UndefinedError: 'syntax' is undefined
+
+
+
 ## `pidgin` metasyntax at language interfaces.
-[📗](test_pidgin_syntax.md.ipynb)
+[📗]({{pathlib.Path(syntax.__file__).name}})
 
 The combinations of document, programming, and templating languages
 provides unique syntaxes as the interfaces.
 
-This is a code string
-
-
-
-
-`pidgin` programming is a `markdown`-forward approach to programming,
-it extends computational to interactive literate programming environment.
-One feature `markdown` uses to identify `markdown.BlockGrammar.block_code`
-is indented code.
-`pidgin` starts here, all cells are `markdown` forward, and code is identified as indented code.
-
-            "This is a code string"
-    
-
-
-
-### Code fences
-
-Some folks may prefer code fences and they may be used without a language specified.
-
-
-```
-"This is code"
-```
-
-```python
-"This is not code."
-```
-
-
-
-    class DocStrings:
-### Docstrings
-
-
-    >>> assert DocStrings.__doc__.startswith('### Docstrings')
-    >>> DocStrings.function_docstring.__doc__
-    '`DocStrings.function_docstring`s appear as native docstrings, ...'
-
-
-        def function_docstring():
-`DocStrings.function_docstring`s appear as native docstrings, but render as `markdown`.
-            
-            ...
-
-    
-
-
-
-
-
-    import doctest
-### `doctest`
-
-    >>> assert True
-    >>> print
-    <built-in function print>
-    >>> pidgin
-    <module...__init__.py'>
-
-
-
-### templating
-
-filters
-jinja docs
-
-
+{{appendix.exports(syntax)}}
 
 
 
@@ -770,5 +814,15 @@ Run a collection of notebook modules.
     def convert(modules):
 Convert notebook written in pidgin to difference formats.
 
+
+
+
+    [NbConvertApp] Converting notebook paper.md.ipynb to markdown
+
+
+
+
+
+    Ellipsis
 
 
