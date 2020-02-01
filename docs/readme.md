@@ -71,6 +71,9 @@ may accept.
         
         """
 
+        if not any(x for x in shell.ast_transformers if isinstance(x, ReturnYield)):
+            shell.ast_transformers.append(ReturnYield())
+
 
 
     class PidginTransformer(IPython.core.inputtransformer2.TransformerManager):
@@ -91,21 +94,29 @@ may accept.
             """Expand the text to tokens to tokens and 
             compact as a formatted `"python"` code."""
             return IPython.display.Code(self.pidgin_transform(''.join(text)), language='python')
+        
+
+
+
+    import ast
+    class ReturnYield(ast.NodeTransformer):
+        def visit_FunctionDef(self, node): return node
+        visit_AsyncFunctionDef = visit_FunctionDef
+        def visit_Return(self, node):
+            replace = ast.parse('''__import__('IPython').display.display()''').body[0]
+            replace.value.args = node.value.elts if isinstance(node.value, ast.Tuple) else [node.value]
+            return ast.copy_location(replace, node)
+
+        def visit_Expr(self, node):
+            if isinstance(node.value, (ast.Yield, ast.YieldFrom)):  return ast.copy_location(self.visit_Return(node.value), node)
+            return node
+        
+        visit_Expression = visit_Expr
 
 
 
     import mistune as markdown, textwrap, __main__, IPython, typing, re, IPython, nbconvert, ipykernel, doctest, ast
     __all__ = 'pidgin',
-
-
-
-
-
-
-</details>&nbsp;
-
-
-
 
 
 
@@ -170,7 +181,6 @@ may accept.
                 for i, token in enumerate(tokens):
                     object = token['text']
                     if token and token['type'] == 'code':
-                        object = '\n'.join(map(str.rstrip, object.splitlines()))
                         if object.lstrip().startswith(FENCE):
 
                             object = ''.join(''.join(object.partition(FENCE)[::2]).rpartition(FENCE)[::2])
@@ -216,17 +226,10 @@ may accept.
 </details>&nbsp;
 
     """
+    pidgin = PidginTransformer()
 
 
-
-    class PidginPreprocessor(nbconvert.preprocessors.Preprocessor):
-        def preprocess_cell(self, cell, resources, index, ):
-            if cell['cell_type'] == 'code':
-                cell['source'] = idgin_transformer.transform_cell(''.join(cell['source']))
-            return cell, resources
-
-
-Convert pidgin to valid python files.
+A potential outcome of a `pidgin` program is reusable code. 
 
 Import pidgin notebooks as modules.
 
@@ -236,45 +239,17 @@ Import pidgin notebooks as modules.
         def code(self, str): return ''.join(pidgin.transform_cell(str))
 
 
-A custom shell and kernel for `pidgin`
+
+    class PidginPreprocessor(nbconvert.preprocessors.Preprocessor):
+        def preprocess_cell(self, cell, resources, index, ):
+            if cell['cell_type'] == 'code':
+                cell['source'] = pidgin_transformer.transform_cell(''.join(cell['source']))
+            return cell, resources
 
 
-    def demojize(lines, delimiters=('_', '_')):
-        str = ''.join(lines)
-        import tokenize, emoji, stringcase; tokens = []
-        try:
-            for token in list(tokenize.tokenize(
-                __import__('io').BytesIO(str.encode()).readline)):
-                if token.type == tokenize.ERRORTOKEN:
-                    string = emoji.demojize(token.string, delimiters=delimiters
-                                           ).replace('-', '_').replace("’", "_")
-                    if tokens and tokens[-1].type == tokenize.NAME: tokens[-1] = tokenize.TokenInfo(tokens[-1].type, tokens[-1].string + string, tokens[-1].start, tokens[-1].end, tokens[-1].line)
-                    else: tokens.append(
-                        tokenize.TokenInfo(
-                            tokenize.NAME, string, token.start, token.end, token.line))
-                else: tokens.append(token)
-            return tokenize.untokenize(tokens).decode().splitlines(True)
-        except BaseException: raise SyntaxError(str)
+The shell is the application either jupyterlab or jupyter notebook, the kernel determines the programming language.  Below we design a just jupyter kernel that can be installed using 
 
-    pidgin = PidginTransformer()
-
-
-
-    import ast
-    class ReturnYield(ast.NodeTransformer):
-        def visit_FunctionDef(self, node): return node
-        visit_AsyncFunctionDef = visit_FunctionDef
-        def visit_Return(self, node):
-            replace = ast.parse('''__import__('IPython').display.display()''').body[0]
-            replace.value.args = node.value.elts if isinstance(node.value, ast.Tuple) else [node.value]
-            return ast.copy_location(replace, node)
-
-        def visit_Expr(self, node):
-            if isinstance(node.value, (ast.Yield, ast.YieldFrom)):  return ast.copy_location(self.visit_Return(node.value), node)
-            return node
-        
-        visit_Expression = visit_Expr
-
+    !pidgin kernel install
 
 
     class PidginInteractiveShell(IPython.InteractiveShell):
@@ -371,6 +346,9 @@ may accept.
         
         """
 
+        if not any(x for x in shell.ast_transformers if isinstance(x, ReturnYield)):
+            shell.ast_transformers.append(ReturnYield())
+
 
 
     class PidginTransformer(IPython.core.inputtransformer2.TransformerManager):
@@ -391,21 +369,29 @@ may accept.
             """Expand the text to tokens to tokens and 
             compact as a formatted `"python"` code."""
             return IPython.display.Code(self.pidgin_transform(''.join(text)), language='python')
+        
+
+
+
+    import ast
+    class ReturnYield(ast.NodeTransformer):
+        def visit_FunctionDef(self, node): return node
+        visit_AsyncFunctionDef = visit_FunctionDef
+        def visit_Return(self, node):
+            replace = ast.parse('''__import__('IPython').display.display()''').body[0]
+            replace.value.args = node.value.elts if isinstance(node.value, ast.Tuple) else [node.value]
+            return ast.copy_location(replace, node)
+
+        def visit_Expr(self, node):
+            if isinstance(node.value, (ast.Yield, ast.YieldFrom)):  return ast.copy_location(self.visit_Return(node.value), node)
+            return node
+        
+        visit_Expression = visit_Expr
 
 
 
     import mistune as markdown, textwrap, __main__, IPython, typing, re, IPython, nbconvert, ipykernel, doctest, ast
     __all__ = 'pidgin',
-
-
-
-
-
-
-</details>&nbsp;
-
-
-
 
 
 
@@ -470,7 +456,6 @@ may accept.
                 for i, token in enumerate(tokens):
                     object = token['text']
                     if token and token['type'] == 'code':
-                        object = '\n'.join(map(str.rstrip, object.splitlines()))
                         if object.lstrip().startswith(FENCE):
 
                             object = ''.join(''.join(object.partition(FENCE)[::2]).rpartition(FENCE)[::2])
@@ -516,17 +501,10 @@ may accept.
 </details>&nbsp;
 
     """
+    pidgin = PidginTransformer()
 
 
-
-    class PidginPreprocessor(nbconvert.preprocessors.Preprocessor):
-        def preprocess_cell(self, cell, resources, index, ):
-            if cell['cell_type'] == 'code':
-                cell['source'] = idgin_transformer.transform_cell(''.join(cell['source']))
-            return cell, resources
-
-
-Convert pidgin to valid python files.
+A potential outcome of a `pidgin` program is reusable code. 
 
 Import pidgin notebooks as modules.
 
@@ -536,45 +514,17 @@ Import pidgin notebooks as modules.
         def code(self, str): return ''.join(pidgin.transform_cell(str))
 
 
-A custom shell and kernel for `pidgin`
+
+    class PidginPreprocessor(nbconvert.preprocessors.Preprocessor):
+        def preprocess_cell(self, cell, resources, index, ):
+            if cell['cell_type'] == 'code':
+                cell['source'] = pidgin_transformer.transform_cell(''.join(cell['source']))
+            return cell, resources
 
 
-    def demojize(lines, delimiters=('_', '_')):
-        str = ''.join(lines)
-        import tokenize, emoji, stringcase; tokens = []
-        try:
-            for token in list(tokenize.tokenize(
-                __import__('io').BytesIO(str.encode()).readline)):
-                if token.type == tokenize.ERRORTOKEN:
-                    string = emoji.demojize(token.string, delimiters=delimiters
-                                           ).replace('-', '_').replace("’", "_")
-                    if tokens and tokens[-1].type == tokenize.NAME: tokens[-1] = tokenize.TokenInfo(tokens[-1].type, tokens[-1].string + string, tokens[-1].start, tokens[-1].end, tokens[-1].line)
-                    else: tokens.append(
-                        tokenize.TokenInfo(
-                            tokenize.NAME, string, token.start, token.end, token.line))
-                else: tokens.append(token)
-            return tokenize.untokenize(tokens).decode().splitlines(True)
-        except BaseException: raise SyntaxError(str)
+The shell is the application either jupyterlab or jupyter notebook, the kernel determines the programming language.  Below we design a just jupyter kernel that can be installed using 
 
-    pidgin = PidginTransformer()
-
-
-
-    import ast
-    class ReturnYield(ast.NodeTransformer):
-        def visit_FunctionDef(self, node): return node
-        visit_AsyncFunctionDef = visit_FunctionDef
-        def visit_Return(self, node):
-            replace = ast.parse('''__import__('IPython').display.display()''').body[0]
-            replace.value.args = node.value.elts if isinstance(node.value, ast.Tuple) else [node.value]
-            return ast.copy_location(replace, node)
-
-        def visit_Expr(self, node):
-            if isinstance(node.value, (ast.Yield, ast.YieldFrom)):  return ast.copy_location(self.visit_Return(node.value), node)
-            return node
-        
-        visit_Expression = visit_Expr
-
+    !pidgin kernel install
 
 
     class PidginInteractiveShell(IPython.InteractiveShell):
@@ -814,15 +764,5 @@ Run a collection of notebook modules.
     def convert(modules):
 Convert notebook written in pidgin to difference formats.
 
-
-
-
-    [NbConvertApp] Converting notebook paper.md.ipynb to markdown
-
-
-
-
-
-    Ellipsis
 
 
