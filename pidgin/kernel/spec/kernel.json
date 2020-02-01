@@ -2,9 +2,7 @@
  "argv": [
   "/Users/tonyfast/anaconda3/bin/python",
   "-m",
-  "ipykernel_launcher",
- "--kernel_class",
-  "pidgin.kernel.PidginKernel",
+  "pidgin.kernel",
   "-f",
   "{connection_file}"
  ],

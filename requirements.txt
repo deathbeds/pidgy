@@ -4,3 +4,4 @@ importnb
 jupyter_client
 htmlmin
 pytest
+stringcase
