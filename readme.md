@@ -1,3 +1,6 @@
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/deathbeds/pidgin/again)
+
+
 `pidgin` is a literate programming designed specifically for `jupyter` `notebook`s running `IPython` kernels.
 It is an `IPython` extension that can be loaded with
 
