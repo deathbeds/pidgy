@@ -28,7 +28,8 @@ setup_args = dict(
     include_package_data=True,
     packages=setuptools.find_packages(),
     entry_points = {
-        'pytest11': [],
+        'pytest11': ['pidgin=pidgin.tests.plugin'],
+        'console_scripts': ['pidgin=pidgin.__main__.cli:app'],
     },
     classifiers=(
         "Development Status :: 4 - Beta",

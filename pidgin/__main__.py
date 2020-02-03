@@ -1,5 +1,4 @@
-with __import__('pidgin').imports.PidginLoader():
-    try: from . import cli
-    except: import cli
-    
+from . import imports
+with imports.PidginLoader():
+    from .import cli
 cli.app()

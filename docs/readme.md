@@ -247,21 +247,6 @@ Import pidgin notebooks as modules.
             return cell, resources
 
 
-The shell is the application either jupyterlab or jupyter notebook, the kernel determines the programming language.  Below we design a just jupyter kernel that can be installed using 
-
-    !pidgin kernel install
-
-
-    class PidginInteractiveShell(IPython.InteractiveShell):
-        """Configure a native `pidgin` `IPython.InteractiveShell`"""
-    PidginInteractiveShell.input_transformer_manager.default_value = PidginTransformer
-    PidginInteractiveShell.enable_html_pager.default_value = True
-
-    class PidginKernelApp(ipykernel.kernelapp.IPKernelApp): 
-        """Configure a native `pidgin` `__import__('ipykernel').kernelapp.IPKernelApp"""
-    PidginKernelApp.shell.default_value = PidginInteractiveShell
-
-
 
 
 
@@ -522,21 +507,6 @@ Import pidgin notebooks as modules.
             return cell, resources
 
 
-The shell is the application either jupyterlab or jupyter notebook, the kernel determines the programming language.  Below we design a just jupyter kernel that can be installed using 
-
-    !pidgin kernel install
-
-
-    class PidginInteractiveShell(IPython.InteractiveShell):
-        """Configure a native `pidgin` `IPython.InteractiveShell`"""
-    PidginInteractiveShell.input_transformer_manager.default_value = PidginTransformer
-    PidginInteractiveShell.enable_html_pager.default_value = True
-
-    class PidginKernelApp(ipykernel.kernelapp.IPKernelApp): 
-        """Configure a native `pidgin` `__import__('ipykernel').kernelapp.IPKernelApp"""
-    PidginKernelApp.shell.default_value = PidginInteractiveShell
-
-
 
     graphviz.Source(
 digraph{rankdir=UD 
@@ -650,76 +620,61 @@ This is the weaving step.
 
 
 
+    def load_ipython_extension(shell):
+        global metadata
+        metadata = Metadata(shell=shell)
+        shell.events.register('pre_run_cell', metadata.pre_run_cell)
+        shell.events.register('post_run_cell', metadata.post_run_cell)
+        shell.display_formatter.formatters['text/markdown'].for_type(str, lambda x: x)
+        
+
+
+
 Markdown input can fail to render when jinja2 is used in correctly.  Markdown is never wrong, but sometimes jinja is.
 
 
 
-    ---------------------------------------------------------------------------
-
-    NameError                                 Traceback (most recent call last)
-
-    <ipython-input-1-25dc2f3cd961> in <module>
-    ----> 1 @dataclasses.dataclass
-          2 class Metadata:
-          3     def pre_run_cell(self, info):
-          4         self.modules = modules()
-          5         self.start = datetime.datetime.utcnow().isoformat()
-
-
-    NameError: name 'dataclasses' is not defined
+    import hashlib
 
 
 
+    @dataclasses.dataclass
+    class Metadata:
+        def pre_run_cell(self, info):
+            self.modules = modules()
+            self.start = datetime.datetime.utcnow().isoformat()
+            if hasattr(self.shell, 'user_ns'):
+                self.ns = self.names()
+            
+            return info
+        
+        def names(self):
+            return [x for x in self.shell.user_ns if x[0].islower()]
 
+        def post_run_cell(self, result):
+            text = result.info.raw_cell
+            lines = text.splitlines() or ['']
+            if lines[0].strip(): 
+                exporter.environment.filters.update({
+                    k: v for k, v in self.shell.user_ns.items() if callable(v) and k not in exporter.environment.filters})
+                try:
+                    text = exporter.environment.from_string(text, globals=IPython.get_ipython().user_ns).render()
+                except BaseException as Exception:
+                    shell.showtraceback((type(Exception), Exception, Exception.__traceback__))
+                    
+                IPython.display.display(IPython.display.Markdown(text, metadata=dict(
+                    modules=[x for x in modules() if x not in self.modules], 
+                    names=[x for x in self.names() if x not in self.ns],
+                    start_time=self.start,
+                    end_time=datetime.datetime.utcnow().isoformat(),
+                    #id=hashlib.sha256(bytes(id(self.shell))).hexdigest(),
+                )))
+            return result
+        shell: python.InteractiveShell = dataclasses.field(default_factory=python.get_ipython)
+        start: datetime.datetime = dataclasses.field(init=False)
+        modules: list = dataclasses.field(default_factory=list)
+        ns: list = lambda self: [x for x in self.shell.user_ns if '.' not in x and not str.startswith(x,'_')]
 
-    ---------------------------------------------------------------------------
-
-    UndefinedError                            Traceback (most recent call last)
-
-    ~/anaconda3/lib/python3.7/site-packages/jinja2/asyncsupport.py in render(self, *args, **kwargs)
-         74     def render(self, *args, **kwargs):
-         75         if not self.environment.is_async:
-    ---> 76             return original_render(self, *args, **kwargs)
-         77         loop = asyncio.get_event_loop()
-         78         return loop.run_until_complete(self.render_async(*args, **kwargs))
-
-
-    ~/anaconda3/lib/python3.7/site-packages/jinja2/environment.py in render(self, *args, **kwargs)
-       1006         except Exception:
-       1007             exc_info = sys.exc_info()
-    -> 1008         return self.environment.handle_exception(exc_info, True)
-       1009 
-       1010     def render_async(self, *args, **kwargs):
-
-
-    ~/anaconda3/lib/python3.7/site-packages/jinja2/environment.py in handle_exception(self, exc_info, rendered, source_hint)
-        778             self.exception_handler(traceback)
-        779         exc_type, exc_value, tb = traceback.standard_exc_info
-    --> 780         reraise(exc_type, exc_value, tb)
-        781 
-        782     def join_path(self, template, parent):
-
-
-    ~/anaconda3/lib/python3.7/site-packages/jinja2/_compat.py in reraise(tp, value, tb)
-         35     def reraise(tp, value, tb=None):
-         36         if value.__traceback__ is not tb:
-    ---> 37             raise value.with_traceback(tb)
-         38         raise value
-         39 
-
-
-    <template> in top-level template code()
-
-
-    ~/anaconda3/lib/python3.7/site-packages/jinja2/environment.py in getattr(self, obj, attribute)
-        432             pass
-        433         try:
-    --> 434             return obj[attribute]
-        435         except (TypeError, LookupError, AttributeError):
-        436             return self.undefined(obj=obj, name=attribute)
-
-
-    UndefinedError: 'syntax' is undefined
 
 
 
@@ -731,8 +686,6 @@ provides unique syntaxes as the interfaces.
 
 {{appendix.exports(syntax)}}
 
-
-
 ### Reusing `pidgin` documents.
 
 Notebooks gain value when they be reusable at rest.
@@ -740,29 +693,7 @@ Notebooks gain value when they be reusable at rest.
 We'll make a cli application that deploys `pidgin` as a web, cli, converter.
 
 
-    @click.group()
-    def pidgin(): 
-The `pidgin` command line application operates on passive notebooks
-documents.
+{{appendix.exports(cli)}}
 
-
-
-    @pidgin.command()
-    def serve(modules):
-Serve notebook modules from fastapi creating an openapi schema for each 
-literate document.
-
-
-
-    @pidgin.command()
-    def run(modules, parallel=True):
-Run a collection of notebook modules.
-
-
-
-    @pidgin.command()
-    def convert(modules):
-Convert notebook written in pidgin to difference formats.
-
-
+    [NbConvertApp] Converting notebook paper.md.ipynb to markdown
 
