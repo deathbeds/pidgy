@@ -2,10 +2,10 @@
  "argv": [
   "/Users/tonyfast/anaconda3/bin/python",
   "-m",
-  "pidgin.kernel",
+  "pidgy.kernel",
   "-f",
   "{connection_file}"
  ],
- "display_name": "Pidgin 3",
+ "display_name": "pidgy 3",
  "language": "python"
 }

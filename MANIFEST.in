@@ -1,2 +1,2 @@
 include LICENSE readme.md
-recursive-include pidgin *.ipynb *.json *.png
+recursive-include pidgy *.ipynb *.json *.png

@@ -1,7 +1,7 @@
 from pathlib import Path
 import setuptools
 
-name = "pidgin"
+name = "pidgy"
 
 __version__ = None
 
@@ -17,7 +17,7 @@ setup_args = dict(
         (here / "readme.md").read_text() + "\n\n"
     ),
     long_description_content_type='text/markdown',
-    url="https://github.com/deathbeds/pidgin",
+    url="https://github.com/deathbeds/pidgy",
     python_requires=">=3.6",
     license="BSD-3-Clause",
     setup_requires=['pytest-runner'],
@@ -28,8 +28,8 @@ setup_args = dict(
     include_package_data=True,
     packages=setuptools.find_packages(),
     entry_points = {
-        'pytest11': ['pidgin=pidgin.tests.plugin'],
-        'console_scripts': ['pidgin=pidgin.__main__.cli:app'],
+        'pytest11': ['pidgy=pidgy.tests.plugin'],
+        'console_scripts': ['pidgy=pidgy.__main__.cli:app'],
     },
     classifiers=(
         "Development Status :: 4 - Beta",

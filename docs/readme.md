@@ -1,9 +1,9 @@
-## The `pidgin` implementation
+## The `pidgy` implementation
 ### An `IPython` extension.
 
     def load_ipython_extension(shell):
         """
-The `pidgin` `load_ipython_extension`'s primary function transforms the `jupyter`
+The `pidgy` `load_ipython_extension`'s primary function transforms the `jupyter`
 `notebook`s into a literate computing interfaces.
 `markdown` becomes the primary plain-text format for submitting code,
 and the `markdown` is translated to `python` source code
@@ -19,17 +19,17 @@ normalizes the narrative relative to the source code.  Consequently,
 introduces new syntaxes at the interfaces between `markdown and python`.
 
         """
-        pidgin_transformer = PidginTransformer()        
-        shell.input_transformer_manager = pidgin_transformer
+        pidgy_transformer = pidgyTransformer()        
+        shell.input_transformer_manager = pidgy_transformer
         
         """
 `IPython` provides configurable interactive `shell` properties.  Some of the configurable properties
 control how `input` code is translated into valid source code. 
-The `pidgin` translation is managed by a custom `IPython.core.inputtransformer2.TransformerManager`.
+The `pidgy` translation is managed by a custom `IPython.core.inputtransformer2.TransformerManager`.
         
         """"""
         >>> shell.input_transformer_manager
-        <...PidginTransformer object...>
+        <...pidgyTransformer object...>
         
         """"""
 
@@ -76,24 +76,24 @@ may accept.
 
 
 
-    class PidginTransformer(IPython.core.inputtransformer2.TransformerManager):
-        def pidgin_transform(self, cell: str) -> str: 
+    class pidgyTransformer(IPython.core.inputtransformer2.TransformerManager):
+        def pidgy_transform(self, cell: str) -> str: 
             tokens = self.tokenizer.parse(''.join(cell))
             return self.tokenizer.untokenize(tokens)
         
-        def pidgin_cleanup(self, cell: str) -> list: 
-            return self.pidgin_transform(cell).splitlines(True)
+        def pidgy_cleanup(self, cell: str) -> list: 
+            return self.pidgy_transform(cell).splitlines(True)
         
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.tokenizer = Tokenizer()
-            self.cleanup_transforms.insert(0, self.pidgin_cleanup)
+            self.cleanup_transforms.insert(0, self.pidgy_cleanup)
             self.line_transforms.append(demojize)
 
-        def pidgin_magic(self, *text): 
+        def pidgy_magic(self, *text): 
             """Expand the text to tokens to tokens and 
             compact as a formatted `"python"` code."""
-            return IPython.display.Code(self.pidgin_transform(''.join(text)), language='python')
+            return IPython.display.Code(self.pidgy_transform(''.join(text)), language='python')
         
 
 
@@ -116,7 +116,7 @@ may accept.
 
 
     import mistune as markdown, textwrap, __main__, IPython, typing, re, IPython, nbconvert, ipykernel, doctest, ast
-    __all__ = 'pidgin',
+    __all__ = 'pidgy',
 
 
 
@@ -226,24 +226,24 @@ may accept.
 </details>&nbsp;
 
     """
-    pidgin = PidginTransformer()
+    pidgy = pidgyTransformer()
 
 
-A potential outcome of a `pidgin` program is reusable code. 
+A potential outcome of a `pidgy` program is reusable code. 
 
-Import pidgin notebooks as modules.
+Import pidgy notebooks as modules.
 
 
-    class PidginLoader(__import__('importnb').Notebook): 
+    class pidgyLoader(__import__('importnb').Notebook): 
         extensions = ".ipynb .md.ipynb".split()
-        def code(self, str): return ''.join(pidgin.transform_cell(str))
+        def code(self, str): return ''.join(pidgy.transform_cell(str))
 
 
 
-    class PidginPreprocessor(nbconvert.preprocessors.Preprocessor):
+    class pidgyPreprocessor(nbconvert.preprocessors.Preprocessor):
         def preprocess_cell(self, cell, resources, index, ):
             if cell['cell_type'] == 'code':
-                cell['source'] = pidgin_transformer.transform_cell(''.join(cell['source']))
+                cell['source'] = pidgy_transformer.transform_cell(''.join(cell['source']))
             return cell, resources
 
 
@@ -263,7 +263,7 @@ Import pidgin notebooks as modules.
 
     def load_ipython_extension(shell):
         """
-The `pidgin` `load_ipython_extension`'s primary function transforms the `jupyter`
+The `pidgy` `load_ipython_extension`'s primary function transforms the `jupyter`
 `notebook`s into a literate computing interfaces.
 `markdown` becomes the primary plain-text format for submitting code,
 and the `markdown` is translated to `python` source code
@@ -279,17 +279,17 @@ normalizes the narrative relative to the source code.  Consequently,
 introduces new syntaxes at the interfaces between `markdown and python`.
 
         """
-        pidgin_transformer = PidginTransformer()        
-        shell.input_transformer_manager = pidgin_transformer
+        pidgy_transformer = pidgyTransformer()        
+        shell.input_transformer_manager = pidgy_transformer
         
         """
 `IPython` provides configurable interactive `shell` properties.  Some of the configurable properties
 control how `input` code is translated into valid source code. 
-The `pidgin` translation is managed by a custom `IPython.core.inputtransformer2.TransformerManager`.
+The `pidgy` translation is managed by a custom `IPython.core.inputtransformer2.TransformerManager`.
         
         """"""
         >>> shell.input_transformer_manager
-        <...PidginTransformer object...>
+        <...pidgyTransformer object...>
         
         """"""
 
@@ -336,24 +336,24 @@ may accept.
 
 
 
-    class PidginTransformer(IPython.core.inputtransformer2.TransformerManager):
-        def pidgin_transform(self, cell: str) -> str: 
+    class pidgyTransformer(IPython.core.inputtransformer2.TransformerManager):
+        def pidgy_transform(self, cell: str) -> str: 
             tokens = self.tokenizer.parse(''.join(cell))
             return self.tokenizer.untokenize(tokens)
         
-        def pidgin_cleanup(self, cell: str) -> list: 
-            return self.pidgin_transform(cell).splitlines(True)
+        def pidgy_cleanup(self, cell: str) -> list: 
+            return self.pidgy_transform(cell).splitlines(True)
         
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.tokenizer = Tokenizer()
-            self.cleanup_transforms.insert(0, self.pidgin_cleanup)
+            self.cleanup_transforms.insert(0, self.pidgy_cleanup)
             self.line_transforms.append(demojize)
 
-        def pidgin_magic(self, *text): 
+        def pidgy_magic(self, *text): 
             """Expand the text to tokens to tokens and 
             compact as a formatted `"python"` code."""
-            return IPython.display.Code(self.pidgin_transform(''.join(text)), language='python')
+            return IPython.display.Code(self.pidgy_transform(''.join(text)), language='python')
         
 
 
@@ -376,7 +376,7 @@ may accept.
 
 
     import mistune as markdown, textwrap, __main__, IPython, typing, re, IPython, nbconvert, ipykernel, doctest, ast
-    __all__ = 'pidgin',
+    __all__ = 'pidgy',
 
 
 
@@ -486,31 +486,31 @@ may accept.
 </details>&nbsp;
 
     """
-    pidgin = PidginTransformer()
+    pidgy = pidgyTransformer()
 
 
-A potential outcome of a `pidgin` program is reusable code. 
+A potential outcome of a `pidgy` program is reusable code. 
 
-Import pidgin notebooks as modules.
+Import pidgy notebooks as modules.
 
 
-    class PidginLoader(__import__('importnb').Notebook): 
+    class pidgyLoader(__import__('importnb').Notebook): 
         extensions = ".ipynb .md.ipynb".split()
-        def code(self, str): return ''.join(pidgin.transform_cell(str))
+        def code(self, str): return ''.join(pidgy.transform_cell(str))
 
 
 
-    class PidginPreprocessor(nbconvert.preprocessors.Preprocessor):
+    class pidgyPreprocessor(nbconvert.preprocessors.Preprocessor):
         def preprocess_cell(self, cell, resources, index, ):
             if cell['cell_type'] == 'code':
-                cell['source'] = pidgin_transformer.transform_cell(''.join(cell['source']))
+                cell['source'] = pidgy_transformer.transform_cell(''.join(cell['source']))
             return cell, resources
 
 
 
     graphviz.Source(
 digraph{rankdir=UD 
-subgraph cluster_pidgin {label="new school" PIDGIN->{PYTHON MARKDOWN}}
+subgraph cluster_pidgy {label="new school" pidgy->{PYTHON MARKDOWN}}
 subgraph cluster_web {label="old school" WEB->{PASCAL TEX} }}
     
     )
@@ -523,9 +523,9 @@ subgraph cluster_web {label="old school" WEB->{PASCAL TEX} }}
 In literate programs, `"code"` is deeply entangled with the narrative.
 `"code"` object can signify meaning and can be validated through testing.
 `python` introduced the `doctest` literate programming convention that indicates some text in a narrative can be tested.
-`pidgin` extends the `doctest` opinion to the inline markdown code.
-Each time a `pidgin` cell is executed, the `doctest`s and inline code are executed ensuring that
-any code in a `pidgin` program is valid.
+`pidgy` extends the `doctest` opinion to the inline markdown code.
+Each time a `pidgy` cell is executed, the `doctest`s and inline code are executed ensuring that
+any code in a `pidgy` program is valid.
 
 
 
@@ -678,7 +678,7 @@ Markdown input can fail to render when jinja2 is used in correctly.  Markdown is
 
 
 
-## `pidgin` metasyntax at language interfaces.
+## `pidgy` metasyntax at language interfaces.
 [📗]({{pathlib.Path(syntax.__file__).name}})
 
 The combinations of document, programming, and templating languages
@@ -686,11 +686,11 @@ provides unique syntaxes as the interfaces.
 
 {{appendix.exports(syntax)}}
 
-### Reusing `pidgin` documents.
+### Reusing `pidgy` documents.
 
 Notebooks gain value when they be reusable at rest.
 
-We'll make a cli application that deploys `pidgin` as a web, cli, converter.
+We'll make a cli application that deploys `pidgy` as a web, cli, converter.
 
 
 {{appendix.exports(cli)}}

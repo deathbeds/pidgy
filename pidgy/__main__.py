@@ -1,4 +1,4 @@
 from . import translate
-with translate.PidginLoader():
+with translate.pidgyLoader():
     from .import cli
 cli.app()

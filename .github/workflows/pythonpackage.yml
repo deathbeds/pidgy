@@ -31,5 +31,5 @@ jobs:
       run: |
         python setup.py develop
         pip install pytest nbval importnb
-        pidgin kernel install
-        pytest --nbval --doctest-modules docs/paper.md.ipynb pidgin/tests/test_pidgin_syntax.md.ipynb
+        pidgy kernel install
+        pytest --nbval --doctest-modules docs/paper.md.ipynb pidgy/tests/test_pidgy_syntax.md.ipynb
