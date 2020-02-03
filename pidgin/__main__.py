@@ -1,4 +1,4 @@
-from . import imports
-with imports.PidginLoader():
+from . import translate
+with translate.PidginLoader():
     from .import cli
 cli.app()
