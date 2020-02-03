@@ -30,4 +30,4 @@ jobs:
     - name: Test with pytest
       run: |
         pip install pytest nbval importnb
-        pytest --nbval --doctest-modules paper.md.ipynb pidgin/tests/test_pidgin_syntax.md.ipynb
+        pytest --nbval --doctest-modules docs/paper.md.ipynb pidgin/tests/test_pidgin_syntax.md.ipynb
