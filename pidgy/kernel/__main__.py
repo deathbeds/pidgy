@@ -1,5 +1,3 @@
-import pidgy
-with pidgy.translate.pidgyLoader():
-    from . import shell
-print(shell.pidgyKernelApp.kernel.default_value, shell.pidgyKernelApp)
-shell.pidgyKernelApp.launch_instance()
+with __import__('pidgy').reuse.pidgyLoader():
+    from . import shell 
+__import__('ipykernel').kernelapp.IPKernelApp.launch_instance(kernel_class=shell.pidgyKernel)

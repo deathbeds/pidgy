@@ -1,8 +1,10 @@
 with __import__('importnb').Notebook(lazy=True):
-    try: from . import translate
-    except: import translate
+    try: from . import reuse, __style__
+    except: import reuse, __style__
 
-with translate.pidgyLoader(lazy=True):
+pidgyLoader = reuse.pidgyLoader
+
+with pidgyLoader(lazy=True):
     try: 
         from .extension import load_ipython_extension, unload_ipython_extension
     except: 
@@ -13,3 +15,4 @@ def true():
     return isinstance(IPython.get_ipython(), pidgy.kernel.shell.pidgyShell)
 
 def false(): return not true()
+

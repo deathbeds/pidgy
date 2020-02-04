@@ -1,6 +1,6 @@
 {
  "argv": [
-  "/Users/tonyfast/anaconda3/bin/python",
+  "python",
   "-m",
   "pidgy.kernel",
   "-f",
