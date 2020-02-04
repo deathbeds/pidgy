@@ -1,9 +1,98 @@
+<style>
+.jp-mod-presentationMode {
+    --jp-notebook-padding: 0;
+}
+.jp-RenderedHTMLCommon pre code {
+    opacity: 0.25;
+}
+.jp-Placeholder-content .jp-MoreHorizIcon {
+    background-size: 32px;
+}
+</style><style>
+.jp-mod-presentationMode .jp-SideBar,
+.jp-mod-presentationMode #jp-top-panel {
+    opacity: 0.0;
+    transition: all 0.2s;
+}
+.jp-mod-presentationMode .jp-SideBar:hover,
+.jp-mod-presentationMode #jp-top-panel:hover {
+    opacity: 0.9;
+    transition: all 0.2s;
+}</style><style>
+.jp-mod-presentationMode.jp-ApplicationShell,
+.jp-mod-presentationMode .p-TabBar-content{
+    background-color: var(--jp-layout-color0);
+}
+</style><style>
+.jp-mod-presentationMode .p-DockPanel-widget,
+.jp-mod-presentationMode #jp-left-stack{
+    border-color: transparent;
+}
+.jp-mod-presentationMode .jp-Toolbar-item,
+.jp-mod-presentationMode .jp-Toolbar {
+    opacity: 0.1;
+    transition: all 0.2s;
+}
+.jp-mod-presentationMode .jp-Toolbar-item:hover,
+.jp-mod-presentationMode .jp-Toolbar:hover {
+    opacity: 0.9;
+    transition: all 0.2s;
+}
+
+.jp-mod-presentationMode .jp-InputArea {
+    flex-direction: column;
+}
+
+</style><style>
+.jp-mod-presentationMode .jp-Notebook .jp-Cell .jp-InputPrompt, 
+.jp-mod-presentationMode .jp-Notebook .jp-Cell .jp-OutputPrompt {
+    flex: 0 0 2rem !important;
+    opacity: 0;
+}
+.jp-mod-presentationMode .jp-Notebook .jp-Cell.jp-mod-active .jp-OutputPrompt,
+.jp-mod-presentationMode .jp-Notebook .jp-Cell.jp-mod-active .jp-OutputPrompt {
+    opacity: 0.5;
+}
+.jp-mod-presentationMode .jp-Notebook .jp-Cell .jp-InputPrompt, 
+.jp-mod-presentationMode .jp-Notebook .jp-Cell .jp-OutputPrompt
+
+.jp-mod-presentationMode hr {
+    opacity: 0.1;
+}
+</style>
+    <style>
+    .jp-TableOfContents-content h1, 
+    .jp-TableOfContents-content h2 {
+        margin-bottom: var(--jp-ui-font-size0);
+    }
+    </style>
+
+    <style>
+    .jp-mod-presentationMode {
+        --jp-content-heading-line-height: 1.25 !important;
+    }
+    </style>
+
+    <style>
+    .jp-mod-presentationMode #jp-main-status-bar {
+        opacity: 0.06;
+        transition: all 0.2s;
+    }
+    .jp-mod-presentationMode #jp-main-status-bar:hover {
+        opacity: 0.8;
+        transition: all 0.2s;
+    }
+    </style>
+
+
+
+
 # `pidgy` programming
 
 
 
 `🐦,pidgy` programming is a fun and expressive style of literate computing
-designed for writing nonfiction literate in `jupyter` computational `📓`s.
+designed for writing nonfiction literature in `jupyter` computational `📓`s.
 It presents a `M⬇️`-forward style of programming where authors
 codevelop code and narrative. 
 `pidgy`programs are intermediate documents 
@@ -30,7 +119,67 @@ computational thought in fluid combinations of human or machine logic.
 
 
 
+# `pidgy` command line application
+
+
+
+    @click.group()
+    def app(): 
+The `pidgy` command line application operates on passive notebooks
+documents.
+
+
+
+    @app.group()
+    def kernel():
+Serve notebook modules from fastapi creating an openapi schema for each 
+literate document.
+
+    @kernel.command()
+    def install(user=False, replace=None, prefix=None):
+        with pidgy.translate.pidgyLoader():
+            from .kernel import shell
+        dest =shell.install(user=user, replace=replace, prefix=prefix)
+        click.echo(F"The pidgy kernel was install in {dest}")
+        
+    @kernel.command()
+    def uninstall(user=True, replace=None, prefix=None):
+        with pidgy.translate.pidgyLoader():
+            from .kernel import shell
+        shell.uninstall()
+        click.echo(F"The pidgy kernel was removed.")
+        
+
+
+
+    @app.command()
+    def serve(modules):
+Serve notebook modules from fastapi creating an openapi schema for each 
+literate document.
+
+
+
+    @app.command()
+    def run(modules, parallel=True):
+Run a collection of notebook modules.
+
+
+
+    @app.command()
+    def convert(modules):
+Convert notebook written in pidgy to difference formats.
+
+
+
+
+
 # Literary code & coded literature
+
+
+
+    with importnb.Notebook():
+        try: from . import translate
+        except: import translate
 
 
 
@@ -68,7 +217,7 @@ with `markdown` as the document language and `IPython` as the glue programming l
 Appply the pidgy transformers.
         
             """
-            return ''.join(__import__('pidgy').translate.pidgy.transform_cell(str))
+            return ''.join(translate.pidgy.transform_cell(str))
 
 
 
@@ -177,38 +326,40 @@ Functions beginning with `"test_"` indicate test functions.
 
 
 
+# The `pidgy` shell-kernel model
+
+
+The shell is the application either jupyterlab or jupyter notebook, the kernel determines the programming language.  Below we design a just jupyter kernel that can be installed using 
+
+    !pidgy kernel install
+
+
+    def install(kernel_name='pidgy',
+        user=True,
+        replace=None,
+        prefix=None
+    ):
+        return ipykernel.kernelspec.KernelSpecManager().install_kernel_spec(
+            str(pathlib.Path(globals().get('__file__', pathlib.Path('spec'))).parent/'spec'), kernel_name=kernel_name,
+            user=user, replace=replace, prefix=prefix)
+
+
+
+    def uninstall(kernel_name='pidgy',):
+        ipykernel.kernelspec.KernelSpecManager().remove_kernel_spec(kernel_name)
+
+
+
+
+
 # Building the `pidgy` extension
 
 
-    def load_ipython_extension(shell):
-The `pidgy` implementation uses the `IPython` configuration
-and extension system to modify the interactive computing expierence
-in `jupyter` notebooks.
-        
-        imports.load_ipython_extension(shell)
-1. The primary function of `pidgy` is that it `imports` `markdown` as formal language for 
-programming multiobjective literate programs.  `imports` focuses on the indentification of
-`"code" and not"code"` that become python code.
-
-        testing.load_ipython_extension(shell) 
-2. The `pidgy` specification promotes strong intertextuality between `"code" and not"code"` 
-objects in a program.  `testing` reinforces that efficacy of the `"code"` using
-documentation tests of `doctest and "inline"+"code"`.  `pidgy` uses the narrative a formal 
-test for the program.  These tests are executed interactively to ensure the veracity of 
-`"code"` signs in the narrative.
-
-        exports.load_ipython_extension(shell)
-3. Literate computing in `pidgy` allows incremental development of `"code"` and the co-development of the documentation.
-`pidgy` interprets the `input` `"code"` as a `display`.  `pidgy` uses a `template` language to transclude
-`object`s from code 
 
 
 
 
-
-
-
-![svg](paper.md_files/paper.md_6_0.svg)
+![svg](paper.md_files/paper.md_8_0.svg)
 
 
 
@@ -450,20 +601,6 @@ A potential outcome of a `pidgy` program is reusable code.
 Import pidgy notebooks as modules.
 
 
-    class pidgyLoader(__import__('importnb').Notebook): 
-        extensions = ".ipynb .md.ipynb".split()
-        def code(self, str): return ''.join(pidgy.transform_cell(str))
-
-
-
-    class pidgyPreprocessor(nbconvert.preprocessors.Preprocessor):
-        def preprocess_cell(self, cell, resources, index, ):
-            if cell['cell_type'] == 'code':
-                cell['source'] = pidgy_transformer.transform_cell(''.join(cell['source']))
-            return cell, resources
-
-
-
     graphviz.Source(
 digraph{rankdir=UD 
 subgraph cluster_pidgy {label="new school" pidgy->{PYTHON MARKDOWN}}
@@ -475,6 +612,11 @@ subgraph cluster_web {label="old school" WEB->{PASCAL TEX} }}
 
 ## testing `"code"` in the `markdown` narrative.
 [📔](interactive.md.ipynb)
+
+    import IPython as python, doctest, textwrap
+    pidgy= None
+
+
 
 In literate programs, `"code"` is deeply entangled with the narrative.
 `"code"` object can signify meaning and can be validated through testing.
@@ -546,7 +688,7 @@ intertextual references between code and narrative.
             return shell.compile(
                 ast.Interactive(
                     body=shell.transform_ast(
-                        shell.compile.ast_parse(input)
+                        shell.compile.ast_parse(shell.transform_cell(input))
                     ).body
                 ),
                 F"In[{shell.last_execution_result.execution_count}]",
@@ -646,66 +788,5 @@ jinja docs
 
 
 
-
-### Reusing `pidgy` documents.
-
-Notebooks gain value when they be reusable at rest.
-
-We'll make a cli application that deploys `pidgy` as a web, cli, converter.
-
-# `pidgy` command line application
-
-
-
-    import click, IPython, pidgy
-
-
-
-    @click.group()
-    def app(): 
-The `pidgy` command line application operates on passive notebooks
-documents.
-
-
-
-    @app.group()
-    def kernel():
-Serve notebook modules from fastapi creating an openapi schema for each 
-literate document.
-
-    @kernel.command()
-    def install(user=False, replace=None, prefix=None):
-        with pidgy.translate.pidgyLoader():
-            from .kernel import shell
-        dest =shell.install(user=user, replace=replace, prefix=prefix)
-        click.echo(F"The pidgy kernel was install in {dest}")
-        
-    @kernel.command()
-    def uninstall(user=True, replace=None, prefix=None):
-        with pidgy.translate.pidgyLoader():
-            from .kernel import shell
-        shell.uninstall()
-        click.echo(F"The pidgy kernel was removed.")
-        
-
-
-
-    @app.command()
-    def serve(modules):
-Serve notebook modules from fastapi creating an openapi schema for each 
-literate document.
-
-
-
-    @app.command()
-    def run(modules, parallel=True):
-Run a collection of notebook modules.
-
-
-
-    @app.command()
-    def convert(modules):
-Convert notebook written in pidgy to difference formats.
-
-
+    [NbConvertApp] Converting notebook paper.md.ipynb to markdown
 
