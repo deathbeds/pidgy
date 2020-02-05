@@ -1,2 +1,5 @@
-with __import__('pidgy').reuse.pidgyLoader(lazy=True):
-    from .readme import pytest_collect_file
+from .. import reuse
+def pytest_collect_file(parent, path):
+    with reuse.pidgyLoader(lazy=True):
+        from . import readme
+    return readme.pidgyTests(parent, path)
