@@ -21,3 +21,5 @@ pytest
 black
 isort
 click
+graphviz
+stringcase

@@ -1,4 +1,4 @@
-from . import translate
-with translate.pidgyLoader():
+from . import reuse
+with reuse.pidgyLoader():
     from .import cli
 cli.app()
