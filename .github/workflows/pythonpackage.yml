@@ -30,6 +30,6 @@ jobs:
     - name: Test with pytest
       run: |
         python setup.py develop
-        pip install pytest nbval importnb
+        pip install -rrequirements.txt
         pidgy kernel install
-        pytest --nbval --doctest-modules docs/paper.md.ipynb pidgy/tests/test_pidgy_syntax.md.ipynb
+        pytest --nbval --doctest-modules docs/paper.md.ipynb **/test_*.ipynb
