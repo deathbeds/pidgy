@@ -1,6 +1,6 @@
 with __import__('importnb').Notebook(lazy=True):
-    try: from . import reuse, __style__
-    except: import reuse, __style__
+    try: from . import reuse
+    except: import reuse
 
 def load_ipython_extension(shell):
     with reuse.pidgyLoader(lazy=True):

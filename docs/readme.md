@@ -1,188 +1,302 @@
-<style>
-.jp-mod-presentationMode {
-    --jp-notebook-padding: 0;
-}
-.jp-RenderedHTMLCommon pre code {
-    opacity: 0.25;
-}
-.jp-Placeholder-content .jp-MoreHorizIcon {
-    background-size: 32px;
-}
-</style><style>
-.jp-mod-presentationMode .jp-SideBar,
-.jp-mod-presentationMode #jp-top-panel {
-    opacity: 0.0;
-    transition: all 0.2s;
-}
-.jp-mod-presentationMode .jp-SideBar:hover,
-.jp-mod-presentationMode #jp-top-panel:hover {
-    opacity: 0.9;
-    transition: all 0.2s;
-}</style><style>
-.jp-mod-presentationMode.jp-ApplicationShell,
-.jp-mod-presentationMode .p-TabBar-content{
-    background-color: var(--jp-layout-color0);
-}
-</style><style>
-.jp-mod-presentationMode .p-DockPanel-widget,
-.jp-mod-presentationMode #jp-left-stack{
-    border-color: transparent;
-}
-.jp-mod-presentationMode .jp-Toolbar-item,
-.jp-mod-presentationMode .jp-Toolbar {
-    opacity: 0.1;
-    transition: all 0.2s;
-}
-.jp-mod-presentationMode .jp-Toolbar-item:hover,
-.jp-mod-presentationMode .jp-Toolbar:hover {
-    opacity: 0.9;
-    transition: all 0.2s;
-}
+# `"pidgin"` programming - literate programming for modern science
 
-.jp-mod-presentationMode .jp-InputArea {
-    flex-direction: column;
-}
+pidgin programming is fun and expressive way to interact
+with literature and code in jupyter notebooks.
+polyglot multilingual.
 
-</style><style>
-.jp-mod-presentationMode .jp-Notebook .jp-Cell .jp-InputPrompt, 
-.jp-mod-presentationMode .jp-Notebook .jp-Cell .jp-OutputPrompt {
-    flex: 0 0 2rem !important;
-    opacity: 0;
-}
-.jp-mod-presentationMode .jp-Notebook .jp-Cell.jp-mod-active .jp-OutputPrompt,
-.jp-mod-presentationMode .jp-Notebook .jp-Cell.jp-mod-active .jp-OutputPrompt {
-    opacity: 0.5;
-}
-.jp-mod-presentationMode .jp-Notebook .jp-Cell .jp-InputPrompt, 
-.jp-mod-presentationMode .jp-Notebook .jp-Cell .jp-OutputPrompt
 
-.jp-mod-presentationMode hr {
-    opacity: 0.1;
-}
-</style>
-    <style>
-    .jp-TableOfContents-content h1, 
-    .jp-TableOfContents-content h2 {
-        margin-bottom: var(--jp-ui-font-size0);
-    }
-    </style>
 
-    <style>
-    .jp-mod-presentationMode {
-        --jp-content-heading-line-height: 1.25 !important;
-    }
-    </style>
+## Literate programming and computing
 
-    <style>
-    .jp-mod-presentationMode #jp-main-status-bar {
-        opacity: 0.06;
-        transition: all 0.2s;
-    }
-    .jp-mod-presentationMode #jp-main-status-bar:hover {
-        opacity: 0.8;
-        transition: all 0.2s;
-    }
-    </style>
+pidgin is inspired by web and literate coffeescript.
+
+`"pidgin"` literate programming is a specification & implementation for writing computational essays 
+that freely use natural and programming languages to bring meaning a subject and theme.
+Donald Knuth introduced literate programming in 1979 as an approach to writing 
+documentation written with the shared intent of being both literature and a program.
+Since, rote software development styles have prevailed 
+for most topics dependent on programming languages.
+Increasingly, we are seeing a rise in literate programs with the
+successful adoption of computational notebooks as substrates
+for data-driven narratives.
+Thoughout this document we'll implement `pidgy`, a literate programming
+interface in `jupyter` `notebook`s running using the `ipykernel`,
+and we'll discuss how modern software practices can be used
+to create readable, reproducible, & reusable computational literature.
+
+One of the most charming features of `"literate programming"` is the 
+authentic pleasure of writing that Donald Knuth describes while 
+discussing about novel technical content.
+The outcome is a paper that is a pleasure to read.
+The `pidgy` implementation had to be written to test
+how enjoyable literate programming can be.
+Hopefully think document does demonstrate and confirm how fun
+writing about technical scientific content may be.
+
+Only in the wake of the literate programming did we learn of
+(1) unit testing, (2) notebook interfaces, and (3) the world wide web.
+`"pidgin"` programming promotes literate programming 
+as a means of writing data-driven narratives in computational notebooks.
+`notebook`s are a natural substrate for reproducible, literate programs
+because their schema refers explicitly to 
+two primary cell types: `markdown and "code"`.
+It follows that `🐦 `'s document language is `markdown`
+with `IPython, python` as the glue programming language.
+
+
+
+In `🐦, pidgy and "pidgin"` programming, units (ie. cells)
+in a `notebook` are written in `markdown` with the 
+shared intent of designing readable outputs
+and source that `python` can `compile`.
+`pidgy` demonstrates this behavior with
+extensions for the `IPython.InteractiveShell` and `ipykernel`
+that augments the interactive REPL experience to be 
+suitable for an implicit literate programming experience.
+Authors interactively read, write, and revise their 
+input as units readable output units,
+as working code units,
+and formal test objects.
+
+`"pidgin"` documents are flexible formats that can 
+be transformed in varities of literature, source code, and formal tests.
+`pidgy` relies on open source infrastructure to 
+provide multiple reusable states of `pidgy` documents. 
+`pidgy` documents abide an `nbformat` version which 
+identifies a `jsonschema` that validates the shape of the document.
+From the `nbformat`, 
+`nbconvert` transforms `notebook`s to other file formats (eg. `markdown and python`),
+`importnb` allows `pidgy` documents to be import like any python module, 
+`doctest` to provide interactive documentation testing,
+and `pytest` to establish formal testing procedures for `pidgy` documents.
+
+Open source communities have worked together to 
+improve access scientific computing technologies.
+Increased access to scientific computing technologies
+has reduced the demand for verbose code bases
+and may be acheived by a simple api.
+As such, non programmers can begin to participate in
+interactive computing through their abilities to tell stories.
+
+`pidgy` is hella fun to write in.
 
 
 
 
-# `pidgy` programming
+
+## The `pidgy` ismplementation
+
+> **What follows is the implementation of `pidgy` as a literate program in `jupyter` `notebook`s.  `notebook`s are the source code for the implementation.**
 
 
 
-`🐦,pidgy` programming is a fun and expressive style of literate computing
-designed for writing nonfiction literature in `jupyter` computational `📓`s.
-It presents a `M⬇️`-forward style of programming where authors
-codevelop code and narrative. 
-`pidgy`programs are intermediate documents 
-that can be read, written, and formally tested.
+### The `notebook` `format` as a basis from literate programs.
 
 
 
-pidgy programming is a style of literate computing,
-it is an expressive way of writing program
-
-
-pidgy programming is concerned with scientific literacy, the general abilities to read & write scientific literature, and the implicit pleasure of interactively
-composing modern literate programs.
-Access to commodity computing infrastructures have affected 
-the forms of scientific information architecture and 
-scientific literature.
-Programming languages represent novel forms
-that express heuristics that are explicitly reusable, they fill the voids where 
-the superior code of language fails to communicate phenomenon.
-Scientific literature written in `pidgy` accept all 
-languages equitably, it assigns language the role of communicating
-computational thought in fluid combinations of human or machine logic.
+![svg](paper.md_files/paper.md_5_0.svg)
 
 
 
+The `notebook` flexible format for numerous input and output languages.
+The `notebook` relies on a consistent data structure, that may be validated be a `schema`,
+that serializes literate programs.  The `notebook` has two primary cell types:
 
-# Literary code & coded literature
+1. Markdown Cells
+    
+    Cells that are typically rendered as rich html, but have a plain-text representation.
+    
+2. Code Cells
 
-
-
-    with importnb.Notebook():
-        try: from . import translate
-        except: import translate
-
-
-
-    """
-literate `pidgy` programs have two intents:
-1. be literature that acts as a program.
-2. be a program that acts as literature.
-
-In this approach, programming languages merge with natural language
-to communicate thought.  As a whole, these documents encapsulate
-unstructured languages that communicate with combinations of human 
-and machine logic.  
-
-    """;
+    Cells that may be executed by a compiler external to a document.  
+    From the document perspective, code cells are forms that tangle to
+    rich assemblages of mimetypes.
+    
+In `pidgy` programming, we look at notebooks as polyglot collages of 
+input and output mimetypes.
 
 
+    return 🕸("digraph {notebook->{documentation->{html pdf tex} python->{CLI extension module tests}}}")
+    
+<details><summary>Short list of output formats</summary><ul>
+<li>org</li>
+<li>tikiwiki</li>
+<li>html</li>
+<li>markdown</li>
+<li>creole</li>
+<li>jats</li>
+<li>textile</li>
+<li>vimwiki</li>
+<li>rst</li>
+<li>docbook</li>
+<li>fb2</li>
+<li>gfm</li>
+<li>latex</li>
+<li>odt</li>
+<li>epub</li>
+<li>opml</li>
+<li>docx</li>
+<li>mediawiki</li>
+<li>commonmark</li>
+<li>muse</li>
+<li>json</li>
+<li>haddock</li>
+<li>t2t</li>
+<li>twiki</li>
+<li>native</li>
+</ul>
+</details>
 
-    class pidgyLoader(__import__('importnb').Notebook): 
-        """
-The `pidgyLoader` includes `pidgy` documents in Python's import system.
+
+
+### Derived applications of pidgin programs.
+
+
+
+    @click.group()
+    def application()->None:
+A successful `notebook` program could find uses outside of its
+interactive state as programs, documentation, or tests.
+`pidgy` programming includes a `click` command-line 
+`application` to weave `notebook`s to other forms and tangle `notebook`s as source code.
+
+
+
+    def document(to, files):
+The `document` command is an opinionated wrapper that 
+converts notebooks to formatted python programs
+and readable documents.
+
+        exporter = nbconvert.get_exporter(to)
+It uses the `nbconvert` library that transforms the `nbformat` into other projections.
+
+        if to in _CODE_FORMATS: 
+`pidgy` introduces a new opinion to the notebook where
+the input defines the output.
+In literate programming terms, 
+we tangle the input and weave the output.
+The decoupling of the input & output means that proper
+python code maybe extracted from the `input`.  `pidgy`
+includes `⬛️ and isort` community conventions 
+for formatting python to abide python styling guides.
+
+            exporter = PythonExporter()
+        else:
+With `pidgy`, we may consider a cell output to be the intended
+`display` set forth by an author.
+A string opinion `pidgy` documents is that the `input`
+is excluded from resulting document, where as typical
+approaches view all code as essential or not essential.
+            
+            exporter = exporter(exclude_input=True)
         
+        for file in files: ...
+    
+    
+
+
+
+    def run(files):
+The `document` function demonstrates that `pidgy` may 
+export `python` code. 
+As a result the could be run as main scripts using the `runpy` modules.
+        
+        import pidgy, importnb, runpy
+        with pidgy.reuse.pidgyLoader(), importnb.Notebook():
+            for file in files: runpy.run_path(file)
+            for module in modules: runpy.run_module(module)
+
+
+
+    @application.group()
+    def kernel():
+`pidgy` is mainly designed to improve the interactive experience
+of creating literature in computational notebooks. 
+
+    @kernel.command()
+    def install(user=False, replace=None, prefix=None):
+        with pidgy.reuse.pidgyLoader():
+            from .kernel import shell
+        dest =shell.install(user=user, replace=replace, prefix=prefix)
+        click.echo(F"The pidgy kernel was install in {dest}")
+        
+    @kernel.command()
+    def uninstall(user=True, replace=None, prefix=None):
+        with pidgy.reuse.pidgyLoader():
+            from .kernel import shell
+        shell.uninstall()
+        click.echo(F"The pidgy kernel was removed.")
+        
+
+
+
+
+
+
+
+![svg](paper.md_files/paper.md_7_0.svg)
+
+
+
+
+### Reusable computable literature
+
+
+
+    def load_ipython_extension(shell):
+        """
+A primary requirement is that `pidgy` documents can be included
+in other `pidgy` documents, and, consequently, other `python` tools.
+To acheive this, `pidgy` modifies
+how `python` finds `__import__`s, this is acheived with an
+existing tool called `importnb` that includes
+`notebook` documents in `sys.path_hooks` used to discover modules.      
+        
+        """
+        pidgyLoader(position=-1).__enter__()
+
+
+
+    class pidgyLoader(importnb.Notebook): 
+        """
+To identify `pidgy` `notebook`s against other notebooks we 
+introduce the hybrid extension `".md.ipynb"`.
+
         """
         extensions = ".md.ipynb".split()
-        """
-Regardless of intent, `pidgy` programs should be reusable in other programs.
-`pidgy` programs are identified by the composite file extension `".md.ipynb"`.
-The choice is file extension is made because `pidgy` programs 
-designed primarly for literate programming in `jupyter` `notebook`s - 
-that use the `".ipynb"` suffix - 
-with `markdown` as the document language and `IPython` as the glue programming language.
         
-        """
         def code(self, str): 
             """
-Appply the pidgy transformers.
-        
+The `"code"` method of the `__import__` loader
+performs string transforms to code cells.
+`pidgy` uses the same method 
+that the `shell.input_transformer_manager`.
+
+
             """
+            with importnb.Notebook(lazy=True):
+                try: from . import translate
+                except: import translate
             return ''.join(translate.pidgy.transform_cell(str))
-
-
-
-## Authoring reusable documents.
-
-
-
-    """
-For documents to be reused as modules, they must restart and run all.
-
-A benefit of this approach is that the documents can be tested.
-
-    """;
-
+        
+        def visit(self, node):
+            """
+The `"visit"` method provides modifications to the
+abstract syntax tree.
+            
+            """
+            with importnb.Notebook():
+                try: from . import translate
+                except: import translate
+            return translate.ReturnYield().visit(node)
 
 
 
 
-# Deriving files from `pidgy` documents.
+
+### Deriving files from pidgin documents.
+
+We can combine many syntaxes through markdown.
 
 
 
@@ -194,18 +308,18 @@ where as the notebook recognizes quite a few formats:
     
 <details><summary><code>nbconvert</code> can generate <b>12</b> different formats from the files that abide the <code>nbformat</code>
 schema.</summary>
-<ul><li>html</li>
-<li>python</li>
-<li>asciidoc</li>
-<li>notebook</li>
-<li>slides</li>
-<li>pdf</li>
-<li>latex</li>
-<li>selectLanguage</li>
-<li>custom</li>
-<li>script</li>
+<ul><li>slides</li>
 <li>markdown</li>
 <li>rst</li>
+<li>custom</li>
+<li>python</li>
+<li>script</li>
+<li>notebook</li>
+<li>asciidoc</li>
+<li>html</li>
+<li>pdf</li>
+<li>selectLanguage</li>
+<li>latex</li>
 </ul>
 </details>
 
@@ -213,8 +327,11 @@ schema.</summary>
 
 
     class pidgyTranslate(nbconvert.preprocessors.Preprocessor):
+Translate pidgy cells to pure python cells.
+        
         def preprocess_cell(self, cell, resources, index, ):
             import pidgy
+            tokenizer = pidgy.translate.Tokenizer()
             if cell['cell_type'] == 'code':
                 cell['source'] = pidgy.imports.pidgy.transform_cell(''.join(cell['source']))
             return cell, resources
@@ -238,10 +355,12 @@ A normalized notebook can be imported by importnb.
 
 
 
-## Literature as the test
+### Literature as the test
 
-A strong intertextuallity may emerge when 
-the primary target of a document is literature.
+
+
+Intertextuallity emerges when 
+the primary target of a program is literature.
 Some of the literary content may include `"code"` `object`s
 that can be tested to qualify the veracity of these
 dual signifiers.
@@ -255,112 +374,29 @@ and any formally defined tests are collected.
 
 
 
+    class pidgyModule(importnb.utils.pytest_importnb.NotebookModule):
 `pidgy` provides a `pytest` plugin that works only on `".md.ipynb"` files.
 The `pidgy.kernel` works directly with `nbval`, install the python packkage and use the --nbval flag.
 `pidgy` uses features from `importnb` to support standard tests discovery, 
 and `doctest` discovery across all strings.
-
 Still working on coverage.
-
-
-
-    class pidgyModule(importnb.utils.pytest_importnb.NotebookModule):
 The `pidgyModule` permits standard test discovery in notebooks.
 Functions beginning with `"test_"` indicate test functions.
 
-        loader = pidgy.imports.pidgyLoader
+        loader = pidgy.reuse.pidgyLoader
 
 
 
     class pidgyTests(importnb.utils.pytest_importnb.NotebookTests):
+if `pidgy` is install then importnb is.
+        
         modules = pidgyModule,
 
-    pytest_collect_file = pidgyTests.__call__
 
 
 
 
-
-![svg](output_1_0.svg)
-
-
-
-
-# `pidgy` co-developments
-
-`pidgy` documents are written in `markdown`,
-and `"code"` is an intertextual feature of the narrative.
-We'll find that `pidgy` documents can serve many purposes like:
-* being a piece of literature.
-* being a piece of documentation.
-* being a testing unit.
-* being a `python` module.
-* being a command line application.
-* being a web service.
-
-`markdown`as a programming language can encapsulate
-any formal programming languages as
-either block or fenced objects.
-They are literate programs that combine human & machine logic 
-to provide enriched meaning to the document.
-
-
-
-`pidgy`'s literate programs are designed to be reused in multiple contexts.
-
-
-
-    @click.group()
-    def app(): 
-The `pidgy` command line application operates on passive notebooks
-documents.
-
-
-
-    @app.group()
-    def kernel():
-Serve notebook modules from fastapi creating an openapi schema for each 
-literate document.
-
-    @kernel.command()
-    def install(user=False, replace=None, prefix=None):
-        with pidgy.translate.pidgyLoader():
-            from .kernel import shell
-        dest =shell.install(user=user, replace=replace, prefix=prefix)
-        click.echo(F"The pidgy kernel was install in {dest}")
-        
-    @kernel.command()
-    def uninstall(user=True, replace=None, prefix=None):
-        with pidgy.translate.pidgyLoader():
-            from .kernel import shell
-        shell.uninstall()
-        click.echo(F"The pidgy kernel was removed.")
-        
-
-
-
-    @app.command()
-    def serve(modules):
-Serve notebook modules from fastapi creating an openapi schema for each 
-literate document.
-
-
-
-    @app.command()
-    def run(modules, parallel=True):
-Run a collection of notebook modules.
-
-
-
-    @app.command()
-    def convert(modules):
-Convert notebook written in pidgy to difference formats.
-
-
-
-
-
-# The `pidgy` shell-kernel model
+### The `pidgy` shell-kernel model
 
 
 The shell is the application either jupyterlab or jupyter notebook, the kernel determines the programming language.  Below we design a just jupyter kernel that can be installed using 
@@ -386,74 +422,313 @@ The shell is the application either jupyterlab or jupyter notebook, the kernel d
 
 
 
-# Building the `pidgy` extension
+### Building the `pidgy` extension
+
+
+    def load_ipython_extension(shell):
+The `pidgy` implementation uses the `IPython` configuration
+and extension system to modify the interactive computing expierence
+in `jupyter` notebooks.
+        
+        translate.load_ipython_extension(shell)
+1. The primary function of `pidgy` is that it imports `markdown` as formal language for 
+programming multiobjective literate programs.  imports focuses on the indentification of
+`"code" and not"code"` that become python code.
+
+        testing.load_ipython_extension(shell) 
+2. The `pidgy` specification promotes strong intertextuality between `"code" and not"code"` 
+objects in a program.  `testing` reinforces that efficacy of the `"code"` using
+documentation tests of `doctest and "inline"+"code"`.  `pidgy` uses the narrative a formal 
+test for the program.  These tests are executed interactively to ensure the veracity of 
+`"code"` signs in the narrative.
+
+        reuse.load_ipython_extension(shell)
+        #debugging.load_ipython_extension(shell)
+        outputs.load_ipython_extension(shell)
+3. Literate computing in `pidgy` allows incremental development of `"code"` and the co-development of the documentation.
+`pidgy` interprets the `input` `"code"` as a `display`.  `pidgy` uses a `template` language to transclude
+`object`s from code 
 
 
 
 
 
 
-![svg](paper.md_files/paper.md_8_0.svg)
 
+![svg](paper.md_files/paper.md_13_0.svg)
 
-
-
-    ---------------------------------------------------------------------------
-
-    UndefinedError                            Traceback (most recent call last)
-
-    ~/anaconda3/lib/python3.7/site-packages/jinja2/asyncsupport.py in render(self, *args, **kwargs)
-         74     def render(self, *args, **kwargs):
-         75         if not self.environment.is_async:
-    ---> 76             return original_render(self, *args, **kwargs)
-         77         loop = asyncio.get_event_loop()
-         78         return loop.run_until_complete(self.render_async(*args, **kwargs))
-
-
-    ~/anaconda3/lib/python3.7/site-packages/jinja2/environment.py in render(self, *args, **kwargs)
-       1006         except Exception:
-       1007             exc_info = sys.exc_info()
-    -> 1008         return self.environment.handle_exception(exc_info, True)
-       1009 
-       1010     def render_async(self, *args, **kwargs):
-
-
-    ~/anaconda3/lib/python3.7/site-packages/jinja2/environment.py in handle_exception(self, exc_info, rendered, source_hint)
-        778             self.exception_handler(traceback)
-        779         exc_type, exc_value, tb = traceback.standard_exc_info
-    --> 780         reraise(exc_type, exc_value, tb)
-        781 
-        782     def join_path(self, template, parent):
-
-
-    ~/anaconda3/lib/python3.7/site-packages/jinja2/_compat.py in reraise(tp, value, tb)
-         35     def reraise(tp, value, tb=None):
-         36         if value.__traceback__ is not tb:
-    ---> 37             raise value.with_traceback(tb)
-         38         raise value
-         39 
-
-
-    <template> in top-level template code()
-
-
-    ~/anaconda3/lib/python3.7/site-packages/jinja2/environment.py in getattr(self, obj, attribute)
-        432             pass
-        433         try:
-    --> 434             return obj[attribute]
-        435         except (TypeError, LookupError, AttributeError):
-        436             return self.undefined(obj=obj, name=attribute)
-
-
-    UndefinedError: 'translate' is undefined
 
 
 
 ## programming in `markdown and python` 
-[📓]({{pathlib.Path(translate.__file__).name}})
+[📓](translate.ipynb)
 
 
-{{appendix.exports(pidgy.translate)}}
+    def load_ipython_extension(shell):
+        """
+The `pidgy` `load_ipython_extension`'s primary function transforms the `jupyter`
+`notebook`s into a literate computing interfaces.
+`markdown` becomes the primary plain-text format for submitting code,
+and the `markdown` is translated to `python` source code
+before compilation.
+The implementation configures the appropriate
+features of the `IPython.InteractiveShell` to accomodate
+the interactive literate programming experience.
+
+In this section, we'll implement a `shell.input_transformer_manager`
+that handles the logical translation of `markdown` to `python`.
+The translation maintains the source line numbers and 
+normalizes the narrative relative to the source code.  Consequently,
+introduces new syntaxes at the interfaces between `markdown and python`.
+
+        """
+        pidgy_transformer = pidgyTransformer()        
+        shell.input_transformer_manager = pidgy_transformer
+        
+        """
+`IPython` provides configurable interactive `shell` properties.  Some of the configurable properties
+control how `input` code is translated into valid source code. 
+The `pidgy` translation is managed by a custom `IPython.core.inputtransformer2.TransformerManager`.
+        
+        """"""
+        >>> shell.input_transformer_manager
+        <...pidgyTransformer object...>
+        
+        """"""
+
+The `shell.input_transformer_manager` applies string transformations to clean up the `input`
+to be valid `python`.  There are three stages of line of transforms.
+
+1. Cleanup transforms that operate on the entire cell `input`.
+
+        """"""
+        >>> shell.input_transformers_cleanup
+        [<...leading_empty_lines...>, <...leading_indent...>, <...PromptStripper...>, ...]
+        
+        """"""
+        
+2. Line transforms that are applied the cell `input` with split lines. 
+This is where `IPython` introduces their bespoke cell magic syntaxes.
+        
+        """"""
+        >>> shell.input_transformer_manager.line_transforms
+        [...<...cell_magic...>...]
+        
+        """"""
+        
+3. Token transformers that look for specific tokens at the like level.  `IPython`'s default
+behavior introduces new symbols into the programming language.
+
+        """"""
+        >>> shell.input_transformer_manager.token_transformers
+        [<...MagicAssign...SystemAssign...EscapedCommand...HelpEnd...>]
+        
+        """"""
+
+After all of the `input` transformations are complete, the `input` should be valid source that `ast.parse, compile or shell.compile` 
+may accept.
+
+        """"""
+        >>> shell.ast_transformers
+        [...]
+        
+        """
+
+        if not any(x for x in shell.ast_transformers if isinstance(x, ReturnYield)):
+            shell.ast_transformers.append(ReturnYield())
+
+
+
+
+
+newline hrule block_code fences heading nptable lheading block_quote list_block block_html def_links def_footnotes table paragraph text
+
+
+
+
+    ' '.join(markdown.BlockLexer.default_rules)
+
+
+
+    class pidgyTransformer(IPython.core.inputtransformer2.TransformerManager):
+        def pidgy_transform(self, cell: str) -> str: 
+            return self.tokenizer.untokenize(self.tokenizer.parse(''.join(cell)))
+        
+        def transform_cell(self, cell):
+            return super().transform_cell(self.pidgy_transform(cell))
+        
+        def _rstrip_lines(self, lines):
+            return '\n'.join(map(str.rstrip, ''.join(lines + ['']).splitlines())).splitlines(True)
+        
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.tokenizer = Tokenizer()
+            self.line_transforms.append(demojize)
+            self.line_transforms.append(self._rstrip_lines)
+
+        def pidgy_magic(self, *text): 
+            """Expand the text to tokens to tokens and 
+            compact as a formatted `"python"` code."""
+            return IPython.display.Code(self.pidgy_transform(''.join(text)), language='python')
+        
+
+
+
+    import ast
+    class ReturnYield(ast.NodeTransformer):
+        def visit_FunctionDef(self, node): return node
+        visit_AsyncFunctionDef = visit_FunctionDef
+        def visit_Return(self, node):
+            replace = ast.parse('''__import__('IPython').display.display()''').body[0]
+            replace.value.args = node.value.elts if isinstance(node.value, ast.Tuple) else [node.value]
+            return ast.copy_location(replace, node)
+
+        def visit_Expr(self, node):
+            if isinstance(node.value, (ast.Yield, ast.YieldFrom)):  return ast.copy_location(self.visit_Return(node.value), node)
+            return node
+        
+        visit_Expression = visit_Expr
+
+
+
+    def demojize(lines, delimiters=('_', '_')):
+        str = ''.join(lines)
+        import tokenize, emoji, stringcase; tokens = []
+        try:
+            for token in list(tokenize.tokenize(
+                __import__('io').BytesIO(str.encode()).readline)):
+                if token.type == tokenize.ERRORTOKEN:
+                    string = emoji.demojize(token.string, delimiters=delimiters
+                                           ).replace('-', '_').replace("’", "_")
+                    if tokens and tokens[-1].type == tokenize.NAME: tokens[-1] = tokenize.TokenInfo(tokens[-1].type, tokens[-1].string + string, tokens[-1].start, tokens[-1].end, tokens[-1].line)
+                    else: tokens.append(
+                        tokenize.TokenInfo(
+                            tokenize.NAME, string, token.start, token.end, token.line))
+                else: tokens.append(token)
+            return tokenize.untokenize(tokens).decode().splitlines(True)
+        except BaseException: raise SyntaxError(str)
+
+
+
+    import mistune as markdown, textwrap, __main__, IPython, typing, re, IPython, nbconvert, ipykernel, doctest, ast
+    __all__ = 'pidgy',
+
+
+
+    class Tokenizer(markdown.BlockLexer):
+            """
+##### Tokenizer
+
+<details>
+<summary>Tokenize `input` text into `"code" and not "code"` tokens that will be translated into valid `python` source.</summary>
+        
+            """
+            class grammar_class(markdown.BlockGrammar):
+                doctest = doctest.DocTestParser._EXAMPLE_RE
+                default_rules = "newline hrule block_code fences heading nptable lheading block_quote list_block def_links def_footnotes table paragraph text".split()
+
+            def parse(self, text: str, default_rules=None) -> typing.List[dict]:
+                if not self.depth: self.tokens = []
+                with self: tokens = super().parse(whiten(text), default_rules)
+                if not self.depth: tokens = self.normalize(text, tokens)
+                return tokens
+
+            def parse_doctest(self, m): self.tokens.append({'type': 'paragraph', 'text': m.group(0)})
+
+            def parse_fences(self, m):
+                if m.group(2): self.tokens.append({'type': 'paragraph', 'text': m.group(0)})
+                else: super().parse_fences(m)
+
+            def parse_hrule(self, m):
+                self.tokens.append({'type': 'hrule', 'text': m.group(0)})
+
+            def normalize(self, text, tokens):
+                """Combine non-code tokens into contiguous blocks."""
+                compacted = []
+                while tokens:
+                    token = tokens.pop(0)
+                    if 'text' not in token: continue
+                    else: 
+                        if not token['text'].strip(): continue
+                        block, body = token['text'].splitlines(), ""
+                    while block:
+                        line = block.pop(0)
+                        if line:
+                            before, line, text = text.partition(line)
+                            body += before + line
+                    if token['type']=='code':
+                        compacted.append({'type': 'code', 'lang': None, 'text': body})
+                    else:
+                        if compacted and compacted[-1]['type'] == 'paragraph':
+                            compacted[-1]['text'] += body
+                        else: compacted.append({'type': 'paragraph', 'text': body})
+                if compacted and compacted[-1]['type'] == 'paragraph':
+                    compacted[-1]['text'] += text
+                elif text.strip():
+                    compacted.append({'type': 'paragraph', 'text': text})
+                return compacted
+
+            depth = 0
+            def __enter__(self): self.depth += 1
+            def __exit__(self, *e): self.depth -= 1
+
+            def untokenize(self, tokens: τ.List[dict], source: str = """""", last: int =0) -> str:
+                INDENT = indent = base_indent(tokens) or 4
+                for i, token in enumerate(tokens):
+                    object = token['text']
+                    if token and token['type'] == 'code':
+                        if object.lstrip().startswith(FENCE):
+
+                            object = ''.join(''.join(object.partition(FENCE)[::2]).rpartition(FENCE)[::2])
+                            indent = INDENT + num_first_indent(object)
+                            object = textwrap.indent(object, INDENT*SPACE)
+
+                        if object.lstrip().startswith(MAGIC):  ...
+                        else: indent = num_last_indent(object)
+                    elif not object: ...
+                    else:
+                        object = textwrap.indent(object, indent*SPACE)
+                        for next in tokens[i+1:]:
+                            if next['type'] == 'code':
+                                next = num_first_indent(next['text'])
+                                break
+                        else: next = indent       
+                        Δ = max(next-indent, 0)
+
+                        if not Δ and source.rstrip().rstrip(CONTINUATION).endswith(COLON): 
+                            Δ += 4
+
+                        spaces = num_whitespace(object)
+                        "what if the spaces are ling enough"
+                        object = object[:spaces] + Δ*SPACE+ object[spaces:]
+                        if not source.rstrip().rstrip(CONTINUATION).endswith(QUOTES): 
+                            object = quote(object)
+                    source += object
+
+                for token in reversed(tokens):
+                    if token['text'].strip():
+                        if token['type'] != 'code': 
+                            source = source.rstrip() + SEMI
+                        break
+                        
+                return source
+            
+    for x in "default_rules footnote_rules list_rules".split():
+        setattr(Tokenizer, x, list(getattr(Tokenizer, x)))
+        getattr(Tokenizer, x).insert(getattr(Tokenizer, x).index('block_code'), 'doctest')
+        
+    ...
+    """
+</details>&nbsp;
+
+    """
+    pidgy = pidgyTransformer()
+
+
+A potential outcome of a `pidgy` program is reusable code. 
+
+Import pidgy notebooks as modules.
+
 
     graphviz.Source(
 digraph{rankdir=UD 
@@ -464,7 +739,17 @@ subgraph cluster_web {label="old school" WEB->{PASCAL TEX} }}
 
 
 
-## testing `"code"` in the `markdown` narrative.
+### Weaving cells in pidgin programs
+
+
+
+pidgin programming is an incremental approach to documents.
+
+
+
+
+
+### testing `"code"` in the `markdown` narrative.
 [📔](interactive.md.ipynb)
 
     import IPython as python, doctest, textwrap
@@ -560,13 +845,6 @@ intertextual references between code and narrative.
 
 
 
-## Weaving the `markdown` to a rich display.
-[📗](outputs.md.ipynb)
-
-
-
-
-
 ## `pidgy` metasyntax at language interfaces.
 [📗](test_pidgin_syntax.md.ipynb)
 
@@ -589,7 +867,7 @@ is indented code.
 
 
 
-### Code fences
+##### Code fences
 
 Some folks may prefer code fences and they may be used without a language specified.
 
@@ -605,7 +883,7 @@ Some folks may prefer code fences and they may be used without a language specif
 
 
     class DocStrings:
-### Docstrings
+##### Docstrings
 
 
     >>> assert DocStrings.__doc__.startswith('### Docstrings')
@@ -625,7 +903,7 @@ Some folks may prefer code fences and they may be used without a language specif
 
 
     import doctest
-### `doctest`
+##### `doctest`
 
     >>> assert True
     >>> print
@@ -635,10 +913,17 @@ Some folks may prefer code fences and they may be used without a language specif
 
 
 
-### templating
+##### templating
 
 filters
 jinja docs
 
+
+
+
+
+
+
+![svg](paper.md_files/paper.md_17_0.svg)
 
 
