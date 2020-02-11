@@ -32,4 +32,4 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        pytest --nbval --doctest-modules docs/paper.md.ipynb **/test_*.ipynb
+        pytest --nbval --doctest-modules **/test_*.ipynb
