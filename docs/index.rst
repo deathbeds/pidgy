@@ -86,36 +86,6 @@ Short list of output formats
 
    <li>
 
-notebook
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-rst
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-asciidoc
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
 pdf
 
 .. raw:: html
@@ -136,17 +106,7 @@ latex
 
    <li>
 
-selectLanguage
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-markdown
+notebook
 
 .. raw:: html
 
@@ -166,7 +126,17 @@ slides
 
    <li>
 
-script
+markdown
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+rst
 
 .. raw:: html
 
@@ -186,7 +156,7 @@ html
 
    <li>
 
-python
+script
 
 .. raw:: html
 
@@ -197,6 +167,36 @@ python
    <li>
 
 custom
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+python
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+selectLanguage
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+asciidoc
 
 .. raw:: html
 
