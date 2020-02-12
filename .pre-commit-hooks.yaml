@@ -1,0 +1,6 @@
+-   id: pidgy
+    name: Prepare pidgy for committing.
+    description: Clean up notebooks.
+    entry: python -m prenotebook --no-black --no-sort --prettier-code
+    language: python
+    files: ".+\\.md.ipynb"
