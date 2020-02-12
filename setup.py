@@ -16,7 +16,7 @@ setup_args = dict(
     long_description=(
         (here / "README.md").read_text() + "\n\n"
     ),
-    long_description_content_type='text/markdown'
+    long_description_content_type='text/markdown',
     url="https://github.com/deathbeds/pidgy",
     python_requires=">=3.6",
     license="BSD-3-Clause",
