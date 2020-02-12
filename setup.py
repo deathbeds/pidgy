@@ -14,9 +14,8 @@ setup_args = dict(
     author_email="tony.fast@gmail.com",
     description="Conventions for writing code in the notebook.",
     long_description=(
-        (here / "readme.md").read_text() + "\n\n"
+        (here / "readme.rst").read_text() + "\n\n"
     ),
-    long_description_content_type='text/markdown',
     url="https://github.com/deathbeds/pidgy",
     python_requires=">=3.6",
     license="BSD-3-Clause",
