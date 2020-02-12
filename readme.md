@@ -2,7 +2,8 @@
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/deathbeds/pidgy/master)
 [![Documentation Status](https://readthedocs.org/projects/pidgin-notebook/badge/?version=latest)](https://pidgin-notebook.readthedocs.io/en/latest/?badge=latest)
-
+![Python package](https://github.com/deathbeds/pidgy/workflows/Python%20package/badge.svg)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pidgy)
 
 `pidgy` is literate programming kernel and shell for `IPython`.
 When `pidgy` is enabled:

@@ -1,7 +1,7 @@
 ``pidgy`` literate ``notebook`` programming
 ===========================================
 
-|Binder| |Documentation Status|
+|Binder| |Documentation Status| |Python package| |PyPI - Python Version|
 
 ``pidgy`` is literate programming kernel and shell for ``IPython``. When
 ``pidgy`` is enabled: \* Write code in ``markdown``, indented and fenced
@@ -23,6 +23,8 @@ literature and reusable source code.
    :target: https://mybinder.org/v2/gh/deathbeds/pidgy/master
 .. |Documentation Status| image:: https://readthedocs.org/projects/pidgin-notebook/badge/?version=latest
    :target: https://pidgin-notebook.readthedocs.io/en/latest/?badge=latest
+.. |Python package| image:: https://github.com/deathbeds/pidgy/workflows/Python%20package/badge.svg
+.. |PyPI - Python Version| image:: https://img.shields.io/pypi/pyversions/pidgy
 
 
 

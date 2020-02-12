@@ -31,7 +31,7 @@ setup_args = dict(
         'pytest11': ['pidgy=pidgy.tests.plugin'],
         'console_scripts': ['pidgy=pidgy.__main__.cli:app'],
     },
-    classifiers=(
+    classifiers=[
         "Development Status :: 4 - Beta",
         "Framework :: IPython",
         "Framework :: Jupyter",
@@ -39,7 +39,8 @@ setup_args = dict(
         "Natural Language :: English",
         "License :: OSI Approved :: BSD License",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 3.6",),
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",],
     zip_safe=False,
 )
 
