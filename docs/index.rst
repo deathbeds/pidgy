@@ -1,95 +1,43 @@
 ``"pidgin"`` programming - literate programming for modern science
 ==================================================================
 
-pidgin programming is fun and expressive way to interact with literature
-and code in jupyter notebooks. polyglot multilingual.
 
 
 
+``pidgy`` is a literate programming designed specifically for
+``jupyter`` computational ``notebook``\ s. In ``pidgy``, authors weave
+narrative and tangle code using ``markdown`` as a document formatting
+language. This implementation is designed specifically for the
+``IPython.InteractiveShell``.
 
-Literate programming and computing
-----------------------------------
+``pidgy`` literate programs are serialized in the ``notebook``
+``schema`` therefore they can be converted a variety of document types.
+The ``pidgy`` package itself demonstrates an literate programming
+approach to writing readable, reusable, and reproducible scientific
+literature in ``notebook``\ s.
+
+
+## Literate programming and computing
 
 pidgin is inspired by web and literate coffeescript.
 
-``"pidgin"`` literate programming is a specification & implementation
-for writing computational essays that freely use natural and programming
-languages to bring meaning a subject and theme. Donald Knuth introduced
-literate programming in 1979 as an approach to writing documentation
-written with the shared intent of being both literature and a program.
-Since, rote software development styles have prevailed for most topics
-dependent on programming languages. Increasingly, we are seeing a rise
-in literate programs with the successful adoption of computational
-notebooks as substrates for data-driven narratives. Thoughout this
-document we’ll implement ``pidgy``, a literate programming interface in
-``jupyter`` ``notebook``\ s running using the ``ipykernel``, and we’ll
-discuss how modern software practices can be used to create readable,
-reproducible, & reusable computational literature.
-
-One of the most charming features of ``"literate programming"`` is the
-authentic pleasure of writing that Donald Knuth describes while
-discussing about novel technical content. The outcome is a paper that is
-a pleasure to read. The ``pidgy`` implementation had to be written to
-test how enjoyable literate programming can be. Hopefully think document
-does demonstrate and confirm how fun writing about technical scientific
-content may be.
-
-Only in the wake of the literate programming did we learn of (1) unit
-testing, (2) notebook interfaces, and (3) the world wide web.
-``"pidgin"`` programming promotes literate programming as a means of
-writing data-driven narratives in computational notebooks.
-``notebook``\ s are a natural substrate for reproducible, literate
-programs because their schema refers explicitly to two primary cell
-types: ``markdown and "code"``. It follows that ``🐦``\ ’s document
-language is ``markdown`` with ``IPython, python`` as the glue
-programming language.
-
-In ``🐦, pidgy and "pidgin"`` programming, units (ie. cells) in a
-``notebook`` are written in ``markdown`` with the shared intent of
-designing readable outputs and source that ``python`` can ``compile``.
-``pidgy`` demonstrates this behavior with extensions for the
-``IPython.InteractiveShell`` and ``ipykernel`` that augments the
-interactive REPL experience to be suitable for an implicit literate
-programming experience. Authors interactively read, write, and revise
-their input as units readable output units, as working code units, and
-formal test objects.
-
-``"pidgin"`` documents are flexible formats that can be transformed in
-varities of literature, source code, and formal tests. ``pidgy`` relies
-on open source infrastructure to provide multiple reusable states of
-``pidgy`` documents. ``pidgy`` documents abide an ``nbformat`` version
-which identifies a ``jsonschema`` that validates the shape of the
-document. From the ``nbformat``, ``nbconvert`` transforms
-``notebook``\ s to other file formats (eg. ``markdown and python``),
-``importnb`` allows ``pidgy`` documents to be import like any python
-module, ``doctest`` to provide interactive documentation testing, and
-``pytest`` to establish formal testing procedures for ``pidgy``
-documents.
-
-Open source communities have worked together to improve access
-scientific computing technologies. Increased access to scientific
-computing technologies has reduced the demand for verbose code bases and
-may be acheived by a simple api. As such, non programmers can begin to
-participate in interactive computing through their abilities to tell
-stories.
-
-``pidgy`` is hella fun to write in.
+{#{appendix.exports(intro)}#}
 
 
 
+The ``pidgy`` implementation
+----------------------------
 
-The ``pidgy`` ismplementation
------------------------------
+``pidgy`` written as a literate program, it is written as a work of
+literature, wherein code objects have equity in the narrative. When
+looking through the ``pidgy`` source code, we’ll notice that
+``notebook``\ s are the substrate for the literate programs. The
+``notebook`` ``schema`` defines specific containers for ``markdown`` and
+``"code"`` cells; this duality motivates the use of ``markdown`` as the
+document formatting language.
 
-   **What follows is the implementation of ``pidgy`` as a literate
-   program in ``jupyter`` ``notebook``\ s. ``notebook``\ s are the
-   source code for the implementation.**
-
-
-
-
-The ``notebook`` ``format`` as a basis from literate programs.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+What follows in an attempt at computable scientific literature, a
+programmatic paper.
 
 
 
@@ -97,6 +45,9 @@ The ``notebook`` ``format`` as a basis from literate programs.
 .. image:: paper.md_files/paper.md_5_0.svg
 
 
+
+The ``notebook`` ``format`` as a basis from literate programs.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The ``notebook`` flexible format for numerous input and output
 languages. The ``notebook`` relies on a consistent data structure, that
@@ -135,107 +86,7 @@ Short list of output formats
 
    <li>
 
-mediawiki
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-vimwiki
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-tikiwiki
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-epub
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-fb2
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-odt
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-org
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-haddock
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-html
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-markdown
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-textile
+notebook
 
 .. raw:: html
 
@@ -255,7 +106,7 @@ rst
 
    <li>
 
-muse
+asciidoc
 
 .. raw:: html
 
@@ -265,67 +116,7 @@ muse
 
    <li>
 
-creole
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-json
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-docx
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-native
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-gfm
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-twiki
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-jats
+pdf
 
 .. raw:: html
 
@@ -345,7 +136,7 @@ latex
 
    <li>
 
-t2t
+selectLanguage
 
 .. raw:: html
 
@@ -355,7 +146,7 @@ t2t
 
    <li>
 
-docbook
+markdown
 
 .. raw:: html
 
@@ -365,7 +156,7 @@ docbook
 
    <li>
 
-opml
+slides
 
 .. raw:: html
 
@@ -375,7 +166,37 @@ opml
 
    <li>
 
-commonmark
+script
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+html
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+python
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+custom
 
 .. raw:: html
 
@@ -402,51 +223,12 @@ Derived applications of pidgin programs.
 
 A successful ``notebook`` program could find uses outside of its
 interactive state as programs, documentation, or tests. ``pidgy``
-programming includes a ``click`` command-line ``application`` to weave
-``notebook``\ s to other forms and tangle ``notebook``\ s as source
-code.
+programming includes a ``click`` command-line ``application`` to
+transform and execute ``notebook``\ s.
 
 ::
 
-   def document(to, files):
-
-The ``document`` command is an opinionated wrapper that converts
-notebooks to formatted python programs and readable documents.
-
-::
-
-       exporter = nbconvert.get_exporter(to)
-
-It uses the ``nbconvert`` library that transforms the ``nbformat`` into
-other projections.
-
-::
-
-       if to in _CODE_FORMATS: 
-
-``pidgy`` introduces a new opinion to the notebook where the input
-defines the output. In literate programming terms, we tangle the input
-and weave the output. The decoupling of the input & output means that
-proper python code maybe extracted from the ``input``. ``pidgy``
-includes ``⬛️ and isort`` community conventions for formatting python to
-abide python styling guides.
-
-::
-
-           exporter = PythonExporter()
-       else:
-
-With ``pidgy``, we may consider a cell output to be the intended
-``display`` set forth by an author. A string opinion ``pidgy`` documents
-is that the ``input`` is excluded from resulting document, where as
-typical approaches view all code as essential or not essential.
-
-::
-
-           exporter = exporter(exclude_input=True)
-       
-       for file in files: ...
-
+   <click.core.Command at 0x10f179ac8>
 
 
 
@@ -454,8 +236,7 @@ typical approaches view all code as essential or not essential.
    def run(files):
 
 The ``document`` function demonstrates that ``pidgy`` may export
-``python`` code. As a result the could be run as main scripts using the
-``runpy`` modules.
+``python`` code. As a result the could be run as main scripts.
 
 ::
 
@@ -476,18 +257,16 @@ creating literature in computational notebooks.
 
    @kernel.command()
    def install(user=False, replace=None, prefix=None):
-       manager = jupyter_client.kernelspec.KernelSpecManager()
-       path = str((pathlib.Path(__file__).parent / 'kernel' / 'spec').absolute())
-       try:
-           dest = manager.install_kernel_spec(path, 'pidgy')
-       except:
-           click.echo(F"System install was unsuccessful. Attempting to install the pidgy kernel to the user.")
-           dest = manager.install_kernel_spec(path, 'pidgy', True)
+       with pidgy.reuse.pidgyLoader():
+           from .kernel import shell
+       dest =shell.install(user=user, replace=replace, prefix=prefix)
        click.echo(F"The pidgy kernel was install in {dest}")
        
    @kernel.command()
    def uninstall(user=True, replace=None, prefix=None):
-       jupyter_client.kernelspec.KernelSpecManager().remove_kernel_spec('pidgy')
+       with pidgy.reuse.pidgyLoader():
+           from .kernel import shell
+       shell.uninstall()
        click.echo(F"The pidgy kernel was removed.")
        
 
@@ -497,70 +276,6 @@ creating literature in computational notebooks.
 
 .. image:: paper.md_files/paper.md_7_0.svg
 
-
-
-
-
-Reusable computable literature
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-::
-
-   def load_ipython_extension(shell):
-       """
-
-A primary requirement is that ``pidgy`` documents can be included in
-other ``pidgy`` documents, and, consequently, other ``python`` tools. To
-acheive this, ``pidgy`` modifies how ``python`` finds ``__import__``\ s,
-this is acheived with an existing tool called ``importnb`` that includes
-``notebook`` documents in ``sys.path_hooks`` used to discover modules.
-
-::
-
-       """
-       pidgyLoader(position=-1).__enter__()
-
-
-
-   class pidgyLoader(importnb.Notebook): 
-       """
-
-To identify ``pidgy`` ``notebook``\ s against other notebooks we
-introduce the hybrid extension ``".md.ipynb"``.
-
-::
-
-       """
-       extensions = ".md.ipynb".split()
-       
-       def code(self, str): 
-           """
-
-The ``"code"`` method of the ``__import__`` loader performs string
-transforms to code cells. ``pidgy`` uses the same method that the
-``shell.input_transformer_manager``.
-
-::
-
-           """
-           with importnb.Notebook(lazy=True):
-               try: from . import translate
-               except: import translate
-           return ''.join(translate.pidgy.transform_cell(str))
-       
-       def visit(self, node):
-           """
-
-The ``"visit"`` method provides modifications to the abstract syntax
-tree.
-
-::
-
-           """
-           with importnb.Notebook():
-               try: from . import translate
-               except: import translate
-           return translate.ReturnYield().visit(node)
 
 
 
@@ -856,7 +571,7 @@ extension system to modify the interactive computing expierence in
 
 
 
-.. image:: paper.md_files/paper.md_13_0.svg
+.. image:: paper.md_files/paper.md_12_0.svg
 
 
 
@@ -1357,6 +1072,6 @@ filters jinja docs
 
 
 
-.. image:: paper.md_files/paper.md_17_0.svg
+.. image:: paper.md_files/paper.md_16_0.svg
 
 
