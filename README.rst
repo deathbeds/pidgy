@@ -20,7 +20,7 @@ narrative develop together into a cohesive program that serves dually as
 literature and reusable source code.
 
 .. |Binder| image:: https://mybinder.org/badge_logo.svg
-   :target: https://mybinder.org/v2/gh/deathbeds/pidgy/master
+   :target: https://mybinder.org/v2/gh/deathbeds/pidgy/master?urlpath=lab
 .. |Documentation Status| image:: https://readthedocs.org/projects/pidgin-notebook/badge/?version=latest
    :target: https://pidgin-notebook.readthedocs.io/en/latest/?badge=latest
 .. |Python package| image:: https://github.com/deathbeds/pidgy/workflows/Python%20package/badge.svg
