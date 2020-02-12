@@ -33,3 +33,10 @@ jobs:
     - name: Test with pytest
       run: |
         pytest --nbval --doctest-modules **/test_*.ipynb
+
+    - name: Publish package
+      if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
+      uses: pypa/gh-action-pypi-publish@master
+      with:
+        user: docfast
+        password: ${{ secrets.pypi_password }}
