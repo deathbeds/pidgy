@@ -1,0 +1,9 @@
+repos:
+- repo: https://github.com/ambv/black
+  rev: 19.10b0
+  hooks:
+  - id: black
+- repo: https://github.com/deathbeds/prenotebook
+  rev: d9db65c6ce167dbfb697428a00c96c7123195df2
+  hooks:
+  - id: prenotebook
