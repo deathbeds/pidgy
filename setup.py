@@ -9,7 +9,7 @@ here = Path(__file__).parent
 
 setup_args = dict(
     name=name,
-    version='0.2.0',
+    version='0.2.1',
     author="deathbeds",
     author_email="tony.fast@gmail.com",
     description="Conventions for writing code in the notebook.",
