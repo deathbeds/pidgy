@@ -86,6 +86,86 @@ Short list of output formats
 
    <li>
 
+html
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+asciidoc
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+script
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+python
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+rst
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+notebook
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+markdown
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+custom
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
 pdf
 
 .. raw:: html
@@ -106,16 +186,6 @@ latex
 
    <li>
 
-notebook
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
 slides
 
 .. raw:: html
@@ -126,77 +196,7 @@ slides
 
    <li>
 
-markdown
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-rst
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-html
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-script
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-custom
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-python
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
 selectLanguage
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-asciidoc
 
 .. raw:: html
 
@@ -223,12 +223,51 @@ Derived applications of pidgin programs.
 
 A successful ``notebook`` program could find uses outside of its
 interactive state as programs, documentation, or tests. ``pidgy``
-programming includes a ``click`` command-line ``application`` to
-transform and execute ``notebook``\ s.
+programming includes a ``click`` command-line ``application`` to weave
+``notebook``\ s to other forms and tangle ``notebook``\ s as source
+code.
 
 ::
 
-   <click.core.Command at 0x10f179ac8>
+   def document(to, files):
+
+The ``document`` command is an opinionated wrapper that converts
+notebooks to formatted python programs and readable documents.
+
+::
+
+       exporter = nbconvert.get_exporter(to)
+
+It uses the ``nbconvert`` library that transforms the ``nbformat`` into
+other projections.
+
+::
+
+       if to in _CODE_FORMATS: 
+
+``pidgy`` introduces a new opinion to the notebook where the input
+defines the output. In literate programming terms, we tangle the input
+and weave the output. The decoupling of the input & output means that
+proper python code maybe extracted from the ``input``. ``pidgy``
+includes ``⬛️ and isort`` community conventions for formatting python to
+abide python styling guides.
+
+::
+
+           exporter = PythonExporter()
+       else:
+
+With ``pidgy``, we may consider a cell output to be the intended
+``display`` set forth by an author. A string opinion ``pidgy`` documents
+is that the ``input`` is excluded from resulting document, where as
+typical approaches view all code as essential or not essential.
+
+::
+
+           exporter = exporter(exclude_input=True)
+       
+       for file in files: ...
+
 
 
 
@@ -236,7 +275,8 @@ transform and execute ``notebook``\ s.
    def run(files):
 
 The ``document`` function demonstrates that ``pidgy`` may export
-``python`` code. As a result the could be run as main scripts.
+``python`` code. As a result the could be run as main scripts using the
+``runpy`` modules.
 
 ::
 
@@ -257,16 +297,18 @@ creating literature in computational notebooks.
 
    @kernel.command()
    def install(user=False, replace=None, prefix=None):
-       with pidgy.reuse.pidgyLoader():
-           from .kernel import shell
-       dest =shell.install(user=user, replace=replace, prefix=prefix)
+       manager = jupyter_client.kernelspec.KernelSpecManager()
+       path = str((pathlib.Path(__file__).parent / 'kernel' / 'spec').absolute())
+       try:
+           dest = manager.install_kernel_spec(path, 'pidgy')
+       except:
+           click.echo(F"System install was unsuccessful. Attempting to install the pidgy kernel to the user.")
+           dest = manager.install_kernel_spec(path, 'pidgy', True)
        click.echo(F"The pidgy kernel was install in {dest}")
        
    @kernel.command()
    def uninstall(user=True, replace=None, prefix=None):
-       with pidgy.reuse.pidgyLoader():
-           from .kernel import shell
-       shell.uninstall()
+       jupyter_client.kernelspec.KernelSpecManager().remove_kernel_spec('pidgy')
        click.echo(F"The pidgy kernel was removed.")
        
 
