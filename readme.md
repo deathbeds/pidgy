@@ -72,7 +72,8 @@ can be viewed by the following tools.
 
 * [nbviewer](https://nbviewer.jupyter.org/github/deathbeds/pidgy/blob/master/readme.md.ipynb)
 * [github pages](https://deathbeds.github.io/pidgy/)
+* [pypi](https://pypi.org/project/pidgy)
 * [readthedocs](https://pidgin-notebook.readthedocs.io/en/latest/)
 * [binder](https://mybinder.org/v2/gh/deathbeds/pidgy/master)
-* [actions](https://github.com/deathbeds/pidgy/actions)
+* [github actions](https://github.com/deathbeds/pidgy/actions)
 

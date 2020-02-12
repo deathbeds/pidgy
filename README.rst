@@ -93,7 +93,8 @@ viewed by the following tools.
 
 -  `nbviewer <https://nbviewer.jupyter.org/github/deathbeds/pidgy/blob/master/readme.md.ipynb>`__
 -  `github pages <https://deathbeds.github.io/pidgy/>`__
+-  `pypi <https://pypi.org/project/pidgy>`__
 -  `readthedocs <https://pidgin-notebook.readthedocs.io/en/latest/>`__
 -  `binder <https://mybinder.org/v2/gh/deathbeds/pidgy/master>`__
--  `actions <https://github.com/deathbeds/pidgy/actions>`__
+-  `github actions <https://github.com/deathbeds/pidgy/actions>`__
 
