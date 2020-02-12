@@ -1,276 +1,53 @@
-
-    !pip install pidgin ### Install `pidgin` from pypi.
-
-Activate `pidgin` to start programming in __Markdown__.
-
-    %load_ext pidgin
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/deathbeds/pidgy/again)
+![Python package](https://github.com/deathbeds/pidgy/workflows/Python%20package/badge.svg)
 
 
-<blockquote><p>Programming in <strong>Markdown</strong> ⁉ What d🤔es that even mean❓</p>
-</blockquote>
-<p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> executes code within indented <strong>Markdown</strong> code blocks.<a href="#" title="Special rules apply for ordered and unordered lists.">🎩</a><a href="https://coffeescript.org/#literate" title="Literate coffee is a significant inspiration for `pidgin`.">☕️</a></p>
-<table class="highlighttable"><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%">5</pre></div></td><td style="text-align: left;" class="code"><div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #BA2121">&quot;I am code! 👂 me rawrrrr🦁!&quot;</span>
-</pre></div>
-</td></tr></table><blockquote><p>An author will recoginize code by it's <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #BA2121">&quot;monospaced&quot;</span>
-</code></span> typesetting.</p>
-</blockquote>
-<p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> encourages authors to capture computational thinking in human and computational logic.</p>
-<ul>
-<li><p>Human logic produces <strong>readable</strong> publications of a computational essay.</p>
-</li>
-<li><p>Computational logic ensures replicability; <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span>s specific focus on testing allows an author to reinforce their ideas.</p>
-</li>
-<li><p>Human and computational logic allows others to understand and <strong>reuse</strong> a program for what could be exciting new discoveries.</p>
-</li>
-</ul>
-<p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> is a literate computing implementation that customizes the interactive <a href="https://jupyter.readthedocs.io/en/latest/"><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>jupyter
-</code></span> <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>notebook
-</code></span></a> experience.</p>
-<p><a href="https://travis-ci.org/deathbeds/pidgin"><img src="https://travis-ci.org/deathbeds/pidgin.svg?branch=master" alt="Build Status"></a><a href="https://pidgin-notebook.readthedocs.io/en/latest/?badge=latest"><img src="https://readthedocs.org/projects/pidgin-notebook/badge/?version=latest" alt="Documentation Status"></a></p>
+pidgy `IPython` she🐚🐚 extension.
+
+```ipython
+%load_ext pidgy
+```
 
 
 
+![pidgy logo](data:image/png;base64,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
+) Kernel
 
-<p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> is a document-forward approach to <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>notebook
-</code></span> authoring.  Authors will combine languages within cells to narrate the computational logic underlying the source code. Below is a list of <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> features 🔽</p>
-<ul>
-<li><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> is <strong>Markdown</strong> first; <strong>indented code blocks</strong> execute as normal code.  _The only modification to your workflow is to indenting your code;
-a notebook of indented code cells will execute with normal behavior.</p>
-</li>
-<li><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> executes <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #008000">all</span>
-</code></span> code!  Inline code and code fences execute code, and it must work.</p>
-</li>
-<li><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> promotes <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>doctest
-</code></span>ing within cells.  <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>doctest
-</code></span> is trigger by the familiar <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #BA2121">&quot;&gt;&gt;&gt;&quot;</span> <span style="color: #AA22FF; font-weight: bold">and</span> <span style="color: #BA2121">&quot;...&quot;</span>
-</code></span> syntax.</p>
-</li>
-<li><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> documents are readable and reusable.  <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> uses <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>importnb
-</code></span> to <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #008000">__import__</span>
-</code></span> documents as modules.</p>
-</li>
-<li><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> uses <strong>YAML front matter</strong> to annotate output metadata and provide temporary variables for publishing.</p>
-</li>
-<li><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> uses <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>jinja2
-</code></span> -  a dependency of <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>nbconvert
-</code></span> - to template <strong>Python</strong> variables into 
-the published output.</p>
-</li>
-<li><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> includes <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>graphviz
-</code></span> support for typographically compising diagrams.</p>
-</li>
-<li><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> has many other features (e.g. completion, inspection) that we hope you enjoy discovering along the way 😁.</p>
-</li>
-</ul>
+```bash
+pidgy kernel install
+```
 
 
 
+    import pidgy as pidgy, pidgy as 🐦, pidgy
 
-<a href="#Writing-code-in-span-class-highlight-code-style-display-inline-block-vertical-align-middle-line-height-125-span-span-pidgin-code-span"><h3 id="Writing-code-in-span-class-highlight-code-style-display-inline-block-vertical-align-middle-line-height-125-span-span-pidgin-code-span">Writing code in <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span></h3></a><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #666666">...</span>
-</code></span> is not much different than composing normal <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>notebook
-</code></span>s; just indent the source code once.</p>
-<table class="highlighttable"><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%">5</pre></div></td><td style="text-align: left;" class="code"><div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #BA2121">&quot;I am code, 🦁, rawwwwrrr&quot;</span>
-</pre></div>
-</td></tr></table><blockquote><p>To reiterate, code objects are identified by their <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #BA2121">&quot;monospace&quot;</span>
-</code></span> typesetting.</p>
-</blockquote>
-<ul>
-<li><p>If any other <strong>Markdown</strong> features exist, the cell is rendered as rich HTML; cells only containing code are not rendered.</p>
-</li>
-<li><p>A note: code in list blocks must be carry an extra indent to be registered.</p>
-<table class="highlighttable"><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%">12</pre></div></td><td style="text-align: left;" class="code"><div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #BA2121">&quot;Indented code within a list requires an extra for each level.&quot;</span>
-</pre></div>
-</td></tr></table></li>
-<li><p>Indents are aligned to the first indented code block..  Specifically, the source for this cell is indented twice to avoid an <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #D2413A; font-weight: bold">IndentationError</span>
-</code></span>.</p>
-</li>
-</ul>
-<a href="#span-class-highlight-code-style-display-inline-block-vertical-align-middle-line-height-125-span-span-span-style-color-BA2121-docstring-span-code-span-s-for-code-class-code-code-function-def-code-initions"><h4 id="span-class-highlight-code-style-display-inline-block-vertical-align-middle-line-height-125-span-span-span-style-color-BA2121-docstring-span-code-span-s-for-code-class-code-code-function-def-code-initions"><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #BA2121">&quot;docstring&quot;</span>
-</code></span>s for <code>class</code> &amp; <code>function def</code>initions.</h4></a><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> converts all non-source code to strings so it is consumed by the python <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>ast
-</code></span>.  When a <strong>_Markdown</strong> <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #008000">str</span>
-</code></span>ing following a <code>class</code> or <code>def</code> statement becomes the docstring; <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>doctest
-</code></span>s included.</p>
-<table class="highlighttable"><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%">21</pre></div></td><td style="text-align: left;" class="code"><div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">a_function_with_a_markdown_docstring</span>():
-</pre></div>
-</td></tr></table><p>This is the <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #BA2121">&quot;docstring&quot;</span>
-</code></span> for <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>a_function_with_a_markdown_docstring
-</code></span>.  It is a function that returns <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #008000">None</span>
-</code></span>.</p>
-<pre><code>&gt;&gt;&gt; assert a_function_with_a_markdown_docstring() is None
-</code></pre>
-<table class="highlighttable"><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%">26
-27</pre></div></td><td style="text-align: left;" class="code"><div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #666666">...</span> <span style="color: #408080; font-style: italic"># A line break is required above to define code</span>
-<span style="color: #408080; font-style: italic"># otherwise Markdown assumes the paragraph is being continued</span>
-</pre></div>
-</td></tr></table><pre><code>&gt;&gt;&gt; a_function_with_a_markdown_docstring.__doc__
-'This is the `"docstring"` for ... assert a_function_with_a_markdown_docstring() is None'
-</code></pre>
+```ipython
+>>> assert pidgy is _bird_, F"Give 'em the {_bird_}.'"
 
-
-
-
-<a href="#Writing-tests"><h3 id="Writing-tests">Writing tests</h3></a><blockquote><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #008000">all</span>
-</code></span> code are tests!</p>
-</blockquote>
-<p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> provides <strong>3</strong> ways to run tests:</p>
-<ol>
-<li><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #BA2121">&quot;Inline code is identified by a tick&quot;</span> <span style="color: #AA22FF; font-weight: bold">and</span> <span style="color: #BA2121">&quot;It must raise an Exception&quot;</span>
-</code></span></p>
-</li>
-<li><p>Code fences without a language specification are evaluated.</p>
-<table class="highlighttable"><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%">12
-13
-14</pre></div></td><td style="text-align: left;" class="code"><div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">_document_</span>
- _document_<span style="color: #666666">.</span><span style="color: #19177C">__dict__</span><span style="color: #666666">.</span>update({<span style="color: #BA2121">&quot;I run&quot;</span>: <span style="color: #008000">None</span>})
- <span style="color: #008000; font-weight: bold">assert</span> <span style="color: #BA2121">&quot;I run&quot;</span> <span style="color: #AA22FF; font-weight: bold">in</span> _document_<span style="color: #666666">.</span><span style="color: #19177C">__dict__</span>
-</pre></div>
-</td></tr></table></li>
-<li><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>doctest
-</code></span> are evaluated.</p>
-</li>
-</ol>
-<pre><code>&gt;&gt;&gt; assert doctest
-</code></pre>
-
-
-
-
-<a href="#Templating-output"><h3 id="Templating-output">Templating output</h3></a><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> compiles and formats <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>jinja2
-</code></span> template syntax during the <strong>Markdown</strong> rendering.  <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>jinja2<span style="color: #666666">.</span>Template
-</code></span>s embed notebook variables as strings; <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> is enhanced to use the <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>IPython<span style="color: #666666">.</span>display
-</code></span>  to embed rich html objects.</p>
-
-
-
-    The pidgin extension is already loaded. To reload it, use:
-      %reload_ext pidgin
-
-
-
-<a href="#Documents-as-modules"><h3 id="Documents-as-modules">Documents as modules</h3></a><p>It is a shame to write code that other documents can't use.  <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> subclasses <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>importnb
-</code></span> to import notebooks as documents.</p>
-<table class="highlighttable"><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%">5
-6
-7</pre></div></td><td style="text-align: left;" class="code"><div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">if</span> <span style="color: #19177C">__name__</span> <span style="color: #666666">==</span> <span style="color: #BA2121">&#39;__main__&#39;</span>:
-    <span style="color: #008000; font-weight: bold">with</span> pidgin<span style="color: #666666">.</span>Pidgin():
-        <span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">readme_pidgin</span>
-</pre></div>
-</td></tr></table><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> documents end with the hybird <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #BA2121">&quot;.md.ipynb&quot;</span>
-</code></span> extension.</p>
-<pre><code>&gt;&gt;&gt; readme_pidgin
-&lt;module 'readme_pidgin' from '...readme_pidgin.md.ipynb'&gt;
-</code></pre>
-
-
-
-
-<a href="#Ways-to-use-span-class-highlight-code-style-display-inline-block-vertical-align-middle-line-height-125-span-span-pidgin-code-span"><h4 id="Ways-to-use-span-class-highlight-code-style-display-inline-block-vertical-align-middle-line-height-125-span-span-pidgin-code-span">Ways to use <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span></h4></a><ul>
-<li><p><strong><em>Binder</em></strong> <a href="https://mybinder.org/v2/gh/deathbeds/pidgin/master?filepath=readme_pidgin.md.ipynb"><img src="https://mybinder.org/badge.svg" alt="Binder"></a></p>
-<p>Take <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> for a spin on <a href="https://mybinder.org/v2/gh/deathbeds/pidgin/master?filepath=readme.ipynb"><strong><em>Binder</em></strong></a>.</p>
-</li>
-<li><p><strong><em>Pytest</em></strong> <a href="https://github.com/pytest-dev"><img src="https://avatars1.githubusercontent.com/u/8897583?s=40&amp;v=4" alt=""></a></p>
-<p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> works great with the <a href="https://github.com/computationalmodelling/nbval"><strong>nbval</strong></a> and <a href="https://github.com/deathbeds/importnb"><strong>importnb</strong></a> notebook specific pytest extensions.  <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> itself is a <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">pytest</span>
-</code></span>
-  plugin that permits tests with <strong>.md.ipynb</strong> and <strong>.md</strong> extensions.</p>
-</li>
-<li><p><strong><em>Jupyter</em></strong> <a href="https://github.com/jupyterlab"><img src="https://avatars1.githubusercontent.com/u/7388996?s=40" alt=""></a></p>
-</li>
-<li><p><strong><em>JupyterLab</em></strong> <a href="https://github.com/jupyterlab"><img src="https://avatars1.githubusercontent.com/u/22800682?s=40" alt=""></a></p>
-</li>
-<li><p><strong><em>Google Colaboratory</em></strong> <a href="https://colab.research.google.com/github/deathbeds/pidgin/blob/mistune/readme.ipynb"><img src="https://avatars0.githubusercontent.com/u/33467679?s=40" alt=""></a></p>
-</li>
-<li><p><strong><em>nteract</em></strong> <a href="https://nteract.io"><img src="https://avatars0.githubusercontent.com/u/12401040?s=40" alt=""></a></p>
-</li>
-</ul>
-
-
-
-
-<a href="#Roadmap"><h2 id="Roadmap">Roadmap</h2></a><ul>
-<li><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> should become an <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">ipykernel</span>
-</code></span>.</p>
-</li>
-<li><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> should have an application level interface to control features.</p>
-</li>
-<li><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> should extend to other ipykernels.</p>
-</li>
-<li><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> should become an <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">nbconvert.nbconvertapp</span>
-</code></span> and <span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>nbconvert<span style="color: #666666">.</span>preprocessors
-</code></span>.</p>
-</li>
-<li><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> should become python source code eventually.</p>
-</li>
-<li><p><span class="highlight"><code style="display: inline-block; vertical-align: middle; line-height: 125%"><span></span>pidgin
-</code></span> should have more essays and documentation.</p>
-</li>
-</ul>
-
-
-
-## Developer
+```
+    
     
 
-### Test `pidgin`
-
-    if __name__ == '__main__':
-        !python -m pytest --nbval
 
 
-<a href="#Run-tests"><h3 id="Run-tests">Run tests</h3></a><table class="highlighttable"><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%">3</pre></div></td><td style="text-align: left;" class="code"><div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span>test <span style="color: #666666">=</span> <span style="color: #008000">False</span>
-</pre></div>
-</td></tr></table>
+`pidgy` is a literate programming designed specifically for `jupyter` `notebook`s running `IPython` kernels.
+It is an `IPython` extension that can be loaded with
 
+interactive testing.
 
-    %%file sanitize.cfg
-    [skip_graphviz]
-    regex: <svg(.|\n)*</svg>w
-    replace: ---
-        
-        
+<code>%load_ext pidgy</code>
 
+If you need to install `pidgy`, you can install it from `"pypi"`
 
-<a href="#UML-diagrams"><h3 id="UML-diagrams">UML diagrams</h3></a><table class="highlighttable"><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%">3</pre></div></td><td style="text-align: left;" class="code"><div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span>uml <span style="color: #666666">=</span> <span style="color: #008000">False</span>
-</pre></div>
-</td></tr></table>
+<code>pip install pidgy</code> 
 
 
 
-<a href="#Convert-to-the-strong-readme-md-strong"><h3 id="Convert-to-the-strong-readme-md-strong">Convert to the <strong>readme.md</strong></h3></a><table class="highlighttable"><tr><td><div class="linenodiv" style="background-color: #f0f0f0; padding-right: 10px"><pre style="line-height: 125%">3</pre></div></td><td style="text-align: left;" class="code"><div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span>convert<span style="color: #666666">=</span><span style="color: #008000">False</span>
-</pre></div>
-</td></tr></table>
+`pidgy` provides a `markdown and python` literate programming interface for `jupyter` `notebook`.
+Authors will develop documentation and source code at the same time,
+wherein literary excellence is the goal.
+When a cell is executed in `pidgy` mode:
+1. The fenced & indented code in `markdown` is executed as python.
+2. Any `doctest`s and inline code are unit tested.
+3. The `markdown` `input` is passed into a `template` engine then rendered by `jupyter`'s rich display system.
 
-
-    %%file markdown_readme.py
-    c.MarkdownExporter.raw_mimetypes = ['text/markdown']
-    c.TemplateExporter.exclude_input=True

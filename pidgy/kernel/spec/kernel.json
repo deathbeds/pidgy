@@ -1,0 +1,11 @@
+{
+ "argv": [
+  "python",
+  "-m",
+  "pidgy.kernel",
+  "-f",
+  "{connection_file}"
+ ],
+ "display_name": "pidgy 3",
+ "language": "python"
+}

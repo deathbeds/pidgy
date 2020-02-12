@@ -1,7 +1,8 @@
-ipython>7
 nbconvert
+nbformat
 importnb
-ruamel.yaml
-jupyter_client
-htmlmin
-xonsh
+pytest
+black
+isort
+click
+stringcase
