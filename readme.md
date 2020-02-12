@@ -2,6 +2,12 @@
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/deathbeds/pidgy/master)
 
+* [nbviewer](https://nbviewer.jupyter.org/github/deathbeds/pidgy/blob/master/readme.md.ipynb)
+* [github pages](https://deathbeds.github.io/pidgy/)
+* [readthedocs]()
+* [binder](https://mybinder.org/v2/gh/deathbeds/pidgy/master)
+* [actions](https://github.com/deathbeds/pidgy/actions)
+
 
 
 `pidgy` is literate programming kernel and shell for `IPython`.
@@ -60,4 +66,18 @@ and adds them to the python import system.
     with pidgy.pidgyLoader():
         import readme
     assert readme.__file__.endswith('.md.ipynb')
+
+
+
+## The plurality of `pidgy`
+
+Above we've highlight a few outcomes of `pidgy` programming.
+`pidgy` is written as both documentation and source code therefore it
+can be viewed by the following tools.
+
+* [nbviewer](https://nbviewer.jupyter.org/github/deathbeds/pidgy/blob/master/readme.md.ipynb)
+* [github pages](https://deathbeds.github.io/pidgy/)
+* [readthedocs](https://pidgin-notebook.readthedocs.io/en/latest/)
+* [binder](https://mybinder.org/v2/gh/deathbeds/pidgy/master)
+* [actions](https://github.com/deathbeds/pidgy/actions)
 
