@@ -84,6 +84,19 @@ reuse ``pidgy`` documents as modules
 
 
 
+testing ``pidgy`` notebooks.
+----------------------------
+
+``pidgy`` is a ``pytest`` plugin that can be used to include literature
+(eg. blog posts, issues, docs) in software test suites.
+
+.. code:: bash
+
+   pytest --nbval--doctest-modules readme.md.ipynb
+
+
+
+
 The plurality of ``pidgy``
 --------------------------
 
