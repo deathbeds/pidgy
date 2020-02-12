@@ -28,6 +28,7 @@ jobs:
         pytest --nbval --doctest-modules **/test_*.ipynb
     - name: Build package
       run: |
+        pip install wheel
         python setup.py sdist
         python setup.py bdist_wheel
 
