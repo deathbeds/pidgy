@@ -1,10 +1,3 @@
-::
-
-   import setuptools
-
-
-
-
 ``"pidgin"`` programming - literate programming for modern science
 ==================================================================
 
@@ -101,7 +94,7 @@ The ``notebook`` ``format`` as a basis from literate programs.
 
 
 
-.. image:: paper.md_files/paper.md_6_0.svg
+.. image:: paper.md_files/paper.md_5_0.svg
 
 
 
@@ -142,7 +135,17 @@ Short list of output formats
 
    <li>
 
-org
+mediawiki
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+vimwiki
 
 .. raw:: html
 
@@ -153,6 +156,56 @@ org
    <li>
 
 tikiwiki
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+epub
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+fb2
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+odt
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+org
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+haddock
 
 .. raw:: html
 
@@ -182,37 +235,7 @@ markdown
 
    <li>
 
-creole
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-jats
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
 textile
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-vimwiki
 
 .. raw:: html
 
@@ -232,107 +255,17 @@ rst
 
    <li>
 
-docbook
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-fb2
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-gfm
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-latex
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-odt
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-epub
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-opml
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-docx
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-mediawiki
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
-commonmark
-
-.. raw:: html
-
-   </li>
-
-.. raw:: html
-
-   <li>
-
 muse
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+creole
 
 .. raw:: html
 
@@ -352,7 +285,7 @@ json
 
    <li>
 
-haddock
+docx
 
 .. raw:: html
 
@@ -362,7 +295,17 @@ haddock
 
    <li>
 
-t2t
+native
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+gfm
 
 .. raw:: html
 
@@ -382,7 +325,57 @@ twiki
 
    <li>
 
-native
+jats
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+latex
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+t2t
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+docbook
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+opml
+
+.. raw:: html
+
+   </li>
+
+.. raw:: html
+
+   <li>
+
+commonmark
 
 .. raw:: html
 
@@ -483,16 +476,18 @@ creating literature in computational notebooks.
 
    @kernel.command()
    def install(user=False, replace=None, prefix=None):
-       with pidgy.reuse.pidgyLoader():
-           from .kernel import shell
-       dest =shell.install(user=user, replace=replace, prefix=prefix)
+       manager = jupyter_client.kernelspec.KernelSpecManager()
+       path = str((pathlib.Path(__file__).parent / 'kernel' / 'spec').absolute())
+       try:
+           dest = manager.install_kernel_spec(path, 'pidgy')
+       except:
+           click.echo(F"System install was unsuccessful. Attempting to install the pidgy kernel to the user.")
+           dest = manager.install_kernel_spec(path, 'pidgy', True)
        click.echo(F"The pidgy kernel was install in {dest}")
        
    @kernel.command()
    def uninstall(user=True, replace=None, prefix=None):
-       with pidgy.reuse.pidgyLoader():
-           from .kernel import shell
-       shell.uninstall()
+       jupyter_client.kernelspec.KernelSpecManager().remove_kernel_spec('pidgy')
        click.echo(F"The pidgy kernel was removed.")
        
 
@@ -500,7 +495,7 @@ creating literature in computational notebooks.
 
 
 
-.. image:: paper.md_files/paper.md_8_0.svg
+.. image:: paper.md_files/paper.md_7_0.svg
 
 
 
@@ -813,21 +808,6 @@ jupyter kernel that can be installed using
    !pidgy kernel install
 
 
-   def install(kernel_name='pidgy',
-       user=True,
-       replace=None,
-       prefix=None
-   ):
-       return ipykernel.kernelspec.KernelSpecManager().install_kernel_spec(
-           str(pathlib.Path(globals().get('__file__', pathlib.Path('spec'))).parent/'spec'), kernel_name=kernel_name,
-           user=user, replace=replace, prefix=prefix)
-
-
-
-   def uninstall(kernel_name='pidgy',):
-       ipykernel.kernelspec.KernelSpecManager().remove_kernel_spec(kernel_name)
-
-
 
 
 Building the ``pidgy`` extension
@@ -876,7 +856,7 @@ extension system to modify the interactive computing expierence in
 
 
 
-.. image:: paper.md_files/paper.md_14_0.svg
+.. image:: paper.md_files/paper.md_13_0.svg
 
 
 
@@ -979,13 +959,6 @@ accept.
        if not any(x for x in shell.ast_transformers if isinstance(x, ReturnYield)):
            shell.ast_transformers.append(ReturnYield())
 
-newline hrule block_code fences heading nptable lheading block_quote
-list_block block_html def_links def_footnotes table paragraph text
-
-::
-
-   ' '.join(markdown.BlockLexer.default_rules)
-
 
 
    class pidgyTransformer(IPython.core.inputtransformer2.TransformerManager):
@@ -1045,11 +1018,6 @@ list_block block_html def_links def_footnotes table paragraph text
                else: tokens.append(token)
            return tokenize.untokenize(tokens).decode().splitlines(True)
        except BaseException: raise SyntaxError(str)
-
-
-
-   import mistune as markdown, textwrap, __main__, IPython, typing, re, IPython, nbconvert, ipykernel, doctest, ast
-   __all__ = 'pidgy',
 
 
 
@@ -1256,10 +1224,6 @@ valid.
 
 
 
-   import doctest
-
-
-
    def test_markdown_string(str, shell=shell, verbose=False, compileflags=None):
        globs, filename = shell.user_ns, F"In[{shell.last_execution_result.execution_count}]"
        runner = doctest.DocTestRunner(verbose=verbose, optionflags=compileflags)  
@@ -1310,6 +1274,10 @@ valid.
 
 The combinations of document, programming, and templating languages
 provides unique syntaxes as the interfaces.
+
+::
+
+   import mistune as markdown, IPython as python, pidgy
 
 This is a code string
 
@@ -1389,6 +1357,6 @@ filters jinja docs
 
 
 
-.. image:: paper.md_files/paper.md_18_0.svg
+.. image:: paper.md_files/paper.md_17_0.svg
 
 
