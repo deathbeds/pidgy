@@ -1,13 +1,7 @@
 # `pidgy` literate `notebook` programming
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/deathbeds/pidgy/master)
-
-* [nbviewer](https://nbviewer.jupyter.org/github/deathbeds/pidgy/blob/master/readme.md.ipynb)
-* [github pages](https://deathbeds.github.io/pidgy/)
-* [readthedocs]()
-* [binder](https://mybinder.org/v2/gh/deathbeds/pidgy/master)
-* [actions](https://github.com/deathbeds/pidgy/actions)
-
+[![Documentation Status](https://readthedocs.org/projects/pidgin-notebook/badge/?version=latest)](https://pidgin-notebook.readthedocs.io/en/latest/?badge=latest)
 
 
 `pidgy` is literate programming kernel and shell for `IPython`.

@@ -1,13 +1,7 @@
 ``pidgy`` literate ``notebook`` programming
 ===========================================
 
-|Binder|
-
--  `nbviewer <https://nbviewer.jupyter.org/github/deathbeds/pidgy/blob/master/readme.md.ipynb>`__
--  `github pages <https://deathbeds.github.io/pidgy/>`__
--  `readthedocs <>`__
--  `binder <https://mybinder.org/v2/gh/deathbeds/pidgy/master>`__
--  `actions <https://github.com/deathbeds/pidgy/actions>`__
+|Binder| |Documentation Status|
 
 ``pidgy`` is literate programming kernel and shell for ``IPython``. When
 ``pidgy`` is enabled: \* Write code in ``markdown``, indented and fenced
@@ -27,6 +21,8 @@ literature and reusable source code.
 
 .. |Binder| image:: https://mybinder.org/badge_logo.svg
    :target: https://mybinder.org/v2/gh/deathbeds/pidgy/master
+.. |Documentation Status| image:: https://readthedocs.org/projects/pidgin-notebook/badge/?version=latest
+   :target: https://pidgin-notebook.readthedocs.io/en/latest/?badge=latest
 
 
 
