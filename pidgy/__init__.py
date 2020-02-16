@@ -5,6 +5,12 @@ with __import__('importnb').Notebook(lazy=True):
     except: 
         import reuse
         from reuse import pidgyLoader
+        
+with pidgyLoader():
+    try:
+        from . import outputs
+    except:
+        import outputs
 
 def load_ipython_extension(shell):
     with reuse.pidgyLoader(lazy=True):
