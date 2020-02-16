@@ -6,7 +6,7 @@ with __import__('importnb').Notebook(lazy=True):
         import reuse
         from reuse import pidgyLoader
         
-with pidgyLoader():
+with pidgyLoader(lazy=True):
     try:
         from . import outputs
     except:
