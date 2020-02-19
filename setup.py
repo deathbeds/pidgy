@@ -28,7 +28,7 @@ setup_args = dict(
     include_package_data=True,
     packages=setuptools.find_packages(),
     entry_points = {
-        'pytest11': ['pidgy=pidgy.tests.plugin'],
+        'pytest11': ['pytest-pidgy=pidgy.pytest_config'],
         'console_scripts': ['pidgy=pidgy.__main__'],
     },
     classifiers=[
