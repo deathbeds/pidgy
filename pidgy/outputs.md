@@ -1,9 +1,16 @@
 # Weaving cells in pidgin programs
 
+<!--
+
+    import datetime, dataclasses, sys, IPython as python, IPython, nbconvert as export, collections, IPython as python, mistune as markdown, hashlib, functools, hashlib, jinja2.meta
+    exporter, shell = export.exporters.TemplateExporter(), python.get_ipython()
+    modules = lambda:[x for x in sys.modules if '.' not in x and not str.startswith(x,'_')]
+
+-->
+
 This is your wysiwyg
 
 pidgin programming is an incremental approach to documents.
-
 
     @dataclasses.dataclass
     class Events:
@@ -119,7 +126,7 @@ Default to showing the markdown displays.
 
         def __post_init__(self):
             self.ns = [x for x in getattr(self.shell, 'user_ns', {}) if '.' not in x and not str.startswith(x,'_')]
-        shell: python.InteractiveShell = dataclasses.field(default_factory=python.get_ipython)
+        shell: IPython.InteractiveShell = dataclasses.field(default_factory=IPython.get_ipython)
         start: datetime.datetime = dataclasses.field(default_factory=datetime.datetime.utcnow().isoformat)
         modules: list = dataclasses.field(default_factory=list)
         ns: list = dataclasses.field(init=False)
@@ -135,6 +142,3 @@ Default to showing the markdown displays.
             shell.weave.unregister()
         except:...
 
-    import datetime, dataclasses, sys, IPython as python, IPython, nbconvert as export, collections, IPython as python, mistune as markdown, hashlib, functools, hashlib, jinja2.meta
-    exporter, shell = export.exporters.TemplateExporter(), python.get_ipython()
-    modules = lambda:[x for x in sys.modules if '.' not in x and not str.startswith(x,'_')]
