@@ -37,3 +37,8 @@ def true():
 
 def false(): return not true()
 
+import builtins
+builtins.yes = builtins.true = True
+builtins.no = builtins.false = False
+builtins.null = None
+    

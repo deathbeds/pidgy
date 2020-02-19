@@ -103,7 +103,7 @@ of creating literature in computational notebooks.
     @kernel.command()
     def install(user=False, replace=None, prefix=None):
         manager = __import__('jupyter_client').kernelspec.KernelSpecManager()
-        path = str((pathlib.Path(__file__).parent.parent / 'kernel' / 'spec').absolute())
+        path = str((pathlib.Path(__file__).parent / 'kernelspec').absolute())
         try:
             dest = manager.install_kernel_spec(path, 'pidgy')
         except:
@@ -116,3 +116,11 @@ of creating literature in computational notebooks.
         __import__('jupyter_client').kernelspec.KernelSpecManager().remove_kernel_spec('pidgy')
         click.echo(F"The pidgy kernel was removed.")
         
+    @kernel.command()
+    @click.option('-f')
+    def start(user=True, replace=None, prefix=None, f=None):
+        import ipykernel.kernelapp
+        with pidgy.pidgyLoader(): 
+            from . import kernel 
+        ipykernel.kernelapp.IPKernelApp.launch_instance(
+            kernel_class=kernel.pidgyKernel)

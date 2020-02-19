@@ -2,7 +2,9 @@
  "argv": [
   "python",
   "-m",
-  "pidgy.kernel",
+  "pidgy",
+  "kernel",
+  "start",
   "-f",
   "{connection_file}"
  ],
