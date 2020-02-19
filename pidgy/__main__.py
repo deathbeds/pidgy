@@ -1,4 +1,5 @@
 from . import reuse
 with reuse.pidgyLoader():
-    from .app import cli
-cli.application()
+    from . import readme
+print(11)
+readme.application()

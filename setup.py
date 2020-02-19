@@ -9,7 +9,7 @@ here = Path(__file__).parent
 
 setup_args = dict(
     name=name,
-    version='0.2.2',
+    version='0.2.3',
     author="deathbeds",
     author_email="tony.fast@gmail.com",
     description="Conventions for writing code in the notebook.",
@@ -29,7 +29,7 @@ setup_args = dict(
     packages=setuptools.find_packages(),
     entry_points = {
         'pytest11': ['pidgy=pidgy.tests.plugin'],
-        'console_scripts': ['pidgy=pidgy.app.__main__.cli:app'],
+        'console_scripts': ['pidgy=pidgy.__main__'],
     },
     classifiers=[
         "Development Status :: 4 - Beta",
