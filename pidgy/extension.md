@@ -1,5 +1,16 @@
 # Building the `pidgy` extension
 
+<!--
+    
+    import jupyter, notebook, IPython, mistune as markdown, IPython as python, ast, jinja2 as template, importnb as _import_, doctest, pathlib
+    with _import_.Notebook(lazy=True): 
+        try: from . import reuse, translate
+        except: import reuse, translate
+    with reuse.pidgyLoader(lazy=True): 
+        try: from . import outputs, testing
+        except: import outputs, testing
+-->
+
     def load_ipython_extension(shell):
 The `pidgy` implementation uses the `IPython` configuration
 and extension system to modify the interactive computing expierence
@@ -29,14 +40,4 @@ test for the program.  These tests are executed interactively to ensure the vera
             x.unload_ipython_extension(shell)
 
     
-    import jupyter, notebook, IPython, mistune as markdown, IPython as python, ast, jinja2 as template, importnb as _import_, doctest, pathlib
-    with _import_.Notebook(lazy=True): 
-        try: from . import reuse, translate
-        except: import reuse, translate
-    with reuse.pidgyLoader(lazy=True): 
-        try: 
-            from . import outputs
-            from .tests import interactive as  testing
-        except: 
-            import outputs
-            from tests import interactive as testing
+    
