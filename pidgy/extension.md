@@ -34,10 +34,10 @@ test for the program.  These tests are executed interactively to ensure the vera
 `pidgy` interprets the `input` `"code"` as a `display`.  `pidgy` uses a `template` language to transclude
 `object`s from code 
 
-    
+<!--  
+
     def unload_ipython_extension(shell):
         for x in (outputs, testing, translate): 
             x.unload_ipython_extension(shell)
-
     
-    
+-->
