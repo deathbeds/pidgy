@@ -29,7 +29,7 @@ setup_args = dict(
     packages=setuptools.find_packages(),
     entry_points = {
         'pytest11': ['pytest-pidgy=pidgy.pytest_config'],
-        'console_scripts': ['pidgy=pidgy.__main__'],
+        'console_scripts': ['pidgy=pidgy.__main__:application'],
     },
     classifiers=[
         "Development Status :: 4 - Beta",
