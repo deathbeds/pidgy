@@ -5,6 +5,8 @@ commitment to write literate programs, because:
 >
 > > - [Donald Knuth] _[Literate Programming]_
 
+The list below describes some best practices learned while designing `pidgy`.
+
 - Restart and run all or it didn't happen.
 
   A useful document, as both literature and python program, must be literate in
