@@ -1,4 +1,4 @@
-[Donald Knuth], the prophet of [_[Literate Programming]_], asks for a core moral
+[Donald Knuth], the prophet of _[Literate Programming]_, asks for a core moral
 commitment to write literate programs, because:
 
 > ...; surely nobody wants to admit writing an illiterate program.
