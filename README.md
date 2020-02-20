@@ -5,8 +5,16 @@
 ![Python package](https://github.com/deathbeds/pidgy/workflows/Python%20package/badge.svg)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pidgy)
 
-`pidgy` is literate programming kernel and shell for `IPython`. When `pidgy` is
-enabled:
+`pidgy` combines ideas from literate programming and modern software practices
+to introduce markdown-forward python syntax.  
+The result is are programs that focus equally literary and computational
+quality, what results are documents with rich intertextuality between natural
+language and programming languages.
+
+`pidgy` is an extension for the interactive python - `IPython` - shell and an
+`IPython` kernel.  
+It can be used when editting markdown documents and `jupyter` notebooks in
+`jupyterlab`. When `pidgy` is enabled:
 
 - Write code in `markdown`, indented and fenced are executed.
 - `doctest`s in `markdown` are tested.
@@ -18,9 +26,8 @@ enabled:
 
 ## The `pidgy` programming paper.
 
-`pidgy` is written as literate programming in `notebook`s; the narrative develop
-together into a cohesive program that serves dually as literature and reusable
-source code.
+`pidgy` is a literate program, meaning it is written narrative first with a
+secondary capability of being a reusable program.
 
     import pidgy
 

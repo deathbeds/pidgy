@@ -1,4 +1,8 @@
-# Building the `pidgy` extension
+# The interactive `pidgy` interface
+
+`pidgy` documents are written in interactive programming environments that make
+it easy to run code and preview outputs. This specific implementation is bound
+to the `IPython` kernel to be used in `jupyter` `notebook` and `jupyterlab`.
 
 <!--
 
@@ -11,33 +15,30 @@
         except: import outputs, testing
 -->
 
-    def load_ipython_extension(shell):
+    def load_ipython_extension(shell: IPython.InteractiveShell) -> None:
 
-The `pidgy` implementation uses the `IPython` configuration and extension system
-to modify the interactive computing expierence in `jupyter` notebooks.
+The `load_ipython_extension and unload_ipython_extension` are functions that can
+configure the `IPython.InteractiveShell`. We'll introduce a few major features
+that are configured everytime `pidgy` is used interactively.
 
-1.  The primary function of `pidgy` is that it imports `markdown` as formal
-    language for programming multiobjective literate programs. imports focuses
-    on the indentification of `"code" and not"code"` that become python code.
+1.  Configure the ability to import other `pidgy` markdown files and notebooks
+    as python modules.  
+    reuse.load_ipython_extension(shell)
 
-                translate.load_ipython_extension(shell)
+2.  Perhaps the most labourious part of `pidgy` are the heuristics for a
+    line-by-line translation of markdown source to python.
 
-2)  The `pidgy` specification promotes strong intertextuality between
-    `"code" and not"code"` objects in a program. `testing` reinforces that
-    efficacy of the `"code"` using documentation tests of
-    `doctest and "inline"+"code"`. `pidgy` uses the narrative a formal test for
-    the program. These tests are executed interactively to ensure the veracity
-    of `"code"` signs in the narrative.
+            translate.load_ipython_extension(shell)
 
-                testing.load_ipython_extension(shell)
+3)  `pidgy` documents will frequently sprinkle `"code"` throughout a document.
+    It uses this code as interactive test objects that are run as unit tests.
 
-3)  Literate computing in `pidgy` allows incremental development of `"code"` and
-    the co-development of the documentation. `pidgy` interprets the `input`
-    `"code"` as a `display`. `pidgy` uses a `template` language to transclude
-    `object`s from code
+            testing.load_ipython_extension(shell)
 
-                reuse.load_ipython_extension(shell)
-                outputs.load_ipython_extension(shell)
+4.  The `pidgy` `input` represents both code and design. We trigger a few custom
+    output events to capture reproducible information about the computing
+    environment.  
+    outputs.load_ipython_extension(shell)
 
 <!--
 
