@@ -1,6 +1,7 @@
-> I am imposing a moral commitment on everyone who hears the term \_[[Literate >
->
-> > Programming]]\_; surely nobody wants to admit writing an illiterate program.
+[Donald Knuth], the prophet of*[[Literate Programming]]*, asks for a core moral
+commitment to write literate programs, because:
+
+> ...; surely nobody wants to admit writing an illiterate program.
 >
 > > - [Donald Knuth] _[Literate Programming]_
 
