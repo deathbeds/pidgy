@@ -1,5 +1,6 @@
-> I am imposing a moral commitment on everyone who hears the term; surely nobody
-> wants to admit writing an illiterate program.
+> I am imposing a moral commitment on everyone who hears the term \_[[Literate >
+>
+> > Programming]]\_; surely nobody wants to admit writing an illiterate program.
 >
 > > - [Donald Knuth] _[Literate Programming]_
 

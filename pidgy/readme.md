@@ -3,11 +3,7 @@ It should document and define the cli application and build steps.
 # Derived applications of pidgin programs.
 
     import click, IPython, pidgy, nbconvert, pathlib
-    Ø = __name__ == '__main__'
-    if Ø:
-        from graphviz import Source as 🕸
-        import black as ⬛️, isort, mistune as markdown, runpy, IPython as python, nbformat, jsonschema as schema, nbconvert, notebook, __main__, nbconvert
-        formats: set = {x.partition('_')[0] for x in nbconvert.get_export_names()}
+    _CODE_FORMATS = "python script".split()
 
     @click.group()
     def application()->None:
@@ -16,8 +12,6 @@ A successful `notebook` program could find uses outside of its interactive state
 as programs, documentation, or tests. `pidgy` programming includes a `click`
 command-line `application` to weave `notebook`s to other forms and tangle
 `notebook`s as source code.
-
-    _CODE_FORMATS = "python script".split()
 
     @application.command(context_settings=dict(
         allow_extra_args=True,
