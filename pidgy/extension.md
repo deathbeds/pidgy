@@ -21,24 +21,20 @@ The `load_ipython_extension and unload_ipython_extension` are functions that can
 configure the `IPython.InteractiveShell`. We'll introduce a few major features
 that are configured everytime `pidgy` is used interactively.
 
-1.  Configure the ability to import other `pidgy` markdown files and notebooks
-    as python modules.  
-    reuse.load_ipython_extension(shell)
+            reuse.load_ipython_extension(shell)
+            translate.load_ipython_extension(shell)
+            testing.load_ipython_extension(shell)
+            outputs.load_ipython_extension(shell)
 
+1.  Configure the ability to import other `pidgy` markdown files and notebooks
+    as python modules.
 2.  Perhaps the most labourious part of `pidgy` are the heuristics for a
     line-by-line translation of markdown source to python.
-
-            translate.load_ipython_extension(shell)
-
-3)  `pidgy` documents will frequently sprinkle `"code"` throughout a document.
+3.  `pidgy` documents will frequently sprinkle `"code"` throughout a document.
     It uses this code as interactive test objects that are run as unit tests.
-
-            testing.load_ipython_extension(shell)
-
 4.  The `pidgy` `input` represents both code and design. We trigger a few custom
     output events to capture reproducible information about the computing
-    environment.  
-    outputs.load_ipython_extension(shell)
+    environment.
 
 <!--
 
