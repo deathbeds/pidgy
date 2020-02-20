@@ -14,13 +14,15 @@ pidgin programming is an incremental approach to documents.
 
     @dataclasses.dataclass
     class Events:
-The `Events` class is a configurable `dataclasses` object
-that simplifies configuring code execution and metadata collection
-during interactive computing sessions.
+
+The `Events` class is a configurable `dataclasses` object that simplifies
+configuring code execution and metadata collection during interactive computing
+sessions.
 
         shell: IPython.InteractiveShell = dataclasses.field(default_factory=IPython.get_ipython)
         _events = "pre_execute pre_run_cell post_execute post_run_cell".split()
         def register(self, *, method=''):
+
 A DRY method to `"register/unregister" kernel and shell extension objects.
 
             for event in self._events:
@@ -31,7 +33,8 @@ A DRY method to `"register/unregister" kernel and shell extension objects.
 
     def load_ipython_extension(shell):
         shell.display_formatter.formatters['text/markdown'].for_type(str, lambda x: x)
-Default to showing the markdown displays.        
+
+Default to showing the markdown displays.
 
         shell.weave = Metadata(shell=shell)
         shell.weave.register()
@@ -64,7 +67,7 @@ Default to showing the markdown displays.
 
         def format_markdown(self, text):
             lines = text.splitlines() or ['']
-            if lines[0].strip(): 
+            if lines[0].strip():
                 exporter.environment.filters.update({
                     k: v for k, v in getattr(self.shell, 'user_ns', {}).items() if callable(v) and k not in exporter.environment.filters})
                 try:
@@ -76,7 +79,7 @@ Default to showing the markdown displays.
         def format_metadata(self):
             parent = getattr(self.shell.kernel, '_last_parent', {})
             return dict(
-                    modules=[x for x in modules() if x not in self.modules], 
+                    modules=[x for x in modules() if x not in self.modules],
                     names=[x for x in self.names() if x not in self.ns],
                     start_at=self.shell.kernel._last_parent['header']['date'].isoformat(),
                     end_at=datetime.datetime.utcnow().isoformat(),
@@ -88,7 +91,7 @@ Default to showing the markdown displays.
         def post_run_cell(self, result):
             text = self.strip_front_matter(result.info.raw_cell)
             lines = text.splitlines() or ['']
-            if lines[0].strip(): 
+            if lines[0].strip():
                 metadata = self.format_metadata()
                 self.mapping[metadata['cellId']]['input'] = result.info.raw_cell
                 exporter.environment.filters.update({
@@ -114,13 +117,13 @@ Default to showing the markdown displays.
             variables = set(self.variables)
             for key, value in self.mapping.items():
                 for variable in value.get('variables', []):
-                    if self.variables[variable] is not self.shell.user_ns.get(variable, None): 
+                    if self.variables[variable] is not self.shell.user_ns.get(variable, None):
                         self.variables[variable] = self.shell.user_ns[variable]
                         if 'display' in value:
                             try:
                                 value['display'].update(IPython.display.Markdown(exporter.environment.from_string(value['input'], globals=getattr(self.shell, 'user_ns', {})).render()))
                             except: del value['display']
-                        break                    
+                        break
 
             return result
 
@@ -141,4 +144,3 @@ Default to showing the markdown displays.
         try:
             shell.weave.unregister()
         except:...
-

@@ -1,6 +1,8 @@
     import jupyter_client, IPython, ipykernel.ipkernel, ipykernel.kernelapp, pidgy, traitlets, pidgy, traitlets, ipykernel.kernelspec, ipykernel.zmqshell, pathlib, traitlets
 
-The shell is the application either jupyterlab or jupyter notebook, the kernel determines the programming language.  Below we design a just jupyter kernel that can be installed using 
+The shell is the application either jupyterlab or jupyter notebook, the kernel
+determines the programming language. Below we design a just jupyter kernel that
+can be installed using
 
 ```bash
 pidgy kernel install
@@ -9,6 +11,7 @@ pidgy kernel install
     _sep = __import__('itertools').cycle("|/-|\ ".strip())
 
     class pidgyInteractiveShell(ipykernel.zmqshell.ZMQInteractiveShell):
+
 Configure a native `pidgy` `IPython.InteractiveShell`
 
         loaders = traitlets.List(allow_none=True)
@@ -16,7 +19,9 @@ Configure a native `pidgy` `IPython.InteractiveShell`
         tangle = ipykernel.zmqshell.ZMQInteractiveShell.input_transformer_manager
         testing = traitlets.Any(allow_none=True)
         enable_html_pager = traitlets.Bool(True)
-`pidgyInteractiveShell.enable_html_pager` is necessary to see rich displays in the inspector.
+
+`pidgyInteractiveShell.enable_html_pager` is necessary to see rich displays in
+the inspector.
 
         def __init__(self,*args, **kwargs):
             super().__init__(*args, **kwargs)
@@ -34,8 +39,9 @@ Configure a native `pidgy` `IPython.InteractiveShell`
             return super().init_metadata(parent)
 
         def do_inspect(self, code, cursor_pos, detail_level=0):
-`pidgyKernel.do_inspect` will default to wysiwyg configuration thats displays a preview
-of the source input rendered as markdown.
+
+`pidgyKernel.do_inspect` will default to wysiwyg configuration thats displays a
+preview of the source input rendered as markdown.
 
 yyy!!!
 
@@ -43,11 +49,12 @@ yyy!!!
             if code[:cursor_pos][-3:] == '!!!':
                 object = {'found': True, 'data': {'text/markdown': self.shell.weave.format_markdown(code[:cursor_pos-3]+code[cursor_pos:])}}
             else:
-                try: 
+                try:
                     object = super().do_inspect(code, cursor_pos, detail_level=0)
                 except: ...
 
             if not object['found']:
+
 Simulate finding an object and return a preview of the markdown.
 
                 object['found'] = True
@@ -61,7 +68,9 @@ Simulate finding an object and return a preview of the markdown.
                 },C{col + 1}</code><br/>\n\n""" + code[:cursor_pos]+'·'+('' if col else '<br/>\n')+code[cursor_pos:]
 
                 object['data'] = {'text/markdown': code}
-We include the line number and cursor position to enrich the connection between the inspector and the source code displayed on another part of the screen.
+
+We include the line number and cursor position to enrich the connection between
+the inspector and the source code displayed on another part of the screen.
 
             return object
 

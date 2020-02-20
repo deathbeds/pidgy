@@ -1,13 +1,13 @@
     import IPython as python, doctest, textwrap, dataclasses, IPython, re
     pidgy= None
 
-In literate programs, `"code"` is deeply entangled with the narrative.
-`"code"` objects can signify meaning, with enriched veracity 
-through formal software testing.
-`python` introduced the `doctest` literate programming convention that indicates some text in a narrative can be tested.
-`pidgy` extends the `doctest` opinion to the inline markdown code.
-Each time a `pidgy` cell is executed, the `doctest`s and inline code are executed ensuring that
-any code in a `pidgy` program is valid.
+In literate programs, `"code"` is deeply entangled with the narrative. `"code"`
+objects can signify meaning, with enriched veracity through formal software
+testing. `python` introduced the `doctest` literate programming convention that
+indicates some text in a narrative can be tested. `pidgy` extends the `doctest`
+opinion to the inline markdown code. Each time a `pidgy` cell is executed, the
+`doctest`s and inline code are executed ensuring that any code in a `pidgy`
+program is valid.
 
     @dataclasses.dataclass
     class Testing:
@@ -17,7 +17,7 @@ any code in a `pidgy` program is valid.
             if not(result.error_before_exec or result.error_in_exec):
                 result.runner = test_markdown_string(result.info.raw_cell, IPython.get_ipython(), False, doctest.ELLIPSIS)
 
-    def load_ipython_extension(shell): 
+    def load_ipython_extension(shell):
         unload_ipython_extension(shell)
         shell.testing = Testing(shell=shell)
         shell.ast_transformers.append(TestingNodes(shell=shell))
@@ -27,17 +27,16 @@ any code in a `pidgy` program is valid.
     import doctest, contextlib, mistune as markdown, re, ast, __main__, IPython, operator
     shell = IPython.get_ipython()
 
-`test_markdown_string` extends the standard python `doctest` tools 
-to inline code objects written in markdown.  
+`test_markdown_string` extends the standard python `doctest` tools to inline
+code objects written in markdown.  
 This approach compliments are markdown forward programming language to test
 intertextual references between code and narrative.
-
 
     INLINE = re.compile(
         markdown.InlineGrammar.code
         .pattern[1:]
         .replace('[\s\S]*', '?P<source>[\s\S]+')
-        .replace('+)\s*', '{1,2})(?P<indent>\s{0})'), 
+        .replace('+)\s*', '{1,2})(?P<indent>\s{0})'),
     )
     INLINE = re.compile("""`{1}(
         ?P<indent>\s{0})(?P<source>[^`\n\r]+
@@ -46,7 +45,7 @@ intertextual references between code and narrative.
 
     def test_markdown_string(str, shell=shell, verbose=False, compileflags=None):
         globs, filename = shell.user_ns, F"In[{shell.last_execution_result.execution_count}]"
-        runner = doctest.DocTestRunner(verbose=verbose, optionflags=compileflags)  
+        runner = doctest.DocTestRunner(verbose=verbose, optionflags=compileflags)
         parsers = DocTestParser(runner), InlineDoctestParser(runner)
         parsers = {
             parser: doctest.DocTestFinder(verbose, parser).find(str, filename) for parser in parsers
@@ -110,8 +109,8 @@ intertextual references between code and narrative.
 
 
 
-    def unload_ipython_extension(shell): 
-        try: 
+    def unload_ipython_extension(shell):
+        try:
             shell.events.unregister('post_run_cell', shell.testing.post_run_cell)
         except: ...
 
