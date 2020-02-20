@@ -1,3 +1,5 @@
+# Best practices for literate programming
+
 [Donald Knuth], the prophet of _[Literate Programming]_, asks for a core moral
 commitment to write literate programs, because:
 
@@ -5,7 +7,10 @@ commitment to write literate programs, because:
 >
 > > - [Donald Knuth] _[Literate Programming]_
 
-The list below describes some best practices learned while designing `pidgy`.
+The following best practices for literate programming have emerged while
+desigined `pidgy`.
+
+## List of best practices
 
 - Restart and run all or it didn't happen.
 
