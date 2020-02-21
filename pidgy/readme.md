@@ -1,9 +1,6 @@
-It should document and define the cli application and build steps.
-
 # Derived applications of pidgin programs.
 
     import click, IPython, pidgy, nbconvert, pathlib, re
-    _CODE_FORMATS = "python script".split()
 
     @click.group()
     def application()->None:
@@ -31,33 +28,30 @@ result the could be run as main scripts using the `runpy` modules.
             sys.argv, argv = [ref] + ctx.args, sys.argv
             try:
                 if pathlib.Path(ref).exists():
-                    for ext in ".py .ipynb .md".split():
-                        if ref[-len(ext):] == ext:
-                            ref = ref[:-len(ext)]
+                    for ext in ".py .ipynb .md".split(): ref = ref[:-len(ext)] if ref[-len(ext):] == ext else ref
                 if ref in sys.modules:
                     with pidgy.pidgyLoader(): # cant reload main
                         object = importlib.reload(importlib.import_module(ref))
                 else: object = importlib.import_module(ref)
                 if verbose:
-                    if object.__file__.endswith('.md.ipynb'):
-                        md = nbconvert.get_exporter('markdown')(exclude_output=True).from_filename(object.__file__)[0]
-                    elif object.__file__.endswith('.ipynb'):
-                        md = nbconvert.get_exporter('markdown')().from_filename(object.__file__)[0]
-                    else:
-                        md = pathlib.Path(object.__file__).read_text()
+                    md = (nbconvert.get_exporter('markdown')(
+                        exclude_output=object.__file__.endswith('.md.ipynb')).from_filename(object.__file__)[0]
+                            if object.__file__.endswith('.ipynb')
+                            else pathlib.Path(object.__file__).read_text())
+                    md = re.sub(comment, '', md)
                     click.echo(
-                        jinja2.Template(re.sub(comment, '', md)).render(vars(object)))
+                        jinja2.Template(md).render(vars(object)))
             finally: sys.argv = argv
 
     @application.command(context_settings=dict(allow_extra_args=True))
-    @click.argument('file', nargs=-1, type=click.STRING)
+    @click.argument('files', nargs=-1, type=click.STRING)
     @click.pass_context
     def test(ctx, files):
 
 Formally test markdown documents, notebooks, and python files.
 
          import pytest
-         pytest.main(ctx.args+['--doctest-modules', '--disable-pytest-warnings']+files)
+         pytest.main(ctx.args+['--doctest-modules', '--disable-pytest-warnings']+list(files))
 
     @application.group()
     def kernel():
