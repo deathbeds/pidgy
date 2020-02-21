@@ -1,7 +1,42 @@
 # `"readme.md"` is a good name for a file.
 
+> [**Eat Me, Drink Me, Read Me.**][readme history]
+
 In `pidgy`, the `"readme.md"` is treated as the description and implementation
-of the `__main__` program.
+of the `__main__` program. The code below outlines the `pidgy` command line
+application to reuse literate `pidgy` documents in `markdown` and `notebook`
+files. It outlines how static `pidgy` documents may be reused outside of the
+interactive context.
+
+<!--excerpt-->
+
+    ...
+
+The functions are:
+
+- Install the `pidgy` kernel.
+
+```bash
+pidgy kernel
+```
+
+- Run `pidgy` documents.
+
+```bash
+pidgy run
+```
+
+- Test `pidgy` documents.
+
+```bash
+pidgy test
+```
+
+- Exporting `pidgy` documents.
+
+```bash
+pidgy export
+```
 
 <!--
 
@@ -110,3 +145,7 @@ Launch a `pidgy` kernel applications.
             from . import kernel
         ipykernel.kernelapp.IPKernelApp.launch_instance(
             kernel_class=kernel.pidgyKernel)
+
+[art of the readme]: https://github.com/noffle/art-of-readme
+[readme history]:
+  https://medium.com/@NSomar/readme-md-history-and-components-a365aff07f10
