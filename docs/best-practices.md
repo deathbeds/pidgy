@@ -1,7 +1,8 @@
 # Best practices for literate programming
 
-[Donald Knuth], the prophet of _[Literate Programming]_, asks for a core moral
-commitment to write literate programs, because:
+The first obligation of the literate programmer, defined by [Donald Knuth](ie.
+the prophet of _[Literate Programming]_), is a core moral commitment to write
+literate programs, because:
 
 > ...; surely nobody wants to admit writing an illiterate program.
 >
@@ -17,7 +18,7 @@ desigined `pidgy`.
   A useful document, as both literature and python program, must be literate in
   all readable, reproducible and reusable contexts.
 
-- One `"h1"` or major heading per page.
+- One `"h1"` or major heading per document.
 
   Abide [Web Content Accessibility Guidelines][wcag] so that information can be
   accessed by differently abled audiences. This constraint indicates that one
@@ -46,10 +47,9 @@ desigined `pidgy`.
 - Find pleasure in writing.
 - When writing narrative include one unit of meaning per line.
 
-      A sentence represents the maximum unit that can be broken up into
-
-  smaller diffable units. This approach with create cleaner histories in
-  revision control systems.
+A sentence represents the maximum unit that can be broken up into smaller
+diffable units. This approach with create cleaner histories in revision control
+systems.
 
 [wcag]: https://www.w3.org/WAI/standards-guidelines/wcag/
 [donald knuth]: #
