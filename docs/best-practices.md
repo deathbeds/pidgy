@@ -9,20 +9,17 @@ literate programs, because:
 > > - [Donald Knuth] _[Literate Programming]_
 
 The following best practices for literate programming have emerged while
-desigined `pidgy`.
+desiging `pidgy`.
 
 ## List of best practices
 
 - Restart and run all or it didn't happen.
 
-  A useful document, as both literature and python program, must be literate in
-  all readable, reproducible and reusable contexts.
+  A document should be literate in all readable, reproducible, and reusable
+  contexts.
 
-- One `"h1"` or major heading per document.
-
-  Abide [Web Content Accessibility Guidelines][wcag] so that information can be
-  accessed by differently abled audiences. This constraint indicates that one
-  subject should be discussed in each document.
+- When in doubt, abide [Web Content Accessibility Guidelines][wcag] so that
+  information can be accessed by differently abled audiences.
 
 - [Markdown] documents are sufficient for single units of thought.
 
