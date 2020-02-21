@@ -1,14 +1,21 @@
-# Derived applications of pidgin programs.
+# `"readme.md"` is a good name for a file.
+
+In `pidgy`, the `"readme.md"` is treated as the description and implementation
+of the `__main__` program.
+
+<!--
 
     import click, IPython, pidgy, nbconvert, pathlib, re
+
+-->
 
     @click.group()
     def application()->None:
 
-A successful `notebook` program could find uses outside of its interactive state
-as programs, documentation, or tests. `pidgy` programming includes a `click`
-command-line `application` to weave `notebook`s to other forms and tangle
-`notebook`s as source code.
+The `pidgy` `application` will group together a few commands that can view,
+execute, and test pidgy documents.
+
+<!---->
 
     @application.command(context_settings=dict(allow_extra_args=True))
     @click.option('--verbose/--quiet', default=True)
@@ -16,8 +23,8 @@ command-line `application` to weave `notebook`s to other forms and tangle
     @click.pass_context
     def run(ctx, ref, verbose):
 
-The `document` function demonstrates that `pidgy` may export `python` code. As a
-result the could be run as main scripts using the `runpy` modules.
+`pidgy` `run` makes it possible to execute `pidgy` documents as programs, and
+view their pubished results.
 
         import pidgy, importnb, runpy, sys, importlib, jinja2
         comment = re.compile(r'(?s:<!--.*?-->)')
@@ -43,6 +50,8 @@ result the could be run as main scripts using the `runpy` modules.
                         jinja2.Template(md).render(vars(object)))
             finally: sys.argv = argv
 
+<!---->
+
     @application.command(context_settings=dict(allow_extra_args=True))
     @click.argument('files', nargs=-1, type=click.STRING)
     @click.pass_context
@@ -53,14 +62,21 @@ Formally test markdown documents, notebooks, and python files.
          import pytest
          pytest.main(ctx.args+['--doctest-modules', '--disable-pytest-warnings']+list(files))
 
+<!---->
+
     @application.group()
     def kernel():
 
 `pidgy` is mainly designed to improve the interactive experience of creating
 literature in computational notebooks.
 
+<!---->
+
     @kernel.command()
     def install(user=False, replace=None, prefix=None):
+
+`install` the pidgy kernel.
+
         manager = __import__('jupyter_client').kernelspec.KernelSpecManager()
         path = str((pathlib.Path(__file__).parent / 'kernelspec').absolute())
         try:
@@ -70,14 +86,25 @@ literature in computational notebooks.
             dest = manager.install_kernel_spec(path, 'pidgy', True)
         click.echo(F"The pidgy kernel was install in {dest}")
 
+<!---->
+
     @kernel.command()
     def uninstall(user=True, replace=None, prefix=None):
-        __import__('jupyter_client').kernelspec.KernelSpecManager().remove_kernel_spec('pidgy')
+
+`uninstall` the kernel.
+
+        import jupyter_client
+        jupyter_client.kernelspec.KernelSpecManager().remove_kernel_spec('pidgy')
         click.echo(F"The pidgy kernel was removed.")
+
+<!---->
 
     @kernel.command()
     @click.option('-f')
     def start(user=True, replace=None, prefix=None, f=None):
+
+Launch a `pidgy` kernel applications.
+
         import ipykernel.kernelapp
         with pidgy.pidgyLoader():
             from . import kernel
