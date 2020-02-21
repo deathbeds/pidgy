@@ -47,9 +47,9 @@ desigined `pidgy`.
 - Find pleasure in writing.
 - When writing narrative include one unit of meaning per line.
 
-A sentence represents the maximum unit that can be broken up into smaller
-diffable units. This approach with create cleaner histories in revision control
-systems.
+      A sentence represents the maximum unit that can be broken up into smaller
+      diffable units. This approach with create cleaner histories in revision
+      control systems.
 
 [wcag]: https://www.w3.org/WAI/standards-guidelines/wcag/
 [donald knuth]: #
