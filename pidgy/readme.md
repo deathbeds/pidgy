@@ -2,7 +2,7 @@ It should document and define the cli application and build steps.
 
 # Derived applications of pidgin programs.
 
-    import click, IPython, pidgy, nbconvert, pathlib
+    import click, IPython, pidgy, nbconvert, pathlib, re
     _CODE_FORMATS = "python script".split()
 
     @click.group()
@@ -13,17 +13,17 @@ as programs, documentation, or tests. `pidgy` programming includes a `click`
 command-line `application` to weave `notebook`s to other forms and tangle
 `notebook`s as source code.
 
-    @application.command(context_settings=dict(
-        allow_extra_args=True,
-    ))
+    @application.command(context_settings=dict(allow_extra_args=True))
+    @click.option('--verbose/--quiet', default=True)
     @click.argument('ref', type=click.STRING)
     @click.pass_context
-    def run(ctx, ref):
+    def run(ctx, ref, verbose):
 
 The `document` function demonstrates that `pidgy` may export `python` code. As a
 result the could be run as main scripts using the `runpy` modules.
 
-        import pidgy, importnb, runpy, sys
+        import pidgy, importnb, runpy, sys, importlib, jinja2
+        comment = re.compile(r'(?s:<!--.*?-->)')
         absolute = str(pathlib.Path().absolute())
         sys.path = ['.'] + sys.path
         with pidgy.pidgyLoader(main=True), importnb.Notebook(main=True):
@@ -31,12 +31,33 @@ result the could be run as main scripts using the `runpy` modules.
             sys.argv, argv = [ref] + ctx.args, sys.argv
             try:
                 if pathlib.Path(ref).exists():
-                    ref = ref.rstrip('.py').rstrip('.ipynb').rstrip('.md')
+                    for ext in ".py .ipynb .md".split():
+                        if ref[-len(ext):] == ext:
+                            ref = ref[:-len(ext)]
                 if ref in sys.modules:
                     with pidgy.pidgyLoader(): # cant reload main
-                        importlib.reload(__import__(ref))
-                else: __import__(ref)
+                        object = importlib.reload(importlib.import_module(ref))
+                else: object = importlib.import_module(ref)
+                if verbose:
+                    if object.__file__.endswith('.md.ipynb'):
+                        md = nbconvert.get_exporter('markdown')(exclude_output=True).from_filename(object.__file__)[0]
+                    elif object.__file__.endswith('.ipynb'):
+                        md = nbconvert.get_exporter('markdown')().from_filename(object.__file__)[0]
+                    else:
+                        md = pathlib.Path(object.__file__).read_text()
+                    click.echo(
+                        jinja2.Template(re.sub(comment, '', md)).render(vars(object)))
             finally: sys.argv = argv
+
+    @application.command(context_settings=dict(allow_extra_args=True))
+    @click.argument('file', nargs=-1, type=click.STRING)
+    @click.pass_context
+    def test(ctx, files):
+
+Formally test markdown documents, notebooks, and python files.
+
+         import pytest
+         pytest.main(ctx.args+['--doctest-modules', '--disable-pytest-warnings']+files)
 
     @application.group()
     def kernel():
