@@ -48,7 +48,7 @@ desigined `pidgy`.
 - When writing narrative include one unit of meaning per line.
 
   A sentence represents the maximum unit that can be broken up into smaller
-  diffable units. This approach with create cleaner histories in revision
+  diffable units. This approach will create cleaner histories in revision
   control systems.
 
 [wcag]: https://www.w3.org/WAI/standards-guidelines/wcag/
