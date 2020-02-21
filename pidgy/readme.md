@@ -146,6 +146,8 @@ Launch a `pidgy` kernel applications.
         ipykernel.kernelapp.IPKernelApp.launch_instance(
             kernel_class=kernel.pidgyKernel)
 
+<!---->
+
 [art of the readme]: https://github.com/noffle/art-of-readme
 [readme history]:
   https://medium.com/@NSomar/readme-md-history-and-components-a365aff07f10
