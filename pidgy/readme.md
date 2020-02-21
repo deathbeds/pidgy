@@ -12,27 +12,27 @@ interactive context.
 
     ...
 
-The functions are:
+The applications will:
 
-- Install the `pidgy` kernel.
+- _Install the `pidgy` kernel._
 
 ```bash
 pidgy kernel
 ```
 
-- Run `pidgy` documents.
+- _Run `pidgy` documents._
 
 ```bash
 pidgy run
 ```
 
-- Test `pidgy` documents.
+- _Test `pidgy` documents._
 
 ```bash
 pidgy test
 ```
 
-- Exporting `pidgy` documents.
+- _Exporting `pidgy` documents._
 
 ```bash
 pidgy export
