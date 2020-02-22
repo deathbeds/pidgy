@@ -21,22 +21,23 @@ system to provide a `markdown`-forward REPL interface that can be used with
 The `load_ipython_extension` makes it possible to configure and extend the
 `IPython.InteractiveShell`.
 
-            loader.load_ipython_extension(shell)
-            tangle.load_ipython_extension(shell)
-            testing.load_ipython_extension(shell)
-            weave.load_ipython_extension(shell)
+        loader.load_ipython_extension(shell)
+        tangle.load_ipython_extension(shell)
+        testing.load_ipython_extension(shell)
+        weave.load_ipython_extension(shell)
+    ...
 
-1.  [x] The `loader` makes it possible to import other markdown documents and
-        notebooks as we would with any other [Python] module. The rub is that
-        the source code in the program must **Restart and Run All**.
-2.  [x] The `tangle` module constructes a line-for-line transformer that
-        converts markdown to python.
-3.  [ ] `pidgy` documents can be used as unit tests. To assist in successful
-        tests `pidgy` includes interactive `testing` with each execution. It
-        verifies inline code, doctests, test functions, and
-        `unittest.TestCase`s.
-4.  [x] The `weave` step relies on the `IPython` rich display to show markdown.
-        And `jinja` templates.
+1. The `loader` makes it possible to import other markdown documents and
+   notebooks as we would with any other [Python] module. The rub is that
+   the source code in the program must **Restart and Run All**.
+2. The `tangle` module constructes a line-for-line transformer that
+   converts markdown to python.
+3. `pidgy` documents can be used as unit tests. To assist in successful
+   tests `pidgy` includes interactive `testing` with each execution. It
+   verifies inline code, doctests, test functions, and
+   `unittest.TestCase`s.
+4. The `weave` step relies on the `IPython` rich display to show markdown.
+   And `jinja` templates.
 
 <!--
 
