@@ -1,13 +1,14 @@
-# The interactive `pidgy` interface
+# The `pidgy` extension for programming in Markdown
 
-`pidgy` documents are written in interactive programming environments that make
-it easy to run code and preview weave. This specific implementation is bound to
-the `IPython` kernel to be used in `jupyter` `notebook` and `jupyterlab`.
+The `IPython.InteractiveShell` has a configuration system for changing how
+`"code"` interacts with the read-eval-print-loop (ie. REPL). `pidgy` uses this
+system to provide a `markdown`-forward REPL interface that can be used with
+`jupyter` tools.
 
 <!--
 
-    import jupyter, notebook, IPython, mistune as markdown, IPython as python, ast, jinja2 as template, importnb as _import_, doctest, pathlib
-    with _import_.Notebook(lazy=True):
+    import jupyter, notebook, IPython, mistune as markdown, IPython as python, ast, jinja2 as template, importnb, doctest, pathlib
+    with importnb.Notebook(lazy=True):
         try: from . import loader, tangle
         except: import loader, tangle
     with loader.pidgyLoader(lazy=True):
@@ -17,28 +18,32 @@ the `IPython` kernel to be used in `jupyter` `notebook` and `jupyterlab`.
 
     def load_ipython_extension(shell: IPython.InteractiveShell) -> None:
 
-The `load_ipython_extension and unload_ipython_extension` are functions that can
-configure the `IPython.InteractiveShell`. We'll introduce a few major features
-that are configured everytime `pidgy` is used interactively.
+The `load_ipython_extension` makes it possible to configure and extend the
+`IPython.InteractiveShell`.
 
             loader.load_ipython_extension(shell)
             tangle.load_ipython_extension(shell)
             testing.load_ipython_extension(shell)
             weave.load_ipython_extension(shell)
 
-1.  Configure the ability to import other `pidgy` markdown files and notebooks
-    as python modules.
-2.  Perhaps the most labourious part of `pidgy` are the heuristics for a
-    line-by-line translation of markdown source to python.
-3.  `pidgy` documents will frequently sprinkle `"code"` throughout a document.
-    It uses this code as interactive test objects that are run as unit tests.
-4.  The `pidgy` `input` represents both code and design. We trigger a few custom
-    output events to capture reproducible information about the computing
-    environment.
+1.  [x] The `loader` makes it possible to import other markdown documents and
+        notebooks as we would with any other [Python] module. The rub is that
+        the source code in the program must **Restart and Run All**.
+2.  [x] The `tangle` module constructes a line-for-line transformer that
+        converts markdown to python.
+3.  [ ] `pidgy` documents can be used as unit tests. To assist in successful
+        tests `pidgy` includes interactive `testing` with each execution. It
+        verifies inline code, doctests, test functions, and
+        `unittest.TestCase`s.
+4.  [x] The `weave` step relies on the `IPython` rich display to show markdown.
+        And `jinja` templates.
 
 <!--
 
     def unload_ipython_extension(shell):
+
+`unload_ipython_extension` unloads all the extensions loads in `load_ipython_extension`.
+
         for x in (weave, testing, tangle):
             x.unload_ipython_extension(shell)
 
