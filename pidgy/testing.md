@@ -41,6 +41,7 @@ intertextual references between code and narrative.
     INLINE = re.compile("""`{1}(
         ?P<indent>\s{0})(?P<source>[^`\n\r]+
     )`{1}""")
+    INLINE = re.compile(r'`(?P<indent>\s{0})(?P<source>[^`].*?)`')
     (TICK,), SPACE = '`'.split(), ' '
 
     def test_markdown_string(str, shell=shell, verbose=False, compileflags=None):

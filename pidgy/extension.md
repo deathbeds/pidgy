@@ -8,8 +8,8 @@ to the `IPython` kernel to be used in `jupyter` `notebook` and `jupyterlab`.
 
     import jupyter, notebook, IPython, mistune as markdown, IPython as python, ast, jinja2 as template, importnb as _import_, doctest, pathlib
     with _import_.Notebook(lazy=True):
-        try: from . import reuse, translate
-        except: import reuse, translate
+        try: from . import reuse, tangle
+        except: import reuse, tangle
     with reuse.pidgyLoader(lazy=True):
         try: from . import outputs, testing
         except: import outputs, testing
@@ -22,7 +22,7 @@ configure the `IPython.InteractiveShell`. We'll introduce a few major features
 that are configured everytime `pidgy` is used interactively.
 
             reuse.load_ipython_extension(shell)
-            translate.load_ipython_extension(shell)
+            tangle.load_ipython_extension(shell)
             testing.load_ipython_extension(shell)
             outputs.load_ipython_extension(shell)
 
@@ -39,7 +39,7 @@ that are configured everytime `pidgy` is used interactively.
 <!--
 
     def unload_ipython_extension(shell):
-        for x in (outputs, testing, translate):
+        for x in (outputs, testing, tangle):
             x.unload_ipython_extension(shell)
 
 -->
