@@ -1,8 +1,24 @@
 # Configuring the `pidgy` shell and kernel architecture.
 
-`IPython` provides two kernel architectures.
+![](https://jupyter.readthedocs.io/en/latest/_images/other_kernels.png)
 
-At this point, we can imagine `pidgy` implementations in other languages.
+Interactive programming in `pidgy` documents is accessed using the polyglot
+[Jupyter] kernel architecture. In fact, the provenance the [Jupyter]
+name is a combination the native kernel architectures for
+[ju~~lia~~][julia], [pyt~~hon~~][python], and [r]. [Jupyter]'s
+generalization of the kernel/shell interface allows
+over 100 languages to be used in `notebook and jupyterlab`.
+It is possible to define prescribe wrapper kernels around existing
+methods; this is the appraoach that `pidgy` takes
+
+> A kernel provides programming language support in Jupyter. IPython is the default kernel. Additional kernels include R, Julia, and many more.
+>
+> > - [`jupyter` kernel definition](https://jupyter.readthedocs.io/en/latest/glossary.html#term-kernel)
+
+`pidgy` is not not a native kernel. It is a wrapper kernel around the
+existing `ipykernel and IPython.InteractiveShell` configurables.
+`IPython` adds extra syntax to python that simulate literate programming
+macros.
 
 <!--
 
@@ -51,12 +67,15 @@ the inspector.
             self._last_parent = parent
             return super().init_metadata(parent)
 
+
         def do_inspect(self, code, cursor_pos, detail_level=0):
 
-`pidgyKernel.do_inspect` will default to wysiwyg configuration thats displays a
-preview of the source input rendered as markdown.
-
-yyy!!!
+<details><summary>Customizing the Jupyter inspector behavior for literate computing</summary><p>
+When we have access to the kernel class it is possible to customize
+a number of interactive shell features.   The do inspect function
+adds some features to `jupyter`'s  inspection behavior when working in 
+`pidgy`.
+</p><pre></code>
 
             object = {'found': False}
             if code[:cursor_pos][-3:] == '!!!':
@@ -86,3 +105,12 @@ We include the line number and cursor position to enrich the connection between
 the inspector and the source code displayed on another part of the screen.
 
             return object
+        ...
+
+</details>
+
+## `pidgy`-like interfaces in other languages.
+
+[julia]: #
+[r]: #
+[python]: #
