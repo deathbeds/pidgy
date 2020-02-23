@@ -25,15 +25,14 @@ jobs:
           pip install wheel
       - name: Test with pytest
         run: |
-          pytest --nbval --doctest-modules **/test_*.ipynb
+          pytest --nbval --doctest-modules pidgy/tests/test_pidgin_syntax.md.ipynb
       - name: Build package
         run: |
           python setup.py sdist
           python setup.py bdist_wheel
 
       - name: Publish package
-        if:
-          github.event_name == 'push' && startsWith(github.event.ref,
+        if: github.event_name == 'push' && startsWith(github.event.ref,
           'refs/tags')
         uses: pypa/gh-action-pypi-publish@master
         with:
