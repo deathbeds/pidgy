@@ -12,32 +12,6 @@ interactive context.
 
     ...
 
-The applications will:
-
-- _Install the `pidgy` kernel._
-
-```bash
-pidgy kernel
-```
-
-- _Run `pidgy` documents._
-
-```bash
-pidgy run
-```
-
-- _Test `pidgy` documents._
-
-```bash
-pidgy test
-```
-
-- _Exporting `pidgy` documents._
-
-```bash
-pidgy export
-```
-
 <!--
 
     import click, IPython, pidgy, nbconvert, pathlib, re
@@ -51,6 +25,8 @@ The `pidgy` `application` will group together a few commands that can view,
 execute, and test pidgy documents.
 
 <!---->
+
+## `"pidgy run"` literature as code
 
     @application.command(context_settings=dict(allow_extra_args=True))
     @click.option('--verbose/--quiet', default=True)
@@ -87,6 +63,8 @@ view their pubished results.
 
 <!---->
 
+## Test `pidgy` documents in pytest.
+
     @application.command(context_settings=dict(allow_extra_args=True))
     @click.argument('files', nargs=-1, type=click.STRING)
     @click.pass_context
@@ -98,6 +76,8 @@ Formally test markdown documents, notebooks, and python files.
          pytest.main(ctx.args+['--doctest-modules', '--disable-pytest-warnings']+list(files))
 
 <!---->
+
+## Install `pidgy` as a known kernel.
 
     @application.group()
     def kernel():
@@ -121,7 +101,7 @@ literature in computational notebooks.
             dest = manager.install_kernel_spec(path, 'pidgy', True)
         click.echo(F"The pidgy kernel was install in {dest}")
 
-<!---->
+<!--
 
     @kernel.command()
     def uninstall(user=True, replace=None, prefix=None):
@@ -132,7 +112,6 @@ literature in computational notebooks.
         jupyter_client.kernelspec.KernelSpecManager().remove_kernel_spec('pidgy')
         click.echo(F"The pidgy kernel was removed.")
 
-<!---->
 
     @kernel.command()
     @click.option('-f')
@@ -147,6 +126,7 @@ Launch a `pidgy` kernel applications.
             kernel_class=kernel.pidgyKernel)
     ...
 
+-->
+
 [art of the readme]: https://github.com/noffle/art-of-readme
-[readme history]:
-  https://medium.com/@NSomar/readme-md-history-and-components-a365aff07f10
+[readme history]: https://medium.com/@NSomar/readme-md-history-and-components-a365aff07f10

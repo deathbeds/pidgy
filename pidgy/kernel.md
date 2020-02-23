@@ -1,20 +1,32 @@
+# Configuring the `pidgy` shell and kernel architecture.
+
+`IPython` provides two kernel architectures.
+
+At this point, we can imagine `pidgy` implementations in other languages.
+
+<!--
+
     import jupyter_client, IPython, ipykernel.ipkernel, ipykernel.kernelapp, pidgy, traitlets, pidgy, traitlets, ipykernel.kernelspec, ipykernel.zmqshell, pathlib, traitlets
+
+-->
 
 The shell is the application either jupyterlab or jupyter notebook, the kernel
 determines the programming language. Below we design a just jupyter kernel that
 can be installed using
 
+- What is the advantage of installing the kernel and how to do it.
+
 ```bash
 pidgy kernel install
 ```
 
-    _sep = __import__('itertools').cycle("|/-|\ ".strip())
+## Configure the `pidgy` shell.
 
     class pidgyInteractiveShell(ipykernel.zmqshell.ZMQInteractiveShell):
 
 Configure a native `pidgy` `IPython.InteractiveShell`
 
-        loaders = traitlets.List(allow_none=True)
+        loaders = traitlets.Dict(allow_none=True)
         weave = traitlets.Any(allow_none=True)
         tangle = ipykernel.zmqshell.ZMQInteractiveShell.input_transformer_manager
         testing = traitlets.Any(allow_none=True)
@@ -29,6 +41,7 @@ the inspector.
                 from .extension import load_ipython_extension
             load_ipython_extension(self)
 
+## Configure the `pidgy` kernel.
 
     class pidgyKernel(ipykernel.ipkernel.IPythonKernel):
         shell_class = traitlets.Type(pidgyInteractiveShell)
@@ -63,7 +76,7 @@ Simulate finding an object and return a preview of the markdown.
                 col = cursor_pos - offset
 
 
-                code = self._make_time()+F"""<br/><code>·L{
+                code = F"""<code>·L{
                     len(lead.splitlines()) + int(not(col))
                 },C{col + 1}</code><br/>\n\n""" + code[:cursor_pos]+'·'+('' if col else '<br/>\n')+code[cursor_pos:]
 
@@ -73,21 +86,3 @@ We include the line number and cursor position to enrich the connection between
 the inspector and the source code displayed on another part of the screen.
 
             return object
-
-        def _make_time(self, t=None):
-            import datetime, emoji
-
-            days="twelve one two three four five six seven eight nine ten eleven"
-
-            days = days.split()*2
-
-            t = datetime.datetime.now() if t is None else t
-
-            hour, minute = t.hour%12, t.minute
-            _minute = str(t.minute)
-            if len(_minute) == 1: _minute = '0'+_minute
-            return "<code>"+ 'AP'[t.hour//12]+' '+''.join(
-                emoji.EMOJI_UNICODE[F":{days[x]}_o’clock:"] + (
-                    '' if x != 5 and (x+1)%3 else ' '
-                ) for x in range(hour%12)
-            ) + _minute + "</code>\n"
