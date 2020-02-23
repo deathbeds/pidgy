@@ -41,6 +41,16 @@ Default to showing the markdown displays.
 
     @dataclasses.dataclass
     class Metadata(Events):
+        shell: IPython.InteractiveShell = dataclasses.field(default_factory=IPython.get_ipython)
+        start: datetime.datetime = dataclasses.field(default_factory=datetime.datetime.utcnow().isoformat)
+        modules: list = dataclasses.field(default_factory=list)
+        ns: list = dataclasses.field(init=False)
+        mapping: dict = dataclasses.field(default_factory=dict)
+        environment: jinja2.Environment = dataclasses.field(default=exporter.environment)
+        interactive: bool = True
+        _null_environment = jinja2.Environment()
+        variables: list = dataclasses.field(default_factory=dict)
+
         def pre_run_cell(self, info):
             cellId=self.shell.kernel._last_parent.get('metadata', {}).get('cellId', None)
             deletedCells=self.shell.kernel._last_parent.get('metadata', {}).get('deletedCells', [])
@@ -91,6 +101,8 @@ Default to showing the markdown displays.
         def post_run_cell(self, result):
             text = self.strip_front_matter(result.info.raw_cell)
             lines = text.splitlines() or ['']
+            if not lines[0].strip():
+                IPython.display.display(F"""<!--\n{text}\n\n-->""")
             if lines[0].strip():
                 metadata = self.format_metadata()
                 self.mapping[metadata['cellId']]['input'] = result.info.raw_cell
@@ -101,7 +113,7 @@ Default to showing the markdown displays.
                     text = template.render()
                 except BaseException as Exception:
                     self.shell.showtraceback((type(Exception), Exception, Exception.__traceback__))
-                variables = jinja2.meta.find_undeclared_variables(self.environment.parse(result.info.raw_cell))
+                variables = jinja2.meta.find_undeclared_variables(self._null_environment.parse(result.info.raw_cell))
                 if variables and self.interactive:
                     self.mapping[metadata['cellId']]['display'] = IPython.display.display(IPython.display.Markdown(self.format_markdown(text), metadata=metadata), display_id=True)
                     self.mapping[metadata['cellId']]['variables'] = variables
@@ -129,16 +141,6 @@ Default to showing the markdown displays.
 
         def __post_init__(self):
             self.ns = [x for x in getattr(self.shell, 'user_ns', {}) if '.' not in x and not str.startswith(x,'_')]
-        shell: IPython.InteractiveShell = dataclasses.field(default_factory=IPython.get_ipython)
-        start: datetime.datetime = dataclasses.field(default_factory=datetime.datetime.utcnow().isoformat)
-        modules: list = dataclasses.field(default_factory=list)
-        ns: list = dataclasses.field(init=False)
-        mapping: dict = dataclasses.field(default_factory=dict)
-        environment: jinja2.Environment = dataclasses.field(default=exporter.environment)
-        interactive: bool = True
-        _null_environment = jinja2.Environment()
-        variables: list = dataclasses.field(default_factory=dict)
-
 
     def unload_ipython_extension(shell):
         try:
