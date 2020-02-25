@@ -23,9 +23,9 @@ for a flexible interface to verifying the computational qualities of literate pr
                 suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(object))
             elif isinstance(object, str):
                 doctest_suite.addTest(doctest.DocTestCase(
-                doctest.DocTestParser().get_doctest(object, vars, name, name, 0)))
+                doctest.DocTestParser().get_doctest(object, vars, name, name, 1), doctest.ELLIPSIS))
                 doctest_suite.addTest(doctest.DocTestCase(
-                InlineDoctestParser().get_doctest(object, vars, name, name, 0), checker=NullOutputCheck))
+                InlineDoctestParser().get_doctest(object, vars, name, name, 1), checker=NullOutputCheck))
             elif inspect.isfunction(object):
                 suite.addTest(unittest.FunctionTestCase(object))
         return suite
@@ -35,7 +35,7 @@ for a flexible interface to verifying the computational qualities of literate pr
 
 The `Testing` class executes the test suite each time a cell is executed.
 
-        function_pattern: str = 'test*'
+        function_pattern: str = 'test_'
         def post_run_cell(self, result):
             globs, filename = self.shell.user_ns, F"In[{self.shell.last_execution_result.execution_count}]"
 
