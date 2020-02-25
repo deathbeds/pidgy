@@ -45,6 +45,7 @@ Configure a native `pidgy` `IPython.InteractiveShell`
         loaders = traitlets.Dict(allow_none=True)
         weave = traitlets.Any(allow_none=True)
         tangle = ipykernel.zmqshell.ZMQInteractiveShell.input_transformer_manager
+        extras = traitlets.Any(allow_none=True)
         testing = traitlets.Any(allow_none=True)
         enable_html_pager = traitlets.Bool(True)
 
