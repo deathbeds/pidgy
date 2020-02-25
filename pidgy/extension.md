@@ -12,8 +12,8 @@ system to provide a `markdown`-forward REPL interface that can be used with
         try: from . import loader, tangle
         except: import loader, tangle
     with loader.pidgyLoader(lazy=True):
-        try: from . import weave, testing
-        except: import weave, testing
+        try: from . import weave, testing, metadata, extras
+        except: import weave, testing, metadata, extras
 -->
 
     def load_ipython_extension(shell: IPython.InteractiveShell) -> None:
@@ -23,6 +23,8 @@ The `load_ipython_extension` makes it possible to configure and extend the
 
         loader.load_ipython_extension(shell)
         tangle.load_ipython_extension(shell)
+        extras.load_ipython_extension(shell)
+        metadata.load_ipython_extension(shell)
         testing.load_ipython_extension(shell)
         weave.load_ipython_extension(shell)
     ...
@@ -45,7 +47,7 @@ The `load_ipython_extension` makes it possible to configure and extend the
 
 `unload_ipython_extension` unloads all the extensions loads in `load_ipython_extension`.
 
-        for x in (weave, testing, tangle):
+        for x in (weave, testing, extras, metadata, tangle):
             x.unload_ipython_extension(shell)
 
 -->
