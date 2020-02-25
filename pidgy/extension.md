@@ -9,11 +9,11 @@ system to provide a `markdown`-forward REPL interface that can be used with
 
     import jupyter, notebook, IPython, mistune as markdown, IPython as python, ast, jinja2 as template, importnb, doctest, pathlib
     with importnb.Notebook(lazy=True):
-        try: from . import loader, tangle
-        except: import loader, tangle
+        try: from . import loader, tangle, extras
+        except: import loader, tangle, extras
     with loader.pidgyLoader(lazy=True):
-        try: from . import weave, testing, metadata, extras
-        except: import weave, testing, metadata, extras
+        try: from . import weave, testing, metadata
+        except: import weave, testing, metadata
 -->
 
     def load_ipython_extension(shell: IPython.InteractiveShell) -> None:
