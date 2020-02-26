@@ -1,4 +1,11 @@
-# Events along the `IPython` execution process.
+> 44. Sometimes I think the only universal in the computing field is the fetch-execute cycle.
+>     > [Perlisisms]
+
+# Events along Read-Eval-Print-Loop
+
+Each time we interact with computer applications we participate in the REPL.
+`IPython` uses specific termininology that can configure the behavior of the interaction.
+We'll the steps `IPython` takes as the shell interacts with the kernel.
 
 <!--
 
