@@ -42,11 +42,11 @@ shell = shell or self.shell
 `ast.NodeTransformers` can be used to intercept parsed [Python] code and apply changes before compilations. If the `Events` object
 is an `ast.NodeTransfromer` then it is registered on the current shell.
 
-self.shell.ast_transformers.pop(self.shell.ast_transformers.index(self))
-else:
-self.shell.ast_transformers.append(self)
+                    self.shell.ast_transformers.pop(self.shell.ast_transformers.index(self))
+                else:
+                    self.shell.ast_transformers.append(self)
 
-return self
+            return self
 
 <!--
 
