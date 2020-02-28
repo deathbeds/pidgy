@@ -46,7 +46,7 @@ The `Testing` class executes the test suite each time a cell is executed.
             globs, filename = self.shell.user_ns, F"In[{self.shell.last_execution_result.execution_count}]"
 
             with ipython_compiler(self.shell):
-                definitions = [self.shell.user_ns[x] for x in self.shell.metadata.definitions
+                definitions = [self.shell.user_ns[x] for x in getattr(self.shell.metadata, 'definitions', [])
                     if x.startswith(self.function_pattern) or
                     isinstance(self.shell.user_ns[x], type) and issubclass(self.shell.user_ns[x], unittest.TestCase)
                 ]

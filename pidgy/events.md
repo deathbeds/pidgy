@@ -35,7 +35,7 @@ shell = shell or self.shell
 
             for event in self._events:
                 callable = getattr(self, event, None)
-                callable and getattr(shell.events, F'{method}register')(event, callable)
+                callable and getattr(self.shell.events, F'{method}register')(event, callable)
             if isinstance(self, ast.NodeTransformer):
                 if method:
 
