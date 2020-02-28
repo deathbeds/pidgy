@@ -42,11 +42,6 @@ desiging `pidgy`.
   [despite all possibilities to fall.](http://ing.univaq.it/continenza/Corso%20di%20Disegno%20dell'Architettura%202/TESTI%20D'AUTORE/Paul-klee-Pedagogical-Sketchbook.pdf#page=6)
 - Use code, data, and visualization to fill the voids of natural language.
 - Find pleasure in writing.
-- When writing narrative include one unit of meaning per line.
-
-  A sentence represents the maximum unit that can be broken up into smaller
-  diffable units. This approach will create cleaner histories in revision
-  control systems.
 
 [wcag]: https://www.w3.org/WAI/standards-guidelines/wcag/
 [donald knuth]: #

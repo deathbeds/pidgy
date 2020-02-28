@@ -1,13 +1,19 @@
 # Interactive testing of literate programs
 
+Testing is something we added because of the application of notebooks as test units.
+
 A primary use case of notebooks is to test ideas. Typically this in informally using
 manual validation to qualify the efficacy of narrative and code. To ensure testable literate documents
 we formally test code incrementally during interactive computing.
+
+<!--
 
     import unittest, doctest, textwrap, dataclasses, IPython, re, pidgy, sys, typing, types, contextlib, ast, inspect
     with pidgy.pidgyLoader(lazy=True):
         try: from . import events
         except: import events
+
+-->
 
     def make_test_suite(*objects: typing.Union[
         unittest.TestCase, types.FunctionType, str

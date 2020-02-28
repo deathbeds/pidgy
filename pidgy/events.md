@@ -1,11 +1,12 @@
+# The `IPython` step during a [Read-Eval-Print-Loop] iteration.
+
 > 44. Sometimes I think the only universal in the computing field is the fetch-execute cycle.
->     > [Perlisisms]
+>     >
 
-# Events along Read-Eval-Print-Loop
+During a fetch-execute cycle in interactive computing, a [Read-Eval-Print-Loop] (ie. REPL) application transmits input to a compiler that returns a representative display for the source. `IPython` is [Read-Eval-Print-Loop] application for interactive python programming. It is a product of the scientific computing that
+required the ability interact with code to gain insight about information.
 
-Each time we interact with computer applications we participate in the REPL.
-`IPython` uses specific termininology that can configure the behavior of the interaction.
-We'll the steps `IPython` takes as the shell interacts with the kernel.
+`IPython` is superset of [Python], it provides custom syntaxes (eg. magics, system calls). `IPython` designed a configurable interface that can customize the input source before executing a command.
 
 <!--
 
@@ -15,37 +16,43 @@ We'll the steps `IPython` takes as the shell interacts with the kernel.
 
 -->
 
-pidgin programming is an incremental approach to documents.
-
     @dataclasses.dataclass
     class Events:
 
 The `Events` class is a configurable `dataclasses` object that simplifies
 configuring code execution and metadata collection during interactive computing
 sessions.
+There are a few note-worthy events that `IPython` identifies.
 
-        shell: IPython.InteractiveShell = dataclasses.field(default_factory=IPython.get_ipython)
         _events = "pre_execute pre_run_cell post_execute post_run_cell".split()
-        def register(self, shell=None, *, method=''):
-            shell = shell or self.shell
+        shell: IPython.InteractiveShell = dataclasses.field(default_factory=IPython.get_ipython)
 
-A DRY method to `"register/unregister" kernel and shell extension objects.
+        def register(self, shell=None, *, method=''):
+
+`Events.register`s the object as an `IPython` extension, it mimics the interface for the `load_ipython_extension` and `unload_ipython_extension` methods.
+
+shell = shell or self.shell
 
             for event in self._events:
                 callable = getattr(self, event, None)
                 callable and getattr(shell.events, F'{method}register')(event, callable)
             if isinstance(self, ast.NodeTransformer):
                 if method:
-                    self.shell.ast_transformers.pop(self.shell.ast_transformers.index(self))
-                else:
-                    self.shell.ast_transformers.append(self)
-            if hasattr(self, 'line_transformers'):
-                if method:
-                    self.shell.line_transformers = [
-                        x for x in self.shell.line_transformers if x not in self.line_transformers
-                    ]
-                else:
-                    self.shell.line_transformers.extend(self.line_transformers)
-            return self
+
+`ast.NodeTransformers` can be used to intercept parsed [Python] code and apply changes before compilations. If the `Events` object
+is an `ast.NodeTransfromer` then it is registered on the current shell.
+
+self.shell.ast_transformers.pop(self.shell.ast_transformers.index(self))
+else:
+self.shell.ast_transformers.append(self)
+
+return self
+
+<!--
 
         unregister = functools.partialmethod(register, method='un')
+
+-->
+
+[read-eval-print-loop]: #
+[perlisisms]: https://www.cs.yale.edu/homes/perlis-alan/quotes.html

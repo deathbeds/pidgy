@@ -1,0 +1,4 @@
+git+https://github.com/deathbeds/pidgy@edits
+pandas
+matplotlib
+sklearn
