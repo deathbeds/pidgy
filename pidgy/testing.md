@@ -45,18 +45,22 @@ The `Testing` class executes the test suite each time a cell is executed.
         def post_run_cell(self, result):
             globs, filename = self.shell.user_ns, F"In[{self.shell.last_execution_result.execution_count}]"
 
-            with ipython_compiler(self.shell):
-                definitions = [self.shell.user_ns[x] for x in getattr(self.shell.metadata, 'definitions', [])
-                    if x.startswith(self.function_pattern) or
-                    isinstance(self.shell.user_ns[x], type) and issubclass(self.shell.user_ns[x], unittest.TestCase)
-                ]
-                result = self.run(make_test_suite(result.info.raw_cell, *definitions, vars=self.shell.user_ns, name=filename))
+            if not (result.error_before_exec or result.error_in_exec):
+                with ipython_compiler(self.shell):
+                    definitions = [self.shell.user_ns[x] for x in getattr(self.shell.metadata, 'definitions', [])
+                        if x.startswith(self.function_pattern) or
+                        (isinstance(self.shell.user_ns[x], type)
+                         and issubclass(self.shell.user_ns[x], unittest.TestCase))
+                    ]
+                    result = self.run(make_test_suite(result.info.raw_cell, *definitions, vars=self.shell.user_ns, name=filename), result)
 
 
-        def run(self, suite: unittest.TestCase) -> unittest.TestResult:
+        def run(self, suite: unittest.TestCase, cell) -> unittest.TestResult:
             result = unittest.TestResult(); suite.run(result)
             if result.failures:
-                sys.stderr.writelines((str(result) + '\n' + '\n'.join(msg for text, msg in result.failures)).splitlines(True))
+                msg = '\n'.join(msg for text, msg in result.failures)
+                msg = re.sub(re.compile("<ipython-input-[0-9]+-\S+>"), F'In[{cell.execution_count}]', msg)
+                sys.stderr.writelines((str(result) + '\n' + msg).splitlines(True))
                 return result
 
     @contextlib.contextmanager
@@ -78,6 +82,8 @@ We'll have to replace how `doctest` compiles code with the `IPython` machinery.
         yield setattr(doctest, "compile", compiler)
         doctest.compile = compile
 
+<details><summary>Utilities for the testing module.</summary>
+    
     class NullOutputCheck(doctest.OutputChecker):
         def check_output(self, *e): return True
 
@@ -93,3 +99,5 @@ We'll have to replace how `doctest` compiles code with the `IPython` machinery.
 
     def unload_ipython_extension(shell):
         shell.testing.unregister()
+
+</details>
