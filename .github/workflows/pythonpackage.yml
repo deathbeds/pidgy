@@ -25,7 +25,7 @@ jobs:
           pip install wheel
       - name: Test with pytest
         run: |
-          pytest --nbval --doctest-modules pidgy/tests/test_pidgin_syntax.md.ipynb index.md.ipynb
+          pytest --nbval --doctest-modules -p no:warnings pidgy/tests/test_pidgin_syntax.md.ipynb index.md.ipynb
       - name: Build package
         run: |
           python setup.py sdist
