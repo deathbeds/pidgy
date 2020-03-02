@@ -7,4 +7,4 @@ repos:
     rev: d746cd7
     hooks:
       - id: prettier
-        args: [--prose-wrap=always]
+        args: [--prose-wrap=preserve]

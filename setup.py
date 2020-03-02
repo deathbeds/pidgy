@@ -30,7 +30,7 @@ setup_args = dict(
         "importnb",
         "IPython>7",
         "dataclasses",
-        "ruamel.yaml",
+        "pyyaml",
         "emoji",
         "htmlmin",
         "webcolors",

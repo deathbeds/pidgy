@@ -1,20 +1,20 @@
 with __import__("importnb").Notebook(lazy=True):
     try:
-        from . import reuse
-        from .reuse import pidgyLoader
+        from . import loader
+        from .loader import pidgyLoader
     except:
-        import reuse
-        from reuse import pidgyLoader
+        import loader
+        from loader import pidgyLoader
 
 with pidgyLoader(lazy=True):
     try:
-        from . import outputs
+        from . import weave
     except:
-        import outputs
+        import weave
 
 
 def load_ipython_extension(shell):
-    with reuse.pidgyLoader(lazy=True):
+    with loader.pidgyLoader(lazy=True):
         try:
             from .extension import load_ipython_extension, unload_ipython_extension
         except:
@@ -24,7 +24,7 @@ def load_ipython_extension(shell):
 
 
 def unload_ipython_extension(shell):
-    with reuse.pidgyLoader(lazy=True):
+    with loader.pidgyLoader(lazy=True):
         try:
             from .extension import load_ipython_extension, unload_ipython_extension
         except:

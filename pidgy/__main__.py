@@ -1,6 +1,6 @@
-from . import reuse
+from . import loader
 
-with reuse.pidgyLoader():
+with loader.pidgyLoader():
     from .readme import application
 
 application()
