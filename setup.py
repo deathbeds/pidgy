@@ -14,7 +14,9 @@ setup_args = dict(
     .rpartition(":")[0]
     .replace("-", ".")
     .replace("T", ".")
-    .replace(":", "."),
+    .replace(":", ".")
+    .rpartition(".")[0]
+    .rpartition(".")[0],
     author="deathbeds",
     author_email="tony.fast@gmail.com",
     description="Conventions for writing code in the notebook.",
