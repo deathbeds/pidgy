@@ -1,3 +1,5 @@
+![](pidgy.png)
+
 # `pidgy` literate `notebook` programming
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/deathbeds/pidgy/master?urlpath=lab)

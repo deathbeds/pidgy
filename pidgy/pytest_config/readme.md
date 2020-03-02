@@ -1,32 +1,29 @@
 # Literature as the test
 
     import pidgy, pytest, nbval, doctest, importnb.utils.pytest_importnb
-    if __name__ == '__main__':
-        import notebook, IPython as python
 
-Intertextuallity emerges when the primary target of a program is literature.
-Some of the literary content may include `"code"` `object`s that can be tested
-to qualify the veracity of these dual signifiers.
+Literate documents can be motivated by the need to test a concept. In a fact, a common
+use case of notebooks is that they interactively test units of thought. Often the thought
+of reusability is an after thought.
 
-`pidgy` documents are designed to be tested under multiple formal testing
-conditions. This is motivated by the `python`ic concept of documentation
-testing, or `doctest`ing, which in itself is a literate programming style. A
-`pidgy` document includes `doctest`, it verifies `notebook` `input`/`"output"`,
-and any formally defined tests are collected.
+`pidgy` documents are meant to be treated as test objects. In fact, the `pidgy` test suite
+executed by `pytest` through [Github Actions][actions] uses `pidgy` notebooks (ie. documents with the `".md" or ".md.ipynb"` extension). `pidgy` supplies its own `pytest` extensions, and it uses [`nbval`][nbval] and the `pytest`"--doctest-modules"`flag. With these conditions we discover pytest conventions, unitests, doctests, and options cell input output validated. Ultimately,`pidgy` documents may represent units of literate that double as formal test objects.
+
+The document accessed by the `"pytest11"` console_script and includes the extension with a pytest runner.
 
     class pidgyModule(importnb.utils.pytest_importnb.NotebookModule):
 
-`pidgy` provides a `pytest` plugin that works only on `".md.ipynb"` files. The
-`pidgy.kernel` works directly with `nbval`, install the python packkage and use
-the --nbval flag. `pidgy` uses features from `importnb` to support standard
-tests discovery, and `doctest` discovery across all strings. Still working on
-coverage. The `pidgyModule` permits standard test discovery in notebooks.
-Functions beginning with `"test_"` indicate test functions.
+The `pidgyModule` derives from an existing `pytest` extension that extracts formal tests from `notebook`s
+as if they were regular python files. We'll use the `pidgy.pidgyLoader` to load Markdown-forward documents
+as python objects.
 
         loader = pidgy.pidgyLoader
 
     class pidgyTests(importnb.utils.pytest_importnb.NotebookTests):
 
-if `pidgy` is install then importnb is.
+`pidgyTests` makes sure to include the alternative source formats to tangle to python executions.
 
         modules = pidgyModule,
+
+[nbval]: https://github.com/computationalmodelling/nbval/ "The pidgy kernel works directly with `nbval`."
+[actions]: https://github.com/deathbeds/pidgy/runs/478462971
