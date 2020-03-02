@@ -1,5 +1,5 @@
 from pathlib import Path
-import setuptools
+import setuptools, datetime
 
 name = "pidgy"
 
@@ -9,7 +9,12 @@ here = Path(__file__).parent
 
 setup_args = dict(
     name=name,
-    version="0.2.3",
+    version=datetime.datetime.now()
+    .isoformat()
+    .rpartition(":")[0]
+    .replace("-", ".")
+    .replace("T", ".")
+    .replace(":", "."),
     author="deathbeds",
     author_email="tony.fast@gmail.com",
     description="Conventions for writing code in the notebook.",
