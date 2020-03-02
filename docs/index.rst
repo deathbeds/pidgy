@@ -19,13 +19,14 @@ literature.
 
        def load(x, level=1):
            file = getattr(x, '__file__', x)
+           name = getattr(x, '__name__', x)
            object = demote(
                pathlib.Path(file).read_text()
                if file.endswith('.md')
                else nbconvert.get_exporter('markdown')(exclude_input=True).from_filename(file)[0], level) 
            if object.startswith('---'): fm, sep, object = object.lstrip('---').partition('---')
                
-           object = str.replace(object, '# ', F'# [📓]({pathlib.Path(file).relative_to(pathlib.Path().absolute())})', 1)
+           object = str.replace(object, '# ', F'# [<code>[source]</code>]({pathlib.Path(file).relative_to(pathlib.Path().absolute())})', 1)
            return object
        
 
@@ -45,8 +46,8 @@ approach to document.
 
 
 
-`📓 <docs/readme.md>`__\ Abstract
---------------------------------
+`[source] <docs/readme.md>`__\ Abstract
+---------------------------------------
 
 ``pidgy`` presents a fun and expressive interactive literate programming
 approach for computational literature, that is also a valid programs. A
@@ -128,8 +129,8 @@ Author
 
 
 
-`📓 <docs/best-practices.md>`__\ Best practices for literate programming
------------------------------------------------------------------------
+`[source] <docs/best-practices.md>`__\ Best practices for literate programming
+------------------------------------------------------------------------------
 
 The first obligation of the literate programmer, defined by `Donald
 Knuth <ie.%20the%20prophet%20of%20_%5BLiterate%20Programming%5D_>`__, is
@@ -182,8 +183,8 @@ List of best practices
 
 
 
-`📓 <docs/intro.md>`__\ Introduction to literate programs and computable essays.
--------------------------------------------------------------------------------
+`[source] <docs/intro.md>`__\ Introduction to literate programs and computable essays.
+--------------------------------------------------------------------------------------
 
    I believe that the time is ripe for significantly better
    documentation of programs, and that we can best achieve this by
@@ -282,10 +283,10 @@ were available
 
 
 
-.. _the-pidgy-extension-for-markdownliterate-programming:
+.. _sourcethe-pidgy-extension-for-markdownliterate-programming:
 
-`📓 <pidgy/extension.md>`__\ The ``pidgy`` extension for `Markdown <#>`__
-------------------------------------------------------------------------
+`[source] <pidgy/extension.md>`__\ The ``pidgy`` extension for `Markdown <#>`__
+-------------------------------------------------------------------------------
 
 The pidgy implementation is successful because of the existing shell
 configuration system provide by the ```IPython`` <#>`__.
@@ -375,8 +376,8 @@ isoluted components of the ``IPython.InteractiveShell``.
 
 
 
-`📓 <pidgy/events.md>`__\ The ``IPython`` step during a `Read-Eval-Print-Loop <#>`__ iteration.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+`[source] <pidgy/events.md>`__\ The ``IPython`` step during a `Read-Eval-Print-Loop <#>`__ iteration.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
    44. Sometimes I think the only universal in the computing field is
        the fetch-execute cycle. >
@@ -457,8 +458,8 @@ and apply changes before compilations. If the ``Events`` object is an
 
 
 
-`📓 <pidgy/tests/test_basic.md.ipynb>`__\ A description of the pidgy metalanguage
---------------------------------------------------------------------------------
+`[source] <pidgy/tests/test_basic.md.ipynb>`__\ A description of the pidgy metalanguage
+---------------------------------------------------------------------------------------
 
 When combined together, the pidgy extensions form the [Markdown]-forward
 [Literate Programming] environment.
@@ -488,8 +489,8 @@ Applications
 
 
 
-`📓 <pidgy/loader.ipynb>`__\ Importing and reusing ``pidgy`` literature
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+`[source] <pidgy/loader.ipynb>`__\ Importing and reusing ``pidgy`` literature
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A constraint consistent across most programming languages is that
 programs are executed line-by-line without any statements or
@@ -588,8 +589,8 @@ in this case we hold the enter the context, but do not leave it until
 
 
 
-`📓 <pidgy/pytest_config/readme.md>`__\ Literature as the test
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+`[source] <pidgy/pytest_config/readme.md>`__\ Literature as the test
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
@@ -638,8 +639,8 @@ tangle to python executions.
 
 
 
-`📓 <pidgy/readme.md>`__\ ``"readme.md"`` is a good name for a file.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+`[source] <pidgy/readme.md>`__\ ``"readme.md"`` is a good name for a file.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
    `Eat Me, Drink Me, Read
    Me. <https://medium.com/@NSomar/readme-md-history-and-components-a365aff07f10>`__
@@ -808,8 +809,8 @@ creating literature in computational notebooks.
 
 
 
-`📓 <pidgy/kernel.md>`__\ Configuring the ``pidgy`` shell and kernel architecture.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+`[source] <pidgy/kernel.md>`__\ Configuring the ``pidgy`` shell and kernel architecture.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 |image0|
 
@@ -972,8 +973,8 @@ Methods
 
 
 
-`📓 <pidgy/tangle.ipynb>`__\ Tangling [Markdown] to [Python]
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+`[source] <pidgy/tangle.ipynb>`__\ Tangling [Markdown] to [Python]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The ``tangle`` step is the keystone of ``pidgy`` by defining the
 heuristics that translate [Markdown] to [Python] execute blocks of
@@ -1240,8 +1241,8 @@ Utility functions for the tangle module
 
 
 
-`📓 <pidgy/extras.ipynb>`__\ Extra langauge features of ``pidgy``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`[source] <pidgy/extras.ipynb>`__\ Extra langauge features of ``pidgy``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ``pidgy`` experiments extra language features for python, using the same
 system that IPython uses to add features like line and cell magics.
@@ -1303,8 +1304,8 @@ Top level return and yield statements.
 
 
 
-`📓 <pidgy/weave.md>`__\ Weaving cells in pidgin programs
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+`[source] <pidgy/weave.md>`__\ Weaving cells in pidgin programs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. raw:: html
 
@@ -1376,8 +1377,8 @@ pidgin programming is an incremental approach to documents.
 
 
 
-`📓 <pidgy/testing.md>`__\ Interactive testing of literate programs
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+`[source] <pidgy/testing.md>`__\ Interactive testing of literate programs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Testing is something we added because of the application of notebooks as
 test units.
@@ -1511,8 +1512,8 @@ Utilities for the testing module.
 
 
 
-`📓 <pidgy/metadata.md>`__\ Capturing metadata during the interactive compute process
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+`[source] <pidgy/metadata.md>`__\ Capturing metadata during the interactive compute process
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To an organization, human compute time bears an important cost and
 programming represents a small part of that cycle.
@@ -1567,21 +1568,5 @@ shell.
 {{load(‘readme.md’)}}
 
 <!–
-
-
-.. parsed-literal::
-
-    [NbConvertApp] Converting notebook index.md.ipynb to rst
-
-
-
-::
-
-   # NBVAL_SKIP
-
-
-   if __name__ == '__main__' and not '__file__' in globals():
-       !jupyter nbconvert --to rst --stdout --TemplateExporter.exclude_input=True index.md.ipynb > docs/index.rst
-
 
 –>
