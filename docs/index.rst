@@ -1566,11 +1566,22 @@ shell.
 
 {{load(‘readme.md’)}}
 
-.. raw:: html
+<!–
 
-   <!--
-       
-       if __name__ == '__main__' and not '__file__' in globals():
-           !jupyter nbconvert --to rst --stdout --TemplateExporter.exclude_input=True index.md.ipynb > index.rst
 
-   -->
+.. parsed-literal::
+
+    [NbConvertApp] Converting notebook index.md.ipynb to rst
+
+
+
+::
+
+   # NBVAL_SKIP
+
+
+   if __name__ == '__main__' and not '__file__' in globals():
+       !jupyter nbconvert --to rst --stdout --TemplateExporter.exclude_input=True index.md.ipynb > docs/index.rst
+
+
+–>
