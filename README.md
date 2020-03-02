@@ -2,6 +2,10 @@
 
 # `pidgy` literate `notebook` programming
 
+```bash
+pip install pidgy
+```
+
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/deathbeds/pidgy/master?urlpath=lab)
 [![Documentation Status](https://readthedocs.org/projects/pidgin-notebook/badge/?version=latest)](https://pidgin-notebook.readthedocs.io/en/latest/?badge=latest)
 ![Python package](https://github.com/deathbeds/pidgy/workflows/Python%20package/badge.svg)
