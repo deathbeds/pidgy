@@ -13,12 +13,9 @@ The `notebook` format establishes a document formatting language and programming
 `jupyter` is propelled by a generalized interface for interactive computing that is language agnostic. Therefore, `jupyter`
 notebooks permits literate programming for many programming, but is restricted to the Markdown documentation language.
 
-In 2013, Fernando Perez, creator of IPython, wrote an essay about ["Literate computing" and computational reproducibility].
-He draws a distinction in [Literate Programming]
-
 ![](pidgy_literate_computing.jpeg)
 
-This work, the `pidgy` specification and implementation, demonstrates [Literate Computing] in the `jupyter` ecosystem. In `pidgy`, we identify [Documentation] as the overlapping features of [Literate Programming] and [Interactive Computing]. When working in `pidgy`, units of code and narrative co-develop using [Markdown] as the input language. The primary heuristic behind the [Markdown] to [Python] translation is that `"code"`` blocks are to be executed and the narrative is cast as a string
+This work, the `pidgy` specification and implementation, demonstrates [Literate Computing] in the `jupyter` ecosystem. Fernando Perez, creator of IPython, wrote an essay about ["Literate computing" and computational reproducibility] that identifies differences between in the act of authoring computational documents versus the intent of the resting document. Despite the differences, `pidgy` identifies [Documentation] as the overlapping features of [Literate Programming] & [Interactive Computing]. When working in `pidgy`, units of code and narrative co-develop using [Markdown] as the input language. The primary heuristic behind the [Markdown] to [Python] translation is that `"code"`` blocks are to be executed and the narrative is cast as a string
 and indented.
 
 ![](literate_computing_venn.jpeg)
