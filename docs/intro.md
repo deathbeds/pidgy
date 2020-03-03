@@ -2,88 +2,42 @@
 tangle_weave_diagram: https://user-images.githubusercontent.com/4236275/75093868-bdb12e80-557d-11ea-8989-efd6a733a8e0.png
 ---
 
-# Introduction to literate programs and computable essays.
+The rise of data-driven occupations has brought a specific skill in using interactive development envelopes to
+extract value from increasing volumes of information. `jupyter` and `python` have become popular
+tooling in academia and industry for testing and communicating computational thought. The `jupyter` `notebook`
+has become a popular documentation tool for data-driven inquiries. `notebook`s are useful for documentation because they establish two languages: [Markdown] for narrative and some programming language for computing.
 
-> I believe that the time is ripe for significantly better documentation of
-> programs, and that we can best achieve this by considering programs to be
-> works of literature.
->
-> > [Donald Knuth]
+![](tangle_weave_diagram.svg)
 
-<!--The introduction should be written as a stand alone essay.-->
-<!--
+The `notebook` format establishes a document formatting language and programming language, which are the basic requirements for a literate program. The original [Literate Programming] paper was published in 1979 as a prescient idea for composing documentation and programs as literature. The first web implementation specification Latex and pascal as the respective langaguges.
+`jupyter` is propelled by a generalized interface for interactive computing that is language agnostic. Therefore, `jupyter`
+notebooks permits literate programming for many programming, but is restricted to the Markdown documentation language.
 
-    try: from . import figures
-    except: ...
+In 2013, Fernando Perez, creator of IPython, wrote an essay about ["Literate computing" and computational reproducibility].
+He draws a distinction in [Literate Programming]
 
--->
+![](pidgy_literate_computing.jpeg)
 
-"[Literate programming]" is a pioneering paper published by [Donald Knuth] in 1979. It
-describes a multiobjective, multilingual style of programming that treats programs
-primarily as documentation. Literate programs have measures along two dimensions:
+This work, the `pidgy` specification and implementation, demonstrates [Literate Computing] in the `jupyter` ecosystem. In `pidgy`, we identify [Documentation] as the overlapping features of [Literate Programming] and [Interactive Computing]. When working in `pidgy`, units of code and narrative co-develop using [Markdown] as the input language. The primary heuristic behind the [Markdown] to [Python] translation is that `"code"`` blocks are to be executed and the narrative is cast as a string
+and indented.
 
-1. the literary qualities determined the document formatting language.
-2. the computational qualities determined by the programming language.
+![](literate_computing_venn.jpeg)
 
-The multilingual nature of literate program creates the opportunity
-for programmers and non-programmers to contribute to the same literature.
+`pidgy` is consistent with [Literate Programming] by defining tangle and weave steps. And, it places another focus on the veracity of the code in the document. It provides access to a formal testing methods that very the efficacy of code within the narrative. One mode of a testing is [`doctest`] (ie. documentation testing.) with is a convention for literate programming in documentation that can be verified by a test suite. Interactive testing formalizes conventional manual testing practices that drive data-driven insight.
 
-Literate programs accept `"code"` as an integral part of the narrative.
-`"code"` signs can be used in places where language lacks just as figures and equations are used in scientific literature.
-An advantage of `"code"` is that it can provide augmented representations
-of documents and their symbols that are tactile and interactive.
+In `pidgy` code has equity in the narrative. There are no boundaries between narrative and code which has been a long withstanding challenge of the notebook with strict boundaries between the documentation language and programming language. [Markdown] allows multiple for conventions for creating code objects in a narrative. `pidgy` tests all these code objects including the inline code. The use of code as an equitable symbol in the narrative reinforces the intertextuality of the literate and computation. They are enriched signifiers that provide an element of verifiability.
 
-![Tangle Weave Diagram]({{tangle_weave_diagram}})
+The year following the [Literate Programming] publications, Ted Nelson presented in the idea of transclusion in his paper titled [Literary Machines]. Transclusion is the ability include one document within another. `pidgy` introduces these abilities in the weaving steps using `jinja2` template syntax.
+Objects with the working interactive computing session can be represented by a resulting document.
 
-The literate program concurrently describes a program and literature.
-Within the document, natural language and the programming language interact
-through two different process:
+In `pidgy`, everything is [Markdown] including code cells in the notebook. As a result, each of the major cell types in the notebook is Markdown and the type indicative of whether it is on or off.
+Considering a single language specification across the entire notebooks makes it easier to consider the document as a whole.
 
-1. the tangle process that converts to the programming language.
-2. the weave process that converts to the document formatting language.
+As a result, if `pidgy` documents **restart and run all** then they may be used in multiple computational contexts including python modules, formal python tests, or command line applications.
 
-The original WEB literate programming implementation chose to tangle to Pascal and weave to Tex. `pidgy`'s modern take on literate programming tangles to [Python] and weaves to [Markdown], and they can be written in either [Markdown] files or `jupyter` `notebooks`.
+The `notebook` defines . Effectively, making the
+the languages independent of each other when potentially these languages could interact at varying degress. In software and scientific communities, programming languages are becoming components of natural language to communicate the relationship between code and its meaning. Currently, the `notebook` lacks ability to embed code as intertextual relationships directly in the narrative.
 
-[Pascal] was originally chosen for its widespread use throughout education,
-and the same can be said for the choice of `jupyter` `notebook`s used
-for education in many programming languages, but most commonly [Python].
-The preferred document language for the `notebook` is [Markdown]
-considering it is part of the notebook schema.
-CP4E
-The motivations made the natural choice for a [Markdown] and [Python]
-programming lanuage.
-Some advantages of this hybrid are that Python is idiomatic and
-sometimes the narrative may be explicitly executable.
+The `notebook` format is a data serialization format for literate programs, it is not specifically a document format, it is a generalized data structure that can be consumed by nearly all other programming languages. Software systems can reliably reuse the notebook schema to build static and interactive applications around computational thinking.
 
-[Literate Programming] is alive in places like [Org mode for Emacs], [RMarkdown], [Pweave], [Doctest], or [Literate Coffeescript].
-A conventional look at literate programming will place a focus on the final document. `pidgy` meanwhile places a focus on the interactive literate computing steps required achieve a quality document.
-
-Originally, `pidgy` was designed specifically for the `notebook` file format, but it failed a constraint
-of not being an existing file.
-Now `pidgy` is native for [Markdown] files, and valid testing units.
-It turns out the [Markdown] documents can provide
-a most compact representation of literate program,
-relative to a notebook. And it diffs better.
-
-Design constraints:
-
-- Use an existing file formats.
-- Minimal bespoke syntax.
-- Importable and testable
-
-A last take on this work is to affirm the reproducibly of enthusiasm when writing literate programs.
-
-The outcome of writing `pidgy` programs are readable, reusable, and reproducible
-documents.  
-`pidgy` natively supports importing markdown and notebooks as source code.
-
-Modern computing has different pieces of software infrastructure than were
-available
-
-[literate programming]: #
-[donald knuth]: #
-[literate coffeescript]: #
-[org mode for emacs]: #
-[jupyter notebooks]: #
-[rmarkdown]: #
-[doctest]: #
+["literate computing" and computational reproducibility]: http://blog.fperez.org/2013/04/literate-computing-and-computational.html
