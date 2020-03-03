@@ -1,7 +1,3 @@
----
-tangle_weave_diagram: https://user-images.githubusercontent.com/4236275/75093868-bdb12e80-557d-11ea-8989-efd6a733a8e0.png
----
-
 The rise of data-driven occupations has brought a specific skill in using interactive development envelopes to
 extract value from increasing volumes of information. `jupyter` and `python` have become popular
 tooling in academia and industry for testing and communicating computational thought. The `jupyter` `notebook`
