@@ -1,14 +1,9 @@
 ---
 ---
 
-# The `pidgy` extension for [Markdown][literate programming]
+# Configuring the [Markdown]-forward interactive shell in `IPython`
 
-The pidgy implementation is successful because of the existing
-shell configuration system provide by the [`IPython`].
-[`IPython`] is an industry standard for interactive python programming,
-and provided the substrate for the first [`IPython`] and later [`jupyter`]
-notebook implementations. This unit specifically configurations the
-high-level names we'll refer to when extending `pidgy` including the tangle and weave steps in literate computing.
+Open source software and practices shape the way `pidgy` is designed. It relies mainly on foundational tools from the scientific python computing community. The primary base for `pidgy` is the `IPython.InteractiveShell` that expose configurable features that customize the interactive computing experience. `IPython` is one of the heritage languages developed in into the award winning `jupyter` project.
 
 <!--excerpt-->
 <!--
@@ -23,12 +18,18 @@ high-level names we'll refer to when extending `pidgy` including the tangle and 
 
 -->
 
-There are two approaches to extending the `jupyter` experience:
+Each module in `pidgy` is an `IPython` configuration module that transforms independent aspects of [Literate Computing]. Our extension appends the following abilities:
 
-1. Write custom jupyter extensions in python and javascript. (eg.[lab extensions], `IPython` widgets)
-2. Use the existing configurable objects to modify behaviors in python. (eg. any jupyter kernel)
+- `loader` ensures the ability to important python, markdown, and notebook documents as reusable modules.
+- `tangle` defines the heuristics for translating [Markdown] to [Python].
+- `extras` introduces experimental syntaxes specific to `pidgy`.
+- `metadata` retains information as the shell and kernel interact with each other.
+- `testing` adds unittest and doctest capabilities to each cell execution.
+- `weave` defines a [Markdown] forward display system that templates and displays the input.
 
-`pidgy` takes the second approach as it builds a [Markdown]-forward REPL interface. Frequently, the `load_ipython_extension` method reappears frequently in this work. This function is used by `IPython` to recognize modifications made by modules to the interactive shell. The `"load_ext reload_ext unload_ext"` line magics used commonly by other tools creating features for interactive computing. Demonstrated in the following, the `load_ipython_extension` recieves the current `IPython.InteractiveShell` as an argument to be configured.
+<details><summary>What are the <code>load_ipython_extension and unload_ipython_extension</code> </summary>
+`load_ipython_extension and unload_ipython_extension` are used by `IPython` to trigger modifications to the interactive shell by a module. These methods are inovked by the `"load_ext reload_ext unload_ext"` line magics. Demonstrated in the following, the `load_ipython_extension` recieves the current `IPython.InteractiveShell` as an argument to be configured.
+</details>
 
     def load_ipython_extension(shell: IPython.InteractiveShell) -> None:
 
@@ -40,21 +41,14 @@ Currently, `pidgy` defines 6 extensions to produce the enhanced literate program
         )]
     ...
 
-- `loader` ensures the ability to important python, markdown, and notebook documents as reusable modules.
-- `tangle` defines the heuristics for translating [Markdown] to [Python].
-- `extras` introduces experimental syntaxes specific to `pidgy`.
-- `metadata` retains information as the shell and kernel interact with each other.
-- `testing` adds unittest and doctest capabilities to each cell execution.
-- `weave` defines a [Markdown] forward display system that templates and displays the input.
-
 <!--
 
     def unload_ipython_extension(shell):
 
 `unload_ipython_extension` unloads all the extensions loads in `load_ipython_extension`.
 
-        for x in (weave, testing, extras, metadata, tangle):
-            x.unload_ipython_extension(shell)
+        [x.unload_ipython_extension(shell) for x in (loader, weave, testing, extras, metadata, tangle)]
+
 
 -->
 
