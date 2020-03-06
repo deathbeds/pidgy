@@ -29,21 +29,18 @@ Currently, `pidgy` defines 6 extensions to produce the enhanced literate program
         ...
 
 - `loader` ensures the ability to important python, markdown, and notebook documents
+- `tangle` defines the heuristics for translating [Markdown] to [Python].
+- `extras` introduces experimental syntaxes specific to `pidgy`.
+- `metadata` retains information as the shell and kernel interact with each other.
+- `testing` adds unittest and doctest capabilities to each cell execution.
+- `weave` defines a [Markdown] forward display system that templates and displays the input.
 
         loader.load_ipython_extension(shell)
-
-* `tangle` defines the heuristics for translating [Markdown] to [Python].
-  tangle.load_ipython_extension(shell)
-* `extras` introduces experimental syntaxes specific to `pidgy`.
-  extras.load_ipython_extension(shell)
-* `metadata` retains information as the shell and kernel interact with each other.
-
+        tangle.load_ipython_extension(shell)
         metadata.load_ipython_extension(shell)
-
-- `testing` adds unittest and doctest capabilities to each cell execution.
-  testing.load_ipython_extension(shell)
-- `weave` defines a [Markdown] forward display system that templates and displays the input.
-  weave.load_ipython_extension(shell)
+        extras.load_ipython_extension(shell)
+        testing.load_ipython_extension(shell)
+        weave.load_ipython_extension(shell)
 
 
     def unload_ipython_extension(shell):
