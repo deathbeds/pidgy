@@ -20,7 +20,7 @@ The body `IPython_REPL` demonstrates that components of the interactive shell th
 
 shell = IPython.get_ipython()
 
-1. Read
+### Read
 
 `IPython` triggers events when the REPL begins.
 
@@ -29,32 +29,34 @@ shell = IPython.get_ipython()
 Once the `input` is read, `IPython` applies a series of strings transformations when the cell is transformed.
 The outcome of the transformation should be some that [Python] can `compile`.
 
-shell.transform_cell, [
-shell.input_transformer_manager.cleanup_transforms,
-shell.input_transformer_manager.line_transforms,
-shell.input_transformer_manager.token_transformers
-]
+        shell.transform_cell, [
+            shell.input_transformer_manager.cleanup_transforms,
+            shell.input_transformer_manager.line_transforms,
+            shell.input_transformer_manager.token_transformers
+        ]
 
 The [Python] code is translated into an [Abstract Syntax Tree].
 
-shell.compile.ast_parse
+        shell.compile.ast_parse
 
 Transformations to AST are applied by a series of transformers.
 
-shell.transform_ast, shell.ast_transformers
+        shell.transform_ast, shell.ast_transformers
 
-2.  Eval
+### Eval
 
     The `shell` run the body of the [Abstract Syntax Tree] and
 
         shell.run_ast_nodes, (
 
-3.  Print
-    formatstheanynodemeetingthecriteriafortheastnodeinteractivity.Typicallythelastexpressionisshown.  
-    ),shell.ast_node_interactivity,shell.display_formatter.format...
+### Print
+
+formats any node meeting the criteria for the ast node interactivity. Typically, the last expression is shown.
+
+        ),shell.ast_node_interactivity,shell.display_formatter.format...
 
 `IPython` triggers events when the REPL ends.
 
-shell.events.callbacks.get('post_run_cell'), shell.events.callbacks.get('post_execute')
+        shell.events.callbacks.get('post_run_cell'), shell.events.callbacks.get('post_execute')
 
-4. Loop
+### Loop
