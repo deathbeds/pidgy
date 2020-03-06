@@ -4,7 +4,7 @@ Interactive computing as a medium for modeling ideas as computational literature
 
 <!--
 
-    import pidgy, pathlib, nbconvert
+    import pidgy, pathlib, nbconvert, IPython
 
     load = lambda x, level=1: demote(pathlib.Path(x.__file__).read_text(), level)
     demote = lambda x, i: ''.join(
@@ -26,7 +26,7 @@ Interactive computing as a medium for modeling ideas as computational literature
 
 
     with pidgy.pidgyLoader():
-        import pidgy.pytest_config.readme, pidgy.tests.test_pidgin_syntax, pidgy.tests.test_basic
+        import pidgy.pytest_config.readme, pidgy.tests.test_pidgin_syntax, pidgy.tests.test_basic, pidgy.tests.test_repl
         import docs.readme
 
 -->
@@ -147,29 +147,16 @@ The intent of `pidgy` matured as different features began to take form. Original
 
 ## [<code>[source]</code>](pidgy/extension.md)Configuring the [Markdown]-forward interactive shell in `IPython`
 
-Open source software and practices shape the way `pidgy` is designed. It relies mainly on foundational tools from the scientific python computing community. The primary base for `pidgy` is the `IPython.InteractiveShell` that expose configurable features that customize the interactive computing experience. `IPython` is one of the heritage languages developed in into the award winning `jupyter` project.
+This sections registers and describes each of the extensions that `pidgy` applies to the interactive shell.
+The implementations of the extension are shaped by existing open source software and practices, and run throughout all aspects of the `pidgy` project. Specifically, this work relies on tooling from the scientific [Python] community.
 
 <!--excerpt-->
-<!--
 
-    import jupyter, notebook, IPython, mistune as markdown, IPython as python, ast, jinja2 as template, importnb, doctest, pathlib
-    with importnb.Notebook(lazy=True):
-        try: from . import loader, tangle, extras
-        except: import loader, tangle, extras
-    with loader.pidgyLoader(lazy=True):
-        try: from . import weave, testing, metadata
-        except: import weave, testing, metadata
+`IPython` is a keystone application in the scientific python computing system and is one of the heritage langauges that evolved in the award winning `jupyter` project. The `ipykernel and IPython` are configurable [Python] objects that prescribe how code is executed while interactive computing. The `pidgy` extension is a collection of individual documents that configure individual components of the [Read-Eval-Print-Loop] application.
 
--->
+    import IPython, importnb
 
-Each module in `pidgy` is an `IPython` configuration module that transforms independent aspects of [Literate Computing]. Our extension appends the following abilities:
-
-- `loader` ensures the ability to important python, markdown, and notebook documents as reusable modules.
-- `tangle` defines the heuristics for translating [Markdown] to [Python].
-- `extras` introduces experimental syntaxes specific to `pidgy`.
-- `metadata` retains information as the shell and kernel interact with each other.
-- `testing` adds unittest and doctest capabilities to each cell execution.
-- `weave` defines a [Markdown] forward display system that templates and displays the input.
+Each module in `pidgy` is an `IPython` configuration module that transforms independent aspects of [Literate Computing].
 
 <details><summary>What are the <code>load_ipython_extension and unload_ipython_extension</code> </summary>
 `load_ipython_extension and unload_ipython_extension` are used by `IPython` to trigger modifications to the interactive shell by a module. These methods are inovked by the `"load_ext reload_ext unload_ext"` line magics. Demonstrated in the following, the `load_ipython_extension` recieves the current `IPython.InteractiveShell` as an argument to be configured.
@@ -180,21 +167,44 @@ Each module in `pidgy` is an `IPython` configuration module that transforms inde
 The `extension` module aggregates the extensions that were designed for `pidgy`.
 Currently, `pidgy` defines 6 extensions to produce the enhanced literate programming experience. Each module configures isoluted components of the `IPython.InteractiveShell`.
 
-        [object.load_ipython_extension(shell) for object in (
-            loader, tangle, extras, metadata, testing, weave
-        )]
-    ...
+        with importnb.Notebook():
+            try: from . import loader, tangle, extras
+            except: import loader, tangle, extras
+        with loader.pidgyLoader():
+            try: from . import weave, testing, metadata
+            except: import weave, testing, metadata
+        ...
 
-<!--
+- `loader` ensures the ability to important python, markdown, and notebook documents
+
+        loader.load_ipython_extension(shell)
+
+* `tangle` defines the heuristics for translating [Markdown] to [Python].
+  tangle.load_ipython_extension(shell)
+* `extras` introduces experimental syntaxes specific to `pidgy`.
+  extras.load_ipython_extension(shell)
+* `metadata` retains information as the shell and kernel interact with each other.
+
+        metadata.load_ipython_extension(shell)
+
+- `testing` adds unittest and doctest capabilities to each cell execution.
+  testing.load_ipython_extension(shell)
+- `weave` defines a [Markdown] forward display system that templates and displays the input.
+  weave.load_ipython_extension(shell)
+
 
     def unload_ipython_extension(shell):
 
 `unload_ipython_extension` unloads all the extensions loads in `load_ipython_extension`.
 
+        with importnb.Notebook():
+            try: from . import loader, tangle, extras
+            except: import loader, tangle, extras
+        with loader.pidgyLoader():
+            try: from . import weave, testing, metadata
+            except: import weave, testing, metadata
+
         [x.unload_ipython_extension(shell) for x in (loader, weave, testing, extras, metadata, tangle)]
-
-
--->
 
 [markdown]: #
 [literate programming]: #
@@ -203,85 +213,292 @@ Currently, `pidgy` defines 6 extensions to produce the enhanced literate program
 [kernels]: https://github.com/jupyter/jupyter/wiki/Jupyter-kernels
 [`ipython` extensions]: https://ipython.readthedocs.io/en/stable/config/extensions/
 
-### [<code>[source]</code>](pidgy/events.md)The `IPython` step during a [Read-Eval-Print-Loop] iteration.
+## [<code>[source]</code>](pidgy/tests/test_repl.md)Stepping along `IPython`'s [Read-Eval-Print-Loop]
 
 > 44. Sometimes I think the only universal in the computing field is the fetch-execute cycle.
->     >
+>     > Alan Perlis - Perlisisms
 
-During a fetch-execute cycle in interactive computing, a [Read-Eval-Print-Loop] (ie. REPL) application transmits input to a compiler that returns a representative display for the source. `IPython` is [Read-Eval-Print-Loop] application for interactive python programming. It is a product of the scientific computing that
-required the ability interact with code to gain insight about information.
+The [Read-Eval-Print-Loop], a fetch-execute cycle, is a familiar interface to execute code and
+programs run by a compiler. The `IPython` project orginally began as an
+terminal application that was designed to improve the interactive experience
+when working [Python]. Eventually, `IPython` moved outside the terminal and
+into the browser with `IPython` notebooks that allowed authors that capture
+the process of their computational thinking supplemented with supporting
+hypermedia.
 
-`IPython` is superset of [Python], it provides custom syntaxes (eg. magics, system calls). `IPython` designed a configurable interface that can customize the input source before executing a command.
+    import pytest
+    @pytest.mark.skipif(not __import__('IPython').get_ipython(), "There is no IPython.")
+    def test_ipython_repl():
+
+The body `IPython_REPL` demonstrates that components of the interactive shell that may be configured.
+
+shell = IPython.get_ipython()
+
+1. Read
+
+`IPython` triggers events when the REPL begins.
+
+        shell.events.callbacks.get('pre_execute'), shell.events.callbacks.get('pre_run_cell')
+
+Once the `input` is read, `IPython` applies a series of strings transformations when the cell is transformed.
+The outcome of the transformation should be some that [Python] can `compile`.
+
+shell.transform_cell, [
+shell.input_transformer_manager.cleanup_transforms,
+shell.input_transformer_manager.line_transforms,
+shell.input_transformer_manager.token_transformers
+]
+
+The [Python] code is translated into an [Abstract Syntax Tree].
+
+shell.compile.ast_parse
+
+Transformations to AST are applied by a series of transformers.
+
+shell.transform_ast, shell.ast_transformers
+
+2.  Eval
+
+    The `shell` run the body of the [Abstract Syntax Tree] and
+
+        shell.run_ast_nodes, (
+
+3.  Print
+    formatstheanynodemeetingthecriteriafortheastnodeinteractivity.Typicallythelastexpressionisshown.  
+    ),shell.ast_node_interactivity,shell.display_formatter.format...
+
+`IPython` triggers events when the REPL ends.
+
+shell.events.callbacks.get('post_run_cell'), shell.events.callbacks.get('post_execute')
+
+4. Loop
+
+### [<code>[source]</code>](pidgy/tangle.ipynb)Tangling [Markdown] to [Python]
 
 <!--
 
-    import datetime, dataclasses, sys, IPython as python, IPython, nbconvert as export, collections, IPython as python, mistune as markdown, hashlib, functools, hashlib, jinja2.meta, ast
-    exporter, shell = export.exporters.TemplateExporter(), python.get_ipython()
-    modules = lambda:[x for x in sys.modules if '.' not in x and not str.startswith(x,'_')]
+    import IPython, typing, mistune as markdown, IPython, textwrap, ast, doctest, re
+    try: from . import base
+    except: import base
 
 -->
 
-    @dataclasses.dataclass
-    class Events:
+The `pidgyTransformer` using the existing `IPython.core.inputtransformer2.TransformerManager` to configure the [Markdown] language features, and it is the public API for manipulating `pidgy` strings. It implements the heuristics applied create predictable [Python] from [Markdown]
 
-The `Events` class is a configurable `dataclasses` object that simplifies
-configuring code execution and metadata collection during interactive computing
-sessions.
-There are a few note-worthy events that `IPython` identifies.
+    class pidgyTransformer(IPython.core.inputtransformer2.TransformerManager, base.Extension):
+        def pidgy_transform(self, cell: str) -> str:
+            return self.tokenizer.untokenize(self.tokenizer.parse(''.join(cell)))
 
-        _events = "pre_execute pre_run_cell post_execute post_run_cell".split()
-        shell: IPython.InteractiveShell = dataclasses.field(default_factory=IPython.get_ipython)
+        def transform_cell(self, cell: str) -> str:
+            return super().transform_cell(self.pidgy_transform(cell))
+        transform = transform_cell
 
-        def register(self, shell=None, *, method=''):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.tokenizer = Tokenizer()
 
-`Events.register`s the object as an `IPython` extension, it mimics the interface for the `load_ipython_extension` and `unload_ipython_extension` methods.
+        def pidgy_magic(self, *text):
+            return IPython.display.Code(self.pidgy_transform(''.join(text)), language='python')
 
-shell = shell or self.shell
+#### The translation process
 
-            for event in self._events:
-                callable = getattr(self, event, None)
-                callable and getattr(self.shell.events, F'{method}register')(event, callable)
-            if isinstance(self, ast.NodeTransformer):
-                if method:
+A convenient considerations when tangling pidgy documents is that we are only concerned with the relative placements of block code objects relative the `not "code"` blocks. `pidgy` customizes `mistune` language features for the purposes of a [Literate Computing] experience. The conversion to [Python] uses:
 
-`ast.NodeTransformers` can be used to intercept parsed [Python] code and apply changes before compilations. If the `Events` object
-is an `ast.NodeTransfromer` then it is registered on the current shell.
+1. lexical analysis to tokenize the markdown.
+2. the token are normalized to block `"code" and not "code"` objects.
+3. the tokens are translated to a string using heuristics that maintain line numbers between the representations.
 
-                    self.shell.ast_transformers.pop(self.shell.ast_transformers.index(self))
+##### Block level lexical analysis.
+
+The block lexer converts a string in tokens that represent blocks of markdown in a text. `pidgy` establishes a modified mistune block lexer that patches some needed features. It includes `doctest` syntax as a language feature. `doctest` are tested interactively, but they are consider `not "code"` objects in the [Markdown] to [Python] translation. `doctest` is added because it is a common documentation approach in [Python], it is an example of [Literate Programming].
+
+<details><summary><code>BlockLexer</code></summary>
+
+    class BlockLexer(markdown.BlockLexer):
+        class grammar_class(markdown.BlockGrammar):
+            doctest = doctest.DocTestParser._EXAMPLE_RE
+            block_code = re.compile(r'^((?!\s+>>>\s) {4}[^\n]+\n*)+')
+            default_rules = "newline hrule block_code fences heading nptable lheading block_quote list_block def_links def_footnotes table paragraph text".split()
+
+        def parse_doctest(self, m): self.tokens.append({'type': 'paragraph', 'text': m.group(0)})
+
+        def parse_fences(self, m):
+            if m.group(2): self.tokens.append({'type': 'paragraph', 'text': m.group(0)})
+            else: super().parse_fences(m)
+
+        def parse_hrule(self, m): self.tokens.append(dict(type='hrule', text=m.group(0)))
+
+        def parse_def_links(self, m):
+            super().parse_def_links(m)
+            self.tokens.append(dict(type='def_link', text=m.group(0)))
+
+        def parse(self, text: str, default_rules=None, normalize=True) -> typing.List[dict]:
+            if not self.depth: self.tokens = []
+            with self: tokens = super().parse(whiten(text), default_rules)
+            if normalize and not self.depth: tokens = normalizer(text, tokens)
+            return tokens
+
+        depth = 0
+        def __enter__(self): self.depth += 1
+        def __exit__(self, *e): self.depth -= 1
+
+<!--
+
+    for x in "default_rules footnote_rules list_rules".split():
+        setattr(BlockLexer, x, list(getattr(BlockLexer, x)))
+        getattr(BlockLexer, x).insert(getattr(BlockLexer, x).index('block_code'), 'doctest')
+        if 'block_html' in getattr(BlockLexer, x):
+            getattr(BlockLexer, x).pop(getattr(BlockLexer, x).index('block_html'))
+
+
+-->
+
+</details>
+
+##### Normalizing the tokens
+
+This extra step flattens the canonical mistune token representation to the collection of `"code" and not "code"` tokens.
+
+<details><summary><code>normalizer</code></summary>
+
+    def normalizer(text, tokens):
+        """Combine non-code tokens into contiguous blocks."""
+        compacted = []
+        while tokens:
+            token = tokens.pop(0)
+            if 'text' not in token: continue
+            else:
+                if not token['text'].strip(): continue
+                block, body = token['text'].splitlines(), ""
+            while block:
+                line = block.pop(0)
+                if line:
+                    before, line, text = text.partition(line)
+                    body += before + line
+            if token['type']=='code':
+                compacted.append({'type': 'code', 'lang': None, 'text': body})
+            else:
+                if compacted and compacted[-1]['type'] == 'paragraph':
+                    compacted[-1]['text'] += body
+                else: compacted.append({'type': 'paragraph', 'text': body})
+        if compacted and compacted[-1]['type'] == 'paragraph':
+            compacted[-1]['text'] += text
+        elif text.strip():
+            compacted.append({'type': 'paragraph', 'text': text})
+        # Deal with front matter
+        if compacted[0]['text'].startswith('---\n') and '\n---' in compacted[0]['text'][4:]:
+            token = compacted.pop(0)
+            front_matter, sep, paragraph = token['text'][4:].partition('---')
+            compacted = [{'type': 'front_matter', 'text': F"\n{front_matter}"},
+                        {'type': 'paragraph', 'text': paragraph}] + compacted
+        return compacted
+
+</details>
+
+##### Flattening the tokens to a [Python] string.
+
+The tokenizer controls the translation of markdown strings to python strings. Our major constraint is that the Markdown input should retain line numbers.
+
+<details><summary><code>Flatten</code></summary>
+
+    class Tokenizer(Normalizer):
+        def untokenize(self, tokens: τ.List[dict], source: str = """""", last: int =0) -> str:
+            INDENT = indent = base_indent(tokens) or 4
+            for i, token in enumerate(tokens):
+                object = token['text']
+                if token and token['type'] == 'code':
+                    if object.lstrip().startswith(FENCE):
+
+                        object = ''.join(''.join(object.partition(FENCE)[::2]).rpartition(FENCE)[::2])
+                        indent = INDENT + num_first_indent(object)
+                        object = textwrap.indent(object, INDENT*SPACE)
+
+                    if object.lstrip().startswith(MAGIC):  ...
+                    else: indent = num_last_indent(object)
+                elif token and token['type'] == 'front_matter':
+                    object = textwrap.indent(
+                        F"locals().update(__import__('yaml').safe_load({quote(object)}))\n", indent*SPACE)
+
+                elif not object: ...
                 else:
-                    self.shell.ast_transformers.append(self)
+                    object = textwrap.indent(object, SPACE*max(indent-num_first_indent(object), 0))
+                    for next in tokens[i+1:]:
+                        if next['type'] == 'code':
+                            next = num_first_indent(next['text'])
+                            break
+                    else: next = indent
+                    Δ = max(next-indent, 0)
 
-            return self
+                    if not Δ and source.rstrip().rstrip(CONTINUATION).endswith(COLON):
+                        Δ += 4
 
-<!--
+                    spaces = num_whitespace(object)
+                    "what if the spaces are ling enough"
+                    object = object[:spaces] + Δ*SPACE+ object[spaces:]
+                    if not source.rstrip().rstrip(CONTINUATION).endswith(QUOTES):
+                        object = quote(object)
+                source += object
 
-        unregister = functools.partialmethod(register, method='un')
+            # add a semicolon to the source if the last block is code.
+            for token in reversed(tokens):
+                if token['text'].strip():
+                    if token['type'] != 'code':
+                        source = source.rstrip() + SEMI
+                    break
 
--->
+            return source
 
-[read-eval-print-loop]: #
-[perlisisms]: https://www.cs.yale.edu/homes/perlis-alan/quotes.html
+    pidgy = pidgyTransformer()
 
-## [<code>[source]</code>](pidgy/tests/test_basic.md.ipynb)A description of the pidgy metalanguage
+</details>
 
-When combined together, the pidgy extensions form the [Markdown]-forward [Literate Programming]
-environment.
+<details><summary>Utility functions for the tangle module</summary>
 
-### Everything is markdown
+    def load_ipython_extension(shell):
+        shell.input_transformer_manager = shell.tangle = pidgyTransformer()
 
-#### Naming markdown blocks.
+    def unload_ipython_extension(shell):
+        shell.input_transformer_manager = __import__('IPython').core.inputtransformer2.TransformerManager()
 
-pidgy was designed so that [Python] objects can consume [Markdown].
-[Markdown] content can interact with code in a few ways.
+    (FENCE, CONTINUATION, SEMI, COLON, MAGIC, DOCTEST), QUOTES, SPACE ='``` \\ ; : %% >>>'.split(), ('"""', "'''"), ' '
+    WHITESPACE = re.compile('^\s*', re.MULTILINE)
 
-- named variables
-- doctests
+    def num_first_indent(text):
+        for str in text.splitlines():
+            if str.strip(): return len(str) - len(str.lstrip())
+        return 0
 
-#### Wrapping units of markdown.
+    def num_last_indent(text):
+        for str in reversed(text.splitlines()):
+            if str.strip(): return len(str) - len(str.lstrip())
+        return 0
 
-### Transclusing data into the display.
+    def base_indent(tokens):
+        "Look ahead for the base indent."
+        for i, token in enumerate(tokens):
+            if token['type'] == 'code':
+                code = token['text']
+                if code.lstrip().startswith(FENCE): continue
+                indent = num_first_indent(code)
+                break
+        else: indent = 4
+        return indent
 
-### Interactively testing code.
+    def quote(text):
+        """wrap text in `QUOTES`"""
+        if text.strip():
+            left, right = len(text)-len(text.lstrip()), len(text.rstrip())
+            quote = QUOTES[(text[right-1] in QUOTES[0]) or (QUOTES[0] in text)]
+            return text[:left] + quote + text[left:right] + quote + text[right:]
+        return text
+
+    def num_whitespace(text): return len(text) - len(text.lstrip())
+
+    def whiten(text: str) -> str:
+        """`whiten` strips empty lines because the `markdown.BlockLexer` doesn't like that."""
+        return '\n'.join(x.rstrip() for x in text.splitlines())
+
+</summary></details>
 
 ## Applications
 
@@ -294,19 +511,7 @@ If literate programs have the computational quality that they **restart
 and run all** the they should
 When `pidgy` programs have this quality they can <code>import</code> in [Python], they become importable essays or reports.
 
-<!--
-
-
-    __all__ = 'pidgyLoader',
-    import pidgy, sys, IPython, mistune as markdown, importnb, IPython as python
-    with importnb.Notebook(lazy=True):
-        try: from . import tangle, extras
-        except: import tangle, extras
-    if __name__ == '__main__':
-        shell = get_ipython()
-
-
--->
+    __all__ = 'pidgyLoader',; import pidgy, IPython, importnb
 
 The `pidgyLoader` customizes [Python]'s ability to discover
 [Markdown] and `pidgy` [Notebook]s have the composite `".md.ipynb"` extension.
@@ -316,47 +521,57 @@ The `pidgyLoader` customizes [Python]'s ability to discover
 `sys.meta_path and sys.path_hooks`
 
     class pidgyLoader(importnb.Notebook):
-        extensions = ".md .md.ipynb".split()
+        extensions = ".py.md .md .md.ipynb".split()
 
 `get_data` determines how a file is decoding from disk. We use it to make an escape hatch for markdown files otherwise we are importing a notebook.
 
     def get_data(self, path):
-        if self.path.endswith('.md'):
-            return self.code(self.decode())
+        if self.path.endswith('.md'): return self.code(self.decode())
         return super(pidgyLoader, self).get_data(path)
 
 The `code` method tangles the [Markdown] to [Python] before compiling to an [Abstract Syntax Tree].
 
     def code(self, str):
-        with importnb.Notebook(lazy=True):
-            try: from . import tangle
-            except: import tangle
-        return ''.join(tangle.pidgy.transform_cell(str))
+        with importnb.Notebook():
+            try: from . import tangle, extras
+            except: import tangle, extras
+        return ''.join(extras.demojize(''.join(tangle.pidgyTransformer().transform_cell(str))))
 
 The `visit` method allows custom [Abstract Syntax Tree] transformations to be applied.
 
-        def visit(self, node):
-            with importnb.Notebook():
-                try: from . import tangle
-                except: import tangle
-            return tangle.ReturnYield().visit(node)
+    def visit(self, node):
+        with importnb.Notebook():
+            try: from . import extras
+            except: import extras
+        return extras.ExtraSyntax().visit(node)
 
 Attach these methods to the `pidgy` loader.
 
     pidgyLoader.code, pidgyLoader.visit = code, visit
     pidgyLoader.get_source = pidgyLoader.get_data = get_data
 
+Collect all of the functions defined into the `pidgyLoader`.
+
 The `pidgy` `loader` configures how [Python] discovers modules when they are
 imported.
 Usually the loader is used as a content manager and in this case we hold the enter
 the context, but do not leave it until `unload_ipython_extension` is executed.
 
-    def load_ipython_extension(shell):
+-->
+
+    def load_ipython_extension(shell, loader=pidgyLoader):
         setattr(shell, 'loaders', getattr(shell, 'loaders', {}))
-        shell.loaders[pidgyLoader] = pidgyLoader(position=-1, lazy=True)
+        shell.loaders[pidgyLoader] = loader(position=-1)
         shell.loaders[pidgyLoader].__enter__()
 
 <!--
+
+
+<!--
+
+    def unload_ipython_extension(shell, loader=pidgyLoader):
+        loader = shell.loaders.pop(pidgyLoader)
+        loader and loader.__exit__(None, None, None)
 
 -->
 
@@ -643,243 +858,6 @@ the inspector and the source code displayed on another part of the screen.
 
 ## Methods
 
-### [<code>[source]</code>](pidgy/tangle.ipynb)Tangling [Markdown] to [Python]
-
-The `tangle` step is the keystone of `pidgy` by defining the
-heuristics that translate [Markdown] to [Python] execute
-blocks of narrative as interactive code, and entire programs.
-A key constraint in the translation is a line-for-line mapping
-between representations, with this we'll benefit from reusable
-tracebacks for [Markdown] source.
-
-There are many ways to translate [Markdown] to other formats specifically with tools
-like `"pandoc"`. The formats are document formatting language, and not programs.
-The [Markdown] to [Python] translation adds a computable dimension to the document.
-`pidgy` is one implementation and it should be possible to apply to different heuristics to other
-programming languages.
-
-<!--
-
-    import IPython, typing as τ, mistune as markdown, IPython, importnb as _import_, textwrap, ast, doctest, typing, re, dataclasses
-    if __name__ == '__main__':
-        import pidgy
-        shell = IPython.get_ipython()
-
--->
-
-The `pidgyTransformer` manages the high level API the `IPython.InteractiveShell` interacts with for `pidgy`.
-The `IPython.core.inputtransformer2.TransformerManager` is a configurable class for modifying
-input source to before it passes to the compiler. It is the object that introduces `IPython`s line
-and cell magics.
-
-    >>> assert isinstance(shell.input_transformer_manager, IPython.core.inputtransformer2.TransformerManager)
-
-This configurable class has three different flavors of transformations.
-
-- `shell.input_transformer_manager.cleanup_transforms`
-- `shell.input_transformer_manager.line_transforms`
-- `shell.input_transformer_manager.token_transformers`
-
-
-    class pidgyTransformer(IPython.core.inputtransformer2.TransformerManager):
-        def pidgy_transform(self, cell: str) -> str:
-            return self.tokenizer.untokenize(self.tokenizer.parse(''.join(cell)))
-
-        def transform_cell(self, cell):
-            return super().transform_cell(self.pidgy_transform(cell))
-
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            self.tokenizer = Tokenizer()
-
-        def pidgy_magic(self, *text):
-            return IPython.display.Code(self.pidgy_transform(''.join(text)), language='python')
-
-#### Block level lexical analysis.
-
-Translating [Markdown] to [Python] rely only on block level objects in the [Markdown]
-grammar. The `BlockLexer` is a modified analyzer that adds logic to include `doctest`
-blocks in the grammar.
-
-    class BlockLexer(markdown.BlockLexer):
-        class grammar_class(markdown.BlockGrammar):
-            doctest = doctest.DocTestParser._EXAMPLE_RE
-            block_code = re.compile(r'^((?!\s+>>>\s) {4}[^\n]+\n*)+')
-            default_rules = "newline hrule block_code fences heading nptable lheading block_quote list_block def_links def_footnotes table paragraph text".split()
-
-        def parse_doctest(self, m): self.tokens.append({'type': 'paragraph', 'text': m.group(0)})
-
-        def parse_fences(self, m):
-            if m.group(2): self.tokens.append({'type': 'paragraph', 'text': m.group(0)})
-            else: super().parse_fences(m)
-
-        def parse_hrule(self, m): self.tokens.append(dict(type='hrule', text=m.group(0)))
-
-        def parse_def_links(self, m):
-            super().parse_def_links(m)
-            self.tokens.append(dict(type='def_link', text=m.group(0)))
-
-        def parse(self, text: str, default_rules=None, normalize=True) -> typing.List[dict]:
-            if not self.depth: self.tokens = []
-            with self: tokens = super().parse(whiten(text), default_rules)
-            if normalize and not self.depth: tokens = self.normalize(text, tokens)
-            return tokens
-
-        depth = 0
-        def __enter__(self): self.depth += 1
-        def __exit__(self, *e): self.depth -= 1
-
-The `doctest` token is identified before the block code.
-
-<!--
-
-    for x in "default_rules footnote_rules list_rules".split():
-        setattr(BlockLexer, x, list(getattr(BlockLexer, x)))
-        getattr(BlockLexer, x).insert(getattr(BlockLexer, x).index('block_code'), 'doctest')
-        if 'block_html' in getattr(BlockLexer, x):
-            getattr(BlockLexer, x).pop(getattr(BlockLexer, x).index('block_html'))
-
-
--->
-
-Our translation creates tokens specific to each [Markdown] rule,
-for code it is only necessary to identify code and paragraph tokens.
-The normalizer compacts tokens into the necessary tokens.
-
-    class Normalizer(BlockLexer):
-        def normalize(self, text, tokens):
-            """Combine non-code tokens into contiguous blocks."""
-            compacted = []
-            while tokens:
-                token = tokens.pop(0)
-                if 'text' not in token: continue
-                else:
-                    if not token['text'].strip(): continue
-                    block, body = token['text'].splitlines(), ""
-                while block:
-                    line = block.pop(0)
-                    if line:
-                        before, line, text = text.partition(line)
-                        body += before + line
-                if token['type']=='code':
-                    compacted.append({'type': 'code', 'lang': None, 'text': body})
-                else:
-                    if compacted and compacted[-1]['type'] == 'paragraph':
-                        compacted[-1]['text'] += body
-                    else: compacted.append({'type': 'paragraph', 'text': body})
-            if compacted and compacted[-1]['type'] == 'paragraph':
-                compacted[-1]['text'] += text
-            elif text.strip():
-                compacted.append({'type': 'paragraph', 'text': text})
-            # Deal with front matter
-            if compacted[0]['text'].startswith('---\n') and '\n---' in compacted[0]['text'][4:]:
-                token = compacted.pop(0)
-                front_matter, sep, paragraph = token['text'][4:].partition('---')
-                compacted = [{'type': 'front_matter', 'text': F"\n{front_matter}"},
-                            {'type': 'paragraph', 'text': paragraph}] + compacted
-            return compacted
-
-#### Tokenizer logic
-
-The tokenizer controls the translation of markdown strings to python strings. Our major constraint is that the Markdown input should retain line numbers.
-
-    class Tokenizer(Normalizer):
-        def untokenize(self, tokens: τ.List[dict], source: str = """""", last: int =0) -> str:
-            INDENT = indent = base_indent(tokens) or 4
-            for i, token in enumerate(tokens):
-                object = token['text']
-                if token and token['type'] == 'code':
-                    if object.lstrip().startswith(FENCE):
-
-                        object = ''.join(''.join(object.partition(FENCE)[::2]).rpartition(FENCE)[::2])
-                        indent = INDENT + num_first_indent(object)
-                        object = textwrap.indent(object, INDENT*SPACE)
-
-                    if object.lstrip().startswith(MAGIC):  ...
-                    else: indent = num_last_indent(object)
-                elif token and token['type'] == 'front_matter':
-                    object = textwrap.indent(
-                        F"locals().update(__import__('yaml').safe_load({quote(object)}))\n", indent*SPACE)
-
-                elif not object: ...
-                else:
-                    object = textwrap.indent(object, SPACE*max(indent-num_first_indent(object), 0))
-                    for next in tokens[i+1:]:
-                        if next['type'] == 'code':
-                            next = num_first_indent(next['text'])
-                            break
-                    else: next = indent
-                    Δ = max(next-indent, 0)
-
-                    if not Δ and source.rstrip().rstrip(CONTINUATION).endswith(COLON):
-                        Δ += 4
-
-                    spaces = num_whitespace(object)
-                    "what if the spaces are ling enough"
-                    object = object[:spaces] + Δ*SPACE+ object[spaces:]
-                    if not source.rstrip().rstrip(CONTINUATION).endswith(QUOTES):
-                        object = quote(object)
-                source += object
-
-            # add a semicolon to the source if the last block is code.
-            for token in reversed(tokens):
-                if token['text'].strip():
-                    if token['type'] != 'code':
-                        source = source.rstrip() + SEMI
-                    break
-
-            return source
-
-    pidgy = pidgyTransformer()
-
-<details><summary>Utility functions for the tangle module</summary>
-
-    def load_ipython_extension(shell):
-        shell.input_transformer_manager = shell.tangle = pidgyTransformer()
-
-    def unload_ipython_extension(shell):
-        shell.input_transformer_manager = __import__('IPython').core.inputtransformer2.TransformerManager()
-
-    (FENCE, CONTINUATION, SEMI, COLON, MAGIC, DOCTEST), QUOTES, SPACE ='``` \\ ; : %% >>>'.split(), ('"""', "'''"), ' '
-    WHITESPACE = re.compile('^\s*', re.MULTILINE)
-
-    def num_first_indent(text):
-        for str in text.splitlines():
-            if str.strip(): return len(str) - len(str.lstrip())
-        return 0
-
-    def num_last_indent(text):
-        for str in reversed(text.splitlines()):
-            if str.strip(): return len(str) - len(str.lstrip())
-        return 0
-
-    def base_indent(tokens):
-        "Look ahead for the base indent."
-        for i, token in enumerate(tokens):
-            if token['type'] == 'code':
-                code = token['text']
-                if code.lstrip().startswith(FENCE): continue
-                indent = num_first_indent(code)
-                break
-        else: indent = 4
-        return indent
-
-    def quote(text):
-        """wrap text in `QUOTES`"""
-        if text.strip():
-            left, right = len(text)-len(text.lstrip()), len(text.rstrip())
-            quote = QUOTES[(text[right-1] in QUOTES[0]) or (QUOTES[0] in text)]
-            return text[:left] + quote + text[left:right] + quote + text[right:]
-        return text
-
-    def num_whitespace(text): return len(text) - len(text.lstrip())
-
-    def whiten(text: str) -> str:
-        """`whiten` strips empty lines because the `markdown.BlockLexer` doesn't like that."""
-        return '\n'.join(x.rstrip() for x in text.splitlines())
-
-</summary></details>
-
 #### [<code>[source]</code>](pidgy/extras.ipynb)Extra langauge features of `pidgy`
 
 `pidgy` experiments extra language features for python, using the same system
@@ -1146,5 +1124,16 @@ It appends the metadata atrribute to the shell.
 {{load('readme.md')}}
 
 <!--
+
+    [NbConvertApp] Converting notebook index.md.ipynb to markdown
+
+
+
+    # NBVAL_SKIP
+
+
+    if __name__ == '__main__' and not '__file__' in globals():
+        !jupyter nbconvert --to markdown --stdout --TemplateExporter.exclude_input=True index.md.ipynb > docs/index.md
+
 
 -->
