@@ -213,6 +213,8 @@ Currently, `pidgy` defines 6 extensions to produce the enhanced literate program
 [kernels]: https://github.com/jupyter/jupyter/wiki/Jupyter-kernels
 [`ipython` extensions]: https://ipython.readthedocs.io/en/stable/config/extensions/
 
+![](pidgyrepl.jpg)
+
 ## [<code>[source]</code>](pidgy/tests/test_repl.md)Stepping along `IPython`'s [Read-Eval-Print-Loop]
 
 > 44. Sometimes I think the only universal in the computing field is the fetch-execute cycle.
