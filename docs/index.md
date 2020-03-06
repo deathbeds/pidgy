@@ -25,7 +25,7 @@ Interactive computing as a medium for modeling ideas as computational literature
 
 
 
-    with pidgy.pidgyLoader():
+    with pidgy.pidgyLoader(lazy=True):
         import pidgy.pytest_config.readme, pidgy.tests.test_pidgin_syntax, pidgy.tests.test_basic, pidgy.tests.test_repl
         import docs.readme
 
@@ -1128,16 +1128,3 @@ It appends the metadata atrribute to the shell.
 {{load('readme.md')}}
 
 <!--
-
-    [NbConvertApp] Converting notebook index.md.ipynb to markdown
-
-
-
-    # NBVAL_SKIP
-
-
-    if __name__ == '__main__' and not '__file__' in globals():
-        !jupyter nbconvert --to markdown --stdout --TemplateExporter.exclude_input=True index.md.ipynb > docs/index.md
-
-
--->
