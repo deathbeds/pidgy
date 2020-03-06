@@ -1,7 +1,7 @@
 # Stepping along `IPython`'s [Read-Eval-Print-Loop]
 
 > 44. Sometimes I think the only universal in the computing field is the fetch-execute cycle.
->     > Alan Perlis - Perlisisms
+>     _Alan Perlis - Perlisisms_
 
 The [Read-Eval-Print-Loop], a fetch-execute cycle, is a familiar interface to execute code and
 programs run by a compiler. The `IPython` project orginally began as an
