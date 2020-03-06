@@ -21,26 +21,26 @@ Make an instance of a `fastapi` application.
 
 `upper` returns the uppercase value of the input string.
 
-return str.upper()
+        return str.upper()
 
-@click.group()
-def cli(): ...
+    @click.group()
+    def cli(): ...
 
-@cli.command()
-def schema():
+    @cli.command()
+    def schema():
 
 Display the `schema` for our simple application.
 
-click.echo(highlight_terminal(**import**('yaml').safe_dump(app.openapi(), default_flow_style=False)))
+        click.echo(highlight_terminal(**import**('yaml').safe_dump(app.openapi(), default_flow_style=False)))
 
-@cli.command()
-def serve():
+    @cli.command()
+    def serve():
 
 Serve the simple `fastapi` application.
 
-**import**('uvicorn').run(app, host="0.0.0.0", port=8000)
-
-    __name__ == "__main__" and cli()
+        import uvicorn
+        uvicorn.run(app, host="0.0.0.0", port=8000)
+        __name__ == "__main__" and cli()
 
     def _test_app():
         __import__('nest_asyncio').apply()
