@@ -18,7 +18,7 @@ hypermedia.
 
 The body `IPython_REPL` demonstrates that components of the interactive shell that may be configured.
 
-shell = IPython.get_ipython()
+        shell = IPython.get_ipython()
 
 ### Read
 
@@ -45,7 +45,7 @@ Transformations to AST are applied by a series of transformers.
 
 ### Eval
 
-    The `shell` run the body of the [Abstract Syntax Tree] and
+The `shell` run the body of the [Abstract Syntax Tree] and
 
         shell.run_ast_nodes, (
 
@@ -53,7 +53,7 @@ Transformations to AST are applied by a series of transformers.
 
 formats any node meeting the criteria for the ast node interactivity. Typically, the last expression is shown.
 
-        ),shell.ast_node_interactivity,shell.display_formatter.format...
+        ),shell.ast_node_interactivity, shell.display_formatter.format
 
 `IPython` triggers events when the REPL ends.
 
