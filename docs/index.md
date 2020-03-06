@@ -138,6 +138,8 @@ Throughout this work we'll design a purpose built interactive literate computing
 
 The intent of `pidgy` matured as different features began to take form. Originally, `pidgy` was gungho about [Notebooks] being the primary interface for Literate Programming. [Notebooks] provide a metastable serialization of the Literate Programming containing both the literate input and the woven hypermedia. And they still serve valid applications for conditions where the input and output are highly dependent on each other. There are other conditions where we desire to write programmatic literature that is reliably reproducible over a longer timeline. [Markdown] written in `pidgy` seems to provide a compact input for pythonic literate programs with [Markdown] first. If a program is reproducible, then it is input of its outputs.
 
+![](degrees_of_freedom.jpg)
+
 ["literate computing" and computational reproducibility]: http://blog.fperez.org/2013/04/literate-computing-and-computational.html
 [tools for the life cycle of a computational idea]: https://sinews.siam.org/Details-Page/jupyter-tools-for-the-life-cycle-of-a-computational-idea
 [tex]: #
@@ -176,21 +178,18 @@ Currently, `pidgy` defines 6 extensions to produce the enhanced literate program
         ...
 
 - `loader` ensures the ability to important python, markdown, and notebook documents
+- `tangle` defines the heuristics for translating [Markdown] to [Python].
+- `extras` introduces experimental syntaxes specific to `pidgy`.
+- `metadata` retains information as the shell and kernel interact with each other.
+- `testing` adds unittest and doctest capabilities to each cell execution.
+- `weave` defines a [Markdown] forward display system that templates and displays the input.
 
         loader.load_ipython_extension(shell)
-
-* `tangle` defines the heuristics for translating [Markdown] to [Python].
-  tangle.load_ipython_extension(shell)
-* `extras` introduces experimental syntaxes specific to `pidgy`.
-  extras.load_ipython_extension(shell)
-* `metadata` retains information as the shell and kernel interact with each other.
-
+        tangle.load_ipython_extension(shell)
         metadata.load_ipython_extension(shell)
-
-- `testing` adds unittest and doctest capabilities to each cell execution.
-  testing.load_ipython_extension(shell)
-- `weave` defines a [Markdown] forward display system that templates and displays the input.
-  weave.load_ipython_extension(shell)
+        extras.load_ipython_extension(shell)
+        testing.load_ipython_extension(shell)
+        weave.load_ipython_extension(shell)
 
 
     def unload_ipython_extension(shell):
@@ -217,8 +216,9 @@ Currently, `pidgy` defines 6 extensions to produce the enhanced literate program
 
 ## [<code>[source]</code>](pidgy/tests/test_repl.md)Stepping along `IPython`'s [Read-Eval-Print-Loop]
 
-> 44. Sometimes I think the only universal in the computing field is the fetch-execute cycle.
->     > Alan Perlis - Perlisisms
+> Sometimes I think the only universal in the computing field is the fetch-execute cycle.
+>
+> > _Alan Perlis - Perlisisms_
 
 The [Read-Eval-Print-Loop], a fetch-execute cycle, is a familiar interface to execute code and
 programs run by a compiler. The `IPython` project orginally began as an
@@ -234,9 +234,9 @@ hypermedia.
 
 The body `IPython_REPL` demonstrates that components of the interactive shell that may be configured.
 
-shell = IPython.get_ipython()
+        shell = IPython.get_ipython()
 
-1. Read
+#### Read
 
 `IPython` triggers events when the REPL begins.
 
@@ -245,35 +245,37 @@ shell = IPython.get_ipython()
 Once the `input` is read, `IPython` applies a series of strings transformations when the cell is transformed.
 The outcome of the transformation should be some that [Python] can `compile`.
 
-shell.transform_cell, [
-shell.input_transformer_manager.cleanup_transforms,
-shell.input_transformer_manager.line_transforms,
-shell.input_transformer_manager.token_transformers
-]
+        shell.transform_cell, [
+            shell.input_transformer_manager.cleanup_transforms,
+            shell.input_transformer_manager.line_transforms,
+            shell.input_transformer_manager.token_transformers
+        ]
 
 The [Python] code is translated into an [Abstract Syntax Tree].
 
-shell.compile.ast_parse
+        shell.compile.ast_parse
 
 Transformations to AST are applied by a series of transformers.
 
-shell.transform_ast, shell.ast_transformers
+        shell.transform_ast, shell.ast_transformers
 
-2.  Eval
+#### Eval
 
-    The `shell` run the body of the [Abstract Syntax Tree] and
+The `shell` run the body of the [Abstract Syntax Tree] and
 
         shell.run_ast_nodes, (
 
-3.  Print
-    formatstheanynodemeetingthecriteriafortheastnodeinteractivity.Typicallythelastexpressionisshown.  
-    ),shell.ast_node_interactivity,shell.display_formatter.format...
+#### Print
+
+formats any node meeting the criteria for the ast node interactivity. Typically, the last expression is shown.
+
+        ),shell.ast_node_interactivity, shell.display_formatter.format
 
 `IPython` triggers events when the REPL ends.
 
-shell.events.callbacks.get('post_run_cell'), shell.events.callbacks.get('post_execute')
+        shell.events.callbacks.get('post_run_cell'), shell.events.callbacks.get('post_execute')
 
-4. Loop
+#### Loop
 
 ### [<code>[source]</code>](pidgy/tangle.ipynb)Tangling [Markdown] to [Python]
 
