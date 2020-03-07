@@ -3,12 +3,9 @@
 <!--
 
     import dataclasses, IPython, nbconvert as convert, jinja2
+    try: from . import base, util
+    except: import base, util
     exporter = convert.exporters.TemplateExporter()
-    try:
-        from . import base, util
-    except:
-        import base, util
-
 
 -->
 
@@ -45,7 +42,6 @@ pidgin programming is an incremental approach to documents.
     def load_ipython_extension(shell):
         shell.weave = Weave(shell=shell)
         shell.weave.register()
-
 
 
     def unload_ipython_extension(shell):
