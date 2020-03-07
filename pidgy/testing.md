@@ -47,7 +47,7 @@ The `Testing` class executes the test suite each time a cell is executed.
 
             if not (result.error_before_exec or result.error_in_exec):
                 with ipython_compiler(self.shell):
-                    definitions = [self.shell.user_ns[x] for x in getattr(self.shell.metadata, 'definitions', [])
+                    definitions = [self.shell.user_ns[x] for x in getattr(self.shell.measure, 'definitions', [])
                         if x.startswith(self.function_pattern) or
                         (isinstance(self.shell.user_ns[x], type)
                          and issubclass(self.shell.user_ns[x], unittest.TestCase))

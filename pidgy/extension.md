@@ -24,8 +24,8 @@ Currently, `pidgy` defines 6 extensions to produce the enhanced literate program
             try: from . import loader, tangle, extras
             except: import loader, tangle, extras
         with loader.pidgyLoader():
-            try: from . import weave, testing, metadata
-            except: import weave, testing, metadata
+            try: from . import weave, testing, measure
+            except: import weave, testing, measure
         ...
 
 - `loader` ensures the ability to important python, markdown, and notebook documents
@@ -37,7 +37,7 @@ Currently, `pidgy` defines 6 extensions to produce the enhanced literate program
 
         loader.load_ipython_extension(shell)
         tangle.load_ipython_extension(shell)
-        metadata.load_ipython_extension(shell)
+        measure.load_ipython_extension(shell)
         extras.load_ipython_extension(shell)
         testing.load_ipython_extension(shell)
         weave.load_ipython_extension(shell)

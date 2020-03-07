@@ -47,6 +47,7 @@ Configure a native `pidgy` `IPython.InteractiveShell`
         tangle = ipykernel.zmqshell.ZMQInteractiveShell.input_transformer_manager
         extras = traitlets.Any(allow_none=True)
         testing = traitlets.Any(allow_none=True)
+        measure = traitlets.Any(allow_none=True)
         enable_html_pager = traitlets.Bool(True)
 
 `pidgyInteractiveShell.enable_html_pager` is necessary to see rich displays in
