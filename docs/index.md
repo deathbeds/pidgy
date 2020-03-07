@@ -173,8 +173,8 @@ Currently, `pidgy` defines 6 extensions to produce the enhanced literate program
             try: from . import loader, tangle, extras
             except: import loader, tangle, extras
         with loader.pidgyLoader():
-            try: from . import weave, testing, metadata
-            except: import weave, testing, metadata
+            try: from . import weave, testing, measure
+            except: import weave, testing, measure
         ...
 
 - `loader` ensures the ability to important python, markdown, and notebook documents
@@ -186,7 +186,7 @@ Currently, `pidgy` defines 6 extensions to produce the enhanced literate program
 
         loader.load_ipython_extension(shell)
         tangle.load_ipython_extension(shell)
-        metadata.load_ipython_extension(shell)
+        measure.load_ipython_extension(shell)
         extras.load_ipython_extension(shell)
         testing.load_ipython_extension(shell)
         weave.load_ipython_extension(shell)
@@ -276,6 +276,125 @@ formats any node meeting the criteria for the ast node interactivity. Typically,
         shell.events.callbacks.get('post_run_cell'), shell.events.callbacks.get('post_execute')
 
 #### Loop
+
+### [<code>[source]</code>](pidgy/kernel.md)Configuring the `pidgy` shell and kernel architecture.
+
+![](https://jupyter.readthedocs.io/en/latest/_images/other_kernels.png)
+
+Interactive programming in `pidgy` documents is accessed using the polyglot
+[Jupyter] kernel architecture. In fact, the provenance the [Jupyter]
+name is a combination the native kernel architectures for
+[ju~~lia~~][julia], [pyt~~hon~~][python], and [r]. [Jupyter]'s
+generalization of the kernel/shell interface allows
+over 100 languages to be used in `notebook and jupyterlab`.
+It is possible to define prescribe wrapper kernels around existing
+methods; this is the appraoach that `pidgy` takes
+
+> A kernel provides programming language support in Jupyter. IPython is the default kernel. Additional kernels include R, Julia, and many more.
+>
+> > - [`jupyter` kernel definition](https://jupyter.readthedocs.io/en/latest/glossary.html#term-kernel)
+
+`pidgy` is not not a native kernel. It is a wrapper kernel around the
+existing `ipykernel and IPython.InteractiveShell` configurables.
+`IPython` adds extra syntax to python that simulate literate programming
+macros.
+
+<!--
+
+    import jupyter_client, IPython, ipykernel.ipkernel, ipykernel.kernelapp, pidgy, traitlets, pidgy, traitlets, ipykernel.kernelspec, ipykernel.zmqshell, pathlib, traitlets
+
+-->
+
+The shell is the application either jupyterlab or jupyter notebook, the kernel
+determines the programming language. Below we design a just jupyter kernel that
+can be installed using
+
+- What is the advantage of installing the kernel and how to do it.
+
+```bash
+pidgy kernel install
+```
+
+#### Configure the `pidgy` shell.
+
+    class pidgyInteractiveShell(ipykernel.zmqshell.ZMQInteractiveShell):
+
+Configure a native `pidgy` `IPython.InteractiveShell`
+
+        loaders = traitlets.Dict(allow_none=True)
+        weave = traitlets.Any(allow_none=True)
+        tangle = ipykernel.zmqshell.ZMQInteractiveShell.input_transformer_manager
+        extras = traitlets.Any(allow_none=True)
+        testing = traitlets.Any(allow_none=True)
+        measure = traitlets.Any(allow_none=True)
+        enable_html_pager = traitlets.Bool(True)
+
+`pidgyInteractiveShell.enable_html_pager` is necessary to see rich displays in
+the inspector.
+
+        def __init__(self,*args, **kwargs):
+            super().__init__(*args, **kwargs)
+            with pidgy.pidgyLoader():
+                from .extension import load_ipython_extension
+            load_ipython_extension(self)
+
+#### Configure the `pidgy` kernel.
+
+    class pidgyKernel(ipykernel.ipkernel.IPythonKernel):
+        shell_class = traitlets.Type(pidgyInteractiveShell)
+        _last_parent = traitlets.Dict()
+
+        def init_metadata(self, parent):
+            self._last_parent = parent
+            return super().init_metadata(parent)
+
+
+        def do_inspect(self, code, cursor_pos, detail_level=0):
+
+<details><summary>Customizing the Jupyter inspector behavior for literate computing</summary><p>
+When we have access to the kernel class it is possible to customize
+a number of interactive shell features.   The do inspect function
+adds some features to `jupyter`'s  inspection behavior when working in 
+`pidgy`.
+</p><pre></code>
+
+            object = {'found': False}
+            if code[:cursor_pos][-3:] == '!!!':
+                object = {'found': True, 'data': {'text/markdown': self.shell.weave.format_markdown(code[:cursor_pos-3]+code[cursor_pos:])}}
+            else:
+                try:
+                    object = super().do_inspect(code, cursor_pos, detail_level=0)
+                except: ...
+
+            if not object['found']:
+
+Simulate finding an object and return a preview of the markdown.
+
+                object['found'] = True
+                line, offset = IPython.utils.tokenutil.line_at_cursor(code, cursor_pos)
+                lead = code[:cursor_pos]
+                col = cursor_pos - offset
+
+
+                code = F"""<code>·L{
+                    len(lead.splitlines()) + int(not(col))
+                },C{col + 1}</code><br/>\n\n""" + code[:cursor_pos]+'·'+('' if col else '<br/>\n')+code[cursor_pos:]
+
+                object['data'] = {'text/markdown': code}
+
+We include the line number and cursor position to enrich the connection between
+the inspector and the source code displayed on another part of the screen.
+
+            return object
+        ...
+
+</details>
+
+#### `pidgy`-like interfaces in other languages.
+
+[julia]: #
+[r]: #
+[python]: #
 
 ### [<code>[source]</code>](pidgy/tangle.ipynb)Tangling [Markdown] to [Python]
 
@@ -754,124 +873,6 @@ Launch a `pidgy` kernel applications.
 [art of the readme]: https://github.com/noffle/art-of-readme
 [readme history]: https://medium.com/@NSomar/readme-md-history-and-components-a365aff07f10
 
-### [<code>[source]</code>](pidgy/kernel.md)Configuring the `pidgy` shell and kernel architecture.
-
-![](https://jupyter.readthedocs.io/en/latest/_images/other_kernels.png)
-
-Interactive programming in `pidgy` documents is accessed using the polyglot
-[Jupyter] kernel architecture. In fact, the provenance the [Jupyter]
-name is a combination the native kernel architectures for
-[ju~~lia~~][julia], [pyt~~hon~~][python], and [r]. [Jupyter]'s
-generalization of the kernel/shell interface allows
-over 100 languages to be used in `notebook and jupyterlab`.
-It is possible to define prescribe wrapper kernels around existing
-methods; this is the appraoach that `pidgy` takes
-
-> A kernel provides programming language support in Jupyter. IPython is the default kernel. Additional kernels include R, Julia, and many more.
->
-> > - [`jupyter` kernel definition](https://jupyter.readthedocs.io/en/latest/glossary.html#term-kernel)
-
-`pidgy` is not not a native kernel. It is a wrapper kernel around the
-existing `ipykernel and IPython.InteractiveShell` configurables.
-`IPython` adds extra syntax to python that simulate literate programming
-macros.
-
-<!--
-
-    import jupyter_client, IPython, ipykernel.ipkernel, ipykernel.kernelapp, pidgy, traitlets, pidgy, traitlets, ipykernel.kernelspec, ipykernel.zmqshell, pathlib, traitlets
-
--->
-
-The shell is the application either jupyterlab or jupyter notebook, the kernel
-determines the programming language. Below we design a just jupyter kernel that
-can be installed using
-
-- What is the advantage of installing the kernel and how to do it.
-
-```bash
-pidgy kernel install
-```
-
-#### Configure the `pidgy` shell.
-
-    class pidgyInteractiveShell(ipykernel.zmqshell.ZMQInteractiveShell):
-
-Configure a native `pidgy` `IPython.InteractiveShell`
-
-        loaders = traitlets.Dict(allow_none=True)
-        weave = traitlets.Any(allow_none=True)
-        tangle = ipykernel.zmqshell.ZMQInteractiveShell.input_transformer_manager
-        extras = traitlets.Any(allow_none=True)
-        testing = traitlets.Any(allow_none=True)
-        enable_html_pager = traitlets.Bool(True)
-
-`pidgyInteractiveShell.enable_html_pager` is necessary to see rich displays in
-the inspector.
-
-        def __init__(self,*args, **kwargs):
-            super().__init__(*args, **kwargs)
-            with pidgy.pidgyLoader():
-                from .extension import load_ipython_extension
-            load_ipython_extension(self)
-
-#### Configure the `pidgy` kernel.
-
-    class pidgyKernel(ipykernel.ipkernel.IPythonKernel):
-        shell_class = traitlets.Type(pidgyInteractiveShell)
-        _last_parent = traitlets.Dict()
-
-        def init_metadata(self, parent):
-            self._last_parent = parent
-            return super().init_metadata(parent)
-
-
-        def do_inspect(self, code, cursor_pos, detail_level=0):
-
-<details><summary>Customizing the Jupyter inspector behavior for literate computing</summary><p>
-When we have access to the kernel class it is possible to customize
-a number of interactive shell features.   The do inspect function
-adds some features to `jupyter`'s  inspection behavior when working in 
-`pidgy`.
-</p><pre></code>
-
-            object = {'found': False}
-            if code[:cursor_pos][-3:] == '!!!':
-                object = {'found': True, 'data': {'text/markdown': self.shell.weave.format_markdown(code[:cursor_pos-3]+code[cursor_pos:])}}
-            else:
-                try:
-                    object = super().do_inspect(code, cursor_pos, detail_level=0)
-                except: ...
-
-            if not object['found']:
-
-Simulate finding an object and return a preview of the markdown.
-
-                object['found'] = True
-                line, offset = IPython.utils.tokenutil.line_at_cursor(code, cursor_pos)
-                lead = code[:cursor_pos]
-                col = cursor_pos - offset
-
-
-                code = F"""<code>·L{
-                    len(lead.splitlines()) + int(not(col))
-                },C{col + 1}</code><br/>\n\n""" + code[:cursor_pos]+'·'+('' if col else '<br/>\n')+code[cursor_pos:]
-
-                object['data'] = {'text/markdown': code}
-
-We include the line number and cursor position to enrich the connection between
-the inspector and the source code displayed on another part of the screen.
-
-            return object
-        ...
-
-</details>
-
-#### `pidgy`-like interfaces in other languages.
-
-[julia]: #
-[r]: #
-[python]: #
-
 ## Methods
 
 ### [<code>[source]</code>](pidgy/weave.md)Weaving cells in pidgin programs
@@ -1024,7 +1025,7 @@ The `Testing` class executes the test suite each time a cell is executed.
 
             if not (result.error_before_exec or result.error_in_exec):
                 with ipython_compiler(self.shell):
-                    definitions = [self.shell.user_ns[x] for x in getattr(self.shell.metadata, 'definitions', [])
+                    definitions = [self.shell.user_ns[x] for x in getattr(self.shell.measure, 'definitions', [])
                         if x.startswith(self.function_pattern) or
                         (isinstance(self.shell.user_ns[x], type)
                          and issubclass(self.shell.user_ns[x], unittest.TestCase))
@@ -1083,7 +1084,7 @@ We'll have to replace how `doctest` compiles code with the `IPython` machinery.
 
 </details>
 
-### [<code>[source]</code>](pidgy/metadata.md)Capturing metadata during the interactive compute process
+### [<code>[source]</code>](pidgy/measure.md)Measure activities during the interactive compute process
 
 To an organization, human compute time bears an important cost
 and programming represents a small part of that cycle.
@@ -1093,7 +1094,7 @@ and programming represents a small part of that cycle.
 The `metadata` module assists in collecting metadata about the interactive compute process.
 It appends the metadata atrribute to the shell.
 
-        shell.metadata = Metadata(shell=shell).register()
+        shell.measure = Measure(shell=shell).register()
 
 <!--
 
@@ -1105,7 +1106,7 @@ It appends the metadata atrribute to the shell.
 -->
 
     @dataclasses.dataclass
-    class Metadata(events.Events, ast.NodeTransformer):
+    class Measure(events.Events, ast.NodeTransformer):
         definitions: list = dataclasses.field(default_factory=list)
         def pre_execute(self):
             self.definitions = []
