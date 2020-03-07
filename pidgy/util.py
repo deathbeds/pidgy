@@ -63,3 +63,11 @@ def num_whitespace(text: str) -> int:
 def whiten(text: str) -> str:
     """`whiten` strips empty lines because the `markdown.BlockLexer` doesn't like that."""
     return "\n".join(x.rstrip() for x in text.splitlines())
+
+
+def strip_front_matter(text, sep=None):
+    if text.startswith("---\n"):
+        front_matter, sep, rest = text[4:].partition("\n---")
+    if sep:
+        return "".join(rest.splitlines(True)[1:])
+    return text
