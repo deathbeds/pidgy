@@ -1135,253 +1135,125 @@ It appends the metadata atrribute to the shell.
 
 ### `pidgy` base extension registration.
 
-<style>.output_html .hll { background-color: #ffffcc }
-.output_html  { background: #f8f8f8; }
-.output_html .c { color: #408080; font-style: italic } /* Comment */
-.output_html .err { border: 1px solid #FF0000 } /* Error */
-.output_html .k { color: #008000; font-weight: bold } /* Keyword */
-.output_html .o { color: #666666 } /* Operator */
-.output_html .ch { color: #408080; font-style: italic } /* Comment.Hashbang */
-.output_html .cm { color: #408080; font-style: italic } /* Comment.Multiline */
-.output_html .cp { color: #BC7A00 } /* Comment.Preproc */
-.output_html .cpf { color: #408080; font-style: italic } /* Comment.PreprocFile */
-.output_html .c1 { color: #408080; font-style: italic } /* Comment.Single */
-.output_html .cs { color: #408080; font-style: italic } /* Comment.Special */
-.output_html .gd { color: #A00000 } /* Generic.Deleted */
-.output_html .ge { font-style: italic } /* Generic.Emph */
-.output_html .gr { color: #FF0000 } /* Generic.Error */
-.output_html .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.output_html .gi { color: #00A000 } /* Generic.Inserted */
-.output_html .go { color: #888888 } /* Generic.Output */
-.output_html .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.output_html .gs { font-weight: bold } /* Generic.Strong */
-.output_html .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.output_html .gt { color: #0044DD } /* Generic.Traceback */
-.output_html .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.output_html .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.output_html .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.output_html .kp { color: #008000 } /* Keyword.Pseudo */
-.output_html .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.output_html .kt { color: #B00040 } /* Keyword.Type */
-.output_html .m { color: #666666 } /* Literal.Number */
-.output_html .s { color: #BA2121 } /* Literal.String */
-.output_html .na { color: #7D9029 } /* Name.Attribute */
-.output_html .nb { color: #008000 } /* Name.Builtin */
-.output_html .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.output_html .no { color: #880000 } /* Name.Constant */
-.output_html .nd { color: #AA22FF } /* Name.Decorator */
-.output_html .ni { color: #999999; font-weight: bold } /* Name.Entity */
-.output_html .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
-.output_html .nf { color: #0000FF } /* Name.Function */
-.output_html .nl { color: #A0A000 } /* Name.Label */
-.output_html .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.output_html .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.output_html .nv { color: #19177C } /* Name.Variable */
-.output_html .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.output_html .w { color: #bbbbbb } /* Text.Whitespace */
-.output_html .mb { color: #666666 } /* Literal.Number.Bin */
-.output_html .mf { color: #666666 } /* Literal.Number.Float */
-.output_html .mh { color: #666666 } /* Literal.Number.Hex */
-.output_html .mi { color: #666666 } /* Literal.Number.Integer */
-.output_html .mo { color: #666666 } /* Literal.Number.Oct */
-.output_html .sa { color: #BA2121 } /* Literal.String.Affix */
-.output_html .sb { color: #BA2121 } /* Literal.String.Backtick */
-.output_html .sc { color: #BA2121 } /* Literal.String.Char */
-.output_html .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.output_html .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.output_html .s2 { color: #BA2121 } /* Literal.String.Double */
-.output_html .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
-.output_html .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.output_html .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
-.output_html .sx { color: #008000 } /* Literal.String.Other */
-.output_html .sr { color: #BB6688 } /* Literal.String.Regex */
-.output_html .s1 { color: #BA2121 } /* Literal.String.Single */
-.output_html .ss { color: #19177C } /* Literal.String.Symbol */
-.output_html .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.output_html .fm { color: #0000FF } /* Name.Function.Magic */
-.output_html .vc { color: #19177C } /* Name.Variable.Class */
-.output_html .vg { color: #19177C } /* Name.Variable.Global */
-.output_html .vi { color: #19177C } /* Name.Variable.Instance */
-.output_html .vm { color: #19177C } /* Name.Variable.Magic */
-.output_html .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">IPython</span><span class="o">,</span> <span class="nn">ast</span><span class="o">,</span> <span class="nn">dataclasses</span><span class="o">,</span> <span class="nn">functools</span><span class="o">,</span> <span class="nn">importnb</span>
+```python
+import IPython, ast, dataclasses, functools, importnb
 
-<span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
-<span class="k">class</span> <span class="nc">Extension</span><span class="p">:</span>
-<span class="sd">&quot;&quot;&quot;`Extension` is base class that simplifies loading and unloading IPython extensions. Each component of `pidgy` is an IPython extension are this work compacts some repetative practices.&quot;&quot;&quot;</span>
 
-    <span class="n">_repl_events</span> <span class="o">=</span> <span class="s2">&quot;pre_execute pre_run_cell post_execute post_run_cell&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-    <span class="n">shell</span><span class="p">:</span> <span class="n">IPython</span><span class="o">.</span><span class="n">InteractiveShell</span> <span class="o">=</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">field</span><span class="p">(</span>
-        <span class="n">default_factory</span><span class="o">=</span><span class="n">IPython</span><span class="o">.</span><span class="n">get_ipython</span>
-    <span class="p">)</span>
+@dataclasses.dataclass
+class Extension:
+    """`Extension` is base class that simplifies loading and unloading IPython extensions. Each component of `pidgy` is an IPython extension are this work compacts some repetative practices."""
 
-    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">shell</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">shell</span> <span class="o">=</span> <span class="n">shell</span>
-        <span class="n">register</span><span class="p">,</span> <span class="n">unregister</span> <span class="o">=</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">(</span><span class="n">method</span><span class="p">),</span> <span class="nb">bool</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
-        <span class="n">shell</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shell</span>
-        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repl_events</span><span class="p">:</span>
-            <span class="n">callable</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="n">callable</span> <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">shell</span><span class="o">.</span><span class="n">events</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{method}</span><span class="s2">register&quot;</span><span class="p">)(</span><span class="n">event</span><span class="p">,</span> <span class="n">callable</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">NodeTransformer</span><span class="p">):</span>
-            <span class="n">register</span> <span class="ow">and</span> <span class="n">shell</span><span class="o">.</span><span class="n">ast_transformers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-            <span class="n">unregister</span> <span class="ow">and</span> <span class="n">shell</span><span class="o">.</span><span class="n">ast_transformers</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span>
-                <span class="n">shell</span><span class="o">.</span><span class="n">ast_transformers</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-            <span class="p">)</span>
+    _repl_events = "pre_execute pre_run_cell post_execute post_run_cell".split()
+    shell: IPython.InteractiveShell = dataclasses.field(
+        default_factory=IPython.get_ipython
+    )
 
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">IPython</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">inputtransformer2</span><span class="o">.</span><span class="n">TransformerManager</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">register</span><span class="p">:</span>
-                    <span class="n">shell</span><span class="o">.</span><span class="n">input_transformer_manager</span> <span class="o">=</span> <span class="bp">self</span>
-                <span class="k">if</span> <span class="n">unregister</span><span class="p">:</span>
-                    <span class="n">shell</span><span class="o">.</span><span class="n">input_transformer_managers</span> <span class="o">=</span> <span class="p">(</span>
-                        <span class="n">IPython</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">inputtransformer2</span><span class="o">.</span><span class="n">TransformerManager</span><span class="p">()</span>
-                    <span class="p">)</span>
+    def register(self, shell=None, *, method=""):
+        if shell:
+            self.shell = shell
+        register, unregister = not bool(method), bool(method)
+        shell = self.shell
+        for event in self._repl_events:
+            callable = getattr(self, event, None)
+            callable and getattr(shell.events, f"{method}register")(event, callable)
+        if isinstance(self, ast.NodeTransformer):
+            register and shell.ast_transformers.append(self)
+            unregister and shell.ast_transformers.pop(
+                shell.ast_transformers.index(self)
+            )
 
-        <span class="k">return</span> <span class="bp">self</span>
+            if isinstance(self, IPython.core.inputtransformer2.TransformerManager):
+                if register:
+                    shell.input_transformer_manager = self
+                if unregister:
+                    shell.input_transformer_managers = (
+                        IPython.core.inputtransformer2.TransformerManager()
+                    )
 
-    <span class="n">unregister</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partialmethod</span><span class="p">(</span><span class="n">register</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;un&quot;</span><span class="p">)</span>
+        return self
 
-</pre></div>
+    unregister = functools.partialmethod(register, method="un")
 
-    IPython.display.Code(filename=pidgy.base.__file__, language='python')
+```
 
 ### `pidgy` utilities.
 
-<style>.output_html .hll { background-color: #ffffcc }
-.output_html  { background: #f8f8f8; }
-.output_html .c { color: #408080; font-style: italic } /* Comment */
-.output_html .err { border: 1px solid #FF0000 } /* Error */
-.output_html .k { color: #008000; font-weight: bold } /* Keyword */
-.output_html .o { color: #666666 } /* Operator */
-.output_html .ch { color: #408080; font-style: italic } /* Comment.Hashbang */
-.output_html .cm { color: #408080; font-style: italic } /* Comment.Multiline */
-.output_html .cp { color: #BC7A00 } /* Comment.Preproc */
-.output_html .cpf { color: #408080; font-style: italic } /* Comment.PreprocFile */
-.output_html .c1 { color: #408080; font-style: italic } /* Comment.Single */
-.output_html .cs { color: #408080; font-style: italic } /* Comment.Special */
-.output_html .gd { color: #A00000 } /* Generic.Deleted */
-.output_html .ge { font-style: italic } /* Generic.Emph */
-.output_html .gr { color: #FF0000 } /* Generic.Error */
-.output_html .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.output_html .gi { color: #00A000 } /* Generic.Inserted */
-.output_html .go { color: #888888 } /* Generic.Output */
-.output_html .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.output_html .gs { font-weight: bold } /* Generic.Strong */
-.output_html .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.output_html .gt { color: #0044DD } /* Generic.Traceback */
-.output_html .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.output_html .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.output_html .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.output_html .kp { color: #008000 } /* Keyword.Pseudo */
-.output_html .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.output_html .kt { color: #B00040 } /* Keyword.Type */
-.output_html .m { color: #666666 } /* Literal.Number */
-.output_html .s { color: #BA2121 } /* Literal.String */
-.output_html .na { color: #7D9029 } /* Name.Attribute */
-.output_html .nb { color: #008000 } /* Name.Builtin */
-.output_html .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.output_html .no { color: #880000 } /* Name.Constant */
-.output_html .nd { color: #AA22FF } /* Name.Decorator */
-.output_html .ni { color: #999999; font-weight: bold } /* Name.Entity */
-.output_html .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
-.output_html .nf { color: #0000FF } /* Name.Function */
-.output_html .nl { color: #A0A000 } /* Name.Label */
-.output_html .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.output_html .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.output_html .nv { color: #19177C } /* Name.Variable */
-.output_html .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.output_html .w { color: #bbbbbb } /* Text.Whitespace */
-.output_html .mb { color: #666666 } /* Literal.Number.Bin */
-.output_html .mf { color: #666666 } /* Literal.Number.Float */
-.output_html .mh { color: #666666 } /* Literal.Number.Hex */
-.output_html .mi { color: #666666 } /* Literal.Number.Integer */
-.output_html .mo { color: #666666 } /* Literal.Number.Oct */
-.output_html .sa { color: #BA2121 } /* Literal.String.Affix */
-.output_html .sb { color: #BA2121 } /* Literal.String.Backtick */
-.output_html .sc { color: #BA2121 } /* Literal.String.Char */
-.output_html .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.output_html .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.output_html .s2 { color: #BA2121 } /* Literal.String.Double */
-.output_html .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
-.output_html .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.output_html .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
-.output_html .sx { color: #008000 } /* Literal.String.Other */
-.output_html .sr { color: #BB6688 } /* Literal.String.Regex */
-.output_html .s1 { color: #BA2121 } /* Literal.String.Single */
-.output_html .ss { color: #19177C } /* Literal.String.Symbol */
-.output_html .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.output_html .fm { color: #0000FF } /* Name.Function.Magic */
-.output_html .vc { color: #19177C } /* Name.Variable.Class */
-.output_html .vg { color: #19177C } /* Name.Variable.Global */
-.output_html .vi { color: #19177C } /* Name.Variable.Instance */
-.output_html .vm { color: #19177C } /* Name.Variable.Magic */
-.output_html .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span><span class="o">,</span> <span class="nn">typing</span>
+````python
+import re, typing
 
-<span class="k">class</span> <span class="nc">ContextDepth</span><span class="p">:</span>
-<span class="n">depth</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">+=</span> <span class="mi">1</span>
+class ContextDepth:
+    depth = 0
 
-    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">e</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">-=</span> <span class="mi">1</span>
+    def __enter__(self):
+        self.depth += 1
 
-<span class="p">(</span><span class="n">FENCE</span><span class="p">,</span> <span class="n">CONTINUATION</span><span class="p">,</span> <span class="n">SEMI</span><span class="p">,</span> <span class="n">COLON</span><span class="p">,</span> <span class="n">MAGIC</span><span class="p">,</span> <span class="n">DOCTEST</span><span class="p">),</span> <span class="n">QUOTES</span><span class="p">,</span> <span class="n">SPACE</span> <span class="o">=</span> <span class="p">(</span>
-<span class="s2">&quot;``` </span><span class="se">\\</span><span class="s2"> ; : </span><span class="si">%%</span><span class="s2"> &gt;&gt;&gt;&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span>
-<span class="p">(</span><span class="s1">&#39;&quot;&quot;&quot;&#39;</span><span class="p">,</span> <span class="s2">&quot;&#39;&#39;&#39;&quot;</span><span class="p">),</span>
-<span class="s2">&quot; &quot;</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">WHITESPACE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;^\s\*&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span>
+    def __exit__(self, *e):
+        self.depth -= 1
 
-<span class="k">def</span> <span class="nf">num_first_indent</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="k">for</span> <span class="nb">str</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
-<span class="k">if</span> <span class="nb">str</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
-<span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">lstrip</span><span class="p">())</span>
-<span class="k">return</span> <span class="mi">0</span>
 
-<span class="k">def</span> <span class="nf">num_last_indent</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="k">for</span> <span class="nb">str</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()):</span>
-<span class="k">if</span> <span class="nb">str</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
-<span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">lstrip</span><span class="p">())</span>
-<span class="k">return</span> <span class="mi">0</span>
+(FENCE, CONTINUATION, SEMI, COLON, MAGIC, DOCTEST), QUOTES, SPACE = (
+    "``` \\ ; : %% >>>".split(),
+    ('"""', "'''"),
+    " ",
+)
+WHITESPACE = re.compile("^\s*", re.MULTILINE)
 
-<span class="k">def</span> <span class="nf">base_indent</span><span class="p">(</span><span class="n">tokens</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="s2">&quot;Look ahead for the base indent.&quot;</span>
-<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">token</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tokens</span><span class="p">):</span>
-<span class="k">if</span> <span class="n">token</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;code&quot;</span><span class="p">:</span>
-<span class="n">code</span> <span class="o">=</span> <span class="n">token</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span>
-<span class="k">if</span> <span class="n">code</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">FENCE</span><span class="p">):</span>
-<span class="k">continue</span>
-<span class="n">indent</span> <span class="o">=</span> <span class="n">num_first_indent</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-<span class="k">break</span>
-<span class="k">else</span><span class="p">:</span>
-<span class="n">indent</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="k">return</span> <span class="n">indent</span>
 
-<span class="k">def</span> <span class="nf">quote</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="sd">&quot;&quot;&quot;wrap text in `QUOTES`&quot;&quot;&quot;</span>
-<span class="k">if</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
-<span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()),</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">rstrip</span><span class="p">())</span>
-<span class="n">quote</span> <span class="o">=</span> <span class="n">QUOTES</span><span class="p">[(</span><span class="n">text</span><span class="p">[</span><span class="n">right</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">QUOTES</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">or</span> <span class="p">(</span><span class="n">QUOTES</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">text</span><span class="p">)]</span>
-<span class="k">return</span> <span class="n">text</span><span class="p">[:</span><span class="n">left</span><span class="p">]</span> <span class="o">+</span> <span class="n">quote</span> <span class="o">+</span> <span class="n">text</span><span class="p">[</span><span class="n">left</span><span class="p">:</span><span class="n">right</span><span class="p">]</span> <span class="o">+</span> <span class="n">quote</span> <span class="o">+</span> <span class="n">text</span><span class="p">[</span><span class="n">right</span><span class="p">:]</span>
-<span class="k">return</span> <span class="n">text</span>
+def num_first_indent(text: str) -> int:
+    for str in text.splitlines():
+        if str.strip():
+            return len(str) - len(str.lstrip())
+    return 0
 
-<span class="k">def</span> <span class="nf">num_whitespace</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">lstrip</span><span class="p">())</span>
 
-<span class="k">def</span> <span class="nf">whiten</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="sd">&quot;&quot;&quot;`whiten` strips empty lines because the `markdown.BlockLexer` doesn&#39;t like that.&quot;&quot;&quot;</span>
-<span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">())</span>
+def num_last_indent(text: str) -> int:
+    for str in reversed(text.splitlines()):
+        if str.strip():
+            return len(str) - len(str.lstrip())
+    return 0
 
-<span class="k">def</span> <span class="nf">strip_front_matter</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="k">if</span> <span class="n">text</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;---</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
-<span class="n">front_matter</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="n">rest</span> <span class="o">=</span> <span class="n">text</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">---&quot;</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">sep</span><span class="p">:</span>
-<span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rest</span><span class="o">.</span><span class="n">splitlines</span><span class="p">(</span><span class="kc">True</span><span class="p">)[</span><span class="mi">1</span><span class="p">:])</span>
-<span class="k">return</span> <span class="n">text</span>
 
-</pre></div>
+def base_indent(tokens: typing.List[dict]) -> int:
+    "Look ahead for the base indent."
+    for i, token in enumerate(tokens):
+        if token["type"] == "code":
+            code = token["text"]
+            if code.lstrip().startswith(FENCE):
+                continue
+            indent = num_first_indent(code)
+            break
+    else:
+        indent = 4
+    return indent
 
-    IPython.display.Code(filename=pidgy.util.__file__, language='python')
+
+def quote(text: str) -> str:
+    """wrap text in `QUOTES`"""
+    if text.strip():
+        left, right = len(text) - len(text.lstrip()), len(text.rstrip())
+        quote = QUOTES[(text[right - 1] in QUOTES[0]) or (QUOTES[0] in text)]
+        return text[:left] + quote + text[left:right] + quote + text[right:]
+    return text
+
+
+def num_whitespace(text: str) -> int:
+    return len(text) - len(text.lstrip())
+
+
+def whiten(text: str) -> str:
+    """`whiten` strips empty lines because the `markdown.BlockLexer` doesn't like that."""
+    return "\n".join(x.rstrip() for x in text.splitlines())
+
+
+def strip_front_matter(text, sep=None):
+    if text.startswith("---\n"):
+        front_matter, sep, rest = text[4:].partition("\n---")
+    if sep:
+        return "".join(rest.splitlines(True)[1:])
+    return text
+
+````
 
 <!--
 
