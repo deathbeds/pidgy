@@ -282,12 +282,12 @@ formats any node meeting the criteria for the ast node interactivity. Typically,
 <!--
 
     import IPython, typing, mistune as markdown, IPython, textwrap, ast, doctest, re
-    try: from . import base, util
-    except: import base, util
+    try: from . import base
+    except: import base
 
 -->
 
-The `pidgyTransformer` using the existing `IPython.core.inputtransformer2.TransformerManager` to configure the [Markdown] language features, and it is the public API for manipulating `pidgy` strings. It implements the heuristics applied create predictable [Python] from [Markdown].
+The `pidgyTransformer` using the existing `IPython.core.inputtransformer2.TransformerManager` to configure the [Markdown] language features, and it is the public API for manipulating `pidgy` strings. It implements the heuristics applied create predictable [Python] from [Markdown]
 
     class pidgyTransformer(IPython.core.inputtransformer2.TransformerManager, base.Extension):
         def pidgy_transform(self, cell: str) -> str:
@@ -318,7 +318,7 @@ The block lexer converts a string in tokens that represent blocks of markdown in
 
 <details><summary><code>BlockLexer</code></summary>
 
-    class BlockLexer(markdown.BlockLexer, util.ContextDepth):
+    class BlockLexer(markdown.BlockLexer):
         class grammar_class(markdown.BlockGrammar):
             doctest = doctest.DocTestParser._EXAMPLE_RE
             block_code = re.compile(r'^((?!\s+>>>\s) {4}[^\n]+\n*)+')
@@ -338,74 +338,34 @@ The block lexer converts a string in tokens that represent blocks of markdown in
 
         def parse(self, text: str, default_rules=None, normalize=True) -> typing.List[dict]:
             if not self.depth: self.tokens = []
-            with self: tokens = super().parse(util.whiten(text), default_rules)
+            with self: tokens = super().parse(whiten(text), default_rules)
             if normalize and not self.depth: tokens = normalizer(text, tokens)
             return tokens
 
-</details>
+        depth = 0
+        def __enter__(self): self.depth += 1
+        def __exit__(self, *e): self.depth -= 1
 
-##### Flattening the tokens to a [Python] string.
+<!--
 
-The tokenizer controls the translation of markdown strings to python strings. Our major constraint is that the Markdown input should retain line numbers.
+    for x in "default_rules footnote_rules list_rules".split():
+        setattr(BlockLexer, x, list(getattr(BlockLexer, x)))
+        getattr(BlockLexer, x).insert(getattr(BlockLexer, x).index('block_code'), 'doctest')
+        if 'block_html' in getattr(BlockLexer, x):
+            getattr(BlockLexer, x).pop(getattr(BlockLexer, x).index('block_html'))
 
-<details><summary><code>Flatten</code></summary>
 
-    class Tokenizer(BlockLexer):
-        def untokenize(self, tokens: typing.List[dict], source: str = """""", last: int =0) -> str:
-            INDENT = indent = util.base_indent(tokens) or 4
-            for i, token in enumerate(tokens):
-                object = token['text']
-                if token and token['type'] == 'code':
-                    if object.lstrip().startswith(FENCE):
-
-                        object = ''.join(''.join(object.partition(FENCE)[::2]).rpartition(FENCE)[::2])
-                        indent = INDENT + util.num_first_indent(object)
-                        object = textwrap.indent(object, INDENT*SPACE)
-
-                    if object.lstrip().startswith(MAGIC):  ...
-                    else: indent = util.num_last_indent(object)
-                elif token and token['type'] == 'front_matter':
-                    object = textwrap.indent(
-                        F"locals().update(__import__('yaml').safe_load({util.quote(object)}))\n", indent*SPACE)
-
-                elif not object: ...
-                else:
-                    object = textwrap.indent(object, SPACE*max(indent-util.num_first_indent(object), 0))
-                    for next in tokens[i+1:]:
-                        if next['type'] == 'code':
-                            next = util.num_first_indent(next['text'])
-                            break
-                    else: next = indent
-                    Δ = max(next-indent, 0)
-
-                    if not Δ and source.rstrip().rstrip(CONTINUATION).endswith(COLON):
-                        Δ += 4
-
-                    spaces = util.num_whitespace(object)
-                    "what if the spaces are ling enough"
-                    object = object[:spaces] + Δ*SPACE+ object[spaces:]
-                    if not source.rstrip().rstrip(CONTINUATION).endswith(QUOTES):
-                        object = util.quote(object)
-                source += object
-
-            # add a semicolon to the source if the last block is code.
-            for token in reversed(tokens):
-                if token['text'].strip():
-                    if token['type'] != 'code':
-                        source = source.rstrip() + SEMI
-                    break
-
-            return source
+-->
 
 </details>
 
 ##### Normalizing the tokens
 
-This step may be superfluous, but it assisted in considering the logic necessary to compose the resulting python. This extra step flattens the canonical mistune token representation is reduced to one of `"paragraph code front_matter"` tokens.
+This extra step flattens the canonical mistune token representation to the collection of `"code" and not "code"` tokens.
 
 <details><summary><code>normalizer</code></summary>
 
-    def normalizer(text: str, tokens: typing.List[dict]):
+    def normalizer(text, tokens):
         """Combine non-code tokens into contiguous blocks."""
         compacted = []
         while tokens:
@@ -429,7 +389,7 @@ This step may be superfluous, but it assisted in considering the logic necessary
             compacted[-1]['text'] += text
         elif text.strip():
             compacted.append({'type': 'paragraph', 'text': text})
-
+        # Deal with front matter
         if compacted[0]['text'].startswith('---\n') and '\n---' in compacted[0]['text'][4:]:
             token = compacted.pop(0)
             front_matter, sep, paragraph = token['text'][4:].partition('---')
@@ -439,25 +399,108 @@ This step may be superfluous, but it assisted in considering the logic necessary
 
 </details>
 
+##### Flattening the tokens to a [Python] string.
+
+The tokenizer controls the translation of markdown strings to python strings. Our major constraint is that the Markdown input should retain line numbers.
+
+<details><summary><code>Flatten</code></summary>
+
+    class Tokenizer(Normalizer):
+        def untokenize(self, tokens: τ.List[dict], source: str = """""", last: int =0) -> str:
+            INDENT = indent = base_indent(tokens) or 4
+            for i, token in enumerate(tokens):
+                object = token['text']
+                if token and token['type'] == 'code':
+                    if object.lstrip().startswith(FENCE):
+
+                        object = ''.join(''.join(object.partition(FENCE)[::2]).rpartition(FENCE)[::2])
+                        indent = INDENT + num_first_indent(object)
+                        object = textwrap.indent(object, INDENT*SPACE)
+
+                    if object.lstrip().startswith(MAGIC):  ...
+                    else: indent = num_last_indent(object)
+                elif token and token['type'] == 'front_matter':
+                    object = textwrap.indent(
+                        F"locals().update(__import__('yaml').safe_load({quote(object)}))\n", indent*SPACE)
+
+                elif not object: ...
+                else:
+                    object = textwrap.indent(object, SPACE*max(indent-num_first_indent(object), 0))
+                    for next in tokens[i+1:]:
+                        if next['type'] == 'code':
+                            next = num_first_indent(next['text'])
+                            break
+                    else: next = indent
+                    Δ = max(next-indent, 0)
+
+                    if not Δ and source.rstrip().rstrip(CONTINUATION).endswith(COLON):
+                        Δ += 4
+
+                    spaces = num_whitespace(object)
+                    "what if the spaces are ling enough"
+                    object = object[:spaces] + Δ*SPACE+ object[spaces:]
+                    if not source.rstrip().rstrip(CONTINUATION).endswith(QUOTES):
+                        object = quote(object)
+                source += object
+
+            # add a semicolon to the source if the last block is code.
+            for token in reversed(tokens):
+                if token['text'].strip():
+                    if token['type'] != 'code':
+                        source = source.rstrip() + SEMI
+                    break
+
+            return source
+
+    pidgy = pidgyTransformer()
+
+</details>
+
+<details><summary>Utility functions for the tangle module</summary>
+
     def load_ipython_extension(shell):
-        shell.tangle = pidgyTransformer().register()
+        shell.input_transformer_manager = shell.tangle = pidgyTransformer()
 
     def unload_ipython_extension(shell):
-        if hasattr(shell, 'tangle'): shell.tangle.unregister(shell)
+        shell.input_transformer_manager = __import__('IPython').core.inputtransformer2.TransformerManager()
 
     (FENCE, CONTINUATION, SEMI, COLON, MAGIC, DOCTEST), QUOTES, SPACE ='``` \\ ; : %% >>>'.split(), ('"""', "'''"), ' '
     WHITESPACE = re.compile('^\s*', re.MULTILINE)
 
-<!--
+    def num_first_indent(text):
+        for str in text.splitlines():
+            if str.strip(): return len(str) - len(str.lstrip())
+        return 0
 
-    for x in "default_rules footnote_rules list_rules".split():
-        setattr(BlockLexer, x, list(getattr(BlockLexer, x)))
-        getattr(BlockLexer, x).insert(getattr(BlockLexer, x).index('block_code'), 'doctest')
-        if 'block_html' in getattr(BlockLexer, x):
-            getattr(BlockLexer, x).pop(getattr(BlockLexer, x).index('block_html'))
+    def num_last_indent(text):
+        for str in reversed(text.splitlines()):
+            if str.strip(): return len(str) - len(str.lstrip())
+        return 0
 
+    def base_indent(tokens):
+        "Look ahead for the base indent."
+        for i, token in enumerate(tokens):
+            if token['type'] == 'code':
+                code = token['text']
+                if code.lstrip().startswith(FENCE): continue
+                indent = num_first_indent(code)
+                break
+        else: indent = 4
+        return indent
 
--->
+    def quote(text):
+        """wrap text in `QUOTES`"""
+        if text.strip():
+            left, right = len(text)-len(text.lstrip()), len(text.rstrip())
+            quote = QUOTES[(text[right-1] in QUOTES[0]) or (QUOTES[0] in text)]
+            return text[:left] + quote + text[left:right] + quote + text[right:]
+        return text
+
+    def num_whitespace(text): return len(text) - len(text.lstrip())
+
+    def whiten(text: str) -> str:
+        """`whiten` strips empty lines because the `markdown.BlockLexer` doesn't like that."""
+        return '\n'.join(x.rstrip() for x in text.splitlines())
 
 </summary></details>
 
