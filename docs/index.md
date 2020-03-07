@@ -279,14 +279,6 @@ formats any node meeting the criteria for the ast node interactivity. Typically,
 
 ### [<code>[source]</code>](pidgy/tangle.ipynb)Tangling [Markdown] to [Python]
 
-<!--
-
-    import IPython, typing, mistune as markdown, IPython, textwrap, ast, doctest, re
-    try: from . import base
-    except: import base
-
--->
-
 The `pidgyTransformer` using the existing `IPython.core.inputtransformer2.TransformerManager` to configure the [Markdown] language features, and it is the public API for manipulating `pidgy` strings. It implements the heuristics applied create predictable [Python] from [Markdown]
 
     class pidgyTransformer(IPython.core.inputtransformer2.TransformerManager, base.Extension):
@@ -318,7 +310,7 @@ The block lexer converts a string in tokens that represent blocks of markdown in
 
 <details><summary><code>BlockLexer</code></summary>
 
-    class BlockLexer(markdown.BlockLexer):
+    class BlockLexer(markdown.BlockLexer, util.ContextDepth):
         class grammar_class(markdown.BlockGrammar):
             doctest = doctest.DocTestParser._EXAMPLE_RE
             block_code = re.compile(r'^((?!\s+>>>\s) {4}[^\n]+\n*)+')
@@ -338,7 +330,7 @@ The block lexer converts a string in tokens that represent blocks of markdown in
 
         def parse(self, text: str, default_rules=None, normalize=True) -> typing.List[dict]:
             if not self.depth: self.tokens = []
-            with self: tokens = super().parse(whiten(text), default_rules)
+            with self: tokens = super().parse(util.whiten(text), default_rules)
             if normalize and not self.depth: tokens = normalizer(text, tokens)
             return tokens
 
@@ -405,30 +397,30 @@ The tokenizer controls the translation of markdown strings to python strings. Ou
 
 <details><summary><code>Flatten</code></summary>
 
-    class Tokenizer(Normalizer):
-        def untokenize(self, tokens: τ.List[dict], source: str = """""", last: int =0) -> str:
-            INDENT = indent = base_indent(tokens) or 4
+    class Tokenizer(BlockLexer):
+        def untokenize(self, tokens: typing.List[dict], source: str = """""", last: int =0) -> str:
+            INDENT = indent = util.base_indent(tokens) or 4
             for i, token in enumerate(tokens):
                 object = token['text']
                 if token and token['type'] == 'code':
                     if object.lstrip().startswith(FENCE):
 
                         object = ''.join(''.join(object.partition(FENCE)[::2]).rpartition(FENCE)[::2])
-                        indent = INDENT + num_first_indent(object)
+                        indent = INDENT + util.num_first_indent(object)
                         object = textwrap.indent(object, INDENT*SPACE)
 
                     if object.lstrip().startswith(MAGIC):  ...
-                    else: indent = num_last_indent(object)
+                    else: indent = util.num_last_indent(object)
                 elif token and token['type'] == 'front_matter':
                     object = textwrap.indent(
-                        F"locals().update(__import__('yaml').safe_load({quote(object)}))\n", indent*SPACE)
+                        F"locals().update(__import__('yaml').safe_load({util.quote(object)}))\n", indent*SPACE)
 
                 elif not object: ...
                 else:
-                    object = textwrap.indent(object, SPACE*max(indent-num_first_indent(object), 0))
+                    object = textwrap.indent(object, SPACE*max(indent-util.num_first_indent(object), 0))
                     for next in tokens[i+1:]:
                         if next['type'] == 'code':
-                            next = num_first_indent(next['text'])
+                            next = util.num_first_indent(next['text'])
                             break
                     else: next = indent
                     Δ = max(next-indent, 0)
@@ -436,11 +428,11 @@ The tokenizer controls the translation of markdown strings to python strings. Ou
                     if not Δ and source.rstrip().rstrip(CONTINUATION).endswith(COLON):
                         Δ += 4
 
-                    spaces = num_whitespace(object)
+                    spaces = util.num_whitespace(object)
                     "what if the spaces are ling enough"
                     object = object[:spaces] + Δ*SPACE+ object[spaces:]
                     if not source.rstrip().rstrip(CONTINUATION).endswith(QUOTES):
-                        object = quote(object)
+                        object = util.quote(object)
                 source += object
 
             # add a semicolon to the source if the last block is code.
@@ -452,55 +444,75 @@ The tokenizer controls the translation of markdown strings to python strings. Ou
 
             return source
 
-    pidgy = pidgyTransformer()
+</details>
+
+##### Normalizing the tokens
+
+This step may be superfluous, but it assisted in considering the logic necessary to compose the resulting python. This extra step flattens the canonical mistune token representation is reduced to one of `"paragraph code front_matter"` tokens.
 
 </details>
 
 <details><summary>Utility functions for the tangle module</summary>
 
+    def normalizer(text: str, tokens: typing.List[dict]):
+        """Combine non-code tokens into contiguous blocks."""
+        compacted = []
+        while tokens:
+            token = tokens.pop(0)
+            if 'text' not in token: continue
+            else:
+                if not token['text'].strip(): continue
+                block, body = token['text'].splitlines(), ""
+            while block:
+                line = block.pop(0)
+                if line:
+                    before, line, text = text.partition(line)
+                    body += before + line
+            if token['type']=='code':
+                compacted.append({'type': 'code', 'lang': None, 'text': body})
+            else:
+                if compacted and compacted[-1]['type'] == 'paragraph':
+                    compacted[-1]['text'] += body
+                else: compacted.append({'type': 'paragraph', 'text': body})
+        if compacted and compacted[-1]['type'] == 'paragraph':
+            compacted[-1]['text'] += text
+        elif text.strip():
+            compacted.append({'type': 'paragraph', 'text': text})
+
+        if compacted[0]['text'].startswith('---\n') and '\n---' in compacted[0]['text'][4:]:
+            token = compacted.pop(0)
+            front_matter, sep, paragraph = token['text'][4:].partition('---')
+            compacted = [{'type': 'front_matter', 'text': F"\n{front_matter}"},
+                        {'type': 'paragraph', 'text': paragraph}] + compacted
+        return compacted
+
+</details>
+
     def load_ipython_extension(shell):
-        shell.input_transformer_manager = shell.tangle = pidgyTransformer()
+        shell.tangle = pidgyTransformer().register(shell)
 
     def unload_ipython_extension(shell):
-        shell.input_transformer_manager = __import__('IPython').core.inputtransformer2.TransformerManager()
+        if hasattr(shell, 'tangle'): shell.tangle.unregister(shell)
 
     (FENCE, CONTINUATION, SEMI, COLON, MAGIC, DOCTEST), QUOTES, SPACE ='``` \\ ; : %% >>>'.split(), ('"""', "'''"), ' '
     WHITESPACE = re.compile('^\s*', re.MULTILINE)
 
-    def num_first_indent(text):
-        for str in text.splitlines():
-            if str.strip(): return len(str) - len(str.lstrip())
-        return 0
+    def unload_ipython_extension(shell):
+        if hasattr(shell, 'tangle'): shell.tangle.unregister(shell)
 
-    def num_last_indent(text):
-        for str in reversed(text.splitlines()):
-            if str.strip(): return len(str) - len(str.lstrip())
-        return 0
+    (FENCE, CONTINUATION, SEMI, COLON, MAGIC, DOCTEST), QUOTES, SPACE ='``` \\ ; : %% >>>'.split(), ('"""', "'''"), ' '
+    WHITESPACE = re.compile('^\s*', re.MULTILINE)
 
-    def base_indent(tokens):
-        "Look ahead for the base indent."
-        for i, token in enumerate(tokens):
-            if token['type'] == 'code':
-                code = token['text']
-                if code.lstrip().startswith(FENCE): continue
-                indent = num_first_indent(code)
-                break
-        else: indent = 4
-        return indent
+<!--
 
-    def quote(text):
-        """wrap text in `QUOTES`"""
-        if text.strip():
-            left, right = len(text)-len(text.lstrip()), len(text.rstrip())
-            quote = QUOTES[(text[right-1] in QUOTES[0]) or (QUOTES[0] in text)]
-            return text[:left] + quote + text[left:right] + quote + text[right:]
-        return text
+    for x in "default_rules footnote_rules list_rules".split():
+        setattr(BlockLexer, x, list(getattr(BlockLexer, x)))
+        getattr(BlockLexer, x).insert(getattr(BlockLexer, x).index('block_code'), 'doctest')
+        if 'block_html' in getattr(BlockLexer, x):
+            getattr(BlockLexer, x).pop(getattr(BlockLexer, x).index('block_html'))
 
-    def num_whitespace(text): return len(text) - len(text.lstrip())
 
-    def whiten(text: str) -> str:
-        """`whiten` strips empty lines because the `markdown.BlockLexer` doesn't like that."""
-        return '\n'.join(x.rstrip() for x in text.splitlines())
+-->
 
 </summary></details>
 
@@ -862,6 +874,57 @@ the inspector and the source code displayed on another part of the screen.
 
 ## Methods
 
+### [<code>[source]</code>](pidgy/weave.md)Weaving cells in pidgin programs
+
+<!--
+
+    import dataclasses, IPython, nbconvert as convert, jinja2
+    try: from . import base, util
+    except: import base, util
+    exporter = convert.exporters.TemplateExporter()
+
+-->
+
+pidgin programming is an incremental approach to documents.
+
+    @dataclasses.dataclass
+    class Weave(base.Extension):
+        environment: jinja2.Environment = dataclasses.field(default=exporter.environment)
+
+        def format_markdown(self, text):
+            lines = text.splitlines() or ['']
+            if not lines[0].strip(): return F"""<!--\n{text}\n\n-->"""
+            try:
+                template = exporter.environment.from_string(text, globals=getattr(self.shell, 'user_ns', {}))
+                text = template.render()
+            except BaseException as Exception:
+                self.shell.showtraceback((type(Exception), Exception, Exception.__traceback__))
+            return text
+
+        def format_metadata(self):
+            parent = getattr(self.shell.kernel, '_last_parent', {})
+            return {}
+
+        def _update_filters(self):
+            self.environment.filters.update({
+                k: v for k, v in getattr(self.shell, 'user_ns', {}).items() if callable(v) and k not in self.environment.filters})
+
+
+        def post_run_cell(self, result):
+            text = util.strip_front_matter(result.info.raw_cell)
+            IPython.display.display(IPython.display.Markdown(self.format_markdown(text), metadata=self.format_metadata()))
+            return result
+
+    def load_ipython_extension(shell):
+        shell.weave = Weave(shell=shell)
+        shell.weave.register()
+
+
+    def unload_ipython_extension(shell):
+        try:
+            shell.weave.unregister()
+        except:...
+
 #### [<code>[source]</code>](pidgy/extras.ipynb)Extra langauge features of `pidgy`
 
 `pidgy` experiments extra language features for python, using the same system
@@ -911,71 +974,6 @@ to use emojis as variables in python. They add extra color and expression to the
 
 
 -->
-
-### [<code>[source]</code>](pidgy/weave.md)Weaving cells in pidgin programs
-
-<!--
-
-    import datetime, dataclasses, sys, IPython as python, IPython, nbconvert as export, collections, IPython as python, mistune as markdown, hashlib, functools, hashlib, jinja2.meta, pidgy
-    exporter, shell = export.exporters.TemplateExporter(), python.get_ipython()
-    modules = lambda:[x for x in sys.modules if '.' not in x and not str.startswith(x,'_')]
-    with pidgy.pidgyLoader(lazy=True):
-        try:
-            from . import events
-        except:
-            import events
-
-
--->
-
-pidgin programming is an incremental approach to documents.
-
-    def load_ipython_extension(shell):
-        shell.display_formatter.formatters['text/markdown'].for_type(str, lambda x: x)
-        shell.weave = Weave(shell=shell)
-        shell.weave.register()
-
-    @dataclasses.dataclass
-    class Weave(events.Events):
-        shell: IPython.InteractiveShell = dataclasses.field(default_factory=IPython.get_ipython)
-        environment: jinja2.Environment = dataclasses.field(default=exporter.environment)
-        _null_environment = jinja2.Environment()
-
-        def format_markdown(self, text):
-            try:
-                template = exporter.environment.from_string(text, globals=getattr(self.shell, 'user_ns', {}))
-                text = template.render()
-            except BaseException as Exception:
-                self.shell.showtraceback((type(Exception), Exception, Exception.__traceback__))
-            return text
-
-        def format_metadata(self):
-            parent = getattr(self.shell.kernel, '_last_parent', {})
-            return {}
-
-        def _update_filters(self):
-            self.environment.filters.update({
-                k: v for k, v in getattr(self.shell, 'user_ns', {}).items() if callable(v) and k not in self.environment.filters})
-
-
-        def post_run_cell(self, result):
-            text = strip_front_matter(result.info.raw_cell)
-            lines = text.splitlines() or ['']
-            IPython.display.display(IPython.display.Markdown(
-                self.format_markdown(text) if lines[0].strip() else F"""<!--\n{text}\n\n-->""", metadata=self.format_metadata())
-            )
-            return result
-
-    def unload_ipython_extension(shell):
-        try:
-            shell.weave.unregister()
-        except:...
-
-    def strip_front_matter(text):
-        if text.startswith('---\n'):
-            front_matter, sep, rest = text[4:].partition("\n---")
-            if sep: return ''.join(rest.splitlines(True)[1:])
-        return text
 
 ### [<code>[source]</code>](pidgy/testing.md)Interactive testing of literate programs
 
@@ -1126,6 +1124,132 @@ It appends the metadata atrribute to the shell.
 -->
 
 {{load('readme.md')}}
+
+## Appendix
+
+[Python] files and notebooks typically represent appendix files.
+
+### `pidgy` base extension registration.
+
+```python
+import IPython, ast, dataclasses, functools, importnb
+
+
+@dataclasses.dataclass
+class Extension:
+    """`Extension` is base class that simplifies loading and unloading IPython extensions. Each component of `pidgy` is an IPython extension are this work compacts some repetative practices."""
+
+    _repl_events = "pre_execute pre_run_cell post_execute post_run_cell".split()
+    shell: IPython.InteractiveShell = dataclasses.field(
+        default_factory=IPython.get_ipython
+    )
+
+    def register(self, shell=None, *, method=""):
+        if shell:
+            self.shell = shell
+        register, unregister = not bool(method), bool(method)
+        shell = self.shell
+        for event in self._repl_events:
+            callable = getattr(self, event, None)
+            callable and getattr(shell.events, f"{method}register")(event, callable)
+        if isinstance(self, ast.NodeTransformer):
+            register and shell.ast_transformers.append(self)
+            unregister and shell.ast_transformers.pop(
+                shell.ast_transformers.index(self)
+            )
+
+            if isinstance(self, IPython.core.inputtransformer2.TransformerManager):
+                if register:
+                    shell.input_transformer_manager = self
+                if unregister:
+                    shell.input_transformer_managers = (
+                        IPython.core.inputtransformer2.TransformerManager()
+                    )
+
+        return self
+
+    unregister = functools.partialmethod(register, method="un")
+
+```
+
+### `pidgy` utilities.
+
+````python
+import re, typing
+
+
+class ContextDepth:
+    depth = 0
+
+    def __enter__(self):
+        self.depth += 1
+
+    def __exit__(self, *e):
+        self.depth -= 1
+
+
+(FENCE, CONTINUATION, SEMI, COLON, MAGIC, DOCTEST), QUOTES, SPACE = (
+    "``` \\ ; : %% >>>".split(),
+    ('"""', "'''"),
+    " ",
+)
+WHITESPACE = re.compile("^\s*", re.MULTILINE)
+
+
+def num_first_indent(text: str) -> int:
+    for str in text.splitlines():
+        if str.strip():
+            return len(str) - len(str.lstrip())
+    return 0
+
+
+def num_last_indent(text: str) -> int:
+    for str in reversed(text.splitlines()):
+        if str.strip():
+            return len(str) - len(str.lstrip())
+    return 0
+
+
+def base_indent(tokens: typing.List[dict]) -> int:
+    "Look ahead for the base indent."
+    for i, token in enumerate(tokens):
+        if token["type"] == "code":
+            code = token["text"]
+            if code.lstrip().startswith(FENCE):
+                continue
+            indent = num_first_indent(code)
+            break
+    else:
+        indent = 4
+    return indent
+
+
+def quote(text: str) -> str:
+    """wrap text in `QUOTES`"""
+    if text.strip():
+        left, right = len(text) - len(text.lstrip()), len(text.rstrip())
+        quote = QUOTES[(text[right - 1] in QUOTES[0]) or (QUOTES[0] in text)]
+        return text[:left] + quote + text[left:right] + quote + text[right:]
+    return text
+
+
+def num_whitespace(text: str) -> int:
+    return len(text) - len(text.lstrip())
+
+
+def whiten(text: str) -> str:
+    """`whiten` strips empty lines because the `markdown.BlockLexer` doesn't like that."""
+    return "\n".join(x.rstrip() for x in text.splitlines())
+
+
+def strip_front_matter(text, sep=None):
+    if text.startswith("---\n"):
+        front_matter, sep, rest = text[4:].partition("\n---")
+    if sep:
+        return "".join(rest.splitlines(True)[1:])
+    return text
+
+````
 
 <!--
 

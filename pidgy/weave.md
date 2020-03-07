@@ -2,32 +2,22 @@
 
 <!--
 
-    import datetime, dataclasses, sys, IPython as python, IPython, nbconvert as export, collections, IPython as python, mistune as markdown, hashlib, functools, hashlib, jinja2.meta, pidgy
-    exporter, shell = export.exporters.TemplateExporter(), python.get_ipython()
-    modules = lambda:[x for x in sys.modules if '.' not in x and not str.startswith(x,'_')]
-    with pidgy.pidgyLoader(lazy=True):
-        try:
-            from . import events
-        except:
-            import events
-
+    import dataclasses, IPython, nbconvert as convert, jinja2
+    try: from . import base, util
+    except: import base, util
+    exporter = convert.exporters.TemplateExporter()
 
 -->
 
 pidgin programming is an incremental approach to documents.
 
-    def load_ipython_extension(shell):
-        shell.display_formatter.formatters['text/markdown'].for_type(str, lambda x: x)
-        shell.weave = Weave(shell=shell)
-        shell.weave.register()
-
     @dataclasses.dataclass
-    class Weave(events.Events):
-        shell: IPython.InteractiveShell = dataclasses.field(default_factory=IPython.get_ipython)
+    class Weave(base.Extension):
         environment: jinja2.Environment = dataclasses.field(default=exporter.environment)
-        _null_environment = jinja2.Environment()
 
         def format_markdown(self, text):
+            lines = text.splitlines() or ['']
+            if not lines[0].strip(): return F"""<!--\n{text}\n\n-->"""
             try:
                 template = exporter.environment.from_string(text, globals=getattr(self.shell, 'user_ns', {}))
                 text = template.render()
@@ -45,20 +35,16 @@ pidgin programming is an incremental approach to documents.
 
 
         def post_run_cell(self, result):
-            text = strip_front_matter(result.info.raw_cell)
-            lines = text.splitlines() or ['']
-            IPython.display.display(IPython.display.Markdown(
-                self.format_markdown(text) if lines[0].strip() else F"""<!--\n{text}\n\n-->""", metadata=self.format_metadata())
-            )
+            text = util.strip_front_matter(result.info.raw_cell)
+            IPython.display.display(IPython.display.Markdown(self.format_markdown(text), metadata=self.format_metadata()))
             return result
+
+    def load_ipython_extension(shell):
+        shell.weave = Weave(shell=shell)
+        shell.weave.register()
+
 
     def unload_ipython_extension(shell):
         try:
             shell.weave.unregister()
         except:...
-
-    def strip_front_matter(text):
-        if text.startswith('---\n'):
-            front_matter, sep, rest = text[4:].partition("\n---")
-            if sep: return ''.join(rest.splitlines(True)[1:])
-        return text

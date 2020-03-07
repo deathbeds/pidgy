@@ -11,8 +11,10 @@ class Extension:
     )
 
     def register(self, shell=None, *, method=""):
+        if shell:
+            self.shell = shell
         register, unregister = not bool(method), bool(method)
-        shell = shell  # or self.shell
+        shell = self.shell
         for event in self._repl_events:
             callable = getattr(self, event, None)
             callable and getattr(shell.events, f"{method}register")(event, callable)
