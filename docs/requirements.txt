@@ -1,1 +1,4 @@
 nbsphinx
+sphinxcontrib-bibtex
+sphinxcontrib-svg2pdfconverter
+sphinx-copybutton

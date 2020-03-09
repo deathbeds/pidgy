@@ -1,14 +1,13 @@
 # `pidgy` command line interface
 
-`"readme.md"` is a good name for a file.
-
 > [**Eat Me, Drink Me, Read Me.**][readme history]
 
-In `pidgy`, the `"readme.md"` is treated as the description and implementation
-of the `__main__` program. The code below outlines the `pidgy` command line
-application to reuse literate `pidgy` documents in `markdown` and `notebook`
-files. It outlines how static `pidgy` documents may be reused outside of the
-interactive context.
+Commonly, the `"readme.md"` documents the use of a piece of software, `pidgy` finds that the readme is a nice place to assign public facing APIs.
+
+- Convert to rst, markdown, html using nbconvert converters.
+- Convert to formatted python.
+- Test the file.
+- Format the file with the contents.
 
 <!--excerpt-->
 

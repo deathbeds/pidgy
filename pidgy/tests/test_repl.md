@@ -1,4 +1,4 @@
-# `IPython`'s [REPL]
+# `IPython`'s configurable [REPL]
 
 > Sometimes I think the only universal in the computing field is the fetch-execute cycle.
 >
@@ -20,7 +20,7 @@ The body `IPython_REPL` demonstrates that components of the interactive shell th
 
         shell = IPython.get_ipython()
 
-### Read
+1. Read
 
 `IPython` triggers events when the REPL begins.
 
@@ -43,13 +43,13 @@ Transformations to AST are applied by a series of transformers.
 
         shell.transform_ast, shell.ast_transformers
 
-### Eval
+2. Eval
 
 The `shell` run the body of the [Abstract Syntax Tree] and
 
         shell.run_ast_nodes, (
 
-### Print
+3. Print
 
 formats any node meeting the criteria for the ast node interactivity. Typically, the last expression is shown.
 
@@ -59,6 +59,6 @@ formats any node meeting the criteria for the ast node interactivity. Typically,
 
         shell.events.callbacks.get('post_run_cell'), shell.events.callbacks.get('post_execute')
 
-### Loop
+4. Loop
 
 [read-eval-print-loop]: #
