@@ -1,4 +1,4 @@
-# Interactive testing of literate programs
+# Interactive formal testing
 
 Testing is something we added because of the application of notebooks as test units.
 
@@ -9,9 +9,8 @@ we formally test code incrementally during interactive computing.
 <!--
 
     import unittest, doctest, textwrap, dataclasses, IPython, re, pidgy, sys, typing, types, contextlib, ast, inspect
-    with pidgy.pidgyLoader(lazy=True):
-        try: from . import events
-        except: import events
+    try: from . import base
+    except: import base
 
 -->
 
@@ -37,7 +36,7 @@ for a flexible interface to verifying the computational qualities of literate pr
         return suite
 
     @dataclasses.dataclass
-    class Testing(events.Events):
+    class Testing(base.Extension):
 
 The `Testing` class executes the test suite each time a cell is executed.
 
@@ -47,7 +46,7 @@ The `Testing` class executes the test suite each time a cell is executed.
 
             if not (result.error_before_exec or result.error_in_exec):
                 with ipython_compiler(self.shell):
-                    definitions = [self.shell.user_ns[x] for x in getattr(self.shell.metadata, 'definitions', [])
+                    definitions = [self.shell.user_ns[x] for x in getattr(self.shell.measure, 'definitions', [])
                         if x.startswith(self.function_pattern) or
                         (isinstance(self.shell.user_ns[x], type)
                          and issubclass(self.shell.user_ns[x], unittest.TestCase))

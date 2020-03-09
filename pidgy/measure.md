@@ -1,4 +1,4 @@
-# Capturing metadata during the interactive compute process
+# Measure interactive computing activities
 
 To an organization, human compute time bears an important cost
 and programming represents a small part of that cycle.
@@ -8,19 +8,18 @@ and programming represents a small part of that cycle.
 The `metadata` module assists in collecting metadata about the interactive compute process.
 It appends the metadata atrribute to the shell.
 
-        shell.metadata = Metadata(shell=shell).register()
+        shell.measure = Measure(shell=shell).register()
 
 <!--
 
     import dataclasses, ast, pidgy
-    with pidgy.pidgyLoader(lazy=True):
-        try: from . import events
-        except: import events
+    try: from . import base
+    except: import base
 
 -->
 
     @dataclasses.dataclass
-    class Metadata(events.Events, ast.NodeTransformer):
+    class Measure(base.Extension, ast.NodeTransformer):
         definitions: list = dataclasses.field(default_factory=list)
         def pre_execute(self):
             self.definitions = []

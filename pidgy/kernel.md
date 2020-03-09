@@ -1,4 +1,4 @@
-# Configuring the `pidgy` shell and kernel architecture.
+# `pidgy` shell and kernel
 
 ![](https://jupyter.readthedocs.io/en/latest/_images/other_kernels.png)
 
@@ -47,6 +47,7 @@ Configure a native `pidgy` `IPython.InteractiveShell`
         tangle = ipykernel.zmqshell.ZMQInteractiveShell.input_transformer_manager
         extras = traitlets.Any(allow_none=True)
         testing = traitlets.Any(allow_none=True)
+        measure = traitlets.Any(allow_none=True)
         enable_html_pager = traitlets.Bool(True)
 
 `pidgyInteractiveShell.enable_html_pager` is necessary to see rich displays in
@@ -67,51 +68,3 @@ the inspector.
         def init_metadata(self, parent):
             self._last_parent = parent
             return super().init_metadata(parent)
-
-
-        def do_inspect(self, code, cursor_pos, detail_level=0):
-
-<details><summary>Customizing the Jupyter inspector behavior for literate computing</summary><p>
-When we have access to the kernel class it is possible to customize
-a number of interactive shell features.   The do inspect function
-adds some features to `jupyter`'s  inspection behavior when working in 
-`pidgy`.
-</p><pre></code>
-
-            object = {'found': False}
-            if code[:cursor_pos][-3:] == '!!!':
-                object = {'found': True, 'data': {'text/markdown': self.shell.weave.format_markdown(code[:cursor_pos-3]+code[cursor_pos:])}}
-            else:
-                try:
-                    object = super().do_inspect(code, cursor_pos, detail_level=0)
-                except: ...
-
-            if not object['found']:
-
-Simulate finding an object and return a preview of the markdown.
-
-                object['found'] = True
-                line, offset = IPython.utils.tokenutil.line_at_cursor(code, cursor_pos)
-                lead = code[:cursor_pos]
-                col = cursor_pos - offset
-
-
-                code = F"""<code>·L{
-                    len(lead.splitlines()) + int(not(col))
-                },C{col + 1}</code><br/>\n\n""" + code[:cursor_pos]+'·'+('' if col else '<br/>\n')+code[cursor_pos:]
-
-                object['data'] = {'text/markdown': code}
-
-We include the line number and cursor position to enrich the connection between
-the inspector and the source code displayed on another part of the screen.
-
-            return object
-        ...
-
-</details>
-
-## `pidgy`-like interfaces in other languages.
-
-[julia]: #
-[r]: #
-[python]: #
