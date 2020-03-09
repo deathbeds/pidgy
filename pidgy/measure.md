@@ -13,14 +13,13 @@ It appends the metadata atrribute to the shell.
 <!--
 
     import dataclasses, ast, pidgy
-    with pidgy.pidgyLoader(lazy=True):
-        try: from . import events
-        except: import events
+    try: from . import base
+    except: import base
 
 -->
 
     @dataclasses.dataclass
-    class Measure(events.Events, ast.NodeTransformer):
+    class Measure(base.Extension, ast.NodeTransformer):
         definitions: list = dataclasses.field(default_factory=list)
         def pre_execute(self):
             self.definitions = []

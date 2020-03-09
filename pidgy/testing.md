@@ -9,9 +9,8 @@ we formally test code incrementally during interactive computing.
 <!--
 
     import unittest, doctest, textwrap, dataclasses, IPython, re, pidgy, sys, typing, types, contextlib, ast, inspect
-    with pidgy.pidgyLoader(lazy=True):
-        try: from . import events
-        except: import events
+    try: from . import base
+    except: import base
 
 -->
 
@@ -37,7 +36,7 @@ for a flexible interface to verifying the computational qualities of literate pr
         return suite
 
     @dataclasses.dataclass
-    class Testing(events.Events):
+    class Testing(base.Extension):
 
 The `Testing` class executes the test suite each time a cell is executed.
 
