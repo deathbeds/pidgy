@@ -1,5 +1,6 @@
+Welcome to `pidgy`, a project designed for modern interactive literate programming.
+
 .. toctree::
-    :caption: pidgy💩
     :glob:
     
     readme.md

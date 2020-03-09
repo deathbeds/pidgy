@@ -1,4 +1,4 @@
-# Interactive testing of literate programs
+# Interactive formal testing
 
 Testing is something we added because of the application of notebooks as test units.
 

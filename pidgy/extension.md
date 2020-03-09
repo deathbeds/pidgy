@@ -1,4 +1,4 @@
-# Configuring the [Markdown]-forward interactive shell in `IPython`
+# `pidgy` extension
 
 This sections registers and describes each of the extensions that `pidgy` applies to the interactive shell.
 The implementations of the extension are shaped by existing open source software and practices, and run throughout all aspects of the `pidgy` project. Specifically, this work relies on tooling from the scientific [Python] community.

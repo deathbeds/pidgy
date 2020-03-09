@@ -1,3 +1,5 @@
+# The `pidgy` package and paper
+
 `pidgy` is a fun way to program in [Markdown] that can be reused as python modules, scripts, and applications.
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/deathbeds/pidgy/master?urlpath=lab)

@@ -1,4 +1,4 @@
-# Weaving cells in pidgin programs
+# Weaving and template `pidgy`
 
 <!--
 

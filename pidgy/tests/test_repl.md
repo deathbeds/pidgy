@@ -1,4 +1,4 @@
-# Stepping along `IPython`'s [Read-Eval-Print-Loop]
+# `IPython`'s [REPL]
 
 > Sometimes I think the only universal in the computing field is the fetch-execute cycle.
 >
@@ -60,3 +60,5 @@ formats any node meeting the criteria for the ast node interactivity. Typically,
         shell.events.callbacks.get('post_run_cell'), shell.events.callbacks.get('post_execute')
 
 ### Loop
+
+[read-eval-print-loop]: #

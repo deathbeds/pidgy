@@ -1,4 +1,4 @@
-# Measure activities during the interactive compute process
+# Measure interactive computing activities
 
 To an organization, human compute time bears an important cost
 and programming represents a small part of that cycle.

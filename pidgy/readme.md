@@ -1,4 +1,6 @@
-# `"readme.md"` is a good name for a file.
+# `pidgy` command line interface
+
+`"readme.md"` is a good name for a file.
 
 > [**Eat Me, Drink Me, Read Me.**][readme history]
 

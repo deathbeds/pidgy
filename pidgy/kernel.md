@@ -1,4 +1,4 @@
-# Configuring the `pidgy` shell and kernel architecture.
+# `pidgy` shell and kernel
 
 ![](https://jupyter.readthedocs.io/en/latest/_images/other_kernels.png)
 
