@@ -12,3 +12,14 @@ extensions = "recommonmark nbsphinx sphinx.ext.autodoc sphinx.ext.coverage sphin
 exclude_patterns = ["_build", "*checkpoint*"]
 autoapi_type = "python"
 autoapi_dirs = ["pidgy"]
+texinfo_documents = [
+    (
+        master_doc,
+        "pidgy programming",
+        "pidgy literate programming",
+        author,
+        "pidgy",
+        "pidgy is a literate program about literate computing.",
+        "Documentation",
+    ),
+]
