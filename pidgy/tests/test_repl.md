@@ -1,4 +1,4 @@
-# `IPython`'s [REPL]
+# `IPython`'s configurable [REPL]
 
 > Sometimes I think the only universal in the computing field is the fetch-execute cycle.
 >

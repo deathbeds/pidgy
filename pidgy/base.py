@@ -1,3 +1,5 @@
+"""Registering `pidgy` extensions"""
+
 import IPython, ast, dataclasses, functools, importnb
 
 
