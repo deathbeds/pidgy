@@ -1,6 +1,6 @@
 # Introduction
 
-[Fernando Perez], creator of [`IPython`], wrote an essay titled ["Literate computing" and computational reproducibility]. Here he introduces the term [Literate Computing] that describes a style of workflow where representations of live computation are critical to the understanding of a computational narrative. At the scale of interactive computing, we focus on documenting the computational thinking process using narrative, code, and hypermedia. Whereas [Literate Programming] considers the enduring literary qualities of the program. In this work, we discuss the `pidgy` interactive shell that is designed to improve the [Literate Computing] experience so that the outcome are multi-objective readable, reproducible, and reusable [Literate Program]s.
+[Fernando Perez], creator of [`IPython`], wrote an essay titled ["Literate computing" and computational reproducibility]. In it he introduces the term [Literate Computing] that describes a style of workflow where representations of live computation are critical to a computational narrative. At the speed of interactive computing, we focus on documenting the computational thinking process using narrative, code, and hypermedia. Whereas [Literate Programming] considers the enduring literary qualities of the program. In this work, we discuss the `pidgy` interactive shell that is designed to provide a [Literate Computing] experience so that results in multi-objective readable, reproducible, and reusable [Literate Program]s.
 
 ![](literate_computing_venn.jpeg)
 
@@ -19,7 +19,7 @@ To [Weave] a document refers to the transforms made to the input as it becomes a
 ![](pidgy_literate_computing.jpeg)
 
 Throughout this work we'll design a purpose built interactive literate computing interface. This work is interested in designing an interactive experience that results in multi-objective computational documents that are readable, reusable, and reproducible over longer timelines than single use notebooks and programs.
-
+A consistent theme is that all interactions were designed for `jupyter`, and as a result end-user of `jupyter` kernels like colab and vscode can use `pidgy`.
 The intent of `pidgy` matured as different features began to take form. Originally, `pidgy` was gungho about [Notebooks] being the primary interface for Literate Programming. [Notebooks] provide a metastable serialization of the Literate Programming containing both the literate input and the woven hypermedia. And they still serve valid applications for conditions where the input and output are highly dependent on each other. There are other conditions where we desire to write programmatic literature that is reliably reproducible over a longer timeline. [Markdown] written in `pidgy` seems to provide a compact input for pythonic literate programs with [Markdown] first. If a program is reproducible, then it is input of its outputs.
 
 ![](degrees_of_freedom.jpg)
@@ -30,3 +30,12 @@ The intent of `pidgy` matured as different features began to take form. Original
 [web]: #
 [pascal]: #
 [markdown]: #
+[fernando perez]: #
+[literate computing]: #
+[notebooks]: #
+[literate programming]: #
+[`ipython`]: #
+[literate program]: #
+[documentation]: #
+[tangle]: #
+[weave]: #
