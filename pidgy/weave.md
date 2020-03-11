@@ -2,11 +2,11 @@
 
 <!--
 
-    import dataclasses, IPython, nbconvert as convert, jinja2
+    import dataclasses, IPython, nbconvert as convert, jinja2, builtins
     try: from . import base, util
     except: import base, util
     exporter = convert.exporters.TemplateExporter()
-
+    exporter.environment.globals.update(vars(builtins))
 -->
 
 pidgin programming is an incremental approach to documents.

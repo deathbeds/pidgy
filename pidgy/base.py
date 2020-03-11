@@ -26,13 +26,13 @@ class Extension:
                 shell.ast_transformers.index(self)
             )
 
-            if isinstance(self, IPython.core.inputtransformer2.TransformerManager):
-                if register:
-                    shell.input_transformer_manager = self
-                if unregister:
-                    shell.input_transformer_managers = (
-                        IPython.core.inputtransformer2.TransformerManager()
-                    )
+        if isinstance(self, IPython.core.inputtransformer2.TransformerManager):
+            if register:
+                shell.input_transformer_manager = self
+            if unregister:
+                shell.input_transformer_managers = (
+                    IPython.core.inputtransformer2.TransformerManager()
+                )
 
         return self
 

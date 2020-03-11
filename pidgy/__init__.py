@@ -9,8 +9,10 @@ with __import__("importnb").Notebook(lazy=True):
 with pidgyLoader(lazy=True):
     try:
         from . import weave
+        from .runpidgy import run
     except:
         import weave
+        from runpidgy import run
 
 
 def load_ipython_extension(shell):

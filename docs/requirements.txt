@@ -3,3 +3,5 @@ sphinxcontrib-bibtex
 sphinxcontrib-svg2pdfconverter
 sphinx-copybutton
 sphinx-autoapi
+sphinxcontrib-fulltoc
+sphinxcontrib-spelling

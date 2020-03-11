@@ -1,4 +1,4 @@
-# `IPython`'s configurable [REPL]
+# `IPython`'s configurable REPL
 
 > Sometimes I think the only universal in the computing field is the fetch-execute cycle.
 >
@@ -18,47 +18,48 @@ hypermedia.
 
 The body `IPython_REPL` demonstrates that components of the interactive shell that may be configured.
 
-        shell = IPython.get_ipython()
+1.  Read
 
-1. Read
+    shell=IPython.get_ipython()
 
-`IPython` triggers events when the REPL begins.
+        `IPython` triggers events when the REPL begins.
 
-        shell.events.callbacks.get('pre_execute'), shell.events.callbacks.get('pre_run_cell')
+            shell.events.callbacks.get('pre_execute'), shell.events.callbacks.get('pre_run_cell')
 
-Once the `input` is read, `IPython` applies a series of strings transformations when the cell is transformed.
-The outcome of the transformation should be some that [Python] can `compile`.
+        Once the `input` is read, `IPython` applies a series of strings transformations when the cell is transformed.
 
-        shell.transform_cell, [
-            shell.input_transformer_manager.cleanup_transforms,
-            shell.input_transformer_manager.line_transforms,
-            shell.input_transformer_manager.token_transformers
-        ]
+    The outcome of the transformation should be some that [Python] can `compile`.
 
-The [Python] code is translated into an [Abstract Syntax Tree].
+            shell.transform_cell, [
+                shell.input_transformer_manager.cleanup_transforms,
+                shell.input_transformer_manager.line_transforms,
+                shell.input_transformer_manager.token_transformers
+            ]
 
-        shell.compile.ast_parse
+        The [Python] code is translated into an [Abstract Syntax Tree].
 
-Transformations to AST are applied by a series of transformers.
+            shell.compile.ast_parse
 
-        shell.transform_ast, shell.ast_transformers
+        Transformations to AST are applied by a series of transformers.
 
-2. Eval
+            shell.transform_ast, shell.ast_transformers
 
-The `shell` run the body of the [Abstract Syntax Tree] and
+2.  Eval
+
+    The `shell` run the body of the [Abstract Syntax Tree] and
 
         shell.run_ast_nodes, (
 
-3. Print
+3.  Print
 
-formats any node meeting the criteria for the ast node interactivity. Typically, the last expression is shown.
+    formats any node meeting the criteria for the ast node interactivity. Typically, the last expression is shown.
 
         ),shell.ast_node_interactivity, shell.display_formatter.format
 
-`IPython` triggers events when the REPL ends.
+    `IPython` triggers events when the REPL ends.
 
         shell.events.callbacks.get('post_run_cell'), shell.events.callbacks.get('post_execute')
 
-4. Loop
+4.  Loop
 
-[read-eval-print-loop]: #
+[repl]: https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop
