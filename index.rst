@@ -28,6 +28,7 @@ Welcome to `pidgy`, a project designed for modern interactive literate programmi
     pidgy/kernel.md
     pidgy/tangle.ipynb
     pidgy/loader.ipynb
+    pidgy/runpidgy.md
     pidgy/extras.ipynb
     pidgy/weave.md
     pidgy/testing.md
