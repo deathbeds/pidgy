@@ -1,6 +1,8 @@
 Literate programs can be translated into many formats. Commonly markup langauges focus on translation to other markup languages, we add an extra ability to convert markup to source code.
 
     import pidgy, pathlib
+    try: from . import util
+    except: import util
 
     def to_markup(input, exporter):
         return exporter.from_notebook_node(nbformat.v4.new_notebook(cells=[nbformat.v4.new_markdown_cell(input)]))[0]
@@ -12,10 +14,10 @@ Literate programs can be translated into many formats. Commonly markup langauges
         code = black.format_str(code, mode=black.FileMode(line_length=100))
         return code
 
+    def convert(): ...
     def python(files):
-        for file in files:
-            code = to_python(pathlib.Path(file).read_text())
-            print(highlight_terminal(code, 'python'))
+        for file in util.yield_files(files):
+            code = to_python(file.read_text())
 
     def markup(files, format='markdown'):
         import nbconvert

@@ -6,6 +6,7 @@ import click
 
 application = autocli.autoclick(
     readme.run,
+    readme.render,
     readme.test,
     autocli.autoclick(
         kernel.install, kernel.uninstall, kernel.start, group=click.Group("kernel")

@@ -1,39 +1,52 @@
-# `pidgy` command line interface
+# Literate scripting
 
-> [**Eat Me, Drink Me, Read Me.**][readme history]
+`pidgy` is based on [Python], a scripting language, therefore it should be possible execute markdown as scripts.
 
-<!--excerpt-->
+    def prepare_name(str):
+        parts = list(__import__('pathlib').Path(str).parts)
+        for ext in ".py .ipynb .md".split():
+            parts[-1] = parts[-1][:-len(ext)] if parts[-1][-len(ext):] == ext else parts[-1]
+        return '.'.join(parts)
 
-<!---->
 
-    def run(ctx, ref: str):
+    def run(object: str, run_name=None, **globals):
 
-`pidgy` `run` makes it possible to execute `pidgy` documents as programs, and
-view their pubished results.
+`run` executes a literate document as a script.
 
-        import pidgy, importnb, runpy, sys, importlib, jinja2, pathlib, click
-        with pidgy.pidgyLoader():
-            try: from . import runpidgy
-            except: import runpidgy
-
-        absolute = str(pathlib.Path().absolute())
-        sys.path = ['.'] + sys.path
-        click.echo(F"Running {ref}.")
-        sys.argv, argv = [ref] + ctx.args, sys.argv
+        import pidgy, importnb, sys, importlib, pathlib, runpy
+        _root_in_sys = '.' not in sys.path
+        if not _root_in_sys:
+            sys.path = ['.'] + sys.path
         try:
-            runpidgy.run(ref)
-        finally: sys.argv = argv
+            with pidgy.pidgyLoader(), importnb.Notebook():
 
-<!---->
+It appears the loaders only work with `runpy.run_module`, not `runpy.run_path`.
 
-    def test(ctx, files: list):
+                return runpy.run_module(prepare_name(object), globals, run_name)
 
-Formally test markdown documents, notebooks, and python files.
+        finally:
+            if not _root_in_sys:
+                sys.path.pop(sys.path.index('.'))
+    def render(ref: str):
+        import pathlib, pidgy, re
+        object = run(ref)
+        if object['__file__'].endswith(('.py', '.md', '.markdown')):
+            body = pathlib.Path(object['__file__']).read_text()
 
-         import pytest
-         pytest.main(ctx.args+['--doctest-modules', '--disable-pytest-warnings']+list(files))
+            return pidgy.weave.exporter.environment.from_string(
+                re.sub('<!--.+-->', '', body)
+            ).render(object)
 
-<!---->
 
-[art of the readme]: https://github.com/noffle/art-of-readme
-[readme history]: https://medium.com/@NSomar/readme-md-history-and-components-a365aff07f10
+
+    def alias_to_module_name(object: str) -> str:
+
+Convert a filename to a module specification.
+
+        path = pathlib.Path(object)
+        if path.exists():
+            parts = list(path.parts)
+        for ext in ".py .ipynb .md".split():
+            parts[-1] = parts[-1][:-len(ext)] if parts[-1][-len(ext):] == ext else parts[-1]
+        object = '.'.join(parts)
+        return object
