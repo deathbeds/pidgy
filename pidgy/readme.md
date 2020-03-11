@@ -41,7 +41,7 @@ Formally test markdown documents, notebooks, and python files.
 
 <!---->
 
-    application = autocli.autoclick(run, test, kernel.application)
+    application = autocli.autoclick(run, test, kernel.application, context_settings=dict(allow_extra_args=True))
 
 [art of the readme]: https://github.com/noffle/art-of-readme
 [readme history]: https://medium.com/@NSomar/readme-md-history-and-components-a365aff07f10
