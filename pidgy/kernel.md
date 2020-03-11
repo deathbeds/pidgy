@@ -11,11 +11,7 @@ macros.
 
 ![](https://jupyter.readthedocs.io/en/latest/_images/other_kernels.png)
 
-<!--
-
-    import jupyter_client, IPython, ipykernel.ipkernel, ipykernel.kernelapp, pidgy, traitlets, pidgy, traitlets, ipykernel.kernelspec, ipykernel.zmqshell, pathlib, traitlets
-
--->
+    import IPython, ipykernel.ipkernel, ipykernel.kernelapp, pidgy, traitlets, ipykernel.kernelspec, ipykernel.zmqshell, pathlib
 
 The shell is the application either jupyterlab or jupyter notebook, the kernel
 determines the programming language. Below we design a just jupyter kernel that
@@ -59,13 +55,10 @@ the inspector.
 
 The `pidgy` kernel command line features.
 
-    def install()->None:
-
-`install` the pidgy kernel.
-
-        import click
-        manager = **import**('jupyter_client').kernelspec.KernelSpecManager()
-        path = str((pathlib.Path(**file**).parent / 'kernelspec').absolute())
+    def install():
+        import jupyter_client, click
+        manager = jupyter_client.kernelspec.KernelSpecManager()
+        path = str((pathlib.Path(__file__).parent / 'kernelspec').absolute())
         try:
             dest = manager.install_kernel_spec(path, 'pidgy')
         except:
@@ -73,9 +66,8 @@ The `pidgy` kernel command line features.
             dest = manager.install_kernel_spec(path, 'pidgy', True)
         click.echo(F"The pidgy kernel was install in {dest}")
 
-<!---->
 
-    def uninstall()->None:
+    def uninstall():
 
 `uninstall` the kernel.
 
@@ -83,12 +75,7 @@ The `pidgy` kernel command line features.
         jupyter_client.kernelspec.KernelSpecManager().remove_kernel_spec('pidgy')
         click.echo(F"The pidgy kernel was removed.")
 
-<!---->
 
-    def start(f:str="")->None:
-
-Launch a `pidgy` kernel applications.
-
-        ipykernel.kernelapp.IPKernelApp.launch_instance(
+    def start(f:str='*.json'):
+        ipykernel.kernelapp.IPKernelApp.launch_instance(connection_file=f,
             kernel_class=pidgyKernel)
-    ...

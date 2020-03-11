@@ -26,7 +26,7 @@ It appears the loaders only work with `runpy.run_module`, not `runpy.run_path`.
 
         finally:
             if not _root_in_sys:
-                sys.path.pop(self.path.index('.'))
+                sys.path.pop(sys.path.index('.'))
 
     def alias_to_module_name(object: str) -> str:
 

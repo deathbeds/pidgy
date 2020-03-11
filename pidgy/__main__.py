@@ -12,5 +12,5 @@ application = autocli.autoclick(
     autocli.autoclick(
         kernel.install, kernel.uninstall, kernel.start, group=click.Group("kernel")
     ),
-    context_settings=dict(allow_extra_args=True),
+    context_settings=dict(allow_extra_args=True, ignore_unknown_options=True),
 )
