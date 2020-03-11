@@ -11,8 +11,6 @@
 
 <!---->
 
-## `"pidgy run"` literature as code
-
     def run(ctx, ref: str):
 
 `pidgy` `run` makes it possible to execute `pidgy` documents as programs, and
@@ -29,8 +27,6 @@ view their pubished results.
         finally: sys.argv = argv
 
 <!---->
-
-## Test `pidgy` documents in pytest.
 
     def test(ctx, files: list):
 
