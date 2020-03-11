@@ -59,16 +59,7 @@ the inspector.
 
 The `pidgy` kernel command line features.
 
-    import pidgy, click
-    @click.group()
-    def kernel():
-
-`pidgy` is mainly designed to improve the interactive experience of creating
-literature in computational notebooks.
-
-<!---->
-
-    def install():
+    def install()->None:
 
 `install` the pidgy kernel.
 
@@ -83,7 +74,7 @@ literature in computational notebooks.
 
 <!---->
 
-    def uninstall():
+    def uninstall()->None:
 
 `uninstall` the kernel.
 
@@ -93,17 +84,10 @@ literature in computational notebooks.
 
 <!---->
 
-    def start(f:str=""):
+    def start(f:str="")->None:
 
 Launch a `pidgy` kernel applications.
 
         ipykernel.kernelapp.IPKernelApp.launch_instance(
             kernel_class=pidgyKernel)
     ...
-
-    with pidgy.pidgyLoader():
-        try: from . import autocli
-        except: import autocli
-
-    autocli.autoclick(install, uninstall, start, group=kernel)
-    application = kernel
