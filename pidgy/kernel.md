@@ -1,28 +1,19 @@
 # `pidgy` shell and kernel
 
-![](https://jupyter.readthedocs.io/en/latest/_images/other_kernels.png)
-
-Interactive programming in `pidgy` documents is accessed using the polyglot
-[Jupyter] kernel architecture. In fact, the provenance the [Jupyter]
-name is a combination the native kernel architectures for
-[ju~~lia~~][julia], [pyt~~hon~~][python], and [r]. [Jupyter]'s
-generalization of the kernel/shell interface allows
-over 100 languages to be used in `notebook and jupyterlab`.
-It is possible to define prescribe wrapper kernels around existing
-methods; this is the appraoach that `pidgy` takes
-
 > A kernel provides programming language support in Jupyter. IPython is the default kernel. Additional kernels include R, Julia, and many more.
 >
 > > - [`jupyter` kernel definition](https://jupyter.readthedocs.io/en/latest/glossary.html#term-kernel)
 
-`pidgy` is not not a native kernel. It is a wrapper kernel around the
+`pidgy` is a wrapper kernel around the
 existing `ipykernel and IPython.InteractiveShell` configurables.
 `IPython` adds extra syntax to python that simulate literate programming
 macros.
 
+![](https://jupyter.readthedocs.io/en/latest/_images/other_kernels.png)
+
 <!--
 
-    import jupyter_client, IPython, ipykernel.ipkernel, ipykernel.kernelapp, pidgy, traitlets, pidgy, traitlets, ipykernel.kernelspec, ipykernel.zmqshell, pathlib, traitlets
+    import jupyter_client, IPython, ipykernel.ipkernel, ipykernel.kernelapp, pidgy, traitlets, ipykernel.kernelspec, ipykernel.zmqshell, pathlib
 
 -->
 
@@ -36,15 +27,13 @@ can be installed using
 pidgy kernel install
 ```
 
-## Configure the `pidgy` shell.
-
     class pidgyInteractiveShell(ipykernel.zmqshell.ZMQInteractiveShell):
 
 Configure a native `pidgy` `IPython.InteractiveShell`
 
         loaders = traitlets.Dict(allow_none=True)
         weave = traitlets.Any(allow_none=True)
-        tangle = ipykernel.zmqshell.ZMQInteractiveShell.input_transformer_manager
+        tangle = traitlets.Any(allow_none=True)
         extras = traitlets.Any(allow_none=True)
         testing = traitlets.Any(allow_none=True)
         measure = traitlets.Any(allow_none=True)
@@ -57,9 +46,8 @@ the inspector.
             super().__init__(*args, **kwargs)
             with pidgy.pidgyLoader():
                 from .extension import load_ipython_extension
+            self.user_ns['shell'] = self
             load_ipython_extension(self)
-
-## Configure the `pidgy` kernel.
 
     class pidgyKernel(ipykernel.ipkernel.IPythonKernel):
         shell_class = traitlets.Type(pidgyInteractiveShell)
@@ -68,3 +56,40 @@ the inspector.
         def init_metadata(self, parent):
             self._last_parent = parent
             return super().init_metadata(parent)
+
+The `pidgy` kernel command line features.
+
+<!---->
+
+    def install():
+
+`install` the pidgy kernel.
+
+        import jupyter_client, click
+        manager = jupyter_client.kernelspec.KernelSpecManager()
+        path = str((pathlib.Path(__file__).parent / 'kernelspec').absolute())
+        try:
+            dest = manager.install_kernel_spec(path, 'pidgy')
+        except:
+            click.echo(F"System install was unsuccessful. Attempting to install the pidgy kernel to the user.")
+        dest = manager.install_kernel_spec(path, 'pidgy', True)
+        click.echo(F"The pidgy kernel was install in {dest}")
+
+<!---->
+
+    def uninstall():
+
+`uninstall` the kernel.
+
+        import jupyter_client, click
+        jupyter_client.kernelspec.KernelSpecManager().remove_kernel_spec('pidgy')
+        click.echo(F"The pidgy kernel was removed.")
+
+<!---->
+
+    def start(f:str=""):
+
+Launch a `pidgy` kernel applications.
+
+        ipykernel.kernelapp.IPKernelApp.launch_instance(connection_file=f, kernel_class=pidgyKernel)
+    ...

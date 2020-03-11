@@ -2,11 +2,6 @@
 
 > [**Eat Me, Drink Me, Read Me.**][readme history]
 
-    import click, IPython, pidgy, nbconvert, pathlib, re
-    with pidgy.pidgyLoader():
-        try: from . import kernel, autocli, runpidgy
-        except: import kernel, autocli, runpidgy
-
 <!--excerpt-->
 
 <!---->
@@ -16,7 +11,11 @@
 `pidgy` `run` makes it possible to execute `pidgy` documents as programs, and
 view their pubished results.
 
-        import pidgy, importnb, runpy, sys, importlib, jinja2
+        import pidgy, importnb, runpy, sys, importlib, jinja2, pathlib, click
+        with pidgy.pidgyLoader():
+            try: from . import runpidgy
+            except: import runpidgy
+
         absolute = str(pathlib.Path().absolute())
         sys.path = ['.'] + sys.path
         click.echo(F"Running {ref}.")
