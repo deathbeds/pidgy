@@ -63,14 +63,15 @@ The `pidgy` kernel command line features.
 
 `install` the pidgy kernel.
 
-        manager = __import__('jupyter_client').kernelspec.KernelSpecManager()
-        path = str((pathlib.Path(__file__).parent / 'kernelspec').absolute())
-        try:
-            dest = manager.install_kernel_spec(path, 'pidgy')
-        except:
-            click.echo(F"System install was unsuccessful. Attempting to install the pidgy kernel to the user.")
-            dest = manager.install_kernel_spec(path, 'pidgy', True)
-        click.echo(F"The pidgy kernel was install in {dest}")
+import click
+manager = **import**('jupyter_client').kernelspec.KernelSpecManager()
+path = str((pathlib.Path(**file**).parent / 'kernelspec').absolute())
+try:
+dest = manager.install_kernel_spec(path, 'pidgy')
+except:
+click.echo(F"System install was unsuccessful. Attempting to install the pidgy kernel to the user.")
+dest = manager.install_kernel_spec(path, 'pidgy', True)
+click.echo(F"The pidgy kernel was install in {dest}")
 
 <!---->
 
@@ -78,7 +79,7 @@ The `pidgy` kernel command line features.
 
 `uninstall` the kernel.
 
-        import jupyter_client
+        import jupyter_client, click
         jupyter_client.kernelspec.KernelSpecManager().remove_kernel_spec('pidgy')
         click.echo(F"The pidgy kernel was removed.")
 
