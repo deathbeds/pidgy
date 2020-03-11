@@ -34,7 +34,7 @@ It appears the loaders only work with `runpy.run_module`, not `runpy.run_path`.
             body = pathlib.Path(object['__file__']).read_text()
 
             return pidgy.weave.exporter.environment.from_string(
-                re.sub('<!--.+-->', '', body)
+                re.sub(re.compile('(<!--.*-->?)', re.MULTILINE), '', body)
             ).render(object)
 
 

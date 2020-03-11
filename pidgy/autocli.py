@@ -38,6 +38,8 @@ def click_type(
             return
         if issubclass(object, typing.List):
             return click_type(object.__args__[0], default)
+        if issubclass(object, set):
+            return click.Choice(object)
 
         if issubclass(object, pathlib.Path):
             return click.Path()
@@ -74,7 +76,8 @@ def command_from_signature(object: types.FunctionType, *decorators):
                 click.option(
                     "-" * (1 if len(k) == 1 else 2) + stringcase.spinalcase(k),
                     type=type,
-                    help=f"Default value <{repr(v.default)}> of type {repr(type)}",
+                    show_default=True,
+                    is_flag=v.annotation is bool,
                 ),
             )
     return decorators
