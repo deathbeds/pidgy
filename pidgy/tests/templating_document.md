@@ -1,4 +1,4 @@
-#!/usr/bin/env python -m pidgy render
+#!/usr/bin/env python3 -m pidgy render
 
 My document recieved {{sys.argv}} as arguments.
 
