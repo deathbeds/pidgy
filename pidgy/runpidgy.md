@@ -1,13 +1,6 @@
-# Literate scripting
+# Scripting with literate programs.
 
 `pidgy` is based on [Python], a scripting language, therefore it should be possible execute markdown as scripts.
-
-    def prepare_name(str):
-        parts = list(__import__('pathlib').Path(str).parts)
-        for ext in ".py .ipynb .md".split():
-            parts[-1] = parts[-1][:-len(ext)] if parts[-1][-len(ext):] == ext else parts[-1]
-        return '.'.join(parts)
-
 
     def run(object: str, run_name=None, **globals):
 
@@ -35,6 +28,13 @@ It appears the loaders only work with `runpy.run_module`, not `runpy.run_path`.
             return pidgy.weave.exporter.environment.from_string(
                 re.sub('(<!--[\s\S]*-->?)', '', body)
             ).render(object).rstrip() + '\n'
+
+    def prepare_name(str):
+        parts = list(__import__('pathlib').Path(str).parts)
+        for ext in ".py .ipynb .md".split():
+            parts[-1] = parts[-1][:-len(ext)] if parts[-1][-len(ext):] == ext else parts[-1]
+        return '.'.join(parts)
+
 
     def alias_to_module_name(object: str) -> str:
 
