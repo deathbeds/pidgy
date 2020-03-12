@@ -36,7 +36,6 @@ Welcome to `pidgy`, a project designed for modern interactive literate programmi
     pidgy/pytest_config/readme.md
     pidgy/readme.md
     docs/discussion.md.ipynb
-    docs/best-practices.md
     
     pidgy/tests/test_basic.md.ipynb
     pidgy/tests/test_pidgin_syntax.md.ipynb
