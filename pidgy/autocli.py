@@ -10,7 +10,6 @@ def autoclick(
             app.add_command(command)
         else:
             decorators = command_from_signature(command)
-            print(decorators)
             for decorator in reversed(decorators):
                 command = decorator(command)
             command = app.command(
