@@ -13,7 +13,9 @@ def autoclick(
             for decorator in reversed(decorators):
                 command = decorator(command)
             command = app.command(
-                help=inspect.getdoc(command), no_args_is_help=not decorators, **settings
+                help=inspect.getdoc(command),
+                no_args_is_help=bool(decorators),
+                **settings
             )(command)
     if len(object) == 1:
         return command
