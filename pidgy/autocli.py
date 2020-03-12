@@ -10,9 +10,12 @@ def autoclick(
             app.add_command(command)
         else:
             decorators = command_from_signature(command)
+            print(decorators)
             for decorator in reversed(decorators):
                 command = decorator(command)
-            command = app.command(help=inspect.getdoc(command), **settings)(command)
+            command = app.command(
+                help=inspect.getdoc(command), no_args_is_help=not decorators, **settings
+            )(command)
     if len(object) == 1:
         return command
     return app

@@ -22,7 +22,7 @@
 
 It appears the loaders only work with `runpy.run_module`, not `runpy.run_path`.
 
-                return runpy.run_module(prepare_name(object), globals, run_name)
+                return runpy.run_module(prepare_name(object), globals, '__main__')
 
         finally:
             if not _root_in_sys:
@@ -32,12 +32,9 @@ It appears the loaders only work with `runpy.run_module`, not `runpy.run_path`.
         object = run(ref)
         if object['__file__'].endswith(('.py', '.md', '.markdown')):
             body = pathlib.Path(object['__file__']).read_text()
-
             return pidgy.weave.exporter.environment.from_string(
-                re.sub(re.compile('(<!--.*-->?)', re.MULTILINE), '', body)
-            ).render(object)
-
-
+                re.sub('(<!--[\s\S]*-->?)', '', body)
+            ).render(object).rstrip() + '\n'
 
     def alias_to_module_name(object: str) -> str:
 
