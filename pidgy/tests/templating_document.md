@@ -1,3 +1,5 @@
+#!/usr/bin/env python -m pidgy render
+
 My document recieved {{sys.argv}} as arguments.
 
 <!--
