@@ -40,6 +40,7 @@ Welcome to `pidgy`, a project designed for modern interactive literate programmi
     
     pidgy/tests/test_basic.md.ipynb
     pidgy/tests/test_pidgin_syntax.md.ipynb
+    pidgy/tests/test_cli.ipynb
     
     pidgy/base.py
     
