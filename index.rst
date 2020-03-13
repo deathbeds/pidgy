@@ -28,16 +28,18 @@ Welcome to `pidgy`, a project designed for modern interactive literate programmi
     pidgy/kernel.md
     pidgy/tangle.ipynb
     pidgy/loader.ipynb
+    pidgy/runpidgy.md
     pidgy/extras.ipynb
     pidgy/weave.md
     pidgy/testing.md
     pidgy/measure.md
     pidgy/pytest_config/readme.md
     pidgy/readme.md
-    docs/best-practices.md
+    docs/discussion.md.ipynb
     
     pidgy/tests/test_basic.md.ipynb
     pidgy/tests/test_pidgin_syntax.md.ipynb
+    pidgy/tests/test_cli.ipynb
     
     pidgy/base.py
     

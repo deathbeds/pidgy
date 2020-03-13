@@ -1,4 +1,4 @@
-import re, typing
+import re, typing, glob, pathlib
 
 
 class ContextDepth:
@@ -71,3 +71,18 @@ def strip_front_matter(text, sep=None):
     if sep:
         return "".join(rest.splitlines(True)[1:])
     return text
+
+
+def ansify(str: str, format="markdown"):
+    import pygments.formatters.terminal256
+
+    return pygments.highlight(
+        str,
+        pygments.lexers.find_lexer_class_by_name(format)(),
+        pygments.formatters.terminal256.Terminal256Formatter(),
+    )
+
+
+def yield_files(files):
+    for file in files:
+        yield from map(pathlib.Path, glob.glob(file) if "*" in file else [file])
