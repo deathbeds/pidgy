@@ -25,3 +25,4 @@ click
 graphviz
 stringcase
 click
+papermill
