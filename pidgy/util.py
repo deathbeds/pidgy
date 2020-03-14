@@ -89,9 +89,12 @@ def ansify(str: str, format="markdown"):
     )
 
 
-def yield_files(files: typing.Sequence[str]) -> typing.Generator:
+def yield_files(files: typing.Sequence[str], recursive=False) -> typing.Generator:
     """Return a list of files from a collection of files and globs."""
     for file in files:
         yield from map(
-            pathlib.Path, glob.glob(str(file)) if "*" in str(file) else [file]
+            pathlib.Path,
+            getattr(glob, ["", "r"][recursive] + "glob")(str(file))
+            if "*" in str(file)
+            else [file],
         )

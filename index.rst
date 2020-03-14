@@ -11,12 +11,26 @@ pidgy programming
 .. |Python package| image:: https://github.com/deathbeds/pidgy/workflows/Python%20package/badge.svg
 .. |PyPI - Python Version| image:: https://img.shields.io/pypi/pyversions/pidgy
 
-Welcome to `pidgy`, a project designed for modern interactive literate programming. `pidgy` is a few things.
+`pidgy` treats code as literature and programming as a literacy. It is an interactive programming workflow in Markdown that allows narrative and code to develop together.
 
-* A way to program in Markdown.
-* A python implementation for literate programming.
-* Scientific literature.
-* A specification for literate programming in different programming languages.
+`pidgy` has literary and computational qualities that:
+
+-  Publish documentation and render PDFs using the
+   `ReadTheDocs <https://pidgy.readthedocs.io/>`__ service.
+-  Make it installable from `pip <https://pypi.org/project/pidgy>`__ and
+   conda.
+
+   .. code:: bash
+
+      pip install pidgy
+
+-  Formally test the literature and source code with `Github
+   Actions <https://github.com/deathbeds/pidgy/actions>`__.
+-  Reusable on
+   `Binder <https://mybinder.org/v2/gh/deathbeds/pidgy/master>`__.
+-  Import alternative source files for python like `notebooks and
+   markdown <https://github.com/deathbeds/pidgy/tree/master/pidgy>`__.
+
 
 pidgy paper
 -----------
@@ -72,5 +86,4 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
-.. inheritance-diagram:: pidgy.tangle pidgy.weave pidgy.loader
 
