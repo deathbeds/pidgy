@@ -4,6 +4,7 @@ import inspect, click, stringcase, enum, uuid, datetime, pathlib, typing, types
 def autoclick(
     *object: typing.Union[types.FunctionType, click.Command], group=None, **settings
 ) -> click.Command:
+    """Automatically generate a click command line application using type inference."""
     app = group or click.Group()
     for command in object:
         if isinstance(command, click.Command):
@@ -31,6 +32,7 @@ def istype(x: typing.Any, y: type) -> bool:
 def click_type(
     object: typing.Union[type, tuple], default=None
 ) -> typing.Union[type, click.types.ParamType]:
+    """Translate python types to click's subset of types."""
     if isinstance(object, type):
         if issubclass(object, datetime.datetime):
             return click.DateTime()
@@ -57,6 +59,7 @@ def click_type(
 
 
 def command_from_signature(object: types.FunctionType, *decorators):
+    """Iterate through the function annotation and derive a click decorator."""
     for i, (k, v) in enumerate(inspect.signature(object).parameters.items()):
 
         if not i and k == "ctx":

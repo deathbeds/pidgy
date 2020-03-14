@@ -33,16 +33,6 @@ def unload_ipython_extension(shell):
     unload_ipython_extension(shell)
 
 
-def true():
-    import IPython, pidgy.kernel.shell
-
-    return isinstance(IPython.get_ipython(), pidgy.kernel.shell.pidgyShell)
-
-
-def false():
-    return not true()
-
-
 import builtins
 
 builtins.yes = builtins.true = True

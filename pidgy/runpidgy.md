@@ -1,5 +1,9 @@
 # Scripting with literate programs.
 
+Since `pidgy` is based on [Python], derived pidgy documents can be used as scripts.
+
+A `pidgy` program executed as the **main** program has similar state to the running notebook and it introduces the file object.
+
 `pidgy` is based on [Python], a scripting language, therefore it should be possible execute markdown as scripts.
 
     def run(object: str, run_name=None, **globals):
@@ -47,3 +51,14 @@ Convert a filename to a module specification.
             parts[-1] = parts[-1][:-len(ext)] if parts[-1][-len(ext):] == ext else parts[-1]
         object = '.'.join(parts)
         return object
+
+## shebang statements in literate programs.
+
+A feature of `pidgy` markdown files, not notebook files, is that a shebang statement can be included at the beginning to indicate how a document is executed.
+
+Some useful shebang lines to being pidgy documents with.
+
+    #!/usr/bin/env pidgy run
+    #!/usr/bin/env python -m pidgy run
+    #!/usr/bin/env python -m pidgy render
+    #!/usr/bin/env pidgy render

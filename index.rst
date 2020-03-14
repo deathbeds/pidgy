@@ -18,6 +18,9 @@ Welcome to `pidgy`, a project designed for modern interactive literate programmi
 * Scientific literature.
 * A specification for literate programming in different programming languages.
 
+pidgy paper
+-----------
+
 .. toctree::
     :glob:
     
@@ -36,7 +39,13 @@ Welcome to `pidgy`, a project designed for modern interactive literate programmi
     pidgy/pytest_config/readme.md
     pidgy/readme.md
     docs/discussion.md.ipynb
-    
+
+pidgy tests
+-----------
+
+.. toctree::
+    :glob:
+
     pidgy/tests/test_basic.md.ipynb
     pidgy/tests/test_pidgin_syntax.md.ipynb
     pidgy/tests/test_cli.ipynb
@@ -47,3 +56,20 @@ Welcome to `pidgy`, a project designed for modern interactive literate programmi
     docs/examples/working-within-dataframes.md.ipynb
     docs/figures.md.ipynb
     
+Source
+-----------
+
+.. toctree::
+    :glob:
+    :maxdepth: 4
+
+    
+Indices and tables
+------------------
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+
+.. inheritance-diagram:: pidgy.tangle pidgy.weave pidgy.loader
+
