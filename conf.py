@@ -12,8 +12,8 @@ extensions = "recommonmark nbsphinx sphinx.ext.autodoc sphinx.ext.coverage sphin
 exclude_patterns = ["_build", "*checkpoint*"]
 autoapi_type = "python"
 autoapi_dirs = ["pidgy"]
-nbsphinx_prolog = """
-.. raw:: html
+
+nbsphinx_prolog = """.. raw:: html
     
     <style>.prompt {
         display: none;
@@ -21,3 +21,8 @@ nbsphinx_prolog = """
 
 
 """
+
+
+def setup(app):
+    if "READTHEDOCS" in __import__("os").environ:
+        __import__("os").system("python -m pidgy export pidgy/*.md --to python --write")
