@@ -1,3 +1,5 @@
+# Export documents to other formats.
+
 Literate programs can be translated into many formats. Commonly markup langauges focus on translation to other markup languages, we add an extra ability to convert markup to source code.
 
     import pidgy, pathlib, typing, textwrap

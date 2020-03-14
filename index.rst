@@ -28,7 +28,7 @@ pidgy programming
    Actions <https://github.com/deathbeds/pidgy/actions>`__.
 -  Reusable on
    `Binder <https://mybinder.org/v2/gh/deathbeds/pidgy/master>`__.
--  Import alternative source files for python like `notebooks and
+-  Import alternative source files into python like `notebooks and
    markdown <https://github.com/deathbeds/pidgy/tree/master/pidgy>`__.
 
 

@@ -12,3 +12,12 @@ extensions = "recommonmark nbsphinx sphinx.ext.autodoc sphinx.ext.coverage sphin
 exclude_patterns = ["_build", "*checkpoint*"]
 autoapi_type = "python"
 autoapi_dirs = ["pidgy"]
+nbsphinx_prolog = """
+.. raw:: html
+    
+    <style>.prompt {
+        display: none;
+    }</style>
+
+
+"""
