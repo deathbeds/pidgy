@@ -33,6 +33,7 @@ def unload_ipython_extension(shell):
     unload_ipython_extension(shell)
 
 
+# do this in the kernel
 import builtins
 
 builtins.yes = builtins.true = True

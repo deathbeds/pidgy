@@ -34,6 +34,7 @@ pidgy paper
     pidgy/runpidgy.md
     pidgy/extras.ipynb
     pidgy/weave.md
+    pidgy/export.md
     pidgy/testing.md
     pidgy/measure.md
     pidgy/pytest_config/readme.md

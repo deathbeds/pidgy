@@ -2,11 +2,11 @@
 
 > [**Eat Me, Drink Me, Read Me.**][readme history]
 
-    import IPython, pidgy, pathlib
+    import IPython, pidgy, pathlib, typing
 
     with pidgy.pidgyLoader():
-        try: from . import kernel, autocli, runpidgy, util
-        except: import kernel, autocli, runpidgy, util
+        try: from . import kernel, autocli, runpidgy, util, export
+        except: import kernel, autocli, runpidgy, util, export
 
 <!--excerpt-->
 
@@ -37,6 +37,9 @@ view their pubished results.
 
         finally: sys.argv = argv
 
+    def export(files: typing.List[pathlib.Path], to:{'markdown', 'python'}='python', write:bool=False):
+        export.convert(*files, to, write)
+
 <!---->
 
     def test(ctx, files: list):
@@ -47,6 +50,14 @@ Formally test markdown documents, notebooks, and python files.
          pytest.main(ctx.args+['--doctest-modules', '--disable-pytest-warnings']+list(files))
 
 <!---->
+
+    application = autocli.autoclick(
+        run, render, test, export,
+        autocli.autoclick(
+            kernel.install, kernel.uninstall, kernel.start, group=click.Group("kernel")
+        ),
+        context_settings=dict(allow_extra_args=True, ignore_unknown_options=True),
+    )
 
 [art of the readme]: https://github.com/noffle/art-of-readme
 [readme history]: https://medium.com/@NSomar/readme-md-history-and-components-a365aff07f10
