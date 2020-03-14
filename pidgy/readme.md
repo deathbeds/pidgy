@@ -2,7 +2,7 @@
 
 > [**Eat Me, Drink Me, Read Me.**][readme history]
 
-    import IPython, pidgy, pathlib, typing
+    import IPython, pidgy, pathlib, typing, click
 
     with pidgy.pidgyLoader():
         try: from . import kernel, autocli, runpidgy, util, export
