@@ -1,3 +1,13 @@
+nbconvert
+nbformat
+importnb
+pytest
+black
+isort
+click
+stringcase
+IPython
+
 nbsphinx
 sphinxcontrib-bibtex
 sphinxcontrib-svg2pdfconverter
