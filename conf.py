@@ -15,5 +15,5 @@ autoapi_dirs = ["pidgy"]
 
 
 def setup(app):
-    if "READTHEDOCS" in __import__("os"):
+    if "READTHEDOCS" in __import__("os").environ:
         __import__("os").system("python -m pidgy export pidgy/*.md --to python --write")
