@@ -1,4 +1,4 @@
-import re, typing, glob, pathlib
+import re, typing, glob, pathlib, contextlib, sys
 
 
 class ContextDepth:
@@ -98,3 +98,11 @@ def yield_files(files: typing.Sequence[str], recursive=False) -> typing.Generato
             if "*" in str(file)
             else [file],
         )
+
+
+@contextlib.contextmanager
+def argv(args: str):
+    argv = sys.argv
+    sys.argv = args.split()
+    yield
+    sys.argv = argv
