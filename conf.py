@@ -22,13 +22,9 @@ nbsphinx_prolog = """.. raw:: html
 
 """
 
-latex_documents = (
-    master_doc,
-    "pidgy.tex",
-    "pidgy literate computing",
-    "Tony Fast",
-    "article",
-)
+latex_documents = [
+    (master_doc, "pidgy.tex", "pidgy literate computing", "Tony Fast", "article",)
+]
 
 
 def setup(app):
