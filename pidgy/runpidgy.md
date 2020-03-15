@@ -6,8 +6,8 @@ A `pidgy` program executed as the **main** program has similar state to the runn
 
 `pidgy` is based on [Python], a scripting language, therefore it should be possible execute markdown as scripts.
 
-import types
-def run(object: str, run_name=None, \*\*globals) -> dict:
+    import types
+    def run(object: str, run_name=None, **globals) -> dict:
 
 `run` executes a literate document as a script.
 
@@ -57,6 +57,34 @@ Convert a filename to a module specification.
 
 Reward good behavior for using type annotations. Type annotations are important for other applications using your technology.
 
+    def parameterize(file):
+
+Run a script with annotated variables as arguements.
+
+        import ast, pytest, builtins, types, runpy, importlib, inspect, pytest, sys, click
+        loader = CLILoader(file, file)
+        spec = importlib.util.spec_from_loader(loader.name, loader)
+
+        main_code, arg_code = loader.get_code(loader.name), compile(loader.annotations, loader.path, 'exec')
+
+        module = types.ModuleType(loader.name)
+        annotations = runpy._run_code(arg_code, vars(module), {}, '__main__', spec, None, None)
+        print(annotations.get('__annotations__'))
+        vars(module).update(annotations)
+        decorators = pidgy.autocli.decorators_from_dict(annotations)
+
+        @click.pass_context
+        def cli(ctx, **kwargs):
+            nonlocal module
+            vars(module).update(kwargs, ctx=ctx)
+            runpy._run_code(main_code, vars(module), {}, '__main__', spec, None, None)
+
+        command = pidgy.autocli.command_from_decorators(cli, *decorators)
+        try:
+            command.main()
+        except SystemExit: ...
+        return vars(module)
+
     import pidgy, ast
 
     class CLILoader(pidgy.pidgyLoader):
@@ -76,38 +104,6 @@ Reward good behavior for using type annotations. Type annotations are important 
                     self.annotations.body.append(element)
                 self.body.body.append(element)
             return self.body
-
-
-    def parameterize(file):
-
-Run a script with annotated variables as arguements.
-
-import ast, pytest, builtins, types, runpy, importlib, inspect, pytest, sys, click
-loader = CLILoader(file, file)
-spec = importlib.util.spec_from_loader(loader.name, loader)
-
-main_code, arg_code = loader.get_code(loader.name), compile(loader.annotations, loader.path, 'exec')
-
-module = types.ModuleType(loader.name)
-print(loader.annotations.body)
-annotations = runpy.\_run_code(arg_code, vars(module), {}, '**main**', spec, None, None)
-print(annotations.get('**annotations**'))
-vars(module).update(annotations)
-decorators = pidgy.autocli.decorators_from_dict(annotations)
-
-@click.pass_context
-def cli(ctx, \*\*kwargs):
-nonlocal module
-print(22, kwargs)
-vars(module).update(kwargs, ctx=ctx)
-runpy.\_run_code(main_code, vars(module), {}, '**main**', spec, None, None)
-
-command = pidgy.autocli.command_from_decorators(cli, \*decorators)
-print(44, command, sys.argv)
-try:
-command.main()
-except SystemExit: ...
-return vars(module)
 
 ## shebang statements in literate programs.
 
