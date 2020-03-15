@@ -1,4 +1,4 @@
-# `pidgy` shell and kernel
+# `pidgy` kernel
 
 > A kernel provides programming language support in Jupyter. IPython is the default kernel. Additional kernels include R, Julia, and many more.
 >
@@ -27,6 +27,16 @@ can be installed using
 pidgy kernel install
 ```
 
+    class pidgyKernel(ipykernel.ipkernel.IPythonKernel):
+        shell_class = traitlets.Type('pidgy.kernel.pidgyInteractiveShell')
+
+        _last_parent = traitlets.Dict()
+        def init_metadata(self, parent):
+            self._last_parent = parent
+            return super().init_metadata(parent)
+
+## `pidgy` shell
+
     class pidgyInteractiveShell(ipykernel.zmqshell.ZMQInteractiveShell):
 
 Configure a native `pidgy` `IPython.InteractiveShell`
@@ -49,17 +59,7 @@ the inspector.
             self.user_ns['shell'] = self
             load_ipython_extension(self)
 
-    class pidgyKernel(ipykernel.ipkernel.IPythonKernel):
-        shell_class = traitlets.Type(pidgyInteractiveShell)
-        _last_parent = traitlets.Dict()
-
-        def init_metadata(self, parent):
-            self._last_parent = parent
-            return super().init_metadata(parent)
-
-The `pidgy` kernel command line features.
-
-<!---->
+## `pidgy` kernel installation
 
     def install():
 
