@@ -43,7 +43,7 @@
             if not no_show: click.echo(runpidgy.format_output(data))
 
     def to(to:{'markdown', 'python'}, files: typing.List[pathlib.Path], write:bool=False):
-        export.convert(*files, to=to, write)
+        export.convert(*files, to=to, write=write)
 
 <!---->
 
