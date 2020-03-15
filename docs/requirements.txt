@@ -7,7 +7,7 @@ isort
 click
 stringcase
 IPython
-
+ipykernl 
 nbsphinx
 sphinxcontrib-bibtex
 sphinxcontrib-svg2pdfconverter
