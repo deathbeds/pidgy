@@ -101,8 +101,27 @@ def yield_files(files: typing.Sequence[str], recursive=False) -> typing.Generato
 
 
 @contextlib.contextmanager
-def argv(args: str):
+def argv(*args: str):
     argv = sys.argv
-    sys.argv = args.split()
+    if len(args) == 1 and isinstance(args[0], str):
+        args = args[0].split()
+    sys.argv = list(args)
     yield
-    sys.argv = argv
+    sys.argv = list(argv)
+
+
+def strip_shebang(str):
+    return re.sub(re.compile(r"#!/.+\n"), "", str)
+
+
+def strip_html_comment(str):
+    return re.sub("(<!--[\s\S]*-->?)", "", str)
+
+
+def strip_front_matter(text: str, sep=None) -> str:
+    """Remove yaml front matter froma string."""
+    if text.startswith("---\n"):
+        front_matter, sep, rest = text[4:].partition("\n---")
+    if sep:
+        return "".join(rest.splitlines(True)[1:])
+    return text
