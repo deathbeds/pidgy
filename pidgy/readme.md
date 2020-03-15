@@ -64,24 +64,5 @@ Formally test markdown documents, notebooks, and python files.
         context_settings=dict(allow_extra_args=True, ignore_unknown_options=True),
     )
 
-
-    import pidgy, ast, pytest, builtins, types, runpy, importlib, inspect, pytest
-
-    class CLILoader(pidgy.pidgyLoader):
-        def visit(self, node):
-            node = super().visit(node)
-            self.body, self.annotations = ast.Module([]), ast.Module([])
-            while node.body:
-                element = node.body.pop(0)
-                if isinstance(element, ast.AnnAssign) and element.target.id[0].islower():
-                    try:
-                        if element.value:
-                            ast.literal_eval(element.value)
-                        self.annotations.body.append(element)
-                        continue
-                    except: ...
-                self.body.body.append(element)
-            return self.body
-
 [art of the readme]: https://github.com/noffle/art-of-readme
 [readme history]: https://medium.com/@NSomar/readme-md-history-and-components-a365aff07f10
