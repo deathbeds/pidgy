@@ -72,31 +72,42 @@ Reward good behavior for using type annotations. Type annotations are important 
                         self.annotations.body.append(element)
                         continue
                     except: ...
-                if isinstance(element, (ast.ClassDef, ast.FunctionDef, ast.Import, ast.ImportFrom)):
+                if isinstance(element, (ast.Import, ast.ImportFrom)):
                     self.annotations.body.append(element)
                 self.body.body.append(element)
             return self.body
 
 
     def parameterize(file):
-        import ast, pytest, builtins, types, runpy, importlib, inspect, pytest, sys
-        loader = CLILoader(file, file)
-        spec = importlib.util.spec_from_loader(loader.name, loader)
 
-        main_code, arg_code = loader.get_code(loader.name), compile(loader.annotations, loader.path, 'exec')
+Run a script with annotated variables as arguements.
 
-        module = types.ModuleType(loader.name)
-        annotations = runpy._run_code(arg_code, vars(types.ModuleType(loader.name)), {}, '__main__', spec, None, None)
-        vars(module).update(annotations)
-        def cli(ctx, **kwargs):
-            vars(module).update(kwargs)
-            runpy._run_code(main_code, vars(module), {}, '__main__', spec, None, None)
-        decorators = pidgy.autocli.decorators_from_dict(annotations)
-        command = pidgy.autocli.command_from_decorators(cli, *decorators)
-        try:
-            command.main()
-        except SystemExit: ...
-        return vars(module)
+import ast, pytest, builtins, types, runpy, importlib, inspect, pytest, sys, click
+loader = CLILoader(file, file)
+spec = importlib.util.spec_from_loader(loader.name, loader)
+
+main_code, arg_code = loader.get_code(loader.name), compile(loader.annotations, loader.path, 'exec')
+
+module = types.ModuleType(loader.name)
+print(loader.annotations.body)
+annotations = runpy.\_run_code(arg_code, vars(module), {}, '**main**', spec, None, None)
+print(annotations.get('**annotations**'))
+vars(module).update(annotations)
+decorators = pidgy.autocli.decorators_from_dict(annotations)
+
+@click.pass_context
+def cli(ctx, \*\*kwargs):
+nonlocal module
+print(22, kwargs)
+vars(module).update(kwargs, ctx=ctx)
+runpy.\_run_code(main_code, vars(module), {}, '**main**', spec, None, None)
+
+command = pidgy.autocli.command_from_decorators(cli, \*decorators)
+print(44, command, sys.argv)
+try:
+command.main()
+except SystemExit: ...
+return vars(module)
 
 ## shebang statements in literate programs.
 
