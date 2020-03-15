@@ -31,7 +31,9 @@ def click_type(
     object: typing.Union[type, tuple], default=None
 ) -> typing.Union[type, click.types.ParamType]:
     """Translate python types to click's subset of types."""
-    if isinstance(object, type):
+    if isinstance(object, typing._GenericAlias):
+        return click_type(object.__args__[0], default)
+    elif isinstance(object, type):
         if issubclass(object, datetime.datetime):
             return click.DateTime()
         if issubclass(object, typing.Tuple):
@@ -40,8 +42,6 @@ def click_type(
             return click.UUID(default)
         if object is list:
             return
-        if issubclass(object, typing.List):
-            return click_type(object.__args__[0], default)
         if issubclass(object, set):
             return click.Choice(object)
 
@@ -69,30 +69,34 @@ def command_from_decorators(command, *decorators, **settings):
 def decorators_from_dicts(annotations, defaults, *decorators):
     for k, v in annotations.items():
         if k in defaults:
-            type = click_type(v, defaults.get(k))
+            t = click_type(v, defaults.get(k))
             decorators += (
                 click.option(
                     "-" * (1 if len(k) == 1 else 2) + stringcase.spinalcase(k),
-                    type=type,
+                    type=t,
                     default=defaults.get(k),
                     show_default=True,
                     is_flag=v is bool,
                 ),
             )
-        else:
-            opts = {}
-            if istype(v, (typing.List, list)):
-                opts.update(nargs=-1)
+
+        elif isinstance(v, typing._GenericAlias) or istype(v, list):
             decorators += (
-                click.argument(stringcase.spinalcase(k), type=click_type(v), **opts),
+                click.argument(
+                    stringcase.spinalcase(k),
+                    type=click_type(getattr(v, "__args__", (str,))[0]),
+                    nargs=-1,
+                ),
+            )
+        else:
+            decorators += (
+                click.argument(stringcase.spinalcase(k), type=click_type(v)),
             )
     return decorators
 
 
 def decorators_from_dict(object):
-    return decorators_from_dicts(object.get("__annotations__", {}), object) + (
-        click.pass_context,
-    )
+    return decorators_from_dicts(object.get("__annotations__", {}), object)
 
 
 def decorators_from_module(object):
