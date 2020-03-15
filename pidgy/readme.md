@@ -42,7 +42,7 @@
             data = runpidgy.parameterize(ref)
             if not no_show: click.echo(runpidgy.format_output(data))
 
-    def export(files: typing.List[pathlib.Path], to:{'markdown', 'python'}='python', write:bool=False):
+    def to(to:{'markdown', 'python'}, files: typing.List[pathlib.Path], write:bool=False):
         export.convert(*files, to, write)
 
 <!---->
@@ -57,7 +57,7 @@ Formally test markdown documents, notebooks, and python files.
 <!---->
 
     application = autocli.autoclick(
-        run, render, test, export, template,
+        run, render, test, to, template,
         autocli.autoclick(
             kernel.install, kernel.uninstall, kernel.start, group=click.Group("kernel")
         ),
