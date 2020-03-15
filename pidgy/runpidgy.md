@@ -6,31 +6,32 @@ A `pidgy` program executed as the **main** program has similar state to the runn
 
 `pidgy` is based on [Python], a scripting language, therefore it should be possible execute markdown as scripts.
 
-    def run(object: str, run_name=None, **globals):
+import types
+def run(object: str, run_name=None, \*\*globals) -> dict:
 
 `run` executes a literate document as a script.
 
         import pidgy, importnb, sys, importlib, pathlib, runpy
-        _root_in_sys = '.' not in sys.path
-        if not _root_in_sys:
-            sys.path = ['.'] + sys.path
-        try:
-            with pidgy.pidgyLoader(), importnb.Notebook():
+        loader = pidgy.pidgyLoader(object, object)
+        spec = importlib.util.spec_from_loader(loader.name, loader)
 
-It appears the loaders only work with `runpy.run_module`, not `runpy.run_path`.
+        main_code = loader.get_code(loader.name)
+        module = types.ModuleType(loader.name)
+        return runpy._run_code(main_code, vars(module), globals, '__main__', spec, None, None)
 
-                return runpy.run_module(prepare_name(object), globals, '__main__')
-
-        finally:
-            if not _root_in_sys:
-                sys.path.pop(sys.path.index('.'))
     def render(ref: str):
         import pathlib, pidgy, re
-        object = run(ref)
+        return format_output(run(ref))
+
+    def format_output(object):
+        import pathlib, pidgy, re
         if object['__file__'].endswith(('.py', '.md', '.markdown')):
             body = pathlib.Path(object['__file__']).read_text()
             return pidgy.weave.exporter.environment.from_string(
-                re.sub('(<!--[\s\S]*-->?)', '', body)
+                pidgy.util.strip_front_matter(
+                    pidgy.util.strip_html_comment(
+                        pidgy.util.strip_shebang(
+                            body)))
             ).render(object).rstrip() + '\n'
 
     def prepare_name(str):
@@ -51,6 +52,51 @@ Convert a filename to a module specification.
             parts[-1] = parts[-1][:-len(ext)] if parts[-1][-len(ext):] == ext else parts[-1]
         object = '.'.join(parts)
         return object
+
+## Parameterizing a script
+
+Reward good behavior for using type annotations. Type annotations are important for other applications using your technology.
+
+    import pidgy, ast
+
+    class CLILoader(pidgy.pidgyLoader):
+        def visit(self, node):
+            node = super().visit(node)
+            self.body, self.annotations = ast.Module([]), ast.Module([])
+            while node.body:
+                element = node.body.pop(0)
+                if isinstance(element, ast.AnnAssign) and element.target.id[0].islower():
+                    try:
+                        if element.value:
+                            ast.literal_eval(element.value)
+                        self.annotations.body.append(element)
+                        continue
+                    except: ...
+                if isinstance(element, (ast.ClassDef, ast.FunctionDef, ast.Import, ast.ImportFrom)):
+                    self.annotations.body.append(element)
+                self.body.body.append(element)
+            return self.body
+
+
+    def parameterize(file):
+        import ast, pytest, builtins, types, runpy, importlib, inspect, pytest, sys
+        loader = CLILoader(file, file)
+        spec = importlib.util.spec_from_loader(loader.name, loader)
+
+        main_code, arg_code = loader.get_code(loader.name), compile(loader.annotations, loader.path, 'exec')
+
+        module = types.ModuleType(loader.name)
+        annotations = runpy._run_code(arg_code, vars(types.ModuleType(loader.name)), {}, '__main__', spec, None, None)
+        vars(module).update(annotations)
+        def cli(ctx, **kwargs):
+            vars(module).update(kwargs)
+            runpy._run_code(main_code, vars(module), {}, '__main__', spec, None, None)
+        decorators = pidgy.autocli.decorators_from_dict(annotations)
+        command = pidgy.autocli.command_from_decorators(cli, *decorators)
+        try:
+            command.main()
+        except SystemExit: ...
+        return vars(module)
 
 ## shebang statements in literate programs.
 
