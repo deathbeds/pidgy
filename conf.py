@@ -23,7 +23,7 @@ nbsphinx_prolog = """.. raw:: html
 """
 
 latex_documents = [
-    (master_doc, "pidgy.tex", "pidgy literate computing", "Tony Fast", "book",)
+    (master_doc, "pidgy.tex", "pidgy literate computing", "Tony Fast", "manual",)
 ]
 
 
