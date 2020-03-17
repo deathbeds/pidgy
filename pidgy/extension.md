@@ -14,7 +14,6 @@ Each module in `pidgy` is an `IPython` configuration module that transforms inde
 - `loader` ensures the ability to important python, markdown, and notebook documents
 - `tangle` defines the heuristics for translating [Markdown] to [Python].
 - `extras` introduces experimental syntaxes specific to `pidgy`.
-- `metadata` retains information as the shell and kernel interact with each other.
 - `testing` adds unittest and doctest capabilities to each cell execution.
 - `weave` defines a [Markdown] forward display system that templates and displays the input.
 
@@ -29,12 +28,11 @@ Currently, `pidgy` defines 6 extensions to produce the enhanced literate program
             try: from . import loader, tangle, extras
             except: import loader, tangle, extras
         with loader.pidgyLoader():
-            try: from . import weave, testing, measure
-            except: import weave, testing, measure
+            try: from . import weave, testing
+            except: import weave, testing
 
         loader.load_ipython_extension(shell)
         tangle.load_ipython_extension(shell)
-        measure.load_ipython_extension(shell)
         extras.load_ipython_extension(shell)
         testing.load_ipython_extension(shell)
         weave.load_ipython_extension(shell)
@@ -52,7 +50,7 @@ Currently, `pidgy` defines 6 extensions to produce the enhanced literate program
             try: from . import weave, testing, metadata
             except: import weave, testing, metadata
 
-        [x.unload_ipython_extension(shell) for x in (loader, weave, testing, extras, metadata, tangle)]
+        [x.unload_ipython_extension(shell) for x in (loader, weave, testing, extras, tangle)]
 
 <details><summary>What are the <code>load_ipython_extension and unload_ipython_extension</code> functions?</summary>
 `load_ipython_extension and unload_ipython_extension` are used by `IPython` to trigger modifications to the interactive shell by a module. These methods are inovked by the `"load_ext reload_ext unload_ext"` line magics. Demonstrated in the following, the `load_ipython_extension` recieves the current `IPython.InteractiveShell` as an argument to be configured.
