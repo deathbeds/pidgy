@@ -6,3 +6,6 @@ black
 isort
 click
 stringcase
+pyyaml
+emoji
+attrs>=17.4.0
