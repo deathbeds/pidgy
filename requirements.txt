@@ -6,6 +6,6 @@ black
 isort
 click
 stringcase
-ruamel
+ruamel.yaml
 emoji
 attrs>=17.4.0
