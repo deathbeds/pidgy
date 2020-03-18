@@ -28,3 +28,6 @@
             pidgy.pidgyLoader().__enter__()
 
         enable_html_pager = traitlets.Bool(True)
+
+    def load_ipython_extension(shell): ...
+    def unload_ipython_extension(shell): ...
