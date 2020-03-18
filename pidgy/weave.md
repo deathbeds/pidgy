@@ -8,7 +8,7 @@ An important feature of interactive computing in the browser is access to rich d
 HTML and Javascript. `pidgy` takes advantage of the ability to include hypermedia forms that enhance and
 support computational narratives.
 
-    import dataclasses, IPython, nbconvert as convert, jinja2, pidgy, builtins
+    import dataclasses, IPython, nbconvert as convert, jinja2, pidgy, builtins, sys
     try: from . import base, util
     except: import base, util
     exporter = convert.exporters.TemplateExporter() # leave an global exporter avai
@@ -30,3 +30,5 @@ The `Weave` class controls the display of `pidgy` outputs.
             except BaseException as Exception:
                 IPython.get_ipython().showtraceback((type(Exception), Exception, Exception.__traceback__))
             return text
+
+    base.pidgyShell.plugin_manager.register(sys.modules[__name__])
