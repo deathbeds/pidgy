@@ -1,4 +1,4 @@
-    import IPython, ipykernel.ipkernel, ipykernel.kernelapp, pidgy, traitlets, ipykernel.kernelspec, ipykernel.zmqshell, pathlib, pluggy, importnb
+    import ipykernel.kernelapp, traitlets, pidgy
 
     try:
         from . import base, extras
@@ -17,22 +17,24 @@
         def tangle(self, text: str):
             ...
 
+        def transform_cell(self, str):
+            return super().transform_cell(self.plugin_manager.hook.tangle(text=str))
+
         @base.specification
         def weave(self, result):
             ...
 
-        def transform_cell(self, str):
-            return super().transform_cell(self.plugin_manager.hook.tangle(text=str)[0])
 
+        def post_run_cell(self, result):
+            return self.plugin_manager.hook.weave(result=result)
 
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            pidgy.pidgyLoader().__enter__()
+
             for plugin in (pidgy.tangle, pidgy.weave, pidgy.testing):
                 self.plugin_manager.register(plugin)
-            self.events.register(
-                "post_run_cell", lambda x: self.plugin_manager.hook.weave(result=x)
-            )
+            self.events.register("post_run_cell", self.post_run_cell)
             self.user_ns["shell"] = self
+            pidgy.pidgyLoader().__enter__()
 
     base.plugin_manager.add_hookspecs(pidgyShell)
