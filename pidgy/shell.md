@@ -1,40 +1,30 @@
+# The `pidgy` literate computing shell
+
     import ipykernel.kernelapp, traitlets, pidgy
-
-    try:
-        from . import base, extras
-    except:
-        import base, extras
-
 
     class pidgyShell(ipykernel.zmqshell.ZMQInteractiveShell):
 
-        enable_html_pager = traitlets.Bool(True)
-        ast_transformers = traitlets.List([extras.ExtraSyntax()]).tag(config=True)
-        input_transformers_post = traitlets.List([extras.demojize])
-        plugin_manager = base.plugin_manager
+        def transform_cell(self, str: str) -> str:
+            return super().transform_cell(pidgy.tangle.tangle(text=str))
 
-        @base.specification(firstresult=True)
-        def tangle(self, text: str):
-            ...
+        ast_transformers = traitlets.List([pidgy.extras.ExtraSyntax()]).tag(config=True)
+        input_transformers_post = traitlets.List([pidgy.extras.demojize])
 
-        def transform_cell(self, str):
-            return super().transform_cell(self.plugin_manager.hook.tangle(text=str))
-
-        @base.specification
-        def weave(self, result):
-            ...
-
-
-        def post_run_cell(self, result):
-            return self.plugin_manager.hook.weave(result=result)
+        def init_json(self):
+            import builtins
+            builtins.yes = builtins.true = True
+            builtins.no = builtins.false = False
+            builtins.null = None
 
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
+            self.init_pidgy(), self.init_json()
 
-            for plugin in (pidgy.tangle, pidgy.weave, pidgy.testing):
-                self.plugin_manager.register(plugin)
-            self.events.register("post_run_cell", self.post_run_cell)
+        def init_pidgy(self):
+            self.events.register("post_run_cell", pidgy.testing.post_run_cell)
+            self.events.register("post_run_cell", pidgy.weave.post_run_cell)
+
             self.user_ns["shell"] = self
             pidgy.pidgyLoader().__enter__()
 
-    base.plugin_manager.add_hookspecs(pidgyShell)
+        enable_html_pager = traitlets.Bool(True)

@@ -16,9 +16,9 @@ with pidgyLoader(lazy=True):
 def load_ipython_extension(shell):
     with loader.pidgyLoader(lazy=True):
         try:
-            from .extension import load_ipython_extension, unload_ipython_extension
+            from .shell import load_ipython_extension, unload_ipython_extension
         except:
-            from extension import load_ipython_extension, unload_ipython_extension
+            from shell import load_ipython_extension, unload_ipython_extension
 
     load_ipython_extension(shell)
 
@@ -26,16 +26,8 @@ def load_ipython_extension(shell):
 def unload_ipython_extension(shell):
     with loader.pidgyLoader(lazy=True):
         try:
-            from .extension import load_ipython_extension, unload_ipython_extension
+            from .shell import load_ipython_extension, unload_ipython_extension
         except:
-            from extension import load_ipython_extension, unload_ipython_extension
+            from shell import load_ipython_extension, unload_ipython_extension
 
     unload_ipython_extension(shell)
-
-
-# do this in the kernel
-import builtins
-
-builtins.yes = builtins.true = True
-builtins.no = builtins.false = False
-builtins.null = None

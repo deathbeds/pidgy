@@ -8,24 +8,28 @@ An important feature of interactive computing in the browser is access to rich d
 HTML and Javascript. `pidgy` takes advantage of the ability to include hypermedia forms that enhance and
 support computational narratives.
 
-    import dataclasses, IPython, nbconvert as convert, jinja2, pidgy, builtins, sys
-    try: from . import base, util
-    except: import base, util
+    import dataclasses, IPython, nbconvert as convert, jinja2, pidgy, builtins, sys, operator
     exporter = convert.exporters.TemplateExporter() # leave an global exporter avai
+
+    try:
+        from . import util
+    except:
+        import util
 
 The `Weave` class controls the display of `pidgy` outputs.
 
-    @base.implementation(trylast=True)
-    def weave(result):
-            text = util.strip_front_matter(result.info.raw_cell)
-            IPython.display.display(IPython.display.Markdown(format_markdown(text)))
-            return result
+    def post_run_cell(result):
+        text = util.strip_front_matter(result.info.raw_cell)
+        IPython.display.display(IPython.display.Markdown(format_markdown(text)))
 
     def format_markdown(text):
             lines = text.splitlines() or ['']
             if not lines[0].strip(): return F"""<!--\n{text}\n\n-->"""
             try:
-                template = exporter.environment.from_string(text, globals=getattr(IPython.get_ipython(), 'user_ns', {}))
+                template = exporter.environment.from_string(text, globals={
+                    **vars(builtins), **vars(operator),
+                    **getattr(IPython.get_ipython(), 'user_ns', {})
+                })
                 text = template.render()
             except BaseException as Exception:
                 IPython.get_ipython().showtraceback((type(Exception), Exception, Exception.__traceback__))

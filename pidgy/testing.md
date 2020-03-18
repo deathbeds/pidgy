@@ -9,8 +9,6 @@ we formally test code incrementally during interactive computing.
 <!--
 
     import unittest, doctest, textwrap, dataclasses, IPython, re, pidgy, sys, typing, types, contextlib, ast, inspect
-    try: from . import base
-    except: import base
 
 -->
 
@@ -35,8 +33,7 @@ for a flexible interface to verifying the computational qualities of literate pr
                 suite.addTest(unittest.FunctionTestCase(object))
         return suite
 
-    @base.implementation
-    def weave(result):
+    def post_run_cell(result):
             shell = IPython.get_ipython()
             globs, filename = shell.user_ns, F"In[{shell.last_execution_result.execution_count}]"
 
