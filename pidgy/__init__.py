@@ -1,16 +1,16 @@
 with __import__("importnb").Notebook(lazy=True):
     try:
-        from . import loader
+        from . import loader, tangle
         from .loader import pidgyLoader
     except:
-        import loader
+        import loader, tangle
         from loader import pidgyLoader
 
 with pidgyLoader(lazy=True):
     try:
-        from . import weave
+        from . import weave, testing
     except:
-        import weave
+        import weave, testing
 
 
 def load_ipython_extension(shell):

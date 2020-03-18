@@ -8,46 +8,25 @@ An important feature of interactive computing in the browser is access to rich d
 HTML and Javascript. `pidgy` takes advantage of the ability to include hypermedia forms that enhance and
 support computational narratives.
 
-    import dataclasses, IPython, nbconvert as convert, jinja2
+    import dataclasses, IPython, nbconvert as convert, jinja2, pidgy, builtins
     try: from . import base, util
     except: import base, util
     exporter = convert.exporters.TemplateExporter() # leave an global exporter avai
 
 The `Weave` class controls the display of `pidgy` outputs.
 
-    @dataclasses.dataclass
-    class Weave(base.Extension):
-        def post_run_cell(self, result):
+    @base.implementation(trylast=True)
+    def weave(result):
             text = util.strip_front_matter(result.info.raw_cell)
-            IPython.display.display(IPython.display.Markdown(self.format_markdown(text), metadata=self.format_metadata()))
+            IPython.display.display(IPython.display.Markdown(format_markdown(text)))
             return result
 
-        environment: jinja2.Environment = dataclasses.field(default=exporter.environment)
-
-        def format_markdown(self, text):
+    def format_markdown(text):
             lines = text.splitlines() or ['']
             if not lines[0].strip(): return F"""<!--\n{text}\n\n-->"""
             try:
-                template = exporter.environment.from_string(text, globals=getattr(self.shell, 'user_ns', {}))
+                template = exporter.environment.from_string(text, globals=getattr(IPython.get_ipython(), 'user_ns', {}))
                 text = template.render()
             except BaseException as Exception:
-                self.shell.showtraceback((type(Exception), Exception, Exception.__traceback__))
+                IPython.get_ipython().showtraceback((type(Exception), Exception, Exception.__traceback__))
             return text
-
-        def format_metadata(self):
-            parent = getattr(self.shell.kernel, '_last_parent', {})
-            return {}
-
-        def _update_filters(self):
-            self.environment.filters.update({
-                k: v for k, v in getattr(self.shell, 'user_ns', {}).items() if callable(v) and k not in self.environment.filters})
-
-
-
-    def load_ipython_extension(shell): shell.weave = Weave(shell=shell).register()
-
-    def unload_ipython_extension(shell):
-        if hasattr(shell, 'weave'): shell.weave.unregister()
-
-Albeit our approach does not specifically target `".DVI"` files, they are produced by ReadTheDocs when creating a PDF
-from Latex.

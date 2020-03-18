@@ -35,26 +35,23 @@ for a flexible interface to verifying the computational qualities of literate pr
                 suite.addTest(unittest.FunctionTestCase(object))
         return suite
 
-    @dataclasses.dataclass
-    class Testing(base.Extension):
-
-The `Testing` class executes the test suite each time a cell is executed.
-
-        function_pattern: str = 'test_'
-        def post_run_cell(self, result):
-            globs, filename = self.shell.user_ns, F"In[{self.shell.last_execution_result.execution_count}]"
+    @base.implementation
+    def weave(result):
+            shell = IPython.get_ipython()
+            globs, filename = shell.user_ns, F"In[{shell.last_execution_result.execution_count}]"
 
             if not (result.error_before_exec or result.error_in_exec):
-                with ipython_compiler(self.shell):
-                    definitions = [self.shell.user_ns[x] for x in getattr(self.shell.measure, 'definitions', [])
-                        if x.startswith(self.function_pattern) or
-                        (isinstance(self.shell.user_ns[x], type)
-                         and issubclass(self.shell.user_ns[x], unittest.TestCase))
-                    ]
-                    result = self.run(make_test_suite(result.info.raw_cell, *definitions, vars=self.shell.user_ns, name=filename), result)
+                with ipython_compiler(shell):
+                    """definitions = [shell.user_ns[x] for x in getattr(shell.measure, 'definitions', [])
+                        if x.startswith('test_') or
+                        (isinstance(shell.user_ns[x], type)
+                         and issubclass(shell.user_ns[x], unittest.TestCase))
+                    ]"""
+                    definitions = []
+                    result = run(make_test_suite(result.info.raw_cell, *definitions, vars=shell.user_ns, name=filename), result)
 
 
-        def run(self, suite: unittest.TestCase, cell) -> unittest.TestResult:
+    def run(suite: unittest.TestCase, cell) -> unittest.TestResult:
             result = unittest.TestResult(); suite.run(result)
             if result.failures:
                 msg = '\n'.join(msg for text, msg in result.failures)
@@ -95,12 +92,5 @@ We'll have to replace how `doctest` compiles code with the `IPython` machinery.
     r'(?P<source>[^`].*?)'
     r'`')
         def _parse_example(self, m, name, lineno): return m.group('source'), None, "...", None
-
-
-    def load_ipython_extension(shell):
-        shell.testing = Testing(shell=shell).register()
-
-    def unload_ipython_extension(shell):
-        shell.testing.unregister()
 
 </details>

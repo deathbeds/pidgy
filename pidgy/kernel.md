@@ -28,36 +28,12 @@ pidgy kernel install
 ```
 
     class pidgyKernel(ipykernel.ipkernel.IPythonKernel):
-        shell_class = traitlets.Type('pidgy.kernel.pidgyInteractiveShell')
+        shell_class = traitlets.Type('pidgy.base.pidgyShell')
 
         _last_parent = traitlets.Dict()
         def init_metadata(self, parent):
             self._last_parent = parent
             return super().init_metadata(parent)
-
-## `pidgy` shell
-
-    class pidgyInteractiveShell(ipykernel.zmqshell.ZMQInteractiveShell):
-
-Configure a native `pidgy` `IPython.InteractiveShell`
-
-        loaders = traitlets.Dict(allow_none=True)
-        weave = traitlets.Any(allow_none=True)
-        tangle = traitlets.Any(allow_none=True)
-        extras = traitlets.Any(allow_none=True)
-        testing = traitlets.Any(allow_none=True)
-        measure = traitlets.Any(allow_none=True)
-        enable_html_pager = traitlets.Bool(True)
-
-`pidgyInteractiveShell.enable_html_pager` is necessary to see rich displays in
-the inspector.
-
-        def __init__(self,*args, **kwargs):
-            super().__init__(*args, **kwargs)
-            with pidgy.pidgyLoader():
-                from .extension import load_ipython_extension
-            self.user_ns['shell'] = self
-            load_ipython_extension(self)
 
 ## `pidgy` kernel installation
 
