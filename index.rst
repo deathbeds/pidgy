@@ -40,8 +40,6 @@ pidgy paper
     
     readme.md
     docs/intro.md
-    pidgy/extension.md
-    pidgy/tests/test_repl.md
     pidgy/kernel.md
     pidgy/tangle.ipynb
     pidgy/loader.ipynb
