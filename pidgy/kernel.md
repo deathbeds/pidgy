@@ -27,8 +27,11 @@ can be installed using
 pidgy kernel install
 ```
 
+    try: from . import shell
+    except: import shell
+
     class pidgyKernel(ipykernel.ipkernel.IPythonKernel):
-        shell_class = traitlets.Type('pidgy.base.pidgyShell')
+        shell_class = traitlets.Type('pidgy.shell.pidgyShell')
 
         _last_parent = traitlets.Dict()
         def init_metadata(self, parent):
