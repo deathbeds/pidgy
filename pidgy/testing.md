@@ -94,5 +94,3 @@ We'll have to replace how `doctest` compiles code with the `IPython` machinery.
         def _parse_example(self, m, name, lineno): return m.group('source'), None, "...", None
 
 </details>
-
-    base.pidgyShell.plugin_manager.register(sys.modules[__name__])

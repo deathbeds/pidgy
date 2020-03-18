@@ -30,5 +30,3 @@ The `Weave` class controls the display of `pidgy` outputs.
             except BaseException as Exception:
                 IPython.get_ipython().showtraceback((type(Exception), Exception, Exception.__traceback__))
             return text
-
-    base.pidgyShell.plugin_manager.register(sys.modules[__name__])

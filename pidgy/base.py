@@ -22,7 +22,8 @@ class pidgyShell(ipykernel.zmqshell.ZMQInteractiveShell):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         pidgy.pidgyLoader().__enter__()
-
+        for plugin in (pidgy.tangle, pidgy.weave, pidgy.testing):
+            self.plugin_manager.register(plugin)
         self.events.register(
             "post_run_cell", lambda x: self.plugin_manager.hook.weave(result=x)
         )
