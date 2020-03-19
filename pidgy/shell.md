@@ -18,7 +18,7 @@ The tangle step occurs before any compite happens. It takes an input string and 
 
 After the tangle, step `pidgy` uses existing `IPython` machinery to tangle two other opinionated language features:
 
-1. `emoiji` for [Python] variables names.
+1. `emoji` for [Python] variables names.
 2. top-level return and yield statements.
 
 Emojis are not valid variables names in [Python], but `pidgy` they are. Emojis represent gestures that can ease the challenge with naming, and using visual symbols instead.
