@@ -5,38 +5,49 @@
 > > - [`jupyter` kernel definition](https://jupyter.readthedocs.io/en/latest/glossary.html#term-kernel)
 
 `pidgy` is a wrapper kernel around the
-existing `ipykernel and IPython.InteractiveShell` configurables.
-`IPython` adds extra syntax to python that simulate literate programming
-macros.
+existing `ipykernel and IPython.InteractiveShell`.
 
 ![](https://jupyter.readthedocs.io/en/latest/_images/other_kernels.png)
 
-<!--
-
     import IPython, ipykernel.ipkernel, ipykernel.kernelapp, pidgy, traitlets, ipykernel.kernelspec, ipykernel.zmqshell, pathlib
-
--->
-
-The shell is the application either jupyterlab or jupyter notebook, the kernel
-determines the programming language. Below we design a just jupyter kernel that
-can be installed using
-
-- What is the advantage of installing the kernel and how to do it.
-
-```bash
-pidgy kernel install
-```
 
     try: from . import shell
     except: import shell
 
     class pidgyKernel(ipykernel.ipkernel.IPythonKernel):
-        shell_class = traitlets.Type('pidgy.shell.pidgyShell')
+
+The `pidgy` kernel specifies to `jupyter` how it can be used as a native kernel from
+the launcher or notebook. It specifies which shell class to use.
+
+shell_class = traitlets.Type('pidgy.shell.pidgyShell')
 
         _last_parent = traitlets.Dict()
         def init_metadata(self, parent):
+
+The is some important data captured in the initial we'll expose for later.
+
             self._last_parent = parent
             return super().init_metadata(parent)
+
+def do_inspect(self, code, cursor_pos, detail_level=0):
+
+The kernel is where the inspection can be customized. `pidgy` adds the ability to use
+the inspector as Markdown rendering tool.
+
+            if code[cursor_pos-3:cursor_pos] == '!!!':
+                return self.markdown_result(pidgy.weave.format_markdown(code))
+            result = super().do_inspect(code, cursor_pos, detail_level)
+            if not result['found']: return self.markdown_result(code)
+            return result
+
+        def markdown_result(self, code):
+            return dict(found=True, status='ok', metadata={}, data={'text/markdown': code})
+
+        def do_complete(self, code, cursor_pos):
+
+The kernel even allows the completion system to be modified.
+
+            return super().do_complete(code, cursor_pos)
 
 ## `pidgy` kernel installation
 
