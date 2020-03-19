@@ -40,14 +40,16 @@ pidgy paper
     
     readme.md
     docs/intro.md
-    pidgy/kernel.md
+    pidgy/shell.md
     pidgy/tangle.ipynb
+    pidgy/weave.md
+    pidgy/testing.md
     pidgy/loader.ipynb
     pidgy/runpidgy.md
     pidgy/extras.ipynb
-    pidgy/weave.md
+    
     pidgy/export.md
-    pidgy/testing.md
+    pidgy/kernel.md
     pidgy/measure.md
     pidgy/pytest_config/readme.md
     pidgy/readme.md
