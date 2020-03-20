@@ -2,7 +2,7 @@
 
 Did y'all know that the `IPython` is a configurable object? That we can modify the heck out it. `pidgy` uses liberally uses `IPython`s configurable Read-Eval-Print-Loop machinery to craft a bespoke literate computing experience.
 
-    import ipykernel.kernelapp, traitlets, pidgy
+    import ipykernel.kernelapp, traitlets, pidgy, types
 
     class pidgyShell(ipykernel.zmqshell.ZMQInteractiveShell):
 
@@ -12,7 +12,7 @@ Primarly, the `pidgyShell` formalizes the tangle and weave steps of literate pro
 
 The tangle step occurs before any compite happens. It takes an input string and converts it a valid programming language, in out case valid `IPython`.
 
-            return super().transform_cell(pidgy.tangle.tangle(text=str))
+            return super(type(self), self).transform_cell(pidgy.tangle.tangle(text=str))
 
 ### Extra language features
 
@@ -46,7 +46,27 @@ The weave step is trigger after the code is code is executed. Weaving triggers a
 
             self.events.register("post_run_cell", pidgy.testing.post_run_cell)
             self.events.register("post_run_cell", pidgy.weave.post_run_cell)
-            pidgy.pidgyLoader().__enter__()
+            self.loaders = getattr(self, 'loaders', {})
+            if pidgy.pidgyLoader not in self.loaders:
+                self.loaders[pidgy.pidgyLoader] = pidgy.pidgyLoader().__enter__()
+
+
+        def load_ipython_extension(shell):
+
+The pidgy kernel makes it easy to access the pidgy shell, but it can also be used an IPython extension.
+
+            pidgyShell.init_weave(shell)
+            pidgyShell.init_json(shell)
+            shell.transform_cell = types.MethodType(pidgyShell.transform_cell, shell)
+
+        def unload_ipython_extension(self):
+            self.events.unregister("post_run_cell", pidgy.testing.post_run_cell)
+            self.events.unregister("post_run_cell", pidgy.weave.post_run_cell)
+            loader = self.loaders.pop(pidgy.pidgyLoader)
+            if loader is not None:
+                loader.__exit__(None, None, None)
+
+        enable_html_pager = traitlets.Bool(True)
 
         def __init__(self, *args, **kwargs):
 
@@ -56,11 +76,7 @@ Override the initialization of the conventional IPython kernel to include the pi
             self.init_weave(), self.init_json()
             self.user_ns["shell"] = self
 
-        enable_html_pager = traitlets.Bool(True)
 
 
-    def load_ipython_extension(shell):
-
-The pidgy kernel makes it easy to access the pidgy shell, but it can also be used an IPython extension.
-
-    def unload_ipython_extension(shell): ...
+    load_ipython_extension = pidgyShell.load_ipython_extension
+    unload_ipython_extension = pidgyShell.unload_ipython_extension
