@@ -32,13 +32,17 @@ pidgy programming
    markdown <https://github.com/deathbeds/pidgy/tree/master/pidgy>`__.
 
 
+.. toctree::
+    :glob:
+    
+    README.md
+
 pidgy paper
 -----------
 
 .. toctree::
     :glob:
     
-    README.md
     docs/intro.md
     pidgy/shell.md
     pidgy/tangle.ipynb
