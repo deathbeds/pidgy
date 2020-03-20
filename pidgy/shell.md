@@ -12,7 +12,8 @@ Primarly, the `pidgyShell` formalizes the tangle and weave steps of literate pro
 
 The tangle step occurs before any compite happens. It takes an input string and converts it a valid programming language, in out case valid `IPython`.
 
-            return super(type(self), self).transform_cell(pidgy.tangle.tangle(text=str))
+            str = pidgy.tangle.tangle(str)
+            return super(type(self), self).transform_cell(str)
 
 ### Extra language features
 
@@ -30,6 +31,8 @@ Emojis are not valid variables names in [Python], but `pidgy` they are. Emojis r
 
         ast_transformers = traitlets.List([pidgy.extras.ExtraSyntax()]).tag(config=True)
 
+<!--  -->
+
         def init_json(self):
 
 If Python is put close to a microscope, it supports most `json`s syntax. `pidgy` wants it to be easy
@@ -39,6 +42,8 @@ for folks to copy and paste json data into code. We acheive this by modifying th
             builtins.yes = builtins.true = True
             builtins.no = builtins.false = False
             builtins.null = None
+
+<!--  -->
 
         def init_weave(self):
 
@@ -50,6 +55,7 @@ The weave step is trigger after the code is code is executed. Weaving triggers a
             if pidgy.pidgyLoader not in self.loaders:
                 self.loaders[pidgy.pidgyLoader] = pidgy.pidgyLoader().__enter__()
 
+<!--  -->
 
         def load_ipython_extension(shell):
 
@@ -59,6 +65,8 @@ The pidgy kernel makes it easy to access the pidgy shell, but it can also be use
             pidgyShell.init_json(shell)
             shell.transform_cell = types.MethodType(pidgyShell.transform_cell, shell)
 
+<!--  -->
+
         def unload_ipython_extension(self):
             self.events.unregister("post_run_cell", pidgy.testing.post_run_cell)
             self.events.unregister("post_run_cell", pidgy.weave.post_run_cell)
@@ -67,6 +75,8 @@ The pidgy kernel makes it easy to access the pidgy shell, but it can also be use
                 loader.__exit__(None, None, None)
 
         enable_html_pager = traitlets.Bool(True)
+
+<!--  -->
 
         def __init__(self, *args, **kwargs):
 
