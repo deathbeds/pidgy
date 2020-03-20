@@ -1,4 +1,4 @@
-# Literature as the test
+# Formally testing literate programs
 
     import pidgy, pytest, nbval, doctest, importnb.utils.pytest_importnb
 
