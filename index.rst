@@ -38,7 +38,7 @@ pidgy paper
 .. toctree::
     :glob:
     
-    readme.md
+    README.md
     docs/intro.md
     pidgy/shell.md
     pidgy/tangle.ipynb
