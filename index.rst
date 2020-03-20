@@ -47,6 +47,7 @@ pidgy paper
     pidgy/loader.ipynb
     pidgy/runpidgy.md
     pidgy/extras.ipynb
+    pidgy/tests/test_pidgin_syntax.md.ipynb
     
 pidgy applications
 ------------------
@@ -67,12 +68,8 @@ pidgy tests
 .. toctree::
     :glob:
 
-    pidgy/tests/test_basic.md.ipynb
-    pidgy/tests/test_pidgin_syntax.md.ipynb
     pidgy/tests/test_cli.ipynb
-    
-    pidgy/base.py
-    
+    pidgy/tests/test_3rd_party.ipynb
     docs/examples/fastapi_application.md
     docs/examples/working-within-dataframes.md.ipynb
     docs/figures.md.ipynb
