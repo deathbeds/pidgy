@@ -19,6 +19,9 @@ support computational narratives.
 The `Weave` class controls the display of `pidgy` outputs.
 
     def post_run_cell(result):
+
+Show the woven output.
+
         text = util.strip_front_matter(result.info.raw_cell)
         IPython.display.display(IPython.display.Markdown(format_markdown(text)))
 
@@ -26,6 +29,10 @@ The `Weave` class controls the display of `pidgy` outputs.
             lines = text.splitlines() or ['']
             if not lines[0].strip(): return F"""<!--\n{text}\n\n-->"""
             try:
+
+Try to replace any jinja templates with information in the current namespace
+and show the rendered view.
+
                 template = exporter.environment.from_string(text, globals={
                     **vars(builtins), **vars(operator),
                     **getattr(IPython.get_ipython(), 'user_ns', {})
