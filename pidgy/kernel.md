@@ -19,7 +19,7 @@ existing `ipykernel and IPython.InteractiveShell`.
 The `pidgy` kernel specifies to `jupyter` how it can be used as a native kernel from
 the launcher or notebook. It specifies which shell class to use.
 
-shell_class = traitlets.Type('pidgy.shell.pidgyShell')
+        shell_class = traitlets.Type('pidgy.shell.pidgyShell')
 
         _last_parent = traitlets.Dict()
         def init_metadata(self, parent):
