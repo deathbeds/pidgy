@@ -48,6 +48,12 @@ pidgy paper
     pidgy/runpidgy.md
     pidgy/extras.ipynb
     
+pidgy applications
+------------------
+
+.. toctree::
+    :glob:
+    
     pidgy/export.md
     pidgy/kernel.md
     pidgy/measure.md

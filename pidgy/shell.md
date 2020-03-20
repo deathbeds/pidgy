@@ -46,13 +46,13 @@ The weave step is trigger after the code is code is executed. Weaving triggers a
 
             self.events.register("post_run_cell", pidgy.testing.post_run_cell)
             self.events.register("post_run_cell", pidgy.weave.post_run_cell)
-            pidgy.pidgyLoader().**enter**()
+            pidgy.pidgyLoader().__enter__()
 
-        def __init__(self, \*args, \*\*kwargs):
+        def __init__(self, *args, **kwargs):
 
 Override the initialization of the conventional IPython kernel to include the pidgy opinions.
 
-            super().__init__(\*args, \*\*kwargs)
+            super().__init__(*args, **kwargs)
             self.init_weave(), self.init_json()
             self.user_ns["shell"] = self
 
