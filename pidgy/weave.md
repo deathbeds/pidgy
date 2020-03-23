@@ -18,6 +18,7 @@ support computational narratives.
 
 The `Weave` class controls the display of `pidgy` outputs.
 
+    @pidgy.implementation
     def post_run_cell(result):
 
 Show the woven output.
