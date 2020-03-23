@@ -2,7 +2,7 @@
 
 Literate programs can be translated into many formats. Commonly markup langauges focus on translation to other markup languages, we add an extra ability to convert markup to source code.
 
-    import pidgy, pathlib, typing, textwrap
+    import pidgy, pathlib, typing, textwrap, IPython
     try: from . import util
     except: import util
 
@@ -25,7 +25,7 @@ A notebook can also be flattened.
 
     def to_python(input, tangle = pidgy.loader.pidgyTransformer()):
         import black, isort
-        code = tangle.transform_cell(flattennb(input))
+        code = pidgy.loader.tangle(flattennb(input))
         code = isort.SortImports(file_contents=code).output
         code = black.format_str(code, mode=black.FileMode(line_length=100))
         return code
