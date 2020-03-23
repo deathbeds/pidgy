@@ -16,13 +16,7 @@ The `tangle` step operates on an input string that will become compiled source c
 
 `pidgy` includes the ability the use emojis as valid python names through the existing `traitlets` configuration system.
 
-        def transform_cell(self, str: str) -> str:
-
-`IPython` transform cells into blocks of valid [Python], if the source is acceptable. Our `tangle` step is introduced before the `IPython` machinery is triggered. After the cell is transformed, `IPython` expects that [Python] can convert the resulting source code as an [Abstract Syntax Tree], if not we'll receive a `SyntaxError`.
-
-            return super(type(self), self).transform_cell(
-                self.manager.hook.tangle(str=str))
-
+        input_transformer_manager = traitlets.Any(pidgy.tangle.pidgyManager())
 
         ast_transformers = traitlets.List([pidgy.extras.ExtraSyntax(), pidgy.testing.Definitions()])
 

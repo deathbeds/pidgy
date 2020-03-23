@@ -23,7 +23,7 @@ A notebook can also be flattened.
     def to_markup(input: typing.Union[str, "nbformat.NotebookNode"], exporter: "nbconvert.Exporter") -> str:
         return exporter.from_notebook_node(input)[0]
 
-    def to_python(input, tangle = pidgy.loader.pidgyTransformer()):
+    def to_python(input, tangle = pidgy.tangle.pidgyManager()):
         import black, isort
         code = pidgy.loader.tangle(flattennb(input))
         code = isort.SortImports(file_contents=code).output
