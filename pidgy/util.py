@@ -13,6 +13,10 @@ class ContextDepth:
         self.depth -= 1
 
 
+def istype(object, cls):
+    return isinstance(object, type) and issubclass(object, cls)
+
+
 (FENCE, CONTINUATION, SEMI, COLON, MAGIC, DOCTEST), QUOTES, SPACE = (
     "``` \\ ; : %% >>>".split(),
     ('"""', "'''"),
