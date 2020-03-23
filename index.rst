@@ -44,17 +44,32 @@ pidgy paper
     :glob:
     
     docs/intro.md
+    
+pidgy specification
+===================
+
+.. toctree::
+    :glob:
+
+
     pidgy/shell.md
+    
+pidgy implementation
+====================
+
+.. toctree::
+    :glob:
+
     pidgy/tangle.ipynb
-    pidgy/weave.md
-    pidgy/testing.md
     pidgy/loader.ipynb
+    pidgy/weave.md    
     pidgy/runpidgy.md
+    pidgy/testing.md
     pidgy/extras.ipynb
     pidgy/tests/test_pidgin_syntax.md.ipynb
     
 pidgy applications
-------------------
+==================
 
 .. toctree::
     :glob:
