@@ -1,3 +1,9 @@
+import pluggy
+
+specification, implementation = (
+    pluggy.HookspecMarker("pidgy"),
+    pluggy.HookimplMarker("pidgy"),
+)
 with __import__("importnb").Notebook(lazy=True):
     try:
         from . import loader, tangle
