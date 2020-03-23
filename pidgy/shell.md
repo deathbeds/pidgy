@@ -46,7 +46,7 @@ A wrapped function that will be called by the IPython post_run_cell event.
 
 `pidgy` mixes the standard `IPython` configuration system and its own `pluggy` specification and implementation.
 
-## The `pidgy` specification
+## `pidgy` shell and extension initialization.
 
         def load_ipython_extension(shell):
 
