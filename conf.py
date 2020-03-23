@@ -29,4 +29,6 @@ latex_documents = [
 
 def setup(app):
     if "READTHEDOCS" in __import__("os").environ:
-        __import__("os").system("python -m pidgy to python pidgy/*.md --write")
+        __import__("os").system(
+            "python -m pidgy to python pidgy/*.md pidgy/*.ipynb --write"
+        )
