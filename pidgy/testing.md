@@ -33,19 +33,28 @@ for a flexible interface to verifying the computational qualities of literate pr
                 suite.addTest(unittest.FunctionTestCase(object))
         return suite
 
+    @pidgy.implementation
     def post_run_cell(result):
             shell = IPython.get_ipython()
             globs, filename = shell.user_ns, F"In[{shell.last_execution_result.execution_count}]"
 
             if not (result.error_before_exec or result.error_in_exec):
+                definitions = []
                 with ipython_compiler(shell):
-                    """definitions = [shell.user_ns[x] for x in getattr(shell.measure, 'definitions', [])
-                        if x.startswith('test_') or
-                        (isinstance(shell.user_ns[x], type)
-                         and issubclass(shell.user_ns[x], unittest.TestCase))
-                    ]"""
-                    definitions = []
+                    while shell.definitions:
+                        definition = shell.definitions.pop(0)
+                        if definition.startswith('test_') or pidgy.util.istype(unittest.TestCase):
+                            definitions.append(shell.user_ns[definition])
                     result = run(make_test_suite(result.info.raw_cell, *definitions, vars=shell.user_ns, name=filename), result)
+
+    class Definitions(ast.NodeTransformer):
+        def visit_FunctionDef(self, node):
+            shell = IPython.get_ipython()
+            shell and shell.definitions.append(node.name)
+            return node
+        visit_ClassDef = visit_FunctionDef
+
+
 
 
     def run(suite: unittest.TestCase, cell) -> unittest.TestResult:
