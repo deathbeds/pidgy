@@ -61,11 +61,10 @@ pidgy implementation
     :glob:
 
     pidgy/tangle.ipynb
+    pidgy/extras.ipynb
     pidgy/loader.ipynb
     pidgy/weave.md    
-    pidgy/runpidgy.md
     pidgy/testing.md
-    pidgy/extras.ipynb
     pidgy/tests/test_pidgin_syntax.md.ipynb
     
 pidgy applications
@@ -74,9 +73,9 @@ pidgy applications
 .. toctree::
     :glob:
     
-    pidgy/export.md
     pidgy/kernel.md
-    pidgy/measure.md
+    pidgy/export.md
+    pidgy/runpidgy.md
     pidgy/pytest_config/readme.md
     pidgy/readme.md
     docs/discussion.md.ipynb
