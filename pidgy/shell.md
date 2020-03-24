@@ -1,5 +1,7 @@
 # The `pidgy` literate computing shell
 
+A powerful feature of the `jupyter` ecosystem is a generalized implementation of the [Shell] & [Kernel] model for interactive computing in interfaces like the terminal and notebooks. That is to say that different programming languages can use the same interfaces, `jupyter` supports [over 100 languages now][kernel languages]. The general ability to support different languages is possible because of configurable interfaces for the `IPython.InteractiveShell` and `ipykernel`.
+
     import ipykernel.kernelapp, nbconvert, traitlets, pidgy, types, pluggy, IPython, jinja2
     class pidgyShell(ipykernel.zmqshell.ZMQInteractiveShell):
 
@@ -18,7 +20,13 @@ The `tangle` step operates on an input string that will become compiled source c
 
 `pidgy` includes the ability the use emojis as valid python names through the existing `traitlets` configuration system.
 
-        input_transformer_manager = traitlets.Any(pidgy.tangle.pidgyManager())
+        class pidgyManager(IPython.core.inputtransformer2.TransformerManager):
+            def transform_cell(self, cell):
+                shell = IPython.get_ipython()
+                return super(type(self), self).transform_cell(
+                    (shell and hasattr(shell, 'manager') and shell.manager.hook.tangle)(str=cell))
+
+        input_transformer_manager = traitlets.Any(pidgyManager())
 
         ast_transformers = traitlets.List([pidgy.extras.ExtraSyntax(), pidgy.testing.Definitions()])
 
@@ -54,7 +62,7 @@ The weave step happens after execution, the tangle step happens before. Weaving 
 
 Initialize `pidgy` specific behaviors.
 
-            self.manager.add_hookspecs(type(self))
+            self.manager.add_hookspecs(pidgyShell)
             for object in (
                 pidgy.tangle, pidgy.weave.Weave(shell=self), pidgy.testing, pidgy.extras
             ):
@@ -62,8 +70,8 @@ Initialize `pidgy` specific behaviors.
 The tangle and weave implementations are discussed in other parts of this document. Here we register each of them as `pluggy` hook implementations.
 
                 self.manager.register(object)
-            self.events.register("post_run_cell", self._post_run_cell)
-            self.events.register("post_execute", self._post_exec)
+            self.events.register("post_run_cell", types.MethodType(pidgyShell._post_run_cell, self))
+            self.events.register("post_execute", types.MethodType(pidgyShell._post_exec, self))
 
 
             if pidgy.pidgyLoader not in self.loaders:
@@ -96,9 +104,11 @@ Override the initialization of the conventional IPython kernel to include the pi
 
 The pidgy kernel makes it easy to access the pidgy shell, but it can also be used an IPython extension.
 
+            shell.add_traits(manager=pidgyShell.manager, loaders=pidgyShell.loaders, definitions=pidgyShell.definitions)
             shell._post_run_cell = types.MethodType(pidgyShell._post_run_cell, shell)
+            shell._post_exec = types.MethodType(pidgyShell._post_exec, shell)
             pidgyShell.init_pidgy(shell)
-            shell.transform_cell = types.MethodType(pidgyShell.transform_cell, shell)
+            shell.input_transformer_manager = pidgyShell.input_transformer_manager.default_value
 
 <!--  -->
 
@@ -112,3 +122,7 @@ The pidgy kernel makes it easy to access the pidgy shell, but it can also be use
 
     load_ipython_extension = pidgyShell.load_ipython_extension
     unload_ipython_extension = pidgyShell.unload_ipython_extension
+
+[shell]: https://en.wikipedia.org/wiki/Shell_(computing)
+[kernel]: https://en.wikipedia.org/wiki/Kernel_(operating_system)
+[kernel languages]: https://github.com/jupyter/jupyter/wiki/Jupyter-kernels
