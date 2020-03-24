@@ -56,7 +56,7 @@ Initialize `pidgy` specific behaviors.
 
             self.manager.add_hookspecs(type(self))
             for object in (
-                pidgy.tangle, pidgy.weave.Weave(shell={self), pidgy.testing, pidgy.extras
+                pidgy.tangle, pidgy.weave.Weave(shell=self), pidgy.testing, pidgy.extras
             ):
 
 The tangle and weave implementations are discussed in other parts of this document. Here we register each of them as `pluggy` hook implementations.
