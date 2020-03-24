@@ -1,9 +1,11 @@
 # The `pidgy` literate computing shell
 
-    import ipykernel.kernelapp, traitlets, pidgy, types, pluggy, IPython
+    import ipykernel.kernelapp, nbconvert, traitlets, pidgy, types, pluggy, IPython, jinja2
     class pidgyShell(ipykernel.zmqshell.ZMQInteractiveShell):
 
 The `pidgy` shell is wrapper around the existing `IPython` shell experience. It explicitly defines the tangle and weave conventions of literate programming to each interactive computing execution. Once the shell is configured, it can be reused as a `jupyter` kernel or `IPython` extension that supports the `pidgy` [Markdown]/[IPython] metalanguage and metasyntax.
+
+        environment = traitlets.Any(nbconvert.exporters.TemplateExporter().environment)
 
 ## `pidgy` specification
 
@@ -23,15 +25,21 @@ The `tangle` step operates on an input string that will become compiled source c
 Another feature of `IPython` is the ability to intercept [Abstract Syntax Tree]s and change their representation or capture metadata. After these transformations are applied, `IPython` compile the tree into a valid `types.CodeType`.
 
         @pidgy.specification
-        def post_run_cell(result):
+        def post_execute(self):
+            ...
+
+
+        @pidgy.specification
+        def post_run_cell(self, result):
 
 The weave step happens after execution, the tangle step happens before. Weaving only occurs if the input is computationally verified. It allows different representations of the input to be displayed. `pidgy` will implement templated Markdown displays of the input and formally test the contents of the input.
 
         def _post_run_cell(self, result):
-
-A wrapped function that will be called by the IPython post_run_cell event.
-
             self.manager.hook.post_run_cell(result=result)
+
+        def _post_exec(self):
+            self.manager.hook.post_execute()
+
 
         enable_html_pager = traitlets.Bool(True)
         definitions = traitlets.List()
@@ -40,7 +48,49 @@ A wrapped function that will be called by the IPython post_run_cell event.
 
 `pidgy` mixes the standard `IPython` configuration system and its own `pluggy` specification and implementation.
 
-## `pidgy` shell and extension initialization.
+## Initializing the `pidgy` shell
+
+        def init_pidgy(self):
+
+Initialize `pidgy` specific behaviors.
+
+            self.manager.add_hookspecs(type(self))
+            for object in (
+                pidgy.tangle, pidgy.weave.Weave(shell={self), pidgy.testing, pidgy.extras
+            ):
+
+The tangle and weave implementations are discussed in other parts of this document. Here we register each of them as `pluggy` hook implementations.
+
+                self.manager.register(object)
+            self.events.register("post_run_cell", self._post_run_cell)
+            self.events.register("post_execute", self._post_exec)
+
+
+            if pidgy.pidgyLoader not in self.loaders:
+
+`pidgy` enters a loader context allowing [Markdown] and notebook files to be used permissively as input.
+
+                self.loaders[pidgy.pidgyLoader] = pidgy.pidgyLoader().__enter__()
+
+It also adds a few extra features to the shell.
+
+            self.user_ns["shell"] = self
+            self.user_ns.update({k: v for k, v in vars(IPython.display).items()
+                if pidgy.util.istype(v, IPython.core.display.DisplayObject)
+            })
+
+and allows json syntax as valid python input.
+
+            pidgy.extras.init_json()
+
+        def __init__(self, *args, **kwargs):
+
+Override the initialization of the conventional IPython kernel to include the pidgy opinions.
+
+            super().__init__(*args, **kwargs)
+            self.init_pidgy()
+
+## `pidgy` extension.
 
         def load_ipython_extension(shell):
 
@@ -58,55 +108,6 @@ The pidgy kernel makes it easy to access the pidgy shell, but it can also be use
             loader = self.loaders.pop(pidgy.pidgyLoader)
             if loader is not None:
                 loader.__exit__(None, None, None)
-
-
-        def init_pidgy(self):
-
-Initialize `pidgy` specific behaviors.
-
-            self.manager.add_hookspecs(type(self))
-            for object in (
-                pidgy.tangle, pidgy.weave, pidgy.testing, pidgy.extras
-            ):
-
-The tangle and weave implementations are discussed in other parts of this document. Here we register each of them as `pluggy` hook implementations.
-
-                self.manager.register(object)
-            self.events.register("post_run_cell", self._post_run_cell)
-
-            if pidgy.pidgyLoader not in self.loaders:
-
-`pidgy` enters a loader context allowing [Markdown] and notebook files to be used permissively as input.
-
-                self.loaders[pidgy.pidgyLoader] = pidgy.pidgyLoader().__enter__()
-
-It also adds a few extra features to the shell.
-
-            self.user_ns["shell"] = self
-            self.user_ns.update({k: v for k, v in vars(IPython.display).items()
-                if pidgy.util.istype(v, IPython.core.display.DisplayObject)
-            })
-
-and allows json syntax as valid python input.
-
-            pidgyShell.init_json(self)
-
-        def init_json(self):
-
-If Python is put close to a microscope, it supports most `json`s syntax. `pidgy` wants it to be easy
-for folks to copy and paste json data into code. We acheive this by modifying the built in settings.
-
-            import builtins
-            builtins.yes = builtins.true = True
-            builtins.no = builtins.false = False
-            builtins.null = None
-
-        def __init__(self, *args, **kwargs):
-
-Override the initialization of the conventional IPython kernel to include the pidgy opinions.
-
-            super().__init__(*args, **kwargs)
-            self.init_pidgy()
 
 
     load_ipython_extension = pidgyShell.load_ipython_extension
