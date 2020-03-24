@@ -13,6 +13,10 @@ class ContextDepth:
         self.depth -= 1
 
 
+def html_comment(text):
+    return f"""<!--\n{text}\n\n-->"""
+
+
 def istype(object, cls):
     return isinstance(object, type) and issubclass(object, cls)
 
