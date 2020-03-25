@@ -43,8 +43,9 @@ for a flexible interface to verifying the computational qualities of literate pr
                 with ipython_compiler(shell):
                     while shell.definitions:
                         definition = shell.definitions.pop(0)
-                        if definition.startswith('test_') or pidgy.util.istype(unittest.TestCase):
-                            definitions.append(shell.user_ns[definition])
+                        object = shell.user_ns.get(definition, None)
+                        if definition.startswith('test_') or pidgy.util.istype(object, unittest.TestCase):
+                            definitions.append(object)
                     result = run(make_test_suite(result.info.raw_cell, *definitions, vars=shell.user_ns, name=filename), result)
 
     class Definitions(ast.NodeTransformer):
