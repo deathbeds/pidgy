@@ -11,13 +11,7 @@ support computational narratives.
     import dataclasses, IPython, nbconvert as convert, jinja2, pidgy, builtins, sys, operator
     exporter = convert.exporters.TemplateExporter() # leave an global exporter avai
 
-    try:
-        from . import util
-    except:
-        import util
-
-
-    @dataclasses.dataclass(unsafe_hash=True, order=True)
+    @dataclasses.dataclass(unsafe_hash=True)
     class Weave:
 
 The `Weave` class controls the display of `pidgy` outputs.
@@ -31,7 +25,11 @@ Show the woven output.
 
             text = pidgy.util.strip_front_matter(result.info.raw_cell)
             lines = text.splitlines() or ['']
-            if not lines[0].strip(): return pidgy.util.html_comment
+            if not lines[0].strip(): return pidgy.util.html_comment(text)
+            IPython.display.display(IPython.display.Markdown(self.format_output(text)))
+
+
+        def format_output(self, text):
             try:
 
 Try to replace any jinja templates with information in the current namespace
@@ -45,4 +43,4 @@ and show the rendered view.
             except BaseException as Exception:
                 IPython.get_ipython().showtraceback((type(Exception), Exception, Exception.__traceback__))
 
-            IPython.display.display(IPython.display.Markdown(text))
+            return text
