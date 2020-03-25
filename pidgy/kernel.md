@@ -34,13 +34,15 @@ The is some important data captured in the initial we'll expose for later.
 
             return super().init_metadata(parent)
 
-def do_inspect(self, code, cursor_pos, detail_level=0):
+        def do_inspect(self, code, cursor_pos, detail_level=0):
 
 The kernel is where the inspection can be customized. `pidgy` adds the ability to use
 the inspector as Markdown rendering tool.
 
             if code[cursor_pos-3:cursor_pos] == '!!!':
-                return self.markdown_result(pidgy.weave.format_markdown(code))
+                if code[cursor_pos-6:cursor_pos] == '!!!'*2:
+                    self.shell.run_cell(code, silent=True)
+                return self.markdown_result(self.shell.weave.format_output(code))
             result = super().do_inspect(code, cursor_pos, detail_level)
             if not result['found']: return self.markdown_result(code)
             return result
