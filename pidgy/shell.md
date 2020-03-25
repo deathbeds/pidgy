@@ -53,6 +53,10 @@ The weave step happens after execution, the tangle step happens before. Weaving 
         definitions = traitlets.List()
         manager = traitlets.Instance('pluggy.PluginManager', args=('pidgy',))
         loaders = traitlets.Dict()
+        weave = traitlets.Any()
+
+        @traitlets.default('weave')
+        def _default_weave(self): return pidgy.weave.Weave(self)
 
 `pidgy` mixes the standard `IPython` configuration system and its own `pluggy` specification and implementation.
 
@@ -64,7 +68,7 @@ Initialize `pidgy` specific behaviors.
 
             self.manager.add_hookspecs(pidgyShell)
             for object in (
-                pidgy.tangle, pidgy.weave.Weave(shell=self), pidgy.testing, pidgy.extras
+                pidgy.tangle, self.weave, pidgy.testing, pidgy.extras
             ):
 
 The tangle and weave implementations are discussed in other parts of this document. Here we register each of them as `pluggy` hook implementations.
@@ -104,7 +108,7 @@ Override the initialization of the conventional IPython kernel to include the pi
 
 The pidgy kernel makes it easy to access the pidgy shell, but it can also be used an IPython extension.
 
-            shell.add_traits(manager=pidgyShell.manager, loaders=pidgyShell.loaders, definitions=pidgyShell.definitions)
+            shell.add_traits(manager=pidgyShell.manager, loaders=pidgyShell.loaders, definitions=pidgyShell.definitions, weave=pidgyShell.weave)
             shell._post_run_cell = types.MethodType(pidgyShell._post_run_cell, shell)
             shell._post_exec = types.MethodType(pidgyShell._post_exec, shell)
             pidgyShell.init_pidgy(shell)
