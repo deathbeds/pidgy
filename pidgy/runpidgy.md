@@ -6,7 +6,7 @@ A `pidgy` program executed as the **main** program has similar state to the runn
 
 `pidgy` is based on [Python], a scripting language, therefore it should be possible execute markdown as scripts.
 
-    import types
+    import types, pidgy, ast
     def run(object: str, run_name=None, **globals) -> dict:
 
 `run` executes a literate document as a script.
@@ -19,45 +19,27 @@ A `pidgy` program executed as the **main** program has similar state to the runn
         module = types.ModuleType(loader.name)
         return runpy._run_code(main_code, vars(module), globals, '__main__', spec, None, None)
 
-    def render(ref: str):
-        import pathlib, pidgy, re
-        return format_output(run(ref))
+    def render(ref: str, **globals): return format_output(parameterize(ref, **globals))
 
     def format_output(object):
-        import pathlib, pidgy, re
+        import pathlib, pidgy, re, operator, builtins, nbconvert
         if object['__file__'].endswith(('.py', '.md', '.markdown')):
             body = pathlib.Path(object['__file__']).read_text()
-            return pidgy.weave.exporter.environment.from_string(
+            return nbconvert.TemplateExporter().environment.from_string(
                 pidgy.util.strip_front_matter(
                     pidgy.util.strip_html_comment(
                         pidgy.util.strip_shebang(
                             body)))
-            ).render(object).rstrip() + '\n'
-
-    def prepare_name(str):
-        parts = list(__import__('pathlib').Path(str).parts)
-        for ext in ".py .ipynb .md".split():
-            parts[-1] = parts[-1][:-len(ext)] if parts[-1][-len(ext):] == ext else parts[-1]
-        return '.'.join(parts)
-
-
-    def alias_to_module_name(object: str) -> str:
-
-Convert a filename to a module specification.
-
-        path = pathlib.Path(object)
-        if path.exists():
-            parts = list(path.parts)
-        for ext in ".py .ipynb .md".split():
-            parts[-1] = parts[-1][:-len(ext)] if parts[-1][-len(ext):] == ext else parts[-1]
-        object = '.'.join(parts)
-        return object
+            ).render({
+                **vars(operator), **vars(builtins),
+                **object}).rstrip() + '\n'
+    ...
 
 ## Parameterizing a script
 
 Reward good behavior for using type annotations. Type annotations are important for other applications using your technology.
 
-    def parameterize(file):
+    def parameterize(file, **globals):
 
 Run a script with annotated variables as arguements.
 
@@ -69,14 +51,14 @@ Run a script with annotated variables as arguements.
 
         module = types.ModuleType(loader.name)
         annotations = runpy._run_code(arg_code, vars(module), {}, '__main__', spec, None, None)
-        print(annotations.get('__annotations__'))
         vars(module).update(annotations)
         decorators = pidgy.autocli.decorators_from_dict(annotations)
 
         @click.pass_context
         def cli(ctx, **kwargs):
-            nonlocal module
+            nonlocal module, globals
             vars(module).update(kwargs, ctx=ctx)
+            vars(module).update(globals)
             runpy._run_code(main_code, vars(module), {}, '__main__', spec, None, None)
 
         command = pidgy.autocli.command_from_decorators(cli, *decorators)
@@ -84,8 +66,6 @@ Run a script with annotated variables as arguements.
             command.main()
         except SystemExit: ...
         return vars(module)
-
-    import pidgy, ast
 
     class CLILoader(pidgy.pidgyLoader):
         def visit(self, node):
