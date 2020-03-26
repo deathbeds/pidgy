@@ -133,3 +133,13 @@ def strip_front_matter(text: str, sep=None) -> str:
     if sep:
         return "".join(rest.splitlines(True)[1:])
     return text
+
+
+@contextlib.contextmanager
+def sys_path():
+    root = "." in sys.path
+    if root:
+        sys.path = ["."] + sys.path
+    yield
+    if root:
+        sys.path.pop(sys.path.index("."))
