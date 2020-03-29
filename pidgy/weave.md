@@ -8,11 +8,12 @@ An important feature of interactive computing in the browser is access to rich d
 HTML and Javascript. `pidgy` takes advantage of the ability to include hypermedia forms that enhance and
 support computational narratives.
 
-    import dataclasses, IPython, nbconvert as convert, jinja2, pidgy, builtins, sys, operator
-    exporter = convert.exporters.TemplateExporter() # leave an global exporter avai
+    import dataclasses, IPython, pidgy
 
     @dataclasses.dataclass(unsafe_hash=True)
     class Weave:
+
+        exporter = __import__('nbconvert').exporters.TemplateExporter()
 
 The `Weave` class controls the display of `pidgy` outputs.
 
@@ -30,12 +31,13 @@ Show the woven output.
 
 
         def render(self, text):
+            import builtins, operator
             try:
 
 Try to replace any jinja templates with information in the current namespace
 and show the rendered view.
 
-                template = exporter.environment.from_string(text, globals={
+                template = self.exporter.environment.from_string(text, globals={
                     **vars(builtins), **vars(operator),
                     **getattr(self.shell, 'user_ns', {})})
                 text = template.render()
