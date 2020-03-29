@@ -28,75 +28,75 @@ A `pidgy` program executed as the **main** program has similar state to the runn
 
 A script `Runner` for `pidgy` documents based off the `importnb` machinery.
 
-def **init**(self, name, path=None, *args, \*\*kwargs):
-if path is None: path = name
-super().**init**(name, path, *args, \*\*kwargs)
-def visit(self, node):
-node = super().visit(node)
-body, annotations = ast.Module([]), ast.Module([])
-while node.body:
-element = node.body.pop(0)
-if isinstance(element, ast.AnnAssign) and element.target.id[0].islower():
-try:
-if element.value:
-ast.literal_eval(element.value)
-annotations.body.append(element)
-continue
-except: ...
-if isinstance(element, (ast.Import, ast.ImportFrom)):
-annotations.body.append(element)
-body.body.append(element)
-self.arg_code = compile(annotations, self.path, 'exec')
-return body
+        def __init__(self, name, path=None, *args, **kwargs):
+            if path is None: path = name
+            super().__init__(name, path, *args, **kwargs)
+        def visit(self, node):
+            node = super().visit(node)
+            body, annotations = ast.Module([]), ast.Module([])
+            while node.body:
+                element = node.body.pop(0)
+                if isinstance(element, ast.AnnAssign) and element.target.id[0].islower():
+                    try:
+                        if element.value:
+                            ast.literal_eval(element.value)
+                        annotations.body.append(element)
+                        continue
+                    except: ...
+                if isinstance(element, (ast.Import, ast.ImportFrom)):
+                    annotations.body.append(element)
+                body.body.append(element)
+            self.arg_code = compile(annotations, self.path, 'exec')
+            return body
 
-def create_module(loader, spec=None):
+        def create_module(loader, spec=None):
 
 When the module is created. Compile the source to code to discover arguments in the code.
 
-if spec is None:
-spec = importlib.util.spec_from_loader(loader.name, loader)
-module = super().create_module(spec)
-loader.main_code = loader.get_code(loader.name)
-runpy.\_run_code(loader.arg_code, vars(module), {}, '**main**', spec, None, None)
-return module
+            if spec is None:
+                spec = importlib.util.spec_from_loader(loader.name, loader)
+                module = super().create_module(spec)
+            loader.main_code = loader.get_code(loader.name)
+            runpy._run_code(loader.arg_code, vars(module), {}, '__main__', spec, None, None)
+            return module
 
-def exec_module(loader, module=None, **globals):
-module = module or loader.create_module()
-vars(module).update(globals)
-runpy.\_run_code(loader.main_code, vars(module), {}, '**main**', module.**spec\*\*, None, None)
-return module
+        def exec_module(loader, module=None, **globals):
+            module = module or loader.create_module()
+            vars(module).update(globals)
+            runpy._run_code(loader.main_code, vars(module), {}, '__main__', module.__spec__, None, None)
+            return module
 
-def run(loader, **globals):
-return loader.exec_module(**globals)
+        def run(loader, **globals):
+            return loader.exec_module(**globals)
 
-def render(loader, **globals):
-return loader.format(loader.run(**globals))
+        def render(loader, **globals):
+            return loader.format(loader.run(**globals))
 
-def cli(loader):
-import pidgy.autocli, click
-module = loader.create_module()
-def main(verbose: bool=True, **globals):
-nonlocal module
-try:
-loader.exec_module(module, **globals)
-verbose and click.echo(pidgy.util.ansify(loader.format(module)))
-except SystemExit: ...
+        def cli(loader):
+            import pidgy.autocli, click
+            module = loader.create_module()
+            def main(verbose: bool=True, **globals):
+                nonlocal module
+                try:
+                    loader.exec_module(module, **globals)
+                    verbose and click.echo(pidgy.util.ansify(loader.format(module)))
+                except SystemExit: ...
 
-pidgy.autocli.command_from_decorators(main,
-click.option('--verbose/--silent', default=True),
-\*pidgy.autocli.decorators_from_module(module)).main()
+            pidgy.autocli.command_from_decorators(main,
+                                                  click.option('--verbose/--silent', default=True),
+                                                  *pidgy.autocli.decorators_from_module(module)).main()
 
-def format(loader, module):
-import nbconvert, operator, builtins
-if loader.path.endswith(('.py', '.md', '.markdown')):
-return nbconvert.TemplateExporter().environment.from_string(
-pidgy.util.strip_front_matter(
-pidgy.util.strip_html_comment(
-pidgy.util.strip_shebang(
-loader.decode())))
-).render({
-**vars(operator), **vars(builtins),
-\*\*vars(module)}).rstrip() + '\n'
+        def format(loader, module):
+            import nbconvert, operator, builtins
+            if loader.path.endswith(('.py', '.md', '.markdown')):
+                return nbconvert.TemplateExporter().environment.from_string(
+                    pidgy.util.strip_front_matter(
+                        pidgy.util.strip_html_comment(
+                            pidgy.util.strip_shebang(
+                                loader.decode())))
+                ).render({
+                    **vars(operator), **vars(builtins),
+                    **vars(module)}).rstrip() + '\n'
 
     ...
 
