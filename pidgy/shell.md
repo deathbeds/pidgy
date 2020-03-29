@@ -94,6 +94,7 @@ It also adds a few extra features to the shell.
 and allows json syntax as valid python input.
 
             pidgy.extras.init_json()
+            pidgy.magic.load_ipython_extension(self)
 
         def __init__(self, *args, **kwargs):
 
