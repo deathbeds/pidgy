@@ -86,7 +86,7 @@ def strip_front_matter(text: str, sep=None) -> str:
     return text
 
 
-def ansify(str: str, format="markdown"):
+def ansify(str: str, format="md"):
     """High source to be printed in the terms."""
     import pygments.formatters.terminal256
 
