@@ -26,10 +26,10 @@ Show the woven output.
             text = pidgy.util.strip_front_matter(result.info.raw_cell)
             lines = text.splitlines() or ['']
             if not lines[0].strip(): return pidgy.util.html_comment(text)
-            IPython.display.display(IPython.display.Markdown(self.format_output(text)))
+            IPython.display.display(IPython.display.Markdown(self.render(text)))
 
 
-        def format_output(self, text):
+        def render(self, text):
             try:
 
 Try to replace any jinja templates with information in the current namespace
@@ -37,8 +37,7 @@ and show the rendered view.
 
                 template = exporter.environment.from_string(text, globals={
                     **vars(builtins), **vars(operator),
-                    **getattr(self.shell, 'user_ns', {})
-                })
+                    **getattr(self.shell, 'user_ns', {})})
                 text = template.render()
             except BaseException as Exception:
                 IPython.get_ipython().showtraceback((type(Exception), Exception, Exception.__traceback__))
