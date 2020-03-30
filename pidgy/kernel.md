@@ -21,18 +21,6 @@ the launcher or notebook. It specifies which shell class to use.
         _last_parent = traitlets.Dict()
         current_cell_id = traitlets.Unicode()
         current_cell_ids = traitlets.Set()
-        def init_metadata(self, parent):
-
-The is some important data captured in the initial we'll expose for later.
-
-            self._last_parent = parent
-            self.current_cell_id = parent['metadata']['cellId']
-            self.current_cell_ids.add(self.current_cell_id)
-            for deleted in parent.get('metadata', {}).get('deletedCells', []):
-                try: self.current_cell_ids.remove(deleted)
-                except KeyError: ...
-
-            return super().init_metadata(parent)
 
         def do_inspect(self, code, cursor_pos, detail_level=0):
 
@@ -88,5 +76,5 @@ The kernel even allows the completion system to be modified.
 
 Launch a `pidgy` kernel applications.
 
-        ipykernel.kernelapp.IPKernelApp.launch_instance(connection_file=f, kernel_class=pidgyKernel)
+        ipykernel.kernelapp.IPKernelApp.launch_instance(connection_file=f)
     ...
