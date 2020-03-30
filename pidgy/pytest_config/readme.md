@@ -1,6 +1,6 @@
 # Formally testing literate programs
 
-    import pidgy, pytest, nbval, doctest, importnb.utils.pytest_importnb
+    import pidgy, pytest, doctest, importnb.utils.pytest_importnb
 
 Literate documents can be motivated by the need to test a concept. In a fact, a common
 use case of notebooks is that they interactively test units of thought. Often the thought
