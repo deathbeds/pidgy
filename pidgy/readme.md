@@ -10,40 +10,29 @@
 
 <!--excerpt-->
 
-<!---->
-
-    @contextlib.contextmanager
-    def sys_path():
-        root = '.' in sys.path
-        if root:
-            sys.path = ['.'] + sys.path
-        yield
-        if root:
-            sys.path.pop(sys.path.index('.'))
-
     def run(ctx, ref: str):
 
-`pidgy` `run` makes it possible to execute `pidgy` documents as programs, and view their pubished results.
+`pidgy` `run` executes `pidgy` documents as programs.
 
         import pidgy, click
         click.echo(F"Running {ref}.")
-        with sys_path(), pidgy.util.argv(*([ref] + ctx.args)):
+        with pidgy.util.sys_path(), pidgy.util.argv(*([ref] + ctx.args)):
             runpidgy.run(ref)
 
-    def render(ctx, ref: str):
-
-        import pidgy, click
-        with sys_path(), pidgy.util.argv(*([ref] + ctx.args)):
-            click.echo(runpidgy.render(ref))
-
     def template(ctx, ref: str, no_show:bool=False):
+
+`pidgy` `template` executes `pidgy` documents as programs and publishes the templated results.
+
         import pidgy, click
-        with sys_path(), pidgy.util.argv(*([ref] + ctx.args)):
-            data = runpidgy.parameterize(ref)
-            if not no_show: click.echo(runpidgy.format_output(data))
+        with pidgy.util.sys_path(), pidgy.util.argv(*([ref] + ctx.args)):
+            data = pidgy.runpidgy.render(ref)
+            if not no_show: click.echo(pidgy.util.ansify(data))
 
     def to(to:{'markdown', 'python'}, files: typing.List[pathlib.Path], write:bool=False):
-        export.convert(*files, to=to, write=write)
+
+Convert pidgy documents to other formats.
+
+        pidgy.export.convert(*files, to=to, write=write)
 
 <!---->
 
@@ -57,9 +46,9 @@ Formally test markdown documents, notebooks, and python files.
 <!---->
 
     application = autocli.autoclick(
-        run, render, test, to, template,
+        run, test, to, template,
         autocli.autoclick(
-            kernel.install, kernel.uninstall, kernel.start, group=click.Group("kernel")
+            pidgy.kernel.install, pidgy.kernel.uninstall, pidgy.kernel.start, group=click.Group("kernel")
         ),
         context_settings=dict(allow_extra_args=True, ignore_unknown_options=True),
     )
