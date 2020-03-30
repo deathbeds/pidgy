@@ -27,3 +27,4 @@ graphviz
 stringcase
 click
 papermill
+tqdm
