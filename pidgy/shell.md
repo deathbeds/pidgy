@@ -1,8 +1,10 @@
 # The `pidgy` literate computing shell
 
+https://ipython.readthedocs.io/en/stable/development/execution.html#execution-semantics
+
 A powerful feature of the `jupyter` ecosystem is a generalized implementation of the [Shell] & [Kernel] model for interactive computing in interfaces like the terminal and notebooks. That is to say that different programming languages can use the same interfaces, `jupyter` supports [over 100 languages now][kernel languages]. The general ability to support different languages is possible because of configurable interfaces for the `IPython.InteractiveShell` and `ipykernel`.
 
-    import ipykernel.kernelapp, nbconvert, traitlets, pidgy, types, pluggy, IPython, jinja2
+    import ipykernel.kernelapp, ipykernel.zmqshell, nbconvert, traitlets, pidgy, types, pluggy, IPython, jinja2
     class pidgyShell(ipykernel.zmqshell.ZMQInteractiveShell):
 
 The `pidgy` shell is wrapper around the existing `IPython` shell experience. It explicitly defines the tangle and weave conventions of literate programming to each interactive computing execution. Once the shell is configured, it can be reused as a `jupyter` kernel or `IPython` extension that supports the `pidgy` [Markdown]/[IPython] metalanguage and metasyntax.
@@ -26,7 +28,7 @@ The `tangle` step operates on an input string that will become compiled source c
                 return super(type(self), self).transform_cell(
                     (shell and hasattr(shell, 'manager') and shell.manager.hook.tangle)(str=cell))
 
-        input_transformer_manager = traitlets.Any(pidgyManager())
+        input_transformer_manager = traitlets.Instance(pidgyManager, args=tuple())
 
         ast_transformers = traitlets.List([pidgy.extras.ExtraSyntax(), pidgy.testing.Definitions()])
 
