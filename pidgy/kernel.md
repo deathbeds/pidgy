@@ -22,6 +22,12 @@ the launcher or notebook. It specifies which shell class to use.
         current_cell_id = traitlets.Unicode()
         current_cell_ids = traitlets.Set()
 
+        def init_metadata(self, *args, **kwargs):
+
+The is some important data captured in the initial we'll expose for later.
+
+            return super().init_metadata(*args, **kwargs)
+
         def do_inspect(self, code, cursor_pos, detail_level=0):
 
 The kernel is where the inspection can be customized. `pidgy` adds the ability to use
@@ -76,5 +82,5 @@ The kernel even allows the completion system to be modified.
 
 Launch a `pidgy` kernel applications.
 
-        ipykernel.kernelapp.IPKernelApp.launch_instance(connection_file=f)
+        ipykernel.kernelapp.IPKernelApp.launch_instance(connection_file=f, kernel_class=pidgyKernel)
     ...
