@@ -6,3 +6,8 @@ black
 isort
 click
 stringcase
+ruamel.yaml
+emoji
+attrs>=17.4.0
+pluggy
+ipykernel

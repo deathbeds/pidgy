@@ -1,7 +1,9 @@
-import re, typing, glob, pathlib
+import re, typing, glob, pathlib, contextlib, sys
 
 
 class ContextDepth:
+    """Count the current depth of a context manager invocation."""
+
     depth = 0
 
     def __enter__(self):
@@ -9,6 +11,14 @@ class ContextDepth:
 
     def __exit__(self, *e):
         self.depth -= 1
+
+
+def html_comment(text):
+    return f"""<!--\n{text}\n\n-->"""
+
+
+def istype(object, cls):
+    return isinstance(object, type) and issubclass(object, cls)
 
 
 (FENCE, CONTINUATION, SEMI, COLON, MAGIC, DOCTEST), QUOTES, SPACE = (
@@ -19,22 +29,28 @@ class ContextDepth:
 WHITESPACE = re.compile("^\s*", re.MULTILINE)
 
 
+def indents(str: str) -> int:
+    return len(str) - len(str.lstrip())
+
+
 def num_first_indent(text: str) -> int:
+    """The number of indents for the first blank line."""
     for str in text.splitlines():
         if str.strip():
-            return len(str) - len(str.lstrip())
+            return indents(str)
     return 0
 
 
 def num_last_indent(text: str) -> int:
+    """The number of indents for the last blank line."""
     for str in reversed(text.splitlines()):
         if str.strip():
-            return len(str) - len(str.lstrip())
+            return indents(str)
     return 0
 
 
 def base_indent(tokens: typing.List[dict]) -> int:
-    "Look ahead for the base indent."
+    "Peek into mistune tokens and find the last code indent."
     for i, token in enumerate(tokens):
         if token["type"] == "code":
             code = token["text"]
@@ -48,7 +64,7 @@ def base_indent(tokens: typing.List[dict]) -> int:
 
 
 def quote(text: str) -> str:
-    """wrap text in `QUOTES`"""
+    """Wrap strings in triple quoted block strings."""
     if text.strip():
         left, right = len(text) - len(text.lstrip()), len(text.rstrip())
         quote = QUOTES[(text[right - 1] in QUOTES[0]) or (QUOTES[0] in text)]
@@ -56,16 +72,13 @@ def quote(text: str) -> str:
     return text
 
 
-def num_whitespace(text: str) -> int:
-    return len(text) - len(text.lstrip())
-
-
 def whiten(text: str) -> str:
     """`whiten` strips empty lines because the `markdown.BlockLexer` doesn't like that."""
     return "\n".join(x.rstrip() for x in text.splitlines())
 
 
-def strip_front_matter(text, sep=None):
+def strip_front_matter(text: str, sep=None) -> str:
+    """Remove yaml front matter froma string."""
     if text.startswith("---\n"):
         front_matter, sep, rest = text[4:].partition("\n---")
     if sep:
@@ -73,7 +86,8 @@ def strip_front_matter(text, sep=None):
     return text
 
 
-def ansify(str: str, format="markdown"):
+def ansify(str: str, format="md"):
+    """High source to be printed in the terms."""
     import pygments.formatters.terminal256
 
     return pygments.highlight(
@@ -83,6 +97,49 @@ def ansify(str: str, format="markdown"):
     )
 
 
-def yield_files(files):
+def yield_files(files: typing.Sequence[str], recursive=False) -> typing.Generator:
+    """Return a list of files from a collection of files and globs."""
     for file in files:
-        yield from map(pathlib.Path, glob.glob(file) if "*" in file else [file])
+        yield from map(
+            pathlib.Path,
+            getattr(glob, ["", "r"][recursive] + "glob")(str(file))
+            if "*" in str(file)
+            else [file],
+        )
+
+
+@contextlib.contextmanager
+def argv(*args: str):
+    argv = sys.argv
+    if len(args) == 1 and isinstance(args[0], str):
+        args = args[0].split()
+    sys.argv = list(args)
+    yield
+    sys.argv = list(argv)
+
+
+def strip_shebang(str):
+    return re.sub(re.compile(r"#!/.+\n"), "", str)
+
+
+def strip_html_comment(str):
+    return re.sub("(<!--[\s\S]*-->?)", "", str)
+
+
+def strip_front_matter(text: str, sep=None) -> str:
+    """Remove yaml front matter froma string."""
+    if text.startswith("---\n"):
+        front_matter, sep, rest = text[4:].partition("\n---")
+    if sep:
+        return "".join(rest.splitlines(True)[1:])
+    return text
+
+
+@contextlib.contextmanager
+def sys_path():
+    root = "." in sys.path
+    if root:
+        sys.path = ["."] + sys.path
+    yield
+    if root:
+        sys.path.pop(sys.path.index("."))

@@ -9,15 +9,10 @@ here = Path(__file__).parent
 
 setup_args = dict(
     name=name,
-    version=datetime.datetime.now()
-    .isoformat()
-    .rpartition(":")[0]
-    .replace("-", ".")
-    .replace("T", ".")
-    .replace(":", "."),
+    version=datetime.datetime.now().strftime("%Y.%m.%d"),
     author="deathbeds",
     author_email="tony.fast@gmail.com",
-    description="Conventions for writing code in the notebook.",
+    description="Literate computing for literate programming",
     long_description=((here / "README.md").read_text() + "\n\n"),
     long_description_content_type="text/markdown",
     url="https://github.com/deathbeds/pidgy",
@@ -25,19 +20,7 @@ setup_args = dict(
     license="BSD-3-Clause",
     setup_requires=["pytest-runner"],
     tests_require=["pytest", "hypothesis", "nbval"],
-    install_requires=[
-        "nbconvert",
-        "importnb",
-        "IPython>7",
-        "dataclasses",
-        "pyyaml",
-        "emoji",
-        "htmlmin",
-        "webcolors",
-        "attrs>=17.4.0",
-        "stringcase",
-        "click",
-    ],
+    install_requires=Path("requirements.txt").read_text().strip().splitlines(),
     include_package_data=True,
     packages=setuptools.find_packages(),
     entry_points={
@@ -54,6 +37,7 @@ setup_args = dict(
         "Programming Language :: Python",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Framework :: Pytest",
     ],
     zip_safe=False,
 )

@@ -1,25 +1,24 @@
-import inspect, click, stringcase, enum, uuid, datetime, pathlib, typing, types
+import inspect, click, stringcase, enum, uuid, datetime, pathlib, typing, types, builtins
 
 
 def autoclick(
     *object: typing.Union[types.FunctionType, click.Command], group=None, **settings
 ) -> click.Command:
+    """Automatically generate a click command line application using type inference."""
     app = group or click.Group()
     for command in object:
         if isinstance(command, click.Command):
             app.add_command(command)
-        else:
-            decorators = command_from_signature(command)
-            for decorator in reversed(decorators):
-                command = decorator(command)
-            command = app.command(
-                help=inspect.getdoc(command),
-                no_args_is_help=bool(decorators),
-                **settings
-            )(command)
-    if len(object) == 1:
-        return command
-    return app
+        elif isinstance(command, types.FunctionType):
+            decorators = signature_to_decorators(command)
+            command = command_from_decorators(
+                command, *decorators, **settings, help=inspect.getdoc(command)
+            )
+            app.add_command(command)
+        elif isinstance(command, dict):
+            decorators = decorators_from_dict(command)
+            command = command_from_decorators(None, *decorators, **settings)
+    return command if len(object) == 1 else app
 
 
 def istype(x: typing.Any, y: type) -> bool:
@@ -31,7 +30,10 @@ def istype(x: typing.Any, y: type) -> bool:
 def click_type(
     object: typing.Union[type, tuple], default=None
 ) -> typing.Union[type, click.types.ParamType]:
-    if isinstance(object, type):
+    """Translate python types to click's subset of types."""
+    if isinstance(object, typing._GenericAlias):
+        return click_type(object.__args__[0], default)
+    elif isinstance(object, type):
         if issubclass(object, datetime.datetime):
             return click.DateTime()
         if issubclass(object, typing.Tuple):
@@ -40,13 +42,13 @@ def click_type(
             return click.UUID(default)
         if object is list:
             return
-        if issubclass(object, typing.List):
-            return click_type(object.__args__[0], default)
         if issubclass(object, set):
             return click.Choice(object)
 
         if issubclass(object, pathlib.Path):
             return click.Path()
+        if object in {builtins.object, typing.Any}:
+            return
         return object
     else:
         if isinstance(object, tuple):
@@ -56,32 +58,69 @@ def click_type(
                 return click.FloatRange(*object)
 
 
-def command_from_signature(object: types.FunctionType, *decorators):
-    for i, (k, v) in enumerate(inspect.signature(object).parameters.items()):
+def command_from_decorators(command, *decorators, **settings):
+    if command is None:
+        *decorators, command = decorators
+    for decorator in reversed(decorators):
+        command = decorator(command)
+    return click.command(no_args_is_help=bool(decorators), **settings)(command)
 
-        if not i and k == "ctx":
-            decorators += (click.pass_context,)
 
-        if v.annotation == inspect._empty:
-            continue
-
-        if v.default == inspect._empty:
-            opts = {}
-            if istype(v.annotation, (typing.List, list)):
-                opts.update(nargs=-1)
-            decorators += (
-                click.argument(
-                    stringcase.spinalcase(k), type=click_type(v.annotation), **opts
-                ),
-            )
-        else:
-            type = click_type(v.annotation, v.default)
+def decorators_from_dicts(annotations, defaults, *decorators):
+    for k, v in annotations.items():
+        if k in defaults:
+            t = click_type(v, defaults.get(k))
             decorators += (
                 click.option(
                     "-" * (1 if len(k) == 1 else 2) + stringcase.spinalcase(k),
-                    type=type,
+                    type=t,
+                    default=defaults.get(k),
                     show_default=True,
-                    is_flag=v.annotation is bool,
+                    is_flag=v is bool,
                 ),
             )
+
+        elif isinstance(v, typing._GenericAlias) or istype(v, list):
+            decorators += (
+                click.argument(
+                    stringcase.spinalcase(k),
+                    type=click_type(getattr(v, "__args__", (str,))[0]),
+                    nargs=-1,
+                ),
+            )
+        else:
+            decorators += (
+                click.argument(stringcase.spinalcase(k), type=click_type(v)),
+            )
+    return decorators
+
+
+def decorators_from_dict(object):
+    return decorators_from_dicts(object.get("__annotations__", {}), object)
+
+
+def decorators_from_module(object):
+    return decorators_from_dict(vars(object))
+
+
+def signature_to_decorators(object, *decorators):
+    signature = inspect.signature(object)
+    decorators += decorators_from_dicts(
+        {
+            k: typing.List[v.annotation]
+            if v.kind == inspect._ParameterKind.VAR_POSITIONAL
+            else v.annotation
+            for k, v in signature.parameters.items()
+            if k != "ctx"
+        },
+        {
+            k: v.default
+            for k, v in signature.parameters.items()
+            if v.default != inspect._empty
+        },
+    )
+    for k, v in signature.parameters.items():
+        if k == "ctx":
+            decorators += (click.pass_context,)
+        break
     return decorators

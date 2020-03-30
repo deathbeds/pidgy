@@ -9,8 +9,6 @@ we formally test code incrementally during interactive computing.
 <!--
 
     import unittest, doctest, textwrap, dataclasses, IPython, re, pidgy, sys, typing, types, contextlib, ast, inspect
-    try: from . import base
-    except: import base
 
 -->
 
@@ -35,26 +33,32 @@ for a flexible interface to verifying the computational qualities of literate pr
                 suite.addTest(unittest.FunctionTestCase(object))
         return suite
 
-    @dataclasses.dataclass
-    class Testing(base.Extension):
-
-The `Testing` class executes the test suite each time a cell is executed.
-
-        function_pattern: str = 'test_'
-        def post_run_cell(self, result):
-            globs, filename = self.shell.user_ns, F"In[{self.shell.last_execution_result.execution_count}]"
+    @pidgy.implementation
+    def post_run_cell(result):
+            shell = IPython.get_ipython()
+            globs, filename = shell.user_ns, F"In[{shell.last_execution_result.execution_count}]"
 
             if not (result.error_before_exec or result.error_in_exec):
-                with ipython_compiler(self.shell):
-                    definitions = [self.shell.user_ns[x] for x in getattr(self.shell.measure, 'definitions', [])
-                        if x.startswith(self.function_pattern) or
-                        (isinstance(self.shell.user_ns[x], type)
-                         and issubclass(self.shell.user_ns[x], unittest.TestCase))
-                    ]
-                    result = self.run(make_test_suite(result.info.raw_cell, *definitions, vars=self.shell.user_ns, name=filename), result)
+                definitions = []
+                with ipython_compiler(shell):
+                    while shell.definitions:
+                        definition = shell.definitions.pop(0)
+                        object = shell.user_ns.get(definition, None)
+                        if definition.startswith('test_') or pidgy.util.istype(object, unittest.TestCase):
+                            definitions.append(object)
+                    result = run(make_test_suite(result.info.raw_cell, *definitions, vars=shell.user_ns, name=filename), result)
+
+    class Definitions(ast.NodeTransformer):
+        def visit_FunctionDef(self, node):
+            shell = IPython.get_ipython()
+            shell and shell.definitions.append(node.name)
+            return node
+        visit_ClassDef = visit_FunctionDef
 
 
-        def run(self, suite: unittest.TestCase, cell) -> unittest.TestResult:
+
+
+    def run(suite: unittest.TestCase, cell) -> unittest.TestResult:
             result = unittest.TestResult(); suite.run(result)
             if result.failures:
                 msg = '\n'.join(msg for text, msg in result.failures)
@@ -95,12 +99,5 @@ We'll have to replace how `doctest` compiles code with the `IPython` machinery.
     r'(?P<source>[^`].*?)'
     r'`')
         def _parse_example(self, m, name, lineno): return m.group('source'), None, "...", None
-
-
-    def load_ipython_extension(shell):
-        shell.testing = Testing(shell=shell).register()
-
-    def unload_ipython_extension(shell):
-        shell.testing.unregister()
 
 </details>

@@ -8,46 +8,40 @@ An important feature of interactive computing in the browser is access to rich d
 HTML and Javascript. `pidgy` takes advantage of the ability to include hypermedia forms that enhance and
 support computational narratives.
 
-    import dataclasses, IPython, nbconvert as convert, jinja2
-    try: from . import base, util
-    except: import base, util
-    exporter = convert.exporters.TemplateExporter() # leave an global exporter avai
+    import dataclasses, IPython, pidgy
+
+    @dataclasses.dataclass(unsafe_hash=True)
+    class Weave:
+
+        exporter = __import__('nbconvert').exporters.TemplateExporter()
 
 The `Weave` class controls the display of `pidgy` outputs.
 
-    @dataclasses.dataclass
-    class Weave(base.Extension):
+        shell: object
+
+        @pidgy.implementation
         def post_run_cell(self, result):
-            text = util.strip_front_matter(result.info.raw_cell)
-            IPython.display.display(IPython.display.Markdown(self.format_markdown(text), metadata=self.format_metadata()))
-            return result
 
-        environment: jinja2.Environment = dataclasses.field(default=exporter.environment)
+Show the woven output.
 
-        def format_markdown(self, text):
+            text = pidgy.util.strip_front_matter(result.info.raw_cell)
             lines = text.splitlines() or ['']
-            if not lines[0].strip(): return F"""<!--\n{text}\n\n-->"""
+            if not lines[0].strip(): return pidgy.util.html_comment(text)
+            IPython.display.display(IPython.display.Markdown(self.render(text)))
+
+
+        def render(self, text):
+            import builtins, operator
             try:
-                template = exporter.environment.from_string(text, globals=getattr(self.shell, 'user_ns', {}))
+
+Try to replace any jinja templates with information in the current namespace
+and show the rendered view.
+
+                template = self.exporter.environment.from_string(text, globals={
+                    **vars(builtins), **vars(operator),
+                    **getattr(self.shell, 'user_ns', {})})
                 text = template.render()
             except BaseException as Exception:
-                self.shell.showtraceback((type(Exception), Exception, Exception.__traceback__))
+                IPython.get_ipython().showtraceback((type(Exception), Exception, Exception.__traceback__))
+
             return text
-
-        def format_metadata(self):
-            parent = getattr(self.shell.kernel, '_last_parent', {})
-            return {}
-
-        def _update_filters(self):
-            self.environment.filters.update({
-                k: v for k, v in getattr(self.shell, 'user_ns', {}).items() if callable(v) and k not in self.environment.filters})
-
-
-
-    def load_ipython_extension(shell): shell.weave = Weave(shell=shell).register()
-
-    def unload_ipython_extension(shell):
-        if hasattr(shell, 'weave'): shell.weave.unregister()
-
-Albeit our approach does not specifically target `".DVI"` files, they are produced by ReadTheDocs when creating a PDF
-from Latex.

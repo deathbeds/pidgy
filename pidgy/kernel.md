@@ -1,65 +1,56 @@
-# `pidgy` shell and kernel
+# `pidgy` kernel
 
 > A kernel provides programming language support in Jupyter. IPython is the default kernel. Additional kernels include R, Julia, and many more.
 >
 > > - [`jupyter` kernel definition](https://jupyter.readthedocs.io/en/latest/glossary.html#term-kernel)
 
 `pidgy` is a wrapper kernel around the
-existing `ipykernel and IPython.InteractiveShell` configurables.
-`IPython` adds extra syntax to python that simulate literate programming
-macros.
+existing `ipykernel and IPython.InteractiveShell`.
 
 ![](https://jupyter.readthedocs.io/en/latest/_images/other_kernels.png)
 
-<!--
-
-    import jupyter_client, IPython, ipykernel.ipkernel, ipykernel.kernelapp, pidgy, traitlets, ipykernel.kernelspec, ipykernel.zmqshell, pathlib
-
--->
-
-The shell is the application either jupyterlab or jupyter notebook, the kernel
-determines the programming language. Below we design a just jupyter kernel that
-can be installed using
-
-- What is the advantage of installing the kernel and how to do it.
-
-```bash
-pidgy kernel install
-```
-
-    class pidgyInteractiveShell(ipykernel.zmqshell.ZMQInteractiveShell):
-
-Configure a native `pidgy` `IPython.InteractiveShell`
-
-        loaders = traitlets.Dict(allow_none=True)
-        weave = traitlets.Any(allow_none=True)
-        tangle = traitlets.Any(allow_none=True)
-        extras = traitlets.Any(allow_none=True)
-        testing = traitlets.Any(allow_none=True)
-        measure = traitlets.Any(allow_none=True)
-        enable_html_pager = traitlets.Bool(True)
-
-`pidgyInteractiveShell.enable_html_pager` is necessary to see rich displays in
-the inspector.
-
-        def __init__(self,*args, **kwargs):
-            super().__init__(*args, **kwargs)
-            with pidgy.pidgyLoader():
-                from .extension import load_ipython_extension
-            self.user_ns['shell'] = self
-            load_ipython_extension(self)
+    import IPython, ipykernel.ipkernel, ipykernel.kernelapp, pidgy, traitlets, ipykernel.kernelspec, ipykernel.zmqshell, pathlib
 
     class pidgyKernel(ipykernel.ipkernel.IPythonKernel):
-        shell_class = traitlets.Type(pidgyInteractiveShell)
+
+The `pidgy` kernel specifies to `jupyter` how it can be used as a native kernel from
+the launcher or notebook. It specifies which shell class to use.
+
+        shell_class = traitlets.Type('pidgy.shell.pidgyShell')
+        loaders = traitlets.Dict()
         _last_parent = traitlets.Dict()
+        current_cell_id = traitlets.Unicode()
+        current_cell_ids = traitlets.Set()
 
-        def init_metadata(self, parent):
-            self._last_parent = parent
-            return super().init_metadata(parent)
+        def init_metadata(self, *args, **kwargs):
 
-The `pidgy` kernel command line features.
+The is some important data captured in the initial we'll expose for later.
 
-<!---->
+            return super().init_metadata(*args, **kwargs)
+
+        def do_inspect(self, code, cursor_pos, detail_level=0):
+
+The kernel is where the inspection can be customized. `pidgy` adds the ability to use
+the inspector as Markdown rendering tool.
+
+            if code[cursor_pos-3:cursor_pos] == '!!!':
+                if code[cursor_pos-6:cursor_pos] == '!!!'*2:
+                    self.shell.run_cell(code, silent=True)
+                return self.markdown_result(self.shell.weave.format_output(code))
+            result = super().do_inspect(code, cursor_pos, detail_level)
+            if not result['found']: return self.markdown_result(code)
+            return result
+
+        def markdown_result(self, code):
+            return dict(found=True, status='ok', metadata={}, data={'text/markdown': code})
+
+        def do_complete(self, code, cursor_pos):
+
+The kernel even allows the completion system to be modified.
+
+            return super().do_complete(code, cursor_pos)
+
+## `pidgy` kernel installation
 
     def install():
 
