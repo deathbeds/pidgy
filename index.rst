@@ -86,6 +86,10 @@ pidgy tests
 .. toctree::
     :glob:
 
+    pidgy/tests/test_tangle.ipynb
+    pidgy/tests/test_weave.md.ipynb
+    pidgy/tests/test_runpidgy.md.ipynb
+    pidgy/tests/test_magic.ipynb
     pidgy/tests/test_cli.ipynb
     pidgy/tests/test_3rd_party.ipynb
     docs/examples/fastapi_application.md
