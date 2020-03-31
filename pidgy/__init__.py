@@ -6,10 +6,10 @@ specification, implementation = (
 )
 with __import__("importnb").Notebook(lazy=True):
     try:
-        from . import loader, tangle, extras
+        from . import loader, tangle
         from .loader import pidgyLoader
     except:
-        import loader, tangle, extras
+        import loader, tangle
         from loader import pidgyLoader
 
 with pidgyLoader(lazy=True):
