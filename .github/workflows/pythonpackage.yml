@@ -34,7 +34,8 @@ jobs:
           pip install wheel
       - name: Test with pytest
         run: |
-          pytest --nbval --sanitize-with sanitize.cfg -p no:warnings pidgy/tests/test_* docs/examples
+          pytest --rootdir pidgy/tests --nbval --sanitize-with sanitize.cfg -p no:warnings pidgy/tests/test_*
+          pytest --rootdir docs/examples --nbval --sanitize-with sanitize.cfg -p no:warnings docs/examples
       - name: Build package
         run: |
           python setup.py sdist
