@@ -130,6 +130,9 @@ def strip_front_matter(text: str, sep=None) -> str:
     """Remove yaml front matter froma string."""
     if text.startswith("---\n"):
         front_matter, sep, rest = text[4:].partition("\n---")
+    if text.startswith("+++\n"):
+        front_matter, sep, rest = text[4:].partition("\n+++")
+
     if sep:
         return "".join(rest.splitlines(True)[1:])
     return text
