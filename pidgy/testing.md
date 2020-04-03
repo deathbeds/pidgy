@@ -20,7 +20,7 @@ The interactive testing suite execute `doctest and unittest` conventions
 for a flexible interface to verifying the computational qualities of literate programs.
 
         suite, doctest_suite = unittest.TestSuite(), doctest.DocTestSuite()
-        suite.addTest(doctest_suite)
+
         for object in objects:
             if isinstance(object, type) and issubclass(object, unittest.TestCase):
                 suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(object))
@@ -31,6 +31,8 @@ for a flexible interface to verifying the computational qualities of literate pr
                 InlineDoctestParser().get_doctest(object, vars, name, name, 1), checker=NullOutputCheck))
             elif inspect.isfunction(object):
                 suite.addTest(unittest.FunctionTestCase(object))
+
+        doctest_suite._tests and suite.addTest(doctest_suite)
         return suite
 
     @pidgy.implementation
@@ -54,9 +56,6 @@ for a flexible interface to verifying the computational qualities of literate pr
             shell and shell.definitions.append(node.name)
             return node
         visit_ClassDef = visit_FunctionDef
-
-
-
 
     def run(suite: unittest.TestCase, cell) -> unittest.TestResult:
             result = unittest.TestResult(); suite.run(result)

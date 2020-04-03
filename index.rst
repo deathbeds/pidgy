@@ -61,7 +61,6 @@ pidgy implementation
     :glob:
 
     pidgy/tangle.ipynb
-    pidgy/extras.ipynb
     pidgy/loader.ipynb
     pidgy/weave.md    
     pidgy/testing.md
