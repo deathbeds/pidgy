@@ -143,3 +143,19 @@ def sys_path():
     yield
     if root:
         sys.path.pop(sys.path.index("."))
+
+
+def pidgy_builtins():
+    import IPython, toolz, poser
+
+    return {
+        **{
+            k: v
+            for k, v in vars(IPython.display).items()
+            if istype(v, IPython.core.display.DisplayObject)
+        },
+        **toolz.valfilter(callable, vars(toolz)),
+        "shell": IPython.get_ipython(),
+        "λ": poser.λ,
+        "Λ": poser.Λ,
+    }
