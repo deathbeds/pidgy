@@ -1,15 +1,11 @@
 # The `pidgy` literate computing shell
 
-https://ipython.readthedocs.io/en/stable/development/execution.html#execution-semantics
-
-A powerful feature of the `jupyter` ecosystem is a generalized implementation of the [Shell] & [Kernel] model for interactive computing in interfaces like the terminal and notebooks. That is to say that different programming languages can use the same interfaces, `jupyter` supports [over 100 languages now][kernel languages]. The general ability to support different languages is possible because of configurable interfaces for the `IPython.InteractiveShell` and `ipykernel`.
+A powerful feature of the `jupyter` ecosystem is a generalized implementation of the [shell] & [kernel] model for interactive computing interfaces like the terminal and notebooks. That is to say that different programming languages can use the same interface, `jupyter` supports [over 100 languages now][kernel languages]. The general ability to support different languages is possible because of configurable interfaces like the `IPython.InteractiveShell` and `ipykernel`.
 
     import ipykernel.kernelapp, ipykernel.zmqshell, nbconvert, traitlets, pidgy, types, pluggy, IPython, jinja2
     class pidgyShell(ipykernel.zmqshell.ZMQInteractiveShell):
 
-The `pidgy` shell is wrapper around the existing `IPython` shell experience. It explicitly defines the tangle and weave conventions of literate programming to each interactive computing execution. Once the shell is configured, it can be reused as a `jupyter` kernel or `IPython` extension that supports the `pidgy` [Markdown]/[IPython] metalanguage and metasyntax.
-
-        environment = traitlets.Any(nbconvert.exporters.TemplateExporter().environment)
+The `pidgy` shell is wrapper around the existing `IPython` shell experience. It explicitly defines [tangle] and [weave] conventions of literate programming for each execution. Once the shell is configured, it can be used as a `jupyter` kernel or `IPython` extension that supports the `pidgy` [Markdown]/[IPython] metalanguage and metasyntax.
 
 ## `pidgy` specification
 
@@ -44,6 +40,10 @@ Another feature of `IPython` is the ability to intercept [Abstract Syntax Tree]s
 
 The weave step happens after execution, the tangle step happens before. Weaving only occurs if the input is computationally verified. It allows different representations of the input to be displayed. `pidgy` will implement templated Markdown displays of the input and formally test the contents of the input.
 
+        environment = traitlets.Any(nbconvert.exporters.TemplateExporter().environment)
+
+`pidgy` includes a `jinja2` templating environment that allows live compute to be woven into a narrative.
+
         def _post_run_cell(self, result):
             self.manager.hook.post_run_cell(result=result)
 
@@ -60,7 +60,7 @@ The weave step happens after execution, the tangle step happens before. Weaving 
         @traitlets.default('weave')
         def _default_weave(self): return pidgy.weave.Weave(self)
 
-`pidgy` mixes the standard `IPython` configuration system and its own `pluggy` specification and implementation.
+`pidgy` mixes the standard `IPython` `traitlets` configuration system and its own `pluggy` `specification` and `implementation`.
 
 ## Initializing the `pidgy` shell
 
@@ -106,7 +106,7 @@ Override the initialization of the conventional IPython kernel to include the pi
 
         def load_ipython_extension(shell):
 
-The pidgy kernel makes it easy to access the pidgy shell, but it can also be used an IPython extension.
+`pidgy` provides an alternative use as an IPython extension; `load_ipython_extension` and `unload_ipython_extension` identify configuration functions to `IPython`.
 
             shell.add_traits(manager=pidgyShell.manager, loaders=pidgyShell.loaders, definitions=pidgyShell.definitions, weave=pidgyShell.weave)
             shell._post_run_cell = types.MethodType(pidgyShell._post_run_cell, shell)
