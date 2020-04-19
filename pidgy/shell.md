@@ -88,10 +88,7 @@ The tangle and weave implementations are discussed in other parts of this docume
 
 It also adds a few extra features to the shell.
 
-            self.user_ns["shell"] = self
-            self.user_ns.update({k: v for k, v in vars(IPython.display).items()
-                if pidgy.util.istype(v, IPython.core.display.DisplayObject)
-            })
+            self.user_ns.update(pidgy.util.pidgy_builtins())
 
 and allows json syntax as valid python input.
 
