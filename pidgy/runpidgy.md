@@ -6,7 +6,7 @@ A `pidgy` program executed as the **main** program has similar state to the runn
 
 `pidgy` is based on [Python], a scripting language, therefore it should be possible execute markdown as scripts.
 
-    import types, pidgy, ast, runpy, importlib
+    import types, pidgy, ast, runpy, importlib, sys
     __all__ = 'run', 'render', 'Runner'
 
 
@@ -33,7 +33,10 @@ A script `Runner` for `pidgy` documents based off the `importnb` machinery.
             super().__init__(name, path, *args, **kwargs)
         def visit(self, node):
             node = super().visit(node)
-            body, annotations = ast.Module([]), ast.Module([])
+            if sys.version_info[1] > 7:
+                body, annotations = ast.Module([], []), ast.Module([], [])
+            else:
+                body, annotations = ast.Module([]), ast.Module([])
             while node.body:
                 element = node.body.pop(0)
                 if isinstance(element, ast.AnnAssign) and element.target.id[0].islower():
