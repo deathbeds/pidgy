@@ -1,3 +1,5 @@
+"""Code I am not proud of 🤗"""
+
 import re, typing, glob, pathlib, contextlib, sys
 
 
@@ -159,3 +161,8 @@ def pidgy_builtins():
         "λ": poser.λ,
         "Λ": poser.Λ,
     }
+
+
+def clean_doctest_traceback(str, *lines):
+    *_, str = str.partition("-" * 70)
+    return str.lstrip()
