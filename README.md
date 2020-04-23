@@ -1,6 +1,6 @@
 # The `pidgy` package and paper
 
-`pidgy` is a fun way to program in [Markdown] in your favorite IDE (jupyter, nteract, colab, vscode) that can be reused as python modules, scripts, and applications.
+`pidgy` is a fun way to program in [Markdown] in your favorite IDE (jupyter, nteract, colab, vscode) and use them in python modules, scripts, and applications.
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/deathbeds/pidgy/master?urlpath=lab)
 [![Documentation Status](https://readthedocs.org/projects/pidgy/badge/?version=latest)](https://pidgin-notebook.readthedocs.io/en/latest/?badge=latest)
@@ -11,11 +11,7 @@
 pip install pidgy    # Install pidgy
 ```
 
-`pidgy` has a few components to it:
-
-- It is an interactive [Literate Computing] implementation of `IPython`
-- A specification of a _potentially_ polyglot approach for literate programming applied to other languages.
-- A complete unit of computable scientific literate. It is written in a literate programming style with the literature as the primary outcome. _Read the `pidgy` paper_.
+`pidgy` provides an interactive literate programming experience that allows fluid combinations of code and prose. It has some added language features like block markdown variables, emoji variables names, and interactive formal testing. It is designed primarily for Jupyter notebooks and Markdown source files.
 
 ## The pidgy shell and kernel
 
@@ -35,6 +31,8 @@ Or, in your standard Python shell, load the `pidgy` `IPython` extension.
     with pidgy.pidgyLoader(): ...
 
 ## The `pidgy` CLI
+
+The `pidgy` cli helps to tangle and weave entire literate pidgy programs.
 
 ```text
 Usage: pidgy [OPTIONS] COMMAND [ARGS]...

@@ -61,7 +61,7 @@ for a flexible interface to verifying the computational qualities of literate pr
             result = unittest.TestResult(); suite.run(result)
             if result.failures:
                 msg = '\n'.join(msg for text, msg in result.failures)
-                msg = re.sub(re.compile("<ipython-input-[0-9]+-\S+>"), F'In[{cell.execution_count}]', clean_doctest_traceback(msg))
+                msg = re.sub(re.compile("<ipython-input-[0-9]+-\S+>"), F'In[{cell.execution_count}]', pidgy.util.clean_doctest_traceback(msg))
                 sys.stderr.writelines((str(result) + '\n' + msg).splitlines(True))
                 return result
 
@@ -83,10 +83,6 @@ We'll have to replace how `doctest` compiles code with the `IPython` machinery.
 
         yield setattr(doctest, "compile", compiler)
         doctest.compile = compile
-
-    def clean_doctest_traceback(str, *lines):
-        str = re.sub(re.compile("""\n\s+File [\s\S]+, line [0-9]+, in runTest\s+raise[\s\S]+\([\s\S]+\)\n?"""), '\n', str)
-        return re.sub(re.compile("Traceback \(most recent call last\):\n"), '', str)
 
 <details><summary>Utilities for the testing module.</summary>
     

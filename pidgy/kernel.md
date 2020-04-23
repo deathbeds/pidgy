@@ -36,7 +36,7 @@ the inspector as Markdown rendering tool.
             if code[cursor_pos-3:cursor_pos] == '!!!':
                 if code[cursor_pos-6:cursor_pos] == '!!!'*2:
                     self.shell.run_cell(code, silent=True)
-                return self.markdown_result(self.shell.weave.format_output(code))
+                return self.markdown_result(self.shell.weave.render(code))
             result = super().do_inspect(code, cursor_pos, detail_level)
             if not result['found']: return self.markdown_result(code)
             return result
