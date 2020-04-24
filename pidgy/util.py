@@ -70,7 +70,12 @@ def quote(text: str) -> str:
     if text.strip():
         left, right = len(text) - len(text.lstrip()), len(text.rstrip())
         quote = QUOTES[(text[right - 1] in QUOTES[0]) or (QUOTES[0] in text)]
-        return text[:left] + quote + text[left:right] + quote + text[right:]
+        cont = ""
+        slug = text[left:right]
+        if slug.endswith(CONTINUATION):
+            cont = CONTINUATION
+            slug = slug.rstrip(CONTINUATION)
+        return text[:left] + quote + slug + quote + cont + text[right:]
     return text
 
 
