@@ -135,10 +135,11 @@ def strip_html_comment(str):
 
 def strip_front_matter(text: str, sep=None) -> str:
     """Remove yaml front matter froma string."""
-    if text.startswith("---\n"):
-        front_matter, sep, rest = text[4:].partition("\n---")
-    if sep:
-        return "".join(rest.splitlines(True)[1:])
+    for sep in "--- +++".split():
+        if text.startswith(f"{sep}\n"):
+            front_matter, sep, rest = text[4:].partition(f"\n{sep}\n")
+            if sep:
+                return "".join(rest.splitlines(True)[1:])
     return text
 
 
