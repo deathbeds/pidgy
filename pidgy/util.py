@@ -2,6 +2,11 @@
 
 import re, typing, glob, pathlib, contextlib, sys, textwrap, doctest, markdown_it.extensions.front_matter, markdown_it.extensions.footnote, copy
 
+list_item = re.compile(
+    r"^(( *)(?:[*+-]|\d+\.) [^\n]*(?:\n(?!\2(?:[*+-]|\d+\.) )[^\n]*)*)",
+    re.MULTILINE | re.UNICODE,
+)
+
 
 class ContextDepth:
     """Count the current depth of a context manager invocation."""
@@ -348,7 +353,7 @@ def dedent_block(str):
     return "".join(lines)
 
 
-CODE_TYPES = "fence code_block front_matter bullet_list_open footnote_reference_open reference".split()
+CODE_TYPES = "fence code_block front_matter bullet_list_open ordered_list_open footnote_reference_open reference".split()
 
 
 def filter_tangle_tokens(token, code=None):
