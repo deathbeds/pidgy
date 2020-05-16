@@ -359,6 +359,8 @@ def filter_tangle_tokens(token, code=None):
         for token in token.children:
             code = filter_tangle_tokens(token, code)
     token.type in CODE_TYPES and token not in code and code.append(token)
+    if code and (code[-1].type == "fence") and code[-1].info:
+        code.pop(-1)
     return code or [
         markdown_it.utils.AttrDict(type="code_block", content="", map=(0, 0))
     ]
