@@ -65,7 +65,7 @@ def base_indent(tokens: typing.List[dict]) -> int:
     return indent
 
 
-def quote(text: str) -> str:
+def quote(text: str, trailing="") -> str:
     """Wrap strings in triple quoted block strings."""
     if text.strip():
         left, right = len(text) - len(text.lstrip()), len(text.rstrip())
@@ -75,7 +75,7 @@ def quote(text: str) -> str:
         if slug.endswith(CONTINUATION):
             cont = CONTINUATION
             slug = slug.rstrip(CONTINUATION)
-        return text[:left] + quote + slug + quote + cont + text[right:]
+        return text[:left] + quote + slug + quote + trailing + cont + text[right:]
     return text
 
 
@@ -303,7 +303,9 @@ def enforce_blanklines(str):
 def quote_docstrings(str):
     next, end = "", 0
     for m in doctest.DocTestParser._EXAMPLE_RE.finditer(str):
-        next += str[slice(end, m.start())] + quote(str[slice(m.start(), m.end())])
+        next += str[slice(end, m.start())] + quote(
+            str[slice(m.start(), m.end())], trailing=";"
+        )
         end = m.end()
     if next:
         next += str[m.end() :]
