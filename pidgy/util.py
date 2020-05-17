@@ -6,6 +6,12 @@ list_item = re.compile(
     r"^(( *)(?:[*+-]|\d+\.) [^\n]*(?:\n(?!\2(?:[*+-]|\d+\.) )[^\n]*)*)",
     re.MULTILINE | re.UNICODE,
 )
+footnote_item = re.compile(
+    r"\[\^([^\]]+)\]: *([^\n]*(?:\n+|$)(?: {1,}[^\n]*(?:\n+|$))*)", re.UNICODE
+)
+link_item = re.compile(
+    r' *\[([^^\]]+)\]: *<?([^\s>]+)>?(?: +["(]([^\n]+)[")])? *(?:\n+|$)', re.UNICODE
+)
 
 
 class ContextDepth:
