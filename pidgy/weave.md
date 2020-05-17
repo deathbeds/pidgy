@@ -39,6 +39,7 @@ and show the rendered view.
 
                 template = self.exporter.environment.from_string(text, globals={
                     **vars(builtins), **vars(operator),
+                    **(getattr(self.shell, 'user_ns', {})).get('__annotations__', {}),
                     **getattr(self.shell, 'user_ns', {})})
                 text = template.render()
             except BaseException as Exception:
