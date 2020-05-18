@@ -14,6 +14,7 @@ support computational narratives.
     class Weave:
 
         exporter = __import__('nbconvert').exporters.TemplateExporter()
+        exporter.environment.loader.loaders.append(__import__('jinja2').FileSystemLoader('.'))
 
 The `Weave` class controls the display of `pidgy` outputs.
 
