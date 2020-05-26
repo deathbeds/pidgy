@@ -27,7 +27,9 @@ Show the woven output.
 
             text = pidgy.util.strip_front_matter(result.info.raw_cell)
             lines = text.splitlines() or ['']
-            if not lines[0].strip(): return
+            if not lines[0].strip():
+                print('blank')
+                return
             IPython.display.display(IPython.display.Markdown(self.render(text)))
 
 
