@@ -36,19 +36,19 @@ for a flexible interface to verifying the computational qualities of literate pr
         return suite
 
     @pidgy.implementation
-    def post_run_cell(result):
-            shell = IPython.get_ipython()
-            globs, filename = shell.user_ns, F"In[{shell.last_execution_result.execution_count}]"
+    def post_run_cell(result, shell):
+        shell = IPython.get_ipython()
+        globs, filename = shell.user_ns, F"In[{shell.last_execution_result.execution_count}]"
 
-            if not (result.error_before_exec or result.error_in_exec):
-                definitions = []
-                with ipython_compiler(shell):
-                    while shell.definitions:
-                        definition = shell.definitions.pop(0)
-                        object = shell.user_ns.get(definition, None)
-                        if definition.startswith('test_') or pidgy.util.istype(object, unittest.TestCase):
-                            definitions.append(object)
-                    result = run(make_test_suite(result.info.raw_cell, *definitions, vars=shell.user_ns, name=filename), result)
+        if not (result.error_before_exec or result.error_in_exec):
+            definitions = []
+            with ipython_compiler(shell):
+                while shell.definitions:
+                    definition = shell.definitions.pop(0)
+                    object = shell.user_ns.get(definition, None)
+                    if definition.startswith('test_') or pidgy.util.istype(object, unittest.TestCase):
+                        definitions.append(object)
+                result = run(make_test_suite(result.info.raw_cell, *definitions, vars=shell.user_ns, name=filename), result)
 
     class Definitions(ast.NodeTransformer):
         def visit_FunctionDef(self, node):
