@@ -112,7 +112,7 @@ and allows json syntax as valid python input.
 
 Override the initialization of the conventional IPython kernel to include the pidgy opinions.
 
-            super().__init__(*args, **kwargs)
+            super(type(self), self).__init__(*args, **kwargs)
             self.init_pidgy()
 
 ## `pidgy` extension.
