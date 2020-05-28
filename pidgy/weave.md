@@ -14,6 +14,7 @@ support computational narratives.
     class Weave:
 
         exporter = __import__('nbconvert').exporters.TemplateExporter()
+        exporter.environment.loader.loaders.append(__import__('jinja2').FileSystemLoader('.'))
 
 The `Weave` class controls the display of `pidgy` outputs.
 
@@ -26,7 +27,7 @@ Show the woven output.
 
             text = pidgy.util.strip_front_matter(result.info.raw_cell)
             lines = text.splitlines() or ['']
-            if not lines[0].strip(): return pidgy.util.html_comment(text)
+            if not lines[0].strip(): return
             IPython.display.display(IPython.display.Markdown(self.render(text)))
 
 
@@ -39,6 +40,7 @@ and show the rendered view.
 
                 template = self.exporter.environment.from_string(text, globals={
                     **vars(builtins), **vars(operator),
+                    **(getattr(self.shell, 'user_ns', {})).get('__annotations__', {}),
                     **getattr(self.shell, 'user_ns', {})})
                 text = template.render()
             except BaseException as Exception:

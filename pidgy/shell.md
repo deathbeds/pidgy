@@ -18,13 +18,19 @@ The `tangle` step operates on an input string that will become compiled source c
 
 `pidgy` includes the ability the use emojis as valid python names through the existing `traitlets` configuration system.
 
-        class pidgyManager(IPython.core.inputtransformer2.TransformerManager):
+        class pidgyManager(traitlets.HasTraits, IPython.core.inputtransformer2.TransformerManager):
+            parent = traitlets.Any()
+            def __init__(self, **kwargs):
+                super().__init__(**kwargs)
+                IPython.core.inputtransformer2.TransformerManager.__init__(self)
             def transform_cell(self, cell):
                 shell = IPython.get_ipython()
                 return super(type(self), self).transform_cell(
-                    (shell and hasattr(shell, 'manager') and shell.manager.hook.tangle)(str=cell))
+                    self.parent.manager.hook.tangle(str=cell))
 
-        input_transformer_manager = traitlets.Instance(pidgyManager, args=tuple())
+        @traitlets.default('input_transformer_manager')
+        def _default_input_transform_manager(self):
+            return self.pidgyManager(parent=self)
 
         ast_transformers = traitlets.List([pidgy.tangle.ExtraSyntax(), pidgy.testing.Definitions()])
 
@@ -36,7 +42,7 @@ Another feature of `IPython` is the ability to intercept [Abstract Syntax Tree]s
 
 
         @pidgy.specification
-        def post_run_cell(self, result):
+        def post_run_cell(self, result, shell):
 
 The weave step happens after execution, the tangle step happens before. Weaving only occurs if the input is computationally verified. It allows different representations of the input to be displayed. `pidgy` will implement templated Markdown displays of the input and formally test the contents of the input.
 
@@ -45,7 +51,7 @@ The weave step happens after execution, the tangle step happens before. Weaving 
 `pidgy` includes a `jinja2` templating environment that allows live compute to be woven into a narrative.
 
         def _post_run_cell(self, result):
-            self.manager.hook.post_run_cell(result=result)
+            self.manager.hook.post_run_cell(result=result, shell=self)
 
         def _post_exec(self):
             self.manager.hook.post_execute()
@@ -68,14 +74,21 @@ The weave step happens after execution, the tangle step happens before. Weaving 
 
 Initialize `pidgy` specific behaviors.
 
-            self.manager.add_hookspecs(pidgyShell)
-            for object in (
-                pidgy.tangle, self.weave, pidgy.testing
-            ):
+            if self.weave is None:
+                self.weave = pidgyShell._default_weave(self)
+            if self.weave is None:
+                self.weave = pidgyShell._default_weave(self)
+
+            try:
+                self.manager.add_hookspecs(pidgyShell)
+                for object in (
+                    pidgy.tangle, self.weave, pidgy.testing
+                ):
 
 The tangle and weave implementations are discussed in other parts of this document. Here we register each of them as `pluggy` hook implementations.
 
-                self.manager.register(object)
+                    self.manager.register(object)
+            except AssertionError:...
             self.events.register("post_run_cell", types.MethodType(pidgyShell._post_run_cell, self))
             self.events.register("post_execute", types.MethodType(pidgyShell._post_exec, self))
 
@@ -99,7 +112,7 @@ and allows json syntax as valid python input.
 
 Override the initialization of the conventional IPython kernel to include the pidgy opinions.
 
-            super().__init__(*args, **kwargs)
+            super(type(self), self).__init__(*args, **kwargs)
             self.init_pidgy()
 
 ## `pidgy` extension.
@@ -112,14 +125,19 @@ Override the initialization of the conventional IPython kernel to include the pi
             shell._post_run_cell = types.MethodType(pidgyShell._post_run_cell, shell)
             shell._post_exec = types.MethodType(pidgyShell._post_exec, shell)
             pidgyShell.init_pidgy(shell)
-            shell.input_transformer_manager = pidgyShell.input_transformer_manager.default_value
+            shell.input_transformers_post.append(pidgy.tangle.demojize)
+
+            shell.input_transformer_manager = pidgyShell.pidgyManager(parent=shell)
 
 <!--  -->
 
         def unload_ipython_extension(self):
-            self.events.unregister("post_run_cell", self._post_run_cell)
-            self.events.unregister("post_run_cell", pidgy.weave.post_run_cell)
+            try:
+                self.events.unregister("post_run_cell", self._post_run_cell)
+            except ValueError:...
             loader = self.loaders.pop(pidgy.pidgyLoader)
+            self.ast_transformers = [x for x in self.ast_transformers if not isinstance(x, (pidgy.tangle.ExtraSyntax, pidgy.testing.Definitions))]
+            self.ast_transformers.extend([pidgy.tangle.ExtraSyntax(), pidgy.testing.Definitions()])
             if loader is not None:
                 loader.__exit__(None, None, None)
 

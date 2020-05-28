@@ -13,3 +13,4 @@ pluggy
 ipykernel
 toml
 poser
+markdown-it-py
