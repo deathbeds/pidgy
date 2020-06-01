@@ -38,9 +38,9 @@ By default, `pidgy` will can transclude variables from a working program into th
 
 `jinja2` is a convention for notebooks in the `nbconvert` universe. `jinja2` is a popular templating engine that makes it possible to put programmatic objects into text.
 
-environment = traitlets.Instance('jinja2.Environment')
-@traitlets.default('environment')
-def \_default_environment(self):
+        environment = traitlets.Instance('jinja2.Environment')
+        @traitlets.default('environment')
+        def _default_environment(self):
 
 `Weave._default_exporter` is used to configure the start of the templating environment.
 
