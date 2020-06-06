@@ -62,9 +62,12 @@ The weave step happens after execution, the tangle step happens before. Weaving 
         manager = traitlets.Instance('pluggy.PluginManager', args=('pidgy',))
         loaders = traitlets.Dict()
         weave = traitlets.Any()
+        testing = traitlets.Any()
 
         @traitlets.default('weave')
-        def _default_weave(self): return pidgy.weave.Weave(self)
+        def _default_weave(self): return pidgy.weave.Weave(parent=self)
+        @traitlets.default('testing')
+        def _default_testing(self): return pidgy.testing.Testing(parent=self)
 
 `pidgy` mixes the standard `IPython` `traitlets` configuration system and its own `pluggy` `specification` and `implementation`.
 
@@ -76,13 +79,11 @@ Initialize `pidgy` specific behaviors.
 
             if self.weave is None:
                 self.weave = pidgyShell._default_weave(self)
-            if self.weave is None:
-                self.weave = pidgyShell._default_weave(self)
 
             try:
                 self.manager.add_hookspecs(pidgyShell)
                 for object in (
-                    pidgy.tangle, self.weave, pidgy.testing
+                    pidgy.tangle, self.weave, self.testing
                 ):
 
 The tangle and weave implementations are discussed in other parts of this document. Here we register each of them as `pluggy` hook implementations.
