@@ -7,7 +7,7 @@ manual validation to qualify the efficacy of narrative and code. To ensure testa
 we formally test code incrementally during interactive computing.
 
     import pidgy.base, traitlets, ast, unittest, IPython
-    with pidgy.pidgyLoader(): import pidgy.compat.unittesting
+    with pidgy.pidgyLoader(lazy=True): import pidgy.compat.unittesting
 
     class Testing(pidgy.base.Trait, pidgy.compat.unittesting.TestingBase):
         medial_test_definitions = traitlets.List()
