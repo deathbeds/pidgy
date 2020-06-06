@@ -13,9 +13,9 @@ The `pidgy` shell is wrapper around the existing `IPython` shell experience. It 
 
 `pidgy` includes the ability the use emojis as valid python names through the existing `traitlets` configuration system.
 
-    @traitlets.default('input_transformer_manager')
-    def _default_input_transform_manager(self):
-    return pidgy.tangle.pidgyManager()
+        @traitlets.default('input_transformer_manager')
+        def _default_input_transform_manager(self):
+            return pidgy.tangle.pidgyManager()
 
         ast_transformers = traitlets.List([pidgy.tangle.ExtraSyntax(), pidgy.testing.Definitions()])
 
@@ -68,7 +68,7 @@ Initialize `pidgy` specific behaviors.
             try:
                 self.manager.add_hookspecs(pidgyShell)
                 for object in (
-                    pidgy.tangle, self.weave, self.testing
+                    self.weave, self.testing
                 ):
 
 The tangle and weave implementations are discussed in other parts of this document. Here we register each of them as `pluggy` hook implementations.
