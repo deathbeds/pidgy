@@ -17,7 +17,7 @@ The `pidgy` shell is wrapper around the existing `IPython` shell experience. It 
         def _default_input_transform_manager(self):
             return pidgy.tangle.pidgyManager()
 
-        ast_transformers = traitlets.List([pidgy.tangle.ExtraSyntax(), pidgy.testing.Definitions()])
+        ast_transformers = traitlets.List([pidgy.tangle.ExtraSyntax()])
 
 Another feature of `IPython` is the ability to intercept [Abstract Syntax Tree]s and change their representation or capture metadata. After these transformations are applied, `IPython` compile the tree into a valid `types.CodeType`.
 
@@ -75,6 +75,7 @@ The tangle and weave implementations are discussed in other parts of this docume
 
                     self.manager.register(object)
             except AssertionError:...
+            self.ast_transformers.append(self.testing.visitor)
             self.events.register("post_run_cell", types.MethodType(pidgyShell._post_run_cell, self))
             self.events.register("post_execute", types.MethodType(pidgyShell._post_exec, self))
 
