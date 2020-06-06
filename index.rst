@@ -45,25 +45,19 @@ pidgy paper
     
     docs/intro.md
     
-pidgy specification
-===================
+pidgy specification and implementation
+======================================
 
 .. toctree::
     :glob:
 
-
-    pidgy/shell.md
-    
-pidgy implementation
-====================
-
-.. toctree::
-    :glob:
-
-    pidgy/tangle.ipynb
-    pidgy/loader.ipynb
-    pidgy/weave.md    
+    pidgy/weave.md
+    pidgy/tangle.md
     pidgy/testing.md
+    
+pidgy syntax
+============
+
     pidgy/tests/test_pidgin_syntax.md.ipynb
     
 pidgy applications
@@ -72,6 +66,8 @@ pidgy applications
 .. toctree::
     :glob:
     
+    pidgy/loader.ipynb
+    pidgy/shell.md
     pidgy/kernel.md
     pidgy/export.md
     pidgy/runpidgy.md
