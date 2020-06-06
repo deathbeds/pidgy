@@ -9,28 +9,13 @@ The `pidgy` shell is wrapper around the existing `IPython` shell experience. It 
 
 ## `pidgy` specification
 
-        @pidgy.specification(firstresult=True)
-        def tangle(str:str)->str:
-
-The `tangle` step operates on an input string that will become compiled source code. In a literate program, the source is written primarily in the documentation language and tangling converts it to the programming language. In `pidgy`, the tangle steps target valid `IPython` which is a superset of [Python], and requires further processing.
-
         input_transformers_post = traitlets.List([pidgy.tangle.demojize])
 
 `pidgy` includes the ability the use emojis as valid python names through the existing `traitlets` configuration system.
 
-        class pidgyManager(traitlets.HasTraits, IPython.core.inputtransformer2.TransformerManager):
-            parent = traitlets.Any()
-            def __init__(self, **kwargs):
-                super().__init__(**kwargs)
-                IPython.core.inputtransformer2.TransformerManager.__init__(self)
-            def transform_cell(self, cell):
-                shell = IPython.get_ipython()
-                return super(type(self), self).transform_cell(
-                    self.parent.manager.hook.tangle(str=cell))
-
-        @traitlets.default('input_transformer_manager')
-        def _default_input_transform_manager(self):
-            return self.pidgyManager(parent=self)
+    @traitlets.default('input_transformer_manager')
+    def _default_input_transform_manager(self):
+    return pidgy.tangle.pidgyManager()
 
         ast_transformers = traitlets.List([pidgy.tangle.ExtraSyntax(), pidgy.testing.Definitions()])
 
