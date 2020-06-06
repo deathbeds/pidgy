@@ -9,30 +9,14 @@ we formally test code incrementally during interactive computing.
     import pidgy.base, traitlets, ast, unittest, IPython
     with pidgy.pidgyLoader(): import pidgy.compat.unittesting
 
-
-    class Definitions(ast.NodeTransformer):
-        def visit_FunctionDef(self, node):
-            shell = IPython.get_ipython()
-            shell and shell.definitions.append(node.name)
-            return node
-        visit_ClassDef = visit_FunctionDef
-
-    def run(suite: unittest.TestCase, cell) -> unittest.TestResult:
-            result = unittest.TestResult(); suite.run(result)
-            if result.failures:
-                msg = '\n'.join(msg for text, msg in result.failures)
-                msg = re.sub(re.compile("<ipython-input-[0-9]+-\S+>"), F'In[{cell.execution_count}]', pidgy.util.clean_doctest_traceback(msg))
-                sys.stderr.writelines((str(result) + '\n' + msg).splitlines(True))
-                return result
-
-
     class Testing(pidgy.base.Trait, pidgy.compat.unittesting.TestingBase):
         medial_test_definitions = traitlets.List()
         pattern = traitlets.Unicode('test_')
         visitor = traitlets.Instance('ast.NodeTransformer')
 
         @traitlets.default('visitor')
-        def _default_visitor(self): return pidgy.compat.unittesting.Definitions(parent=self)
+        def _default_visitor(self):
+            return pidgy.compat.unittesting.Definitions(parent=self)
 
         @pidgy.implementation
         def post_run_cell(self, result):
