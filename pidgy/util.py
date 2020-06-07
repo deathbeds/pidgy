@@ -431,17 +431,3 @@ def continuation(str, env):
         elif continuing:
             lines[i] = " " * env["base_indent"] + "\\"
     return "\n".join(lines)
-
-
-class BaseRenderer:
-    """
->>> md = Tangle(renderer_cls=BaseRenderer)
->>> assert len(md.render(s).splitlines()) == len(s.splitlines())
-    
-    """
-
-    __output__ = "html"
-    __init__ = markdown_it.renderer.RendererHTML.__init__
-
-    def render(self, tokens, options, env):
-        return "".join(env["src"])
