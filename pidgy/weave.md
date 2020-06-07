@@ -1,9 +1,7 @@
 # Woven text
 
     import IPython, pidgy.base, traitlets, jinja2
-    with pidgy.pidgyLoader(): import pidgy.compat.templating
-
-    __all__ = 'Weave',
+    with pidgy.pidgyLoader(lazy=True): import pidgy.compat.templating
 
 Nominally, since the earliest illuminated manuscripts, text is woven with type and form. In [literate programming], the weave step explicitly refers to the act of converting an input source in to other readable forms.
 For example, the original [WEB] implementation models the properties of printed documents using the [TeX] document language.
