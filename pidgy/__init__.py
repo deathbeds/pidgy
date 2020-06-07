@@ -15,10 +15,10 @@ with __import__("importnb").Notebook(lazy=True):
 with pidgyLoader(lazy=True):
     try:
         from . import weave, testing, magic, runpidgy
-        from .shell import load_ipython_extension, unload_ipython_extension
+        from .extension import load_ipython_extension, unload_ipython_extension
     except:
         import weave, testing, magic, runpidgy
-        from shell import load_ipython_extension, unload_ipython_extension
+        from extension import load_ipython_extension, unload_ipython_extension
 
 if __import__("IPython").get_ipython():
     magic.load_ipython_extension(__import__("IPython").get_ipython())
