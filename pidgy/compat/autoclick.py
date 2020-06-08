@@ -1,4 +1,18 @@
-import inspect, click, stringcase, enum, uuid, datetime, pathlib, typing, types, builtins
+#!/usr/bin/env python
+# coding: utf-8
+
+import builtins
+import copy
+import datetime
+import enum
+import inspect
+import pathlib
+import types
+import typing
+import uuid
+
+import click
+import stringcase
 
 
 def autoclick(

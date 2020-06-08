@@ -2,11 +2,11 @@
 
 > [**Eat Me, Drink Me, Read Me.**][readme history]
 
-    import IPython, pidgy, pathlib, typing, click, functools, contextlib, sys, types
+    import IPython, pidgy, pathlib, typing, click, functools, contextlib, sys, types, pidgy.compat.autoclick
 
     with pidgy.pidgyLoader():
-        try: from . import kernel, autocli, runpidgy, util, export, weave
-        except: import kernel, autocli, runpidgy, util, export, weave
+        try: from . import kernel, runpidgy, util, export, weave
+        except: import kernel, runpidgy, util, export, weave
 
 <!--excerpt-->
 
@@ -45,9 +45,9 @@ Formally test markdown documents, notebooks, and python files.
 
 <!---->
 
-    application = autocli.autoclick(
+    application = pidgy.compat.autoclick.autoclick(
         run, test, to, template,
-        autocli.autoclick(
+        pidgy.compat.autoclick.autoclick(
             pidgy.kernel.install, pidgy.kernel.uninstall, pidgy.kernel.start, group=click.Group("kernel")
         ),
         context_settings=dict(allow_extra_args=True, ignore_unknown_options=True),
