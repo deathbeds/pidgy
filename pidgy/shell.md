@@ -31,10 +31,6 @@ Another feature of `IPython` is the ability to intercept [Abstract Syntax Tree]s
 
 The weave step happens after execution, the tangle step happens before. Weaving only occurs if the input is computationally verified. It allows different representations of the input to be displayed. `pidgy` will implement templated Markdown displays of the input and formally test the contents of the input.
 
-        environment = traitlets.Any(nbconvert.exporters.TemplateExporter().environment)
-
-`pidgy` includes a `jinja2` templating environment that allows live compute to be woven into a narrative.
-
         def _post_run_cell(self, result):
             self.manager.hook.post_run_cell(result=result, shell=self)
 
