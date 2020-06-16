@@ -29,11 +29,8 @@ The `Weave` step is invoked after a cell or code has been executed.
 
 `pidgy` defers from printing the output if the first line is blank.
 
-            text = getattr(self, self.interactive_template and 'render_interactive' or 'render')(text)
+            self.render(text)
 
-By default, `pidgy` will can transclude variables from a working program into the output creating rich data driven programs.
-
-            text and IPython.display.display(IPython.display.Markdown(text))
 
 ## Transclusion with `jinja2` templates.
 
@@ -61,21 +58,23 @@ By default templates are always rendered, but this feature can be turned off.
                     **vars(builtins), **vars(operator),
                     **(getattr(self.parent, 'user_ns', {})).get('__annotations__', {}),
                     **getattr(self.parent, 'user_ns', {})})
-                return template.render()
+                display = pidgy.compat.templating.MarkdownDisplay(template=template, body=text)
+                self.display_manager.append(display)
+                display.display()
             except BaseException as Exception: self.parent.showtraceback((type(Exception), Exception, Exception.__traceback__))
             return text
-
-        def render_interactive(self, text):
-            import builtins, operator
-            display = IPython.display.display(IPython.display.Markdown(text), display_id=True)
-            while self.environment.last_widgets:
-                self.environment.last_widgets.pop(-1).observe(lambda change: display.update(IPython.display.Markdown(self.render(text))), 'value')
             
-            
+        display_manager = traitlets.Any()
+        
+        @traitlets.default('display_manager')
+        def _default_display_manager(self): 
+            manager = pidgy.compat.templating.DisplayManager(parent=self.parent)
+            manager.register()
+            return manager
 
         @traitlets.default('environment')
         def _default_environment(self): 
 
 More information about the default `jinja2` environment may be found in the [compatability module].
 
-            return pidgy.compat.templating.environment()
+            return pidgy.compat.templating.environment(self.parent)
