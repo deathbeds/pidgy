@@ -13,10 +13,6 @@ The `pidgy` shell is wrapper around the existing `IPython` shell experience. It 
 
 `pidgy` includes the ability the use emojis as valid python names through the existing `traitlets` configuration system.
 
-        @traitlets.default('input_transformer_manager')
-        def _default_input_transform_manager(self):
-            return pidgy.tangle.pidgyManager()
-
         ast_transformers = traitlets.List([pidgy.tangle.ExtraSyntax()])
 
 Another feature of `IPython` is the ability to intercept [Abstract Syntax Tree]s and change their representation or capture metadata. After these transformations are applied, `IPython` compile the tree into a valid `types.CodeType`.
@@ -31,16 +27,8 @@ Another feature of `IPython` is the ability to intercept [Abstract Syntax Tree]s
 
 The weave step happens after execution, the tangle step happens before. Weaving only occurs if the input is computationally verified. It allows different representations of the input to be displayed. `pidgy` will implement templated Markdown displays of the input and formally test the contents of the input.
 
-        def _post_run_cell(self, result):
-            self.manager.hook.post_run_cell(result=result, shell=self)
-
-        def _post_exec(self):
-            self.manager.hook.post_execute()
-
-
         enable_html_pager = traitlets.Bool(True)
         definitions = traitlets.List()
-        manager = traitlets.Instance('pluggy.PluginManager', args=('pidgy',))
         loaders = traitlets.Dict()
         weave = traitlets.Any()
         testing = traitlets.Any()
@@ -62,18 +50,13 @@ Initialize `pidgy` specific behaviors.
                 self.weave = pidgyShell._default_weave(self)
 
             try:
-                self.manager.add_hookspecs(pidgyShell)
-                for object in (
-                    self.weave, self.testing
-                ):
+                self.weave.register()
+                self.testing.register()
 
 The tangle and weave implementations are discussed in other parts of this document. Here we register each of them as `pluggy` hook implementations.
 
-                    self.manager.register(object)
             except AssertionError:...
             self.ast_transformers.append(self.testing.visitor)
-            self.events.register("post_run_cell", types.MethodType(pidgyShell._post_run_cell, self))
-            self.events.register("post_execute", types.MethodType(pidgyShell._post_exec, self))
 
 
             if pidgy.pidgyLoader not in self.loaders:

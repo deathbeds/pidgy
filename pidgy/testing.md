@@ -18,7 +18,6 @@ we formally test code incrementally during interactive computing.
         def _default_visitor(self):
             return pidgy.compat.unittesting.Definitions(parent=self)
 
-        @pidgy.implementation
         def post_run_cell(self, result):
             if not (result.error_before_exec or result.error_in_exec):
                 tests = []

@@ -1,5 +1,9 @@
 # Woven text
 
+```{toctree}
+compat/templating
+```
+
     import IPython, pidgy.base, traitlets, jinja2
     with pidgy.pidgyLoader(lazy=True): import pidgy.compat.templating
     class Weave(pidgy.base.Trait):
@@ -16,9 +20,7 @@ The source code for `pidgy` is always [Markdown], it provides both the design an
 The `Weave` class controls the display of `pidgy` outputs, and it relies on the `Weave.parent` interactive shell.
 
         environment = traitlets.Instance('jinja2.Environment')
-    
 
-        @pidgy.implementation
         def post_run_cell(self, result):
 
 The `Weave` step is invoked after a cell or code has been executed.
