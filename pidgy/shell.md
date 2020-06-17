@@ -8,9 +8,9 @@ A powerful feature of the `jupyter` ecosystem is a generalized implementation of
 The `pidgy` shell is wrapper around the existing `IPython` shell experience. It explicitly defines [tangle] and [weave] conventions of literate programming for each execution. Once the shell is configured, it can be used as a `jupyter` kernel or `IPython` extension that supports the `pidgy` [Markdown]/[IPython] metalanguage and metasyntax.
 
 ## `pidgy` specification
-
+        
         input_transformers_post = traitlets.List([pidgy.tangle.demojize])
-
+    
 `pidgy` includes the ability the use emojis as valid python names through the existing `traitlets` configuration system.
 
         ast_transformers = traitlets.List([pidgy.tangle.ExtraSyntax()])
@@ -32,6 +32,8 @@ The weave step happens after execution, the tangle step happens before. Weaving 
         loaders = traitlets.Dict()
         weave = traitlets.Any()
         testing = traitlets.Any()
+        @traitlets.default('input_transformer_manager')
+        def _default_tangle(self): return pidgy.tangle.pidgyManager()
 
         @traitlets.default('weave')
         def _default_weave(self): return pidgy.weave.Weave(parent=self)
