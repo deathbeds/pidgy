@@ -17,14 +17,6 @@ The `pidgy` shell is wrapper around the existing `IPython` shell experience. It 
 
 Another feature of `IPython` is the ability to intercept [Abstract Syntax Tree]s and change their representation or capture metadata. After these transformations are applied, `IPython` compile the tree into a valid `types.CodeType`.
 
-        @pidgy.specification
-        def post_execute(self):
-            ...
-
-
-        @pidgy.specification
-        def post_run_cell(self, result, shell):
-
 The weave step happens after execution, the tangle step happens before. Weaving only occurs if the input is computationally verified. It allows different representations of the input to be displayed. `pidgy` will implement templated Markdown displays of the input and formally test the contents of the input.
 
         enable_html_pager = traitlets.Bool(True)
