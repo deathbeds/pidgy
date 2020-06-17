@@ -31,7 +31,11 @@ The `Weave` step is invoked after a cell or code has been executed.
 
 `pidgy` defers from printing the output if the first line is blank.
 
-            self.render(text)
+            display = pidgy.compat.templating.MarkdownDisplay(
+                body=text, parent=self.parent, template=self.template(text)
+            )
+            self.display_manager.append(display)
+            display.display()
 
 
 ## Transclusion with `jinja2` templates.
@@ -52,17 +56,18 @@ The `Weave` step is invoked after a cell or code has been executed.
 
 By default templates are always rendered, but this feature can be turned off.
 
+        def template(self, text):
+            import builtins, operator
+            return self.environment.from_string(text, globals={
+                    **vars(builtins), **vars(operator),
+                    **(getattr(self.parent, 'user_ns', {})).get('__annotations__', {}),
+                    **getattr(self.parent, 'user_ns', {})})
+                    
         def render(self, text):
             if not self.render_template: return text
             import builtins, operator
             try:
-                template = self.environment.from_string(text, globals={
-                    **vars(builtins), **vars(operator),
-                    **(getattr(self.parent, 'user_ns', {})).get('__annotations__', {}),
-                    **getattr(self.parent, 'user_ns', {})})
-                display = pidgy.compat.templating.MarkdownDisplay(template=template, body=text)
-                self.display_manager.append(display)
-                display.display()
+                return self.template(text).render()
             except BaseException as Exception: self.parent.showtraceback((type(Exception), Exception, Exception.__traceback__))
             return text
             
