@@ -164,11 +164,6 @@ def sys_path():
         sys.path.pop(sys.path.index("."))
 
 
-santize_doctest = re.compile(
-    r"""Traceback.+\n\s*File "[^In]\S+", line [0-9]+.+in.+\n.+""", re.MULTILINE
-)
-
-
 def pidgy_builtins():
     import IPython, toolz, poser
 
@@ -183,10 +178,6 @@ def pidgy_builtins():
         "λ": poser.λ,
         "Λ": poser.Λ,
     }
-
-
-def clean_doctest_traceback(str, *lines):
-    return re.sub(santize_doctest, "", str).lstrip().replace("-" * 70, "\n")
 
 
 from math import floor
@@ -440,17 +431,3 @@ def continuation(str, env):
         elif continuing:
             lines[i] = " " * env["base_indent"] + "\\"
     return "\n".join(lines)
-
-
-class BaseRenderer:
-    """
->>> md = Tangle(renderer_cls=BaseRenderer)
->>> assert len(md.render(s).splitlines()) == len(s.splitlines())
-    
-    """
-
-    __output__ = "html"
-    __init__ = markdown_it.renderer.RendererHTML.__init__
-
-    def render(self, tokens, options, env):
-        return "".join(env["src"])

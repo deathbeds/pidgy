@@ -76,7 +76,7 @@ When the module is created. Compile the source to code to discover arguments in 
             return loader.format(loader.run(**globals))
 
         def cli(loader):
-            import pidgy.autocli, click
+            import pidgy.compat.autoclick, click
             module = loader.create_module()
             def main(verbose: bool=True, **globals):
                 nonlocal module
@@ -85,9 +85,9 @@ When the module is created. Compile the source to code to discover arguments in 
                     verbose and click.echo(pidgy.util.ansify(loader.format(module)))
                 except SystemExit: ...
 
-            pidgy.autocli.command_from_decorators(main,
+            pidgy.compat.autoclick.command_from_decorators(main,
                                                   click.option('--verbose/--silent', default=True),
-                                                  *pidgy.autocli.decorators_from_module(module)).main()
+                                                  *pidgy.compat.autoclick.decorators_from_module(module)).main()
 
         def format(loader, module):
             import nbconvert, operator, builtins

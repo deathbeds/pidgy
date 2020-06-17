@@ -22,11 +22,12 @@ the launcher or notebook. It specifies which shell class to use.
         current_cell_id = traitlets.Unicode()
         current_cell_ids = traitlets.Set()
 
-        def init_metadata(self, *args, **kwargs):
+        def init_metadata(self, object):
 
 The is some important data captured in the initial we'll expose for later.
 
-            return super().init_metadata(*args, **kwargs)
+            self.shell._last_parent = object
+            return super().init_metadata(object)
 
         def do_inspect(self, code, cursor_pos, detail_level=0):
 
