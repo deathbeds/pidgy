@@ -34,10 +34,10 @@ The is some important data captured in the initial we'll expose for later.
 The kernel is where the inspection can be customized. `pidgy` adds the ability to use
 the inspector as Markdown rendering tool.
 
-            if code[cursor_pos-3:cursor_pos] == '!!!':
-                if code[cursor_pos-6:cursor_pos] == '!!!'*2:
-                    self.shell.run_cell(code, silent=True)
-                return self.markdown_result(self.shell.weave.render(code))
+            if code[:cursor_pos].rstrip()[-3:] == '!!!':
+                if code[:cursor_pos].rstrip()[-6:] == '!!!'*2:
+                    self.shell.run_cell(code[:cursor_pos], silent=True)
+                return self.markdown_result(self.shell.weave.render(code[:cursor_pos]))
             result = super().do_inspect(code, cursor_pos, detail_level)
             if not result['found']: return self.markdown_result(code)
             return result
