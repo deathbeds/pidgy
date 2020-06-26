@@ -31,7 +31,7 @@ The `Weave` step is invoked after a cell or code has been executed.
 
 `pidgy` defers from printing the output if the first line is blank.
 
-            display = pidgy.compat.templating.MarkdownTemplate(
+            display = pidgy.compat.templating.MarkdownDisplay(
                 body=text, parent=self.parent, template=self.template(text)
             )
             self.display_manager.append(display)
