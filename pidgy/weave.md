@@ -22,6 +22,7 @@ The `Weave` class controls the display of `pidgy` outputs, and it relies on the 
         environment = traitlets.Instance('jinja2.Environment')
 
         def post_run_cell(self, result):
+            if not self.enabled: return
 
 The `Weave` step is invoked after a cell or code has been executed.
 
