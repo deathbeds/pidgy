@@ -20,6 +20,7 @@ we formally test code incrementally during interactive computing.
             return pidgy.compat.unittesting.Definitions(parent=self)
 
         def post_run_cell(self, result):
+            if not self.enabled: return
             if not (result.error_before_exec or result.error_in_exec):
                 tests = []
                 while self.medial_test_definitions:
@@ -29,7 +30,7 @@ we formally test code incrementally during interactive computing.
                         tests.append(object)
 
                 test = pidgy.compat.unittesting.Test(result=result, parent=self.parent, vars=True)
-                with pidgy.compat.unittesting.ipython_compiler(self.parent): test.test(*tests)
+                test.test(*tests)
                 if test.test_result.testsRun:
                     IPython.display.display(test)
                     self.results = [
