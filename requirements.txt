@@ -13,3 +13,4 @@ ipykernel
 toml
 poser
 markdown-it-py
+monkeytype
