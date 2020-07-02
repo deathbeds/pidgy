@@ -7,13 +7,19 @@ manual validation to qualify the efficacy of narrative and code. To ensure testa
 we formally test code incrementally during interactive computing.
 
     import pidgy.base, traitlets, ast, unittest, IPython
-    with pidgy.pidgyLoader(lazy=True): import pidgy.compat.unittesting
+    with pidgy.pidgyLoader(lazy=True):
+        import pidgy.compat.unittesting, pidgy.compat.typin
 
     class Testing(pidgy.base.Trait, pidgy.compat.unittesting.TestingBase):
         medial_test_definitions = traitlets.List()
         pattern = traitlets.Unicode('test_')
         visitor = traitlets.Instance('ast.NodeTransformer')
         results = traitlets.List()
+        trace = traitlets.Any()
+
+        @traitlets.default('trace')
+        def _default_trace(self):
+            return pidgy.compat.typin.InteractiveTyping(parent=self)
 
         @traitlets.default('visitor')
         def _default_visitor(self):
@@ -30,7 +36,9 @@ we formally test code incrementally during interactive computing.
                         tests.append(object)
 
                 test = pidgy.compat.unittesting.Test(result=result, parent=self.parent, vars=True)
-                test.test(*tests)
+                if self.trace.enabled:
+                    with self.trace: test.test(*tests)
+                else: test.test()
                 if test.test_result.testsRun:
                     IPython.display.display(test)
                     self.results = [
@@ -38,8 +46,11 @@ we formally test code incrementally during interactive computing.
                     ] + [test]
 
 
-
+        def stub(self):
+            return self.trace.stub()
         def post_execute(self):
             for test in self.results:
-                test.test()
+                if self.trace.enabled:
+                    with self.trace: test.test()
+                else: test.test()
                 test.update()
