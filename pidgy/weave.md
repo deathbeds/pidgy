@@ -47,11 +47,7 @@ The `Weave` step is invoked after a cell or code has been executed.
 `Weave.render_template` is a toggle for turning transclusion on and off.
 
         )
-        interactive_template = traitlets.Bool(False).tag(description=
 
-`Weave.interactive_template` is a toggle for ability to update templates each time a cell is executed ultimately creating a reactive document.
-
-        )
 
 By default templates are always rendered, but this feature can be turned off.
 
