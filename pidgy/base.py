@@ -1,4 +1,4 @@
-import traitlets, IPython
+import traitlets, IPython, sys
 
 
 class Trait(traitlets.HasTraits):
@@ -21,6 +21,7 @@ class Display(Trait):
 
     def update(self, **kwargs):
         if self._display is None: return self.display(**kwargs)
+        if 'nbval' in sys.modules: return 
         self._display.update(self.render(**kwargs))
 
     def render(self, **kwargs): 

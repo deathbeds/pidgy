@@ -6,7 +6,7 @@ A primary use case of notebooks is to test ideas. Typically this in informally u
 manual validation to qualify the efficacy of narrative and code. To ensure testable literate documents
 we formally test code incrementally during interactive computing.
 
-    import pidgy.base, traitlets, ast, unittest, IPython
+    import pidgy.base, traitlets, ast, unittest, IPython, sys
     with pidgy.pidgyLoader(lazy=True):
         import pidgy.compat.unittesting, pidgy.compat.typin
 
