@@ -16,7 +16,6 @@ we formally test code incrementally during interactive computing.
         visitor = traitlets.Instance('ast.NodeTransformer')
         results = traitlets.List()
         trace = traitlets.Any()
-        update = traitlets.Bool(True)
 
         @traitlets.default('trace')
         def _default_trace(self):
@@ -43,16 +42,15 @@ we formally test code incrementally during interactive computing.
                 if test.test_result.testsRun:
                     IPython.display.display(test)
                     self.results = [
-                           x for x in self.results if x._display and x._display.display_id != test._display.display_id
+                           x for x in self.results if x._display and test._display and (x._display.display_id != test._display.display_id)
                     ] + [test]
 
 
         def stub(self):
             return self.trace.stub()
         def post_execute(self):
-            if self.update: 
-                for test in self.results:
-                    if self.trace.enabled:
-                        with self.trace: test.test()
-                    else: test.test()
-                    test.update()
+            for test in self.results:
+                if self.trace.enabled:
+                    with self.trace: test.test()
+                else: test.test()
+                test.update()
