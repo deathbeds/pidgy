@@ -30,7 +30,7 @@ The weave step happens after execution, the tangle step happens before. Weaving 
         @traitlets.default('weave')
         def _default_weave(self): return pidgy.weave.Weave(parent=self)
         @traitlets.default('testing')
-        def _default_testing(self): return pidgy.testing.Testing(parent=self, enabled=False)
+        def _default_testing(self): return pidgy.testing.Testing(parent=self)
 
 `pidgy` mixes the standard `IPython` `traitlets` configuration system and its own `pluggy` `specification` and `implementation`.
 
