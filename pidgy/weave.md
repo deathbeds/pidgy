@@ -7,7 +7,7 @@ compat/templating
     import IPython, pidgy.base, traitlets, jinja2
     with pidgy.pidgyLoader(lazy=True): import pidgy.compat.templating
     class Weave(pidgy.base.Trait):
-    
+
 Nominally, since the earliest illuminated manuscripts, text is in with type and form. In [literate programming], the weave step explicitly refers to the act of converting an input source into other media forms.
 
 The original [WEB] implementation models the properties of printed documents using the [TeX] document language.
@@ -22,6 +22,7 @@ The `Weave` class controls the display of `pidgy` outputs, and it relies on the 
         environment = traitlets.Instance('jinja2.Environment')
 
         def post_run_cell(self, result):
+            if not self.enabled: return
 
 The `Weave` step is invoked after a cell or code has been executed.
 
@@ -37,22 +38,16 @@ The `Weave` step is invoked after a cell or code has been executed.
             self.display_manager.append(display)
             display.display()
 
-
 ## Transclusion with `jinja2` templates.
 
 `jinja2` is a convention for notebooks in the `nbconvert` universe. `jinja2` is a popular templating engine that makes it possible to put programmatic objects into text.
 
-
         render_template = traitlets.Bool(True).tag(description=
-        
+
 `Weave.render_template` is a toggle for turning transclusion on and off.
-        
+
         )
-        interactive_template = traitlets.Bool(False).tag(description=
-        
-`Weave.interactive_template` is a toggle for ability to update templates each time a cell is executed ultimately creating a reactive document.
-        
-        )
+
 
 By default templates are always rendered, but this feature can be turned off.
 
@@ -62,7 +57,7 @@ By default templates are always rendered, but this feature can be turned off.
                     **vars(builtins), **vars(operator),
                     **(getattr(self.parent, 'user_ns', {})).get('__annotations__', {}),
                     **getattr(self.parent, 'user_ns', {})})
-                    
+
         def render(self, text):
             if not self.render_template: return text
             import builtins, operator
@@ -70,17 +65,17 @@ By default templates are always rendered, but this feature can be turned off.
                 return self.template(text).render()
             except BaseException as Exception: self.parent.showtraceback((type(Exception), Exception, Exception.__traceback__))
             return text
-            
+
         display_manager = traitlets.Any()
-        
+
         @traitlets.default('display_manager')
-        def _default_display_manager(self): 
+        def _default_display_manager(self):
             manager = pidgy.compat.templating.DisplayManager(parent=self.parent)
             manager.register()
             return manager
 
         @traitlets.default('environment')
-        def _default_environment(self): 
+        def _default_environment(self):
 
 More information about the default `jinja2` environment may be found in the [compatability module].
 

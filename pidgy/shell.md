@@ -75,6 +75,9 @@ Override the initialization of the conventional IPython kernel to include the pi
             super(type(self), self).__init__(*args, **kwargs)
             self.init_pidgy()
 
+            # Reload doctest because something weird happens with pdb  when doctest is initialized first.
+            __import__('importlib').reload(__import__('doctest'))
+
 [shell]: https://en.wikipedia.org/wiki/Shell_(computing)
 [kernel]: https://en.wikipedia.org/wiki/Kernel_(operating_system)
 [kernel languages]: https://github.com/jupyter/jupyter/wiki/Jupyter-kernels
