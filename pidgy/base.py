@@ -15,7 +15,6 @@ class Trait(traitlets.HasTraits):
         self.enabled = bool(object if object is None else not self.enabled)
         
 class Display(Trait):
-    body = traitlets.Unicode(allow_none=True)
     vars = traitlets.Any()
     _display = traitlets.Any()
 
@@ -23,10 +22,6 @@ class Display(Trait):
         if self._display is None: return self.display(**kwargs)
         if 'nbval' in sys.modules: return 
         self._display.update(self.render(**kwargs))
-
-    def render(self, **kwargs): 
-        if self.body is not None:
-            return self.displayer(self.body)
 
     def display(self, **kwargs):
         object = self.render(**kwargs)
