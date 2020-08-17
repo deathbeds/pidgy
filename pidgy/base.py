@@ -35,6 +35,3 @@ class Display(Trait):
             IPython.display.display(object)
 
     _ipython_display_ = display
-
-class MarkdownDisplay(Display):
-    displayer = IPython.display.Markdown        
