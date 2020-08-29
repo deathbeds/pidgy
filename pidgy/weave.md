@@ -30,6 +30,12 @@ The `Weave` step is invoked after a cell or code has been executed.
             lines = text.splitlines() or ['']
             if not lines[0].strip(): return
 
+
+            if text.startswith(('http:', "https:")):
+                lines in text.splitlines()
+                if all(x.startswith(('http:', "https:")) for x in lines):
+                    return IPython.display.display(*(IPython.display.IFrame(x, width='100%', height=700) for x in lines))
+
 `pidgy` defers from printing the output if the first line is blank.
 
             display = pidgy.compat.templating.MarkdownDisplay(
@@ -47,7 +53,6 @@ The `Weave` step is invoked after a cell or code has been executed.
 `Weave.render_template` is a toggle for turning transclusion on and off.
 
         )
-
 
 By default templates are always rendered, but this feature can be turned off.
 
