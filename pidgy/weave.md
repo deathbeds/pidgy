@@ -20,6 +20,8 @@ The source code for `pidgy` is always [Markdown], it provides both the design an
 The `Weave` class controls the display of `pidgy` outputs, and it relies on the `Weave.parent` interactive shell.
 
         environment = traitlets.Instance('jinja2.Environment')
+        iframe_width = traitlets.Any("100%")
+        iframe_height = traitlets.Any("80vh")
 
         def post_run_cell(self, result):
             if not self.enabled: return
@@ -34,7 +36,10 @@ The `Weave` step is invoked after a cell or code has been executed.
             if text.startswith(('http:', "https:")):
                 lines in text.splitlines()
                 if all(x.startswith(('http:', "https:")) for x in lines):
-                    return IPython.display.display(*(IPython.display.IFrame(x, width='100%', height=700) for x in lines))
+                    return IPython.display.display(*(
+                        IPython.display.IFrame(x, width=self.iframe_width, height=self.iframe_height) 
+                        for x in lines
+                    ))
 
 `pidgy` defers from printing the output if the first line is blank.
 
