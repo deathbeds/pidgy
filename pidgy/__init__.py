@@ -1,11 +1,12 @@
+from . import base, util, compat
+
+
 with __import__("importnb").Notebook(lazy=True):
     try:
-        from . import loader, tangle
-        from .loader import pidgyLoader
+        from . import tangle, loader
     except:
-        import loader, tangle
-        from loader import pidgyLoader
-
+        import tangle, loader
+pidgyLoader = loader.pidgyLoader
 with pidgyLoader(lazy=True):
     try:
         from . import weave, testing, magic, runpidgy
