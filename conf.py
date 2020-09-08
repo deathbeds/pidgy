@@ -1,34 +1,56 @@
-# import sphinx.writers.html5
-# sphinx.writers.html5.HTML5Translator.visit_pending_xref = lambda *x:...
-# sphinx.writers.html5.HTML5Translator.depart_pending_xref = lambda *x:...
-title = html_title = "pidgy literate computing"
-author = "Tony Fast"
-html_theme = "classic"
-master_doc = "index"
-source_suffix = ".rst .md .ipynb .py".split()
-extensions = "recommonmark nbsphinx sphinx.ext.autodoc sphinx.ext.coverage sphinx.ext.napoleon autoapi.extension sphinx.ext.mathjax sphinx_copybutton     sphinx.ext.viewcode".split()
-
-# Exclude build directory and Jupyter backup files:
-exclude_patterns = ["_build", "*checkpoint*"]
-autoapi_type = "python"
-autoapi_dirs = ["pidgy"]
-
-nbsphinx_prolog = """.. raw:: html
-    
-    <style>.prompt {
-        display: none;
-    }</style>
-
-
-"""
-
-latex_documents = [
-    (master_doc, "pidgy.tex", "pidgy literate computing", "Tony Fast", "manual",)
+author = "deathbeds"
+comments_config = {"hypothesis": False, "utterances": False}
+copyright = "2020"
+exclude_patterns = ["**.ipynb_checkpoints", ".DS_Store", "Thumbs.db", "_build"]
+execution_allow_errors = False
+execution_excludepatterns = []
+execution_in_temp = False
+execution_timeout = 30
+extensions = [
+    "sphinx_togglebutton",
+    "sphinx_copybutton",
+    "myst_nb",
+    "jupyter_book",
+    "sphinxcontrib.bibtex",
+    "sphinx_thebe",
+    "sphinx_comments",
+    "sphinx.ext.intersphinx",
+    "sphinx_panels",
 ]
-
-
-def setup(app):
-    if "READTHEDOCS" in __import__("os").environ:
-        __import__("os").system(
-            "python -m pidgy to python pidgy/*.md pidgy/*.ipynb --write"
-        )
+globaltoc_path = "/home/tonyfast/Documents/pidgy/_toc.yml"
+html_add_permalinks = "¶"
+html_baseurl = ""
+html_favicon = ""
+html_logo = "pidgy.png"
+html_sourcelink_suffix = ""
+html_theme = "sphinx_book_theme"
+html_theme_options = {
+    "search_bar_text": "Search this book...",
+    "launch_buttons": {
+        "notebook_interface": "classic",
+        "binderhub_url": "https://mybinder.org",
+        "jupyterhub_url": "",
+        "thebe": False,
+        "colab_url": "https://colab.research.google.com",
+    },
+    "path_to_docs": "",
+    "repository_url": "https://github.com/executablebooks/jupyter-book",
+    "repository_branch": "master",
+    "google_analytics_id": "",
+    "extra_navbar": 'Powered by <a href="https://jupyterbook.org">Jupyter Book</a>',
+    "extra_footer": "",
+    "home_page_in_toc": True,
+    "use_repository_button": False,
+    "use_edit_page_button": False,
+    "use_issues_button": False,
+}
+html_title = "Pidgy Programming"
+jupyter_cache = ""
+jupyter_execute_notebooks = "off"
+language = None
+latex_engine = "pdflatex"
+myst_url_schemes = ["mailto", "http", "https"]
+nb_output_stderr = "show"
+numfig = True
+panels_add_boostrap_css = False
+pygments_style = "sphinx"

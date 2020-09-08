@@ -1,6 +1,11 @@
 # The `pidgy` package and paper
 
-`pidgy` is a fun way to program in [Markdown] in your favorite IDE (jupyter, nteract, colab, vscode) and use them in python modules, scripts, and applications.
+`pidgy` is a fun way to interactively program in [Markdown]. It is design
+to tell stories with data and code in your favorite IDE ([jupyter], [nteract], [colab], [vscode]).
+ and use them in python modules, scripts, and applications.
+
+ It that allows fluid combinations of code and prose with added language features like block markdown variables, emoji variables names, and interactive formal testing. It is designed primarily for Jupyter notebooks and Markdown source files.
+
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/deathbeds/pidgy/master?urlpath=lab)
 [![Documentation Status](https://readthedocs.org/projects/pidgy/badge/?version=latest)](https://pidgin-notebook.readthedocs.io/en/latest/?badge=latest)
@@ -10,8 +15,6 @@
 ```bash
 pip install pidgy    # Install pidgy
 ```
-
-`pidgy` provides an interactive literate programming experience that allows fluid combinations of code and prose. It has some added language features like block markdown variables, emoji variables names, and interactive formal testing. It is designed primarily for Jupyter notebooks and Markdown source files.
 
 ## The pidgy shell and kernel
 
@@ -48,3 +51,47 @@ Commands:
   test      Formally test markdown documents, notebooks, and python files.
   to
 ```
+
+## developer
+
+`pidgy` uses `doit` to make tests and documentation work.
+
+    import doit.tools
+
+### tasks
+
+    def task_sphinx():
+build the pidgy docs with sphinx and is configured by conf.py
+    
+        return dict(actions="sphinx-build . docs".splitlines())
+    
+    def task_book():
+build the pidgy docs with jupyter book. 
+    
+        return dict(actions="jupyter-book build .".splitlines())
+    
+    def task_docs_config():
+build the pidgy docs with jupyter book. 
+    
+        return dict(actions="jupyter-book config sphinx . > conf.py".splitlines())
+
+    def task_test():
+test the pidgy package.
+    
+        return dict(actions=[
+            doit.tools.Interactive("pytest --nbval --sanitize-with sanitize.cfg -p no:warnings pidgy/tests/test_* docs/examples")
+            ])
+
+
+    def task_build():
+build the pidgy package
+    
+        return dict(actions="".splitlines())        
+
+
+[markdown]: https://en.wikipedia.org/wiki/Markdown
+[python]: https://python.org
+[jupyter]: https://jupyter.org
+[nteract]: https://nteract.io
+[colab]: #
+[vscode]: #

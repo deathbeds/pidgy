@@ -30,12 +30,14 @@ jobs:
           pip install git+https://github.com/deathbeds/importnb
           pip install -r requirements.txt
           pip install -r requirements-test.txt
-          python setup.py develop
-          pidgy kernel install
+          pip install doit
+          pip install .
           pip install wheel
+          pidgy kernel install
+          
       - name: Test with pytest
         run: |
-          pytest --nbval --sanitize-with sanitize.cfg -p no:warnings pidgy/tests/test_* docs/examples
+          doit test
       - name: Build package
         run: |
           python setup.py sdist

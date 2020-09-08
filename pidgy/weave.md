@@ -21,7 +21,7 @@ The `Weave` class controls the display of `pidgy` outputs, and it relies on the 
 
         environment = traitlets.Instance('jinja2.Environment')
         iframe_width = traitlets.Any("100%")
-        iframe_height = traitlets.Any("80vh")
+        iframe_height = traitlets.Any("""600""")
 
         def post_run_cell(self, result):
             if not self.enabled: return

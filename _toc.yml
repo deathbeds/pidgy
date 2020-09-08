@@ -1,0 +1,35 @@
+- file: README
+
+- part: literate programming and computing
+  chapters:
+  - file: docs/discussion.md.ipynb
+  - file: docs/examples/working-within-dataframes.md.ipynb
+  
+- part: literate shell
+  chapters:
+  - file: pidgy/shell
+  - file: pidgy/tangle
+  - file: pidgy/loader
+  - file: pidgy/weave
+  - file: pidgy/testing
+  - file: pidgy/kernel
+
+
+- part: pidgy syntax
+  chapters: 
+  - file: pidgy/tests/test_pidgin_syntax.md.ipynb
+
+- part: tangling
+  chapters:
+  - file: pidgy/compat/markdown
+  - file: pidgy/tests/test_tangle
+
+- part: weaving
+  chapters:
+  - file: pidgy/compat/templating.md.ipynb
+  - file: pidgy/tests/test_weave.md.ipynb
+
+- part: testing
+  chapters:
+  - file: pidgy/testing.md
+  - file: pidgy/tests/test_testing.md.ipynb

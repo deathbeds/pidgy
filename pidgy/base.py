@@ -13,19 +13,23 @@ class Trait(traitlets.HasTraits):
 
     def toggle(self, object: bool):
         self.enabled = bool(object if object is None else not self.enabled)
-        
+
+
 class Display(Trait):
     vars = traitlets.Any()
     _display = traitlets.Any()
 
     def update(self, **kwargs):
-        if self._display is None: return self.display(**kwargs)
-        if 'nbval' in sys.modules: return 
+        if self._display is None:
+            return self.display(**kwargs)
+        if "nbval" in sys.modules:
+            return
         self._display.update(self.render(**kwargs))
 
     def display(self, **kwargs):
         object = self.render(**kwargs)
-        if object is None: return
+        if object is None:
+            return
         if self.vars:
             if self._display is None:
                 self._display = IPython.display.display(object, display_id=True)

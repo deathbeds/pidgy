@@ -26,6 +26,7 @@ setup_args = dict(
     entry_points={
         "pytest11": ["pytest-pidgy=pidgy.pytest_config"],
         "console_scripts": ["pidgy=pidgy.__main__:application"],
+    }        
     },
     classifiers=[
         "Development Status :: 4 - Beta",

@@ -1,83 +1,96 @@
-# The `pidgy` literate computing shell
+# the `pidgy` shell
 
-A powerful feature of the `jupyter` ecosystem is a generalized implementation of the [shell] & [kernel] model for interactive computing interfaces like the terminal and notebooks. That is to say that different programming languages can use the same interface, `jupyter` supports [over 100 languages now][kernel languages]. The general ability to support different languages is possible because of configurable interfaces like the `IPython.InteractiveShell` and `ipykernel`.
+    import ipykernel.kernelapp, ipykernel.zmqshell, traitlets, pidgy, types, IPython, jinja2
+    
 
-    import ipykernel.kernelapp, ipykernel.zmqshell, nbconvert, traitlets, pidgy, types, pluggy, IPython, jinja2
+`pidgy` relies on the `jupyter` [shell] & [kernel] to provide an enhanced authoring experience for computational documentations.  the [kernel] has the ability to work with the cpu, memory, and other devices; the [shell] is the application we use to affect changes to the kernel.
+
+the `jupyter` ecosystem has grown include more [over 100 languages now][kernel languages]. Most recently, it has brought new life to compiled languages like [C++](https://github.com/jupyter-xeus/xeus-cling) and [Fortran](https://github.com/lfortran/lfortran/).
+
+A powerful feature of the `jupyter` ecosystem is a generalized implementation of the [shell] & [kernel] model for interactive ctomputing interfaces like the terminal and notebooks. That is to say that different programming languages can use the same interface, `jupyter` supports [over 100 languages now][kernel languages]. The general ability to support different languages is possible because of configurable interfaces like the `IPython.InteractiveShell` and `ipykernel`.
+
+    
     class pidgyShell(ipykernel.zmqshell.ZMQInteractiveShell):
 
-The `pidgy` shell is wrapper around the existing `IPython` shell experience. It explicitly defines [tangle] and [weave] conventions of literate programming for each execution. Once the shell is configured, it can be used as a `jupyter` kernel or `IPython` extension that supports the `pidgy` [Markdown]/[IPython] metalanguage and metasyntax.
+`pidgy` introduces markdown as an application language for literate computing. it encodes the tangle and weave aspects of literate programming directly into the interactive cell execution. with each execution, the input is _tangled_ into valid `IPython` source code then the input is processed as [markdown] output with `jinja2` templates.
 
-## `pidgy` specification
+## tangle markdown to code
+
+        @traitlets.default('input_transformer_manager')
+        def _default_tangle(self): 
+`pidgy` tangles [markdown] to source code on block elements permitting line-for-line transforms to `IPython`. The [tangle](tangle.ipynb) section contains more detail on this heurisitic.
         
+            return pidgy.tangle.pidgyManager()
+
+we can already use existing `IPython` features to transform the abstract syntax tree and apply text processing. `pidgy` includes the abilities to:
+
+* use emojis in code
+
         input_transformers_post = traitlets.List([pidgy.tangle.demojize])
-    
-`pidgy` includes the ability the use emojis as valid python names through the existing `traitlets` configuration system.
+
+* use return statements at the top code level, outside of functions, to display objects.
 
         ast_transformers = traitlets.List([pidgy.tangle.ExtraSyntax()])
 
-Another feature of `IPython` is the ability to intercept [Abstract Syntax Tree]s and change their representation or capture metadata. After these transformations are applied, `IPython` compile the tree into a valid `types.CodeType`.
 
-The weave step happens after execution, the tangle step happens before. Weaving only occurs if the input is computationally verified. It allows different representations of the input to be displayed. `pidgy` will implement templated Markdown displays of the input and formally test the contents of the input.
+## weave input to output
 
-        enable_html_pager = traitlets.Bool(True)
-        definitions = traitlets.List()
-        loaders = traitlets.Dict()
         weave = traitlets.Any()
-        testing = traitlets.Any()
-        @traitlets.default('input_transformer_manager')
-        def _default_tangle(self): return pidgy.tangle.pidgyManager()
-
         @traitlets.default('weave')
-        def _default_weave(self): return pidgy.weave.Weave(parent=self)
+        def _default_weave(self): 
+`pidgy` weaves the input into a rich display provided by `jupyter` display system, it adds the ability to implicitly transclude variables from live compute into a narrative. in traditional literate computing, code and narrative had to be mixed explicitly.
+        
+            return pidgy.weave.Weave(parent=self)
+
+## formal interactive testing
+
+        testing = traitlets.Any()
         @traitlets.default('testing')
-        def _default_testing(self): return pidgy.testing.Testing(parent=self)
+        def _default_testing(self): 
+`pidgy` promotes value by including formal testing it literate programs.
 
-`pidgy` mixes the standard `IPython` `traitlets` configuration system and its own `pluggy` `specification` and `implementation`.
+            testing = pidgy.testing.Testing(parent=self)
+            self.ast_transformers.append(testing.visitor)
+            return testing
 
-## Initializing the `pidgy` shell
+
+## import alternative document formats
+
+        loaders = traitlets.Dict()
+
+        def init_loaders(self):
+`pidgy` augments the python import system to include `pidgy` notebooks and markdown documents along with normal notebooks.
+
+            for x in (pidgy.pidgyLoader, __import__("importnb").Notebook):
+                if x not in self.loaders:
+                    self.loaders[x] = x().__enter__()
+
+## extra shell initialization options
 
         def init_pidgy(self):
-
-Initialize `pidgy` specific behaviors.
-
             if self.weave is None:
                 self.weave = pidgyShell._default_weave(self)
-
-            try:
-                self.weave.register()
-                self.testing.register()
-
-The tangle and weave implementations are discussed in other parts of this document. Here we register each of them as `pluggy` hook implementations.
-
-            except AssertionError:...
-            self.ast_transformers.append(self.testing.visitor)
+            if self.testing is None:
+                self.testing = pidgyShell._default_testing(self)
 
 
-            if pidgy.pidgyLoader not in self.loaders:
+            for x in (self.weave, self.testing):
+                try: x.register()
+                except AssertionError:...
 
-`pidgy` enters a loader context allowing [Markdown] and notebook files to be used permissively as input.
-
-                self.loaders[pidgy.pidgyLoader] = pidgy.pidgyLoader().__enter__()
-
-It also adds a few extra features to the shell.
-
-            self.user_ns.update(pidgy.util.pidgy_builtins())
-
-and allows json syntax as valid python input.
-
-            pidgy.tangle.init_json()
+            pidgyShell.init_loaders(self)
             pidgy.magic.load_ipython_extension(self)
+            __import__('importlib').reload(__import__('doctest'))
 
+        enable_html_pager = traitlets.Bool(True)
+        
         def __init__(self, *args, **kwargs):
-
 Override the initialization of the conventional IPython kernel to include the pidgy opinions.
 
             super(type(self), self).__init__(*args, **kwargs)
             self.init_pidgy()
 
-            # Reload doctest because something weird happens with pdb  when doctest is initialized first.
-            __import__('importlib').reload(__import__('doctest'))
-
+    
 [shell]: https://en.wikipedia.org/wiki/Shell_(computing)
 [kernel]: https://en.wikipedia.org/wiki/Kernel_(operating_system)
 [kernel languages]: https://github.com/jupyter/jupyter/wiki/Jupyter-kernels
