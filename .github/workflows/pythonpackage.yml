@@ -30,10 +30,8 @@ jobs:
           pip install git+https://github.com/deathbeds/importnb
           pip install -r requirements.txt
           pip install -r requirements-test.txt
-          pip install doit
+          pip install doit wheel
           pip install .
-          pip install wheel
-          pidgy kernel install
           
       - name: Test with pytest
         run: |
