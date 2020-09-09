@@ -1,11 +1,8 @@
-# The `pidgy` package and paper
+# `pidgy` hyperactive programmings
 
-`pidgy` is a fun way to interactively program in [Markdown]. It is design
-to tell stories with data and code in your favorite IDE ([jupyter], [nteract], [colab], [vscode]).
- and use them in python modules, scripts, and applications.
-
- It that allows fluid combinations of code and prose with added language features like block markdown variables, emoji variables names, and interactive formal testing. It is designed primarily for Jupyter notebooks and Markdown source files.
-
+`pidgy` is a fun way to interactively program in [Markdown] and [IPython]. It is design
+to tell stories with code, tests, and data in your favorite IDE ([jupyter], [nteract], [colab], [vscode]).
+ It that allows fluid combinations of code and prose with added language features like block markdown variables, emoji variables names, and interactive formal testing. It is designed primarily for Jupyter notebooks and Markdown source files that can be used as python modules, scripts, and applications.
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/deathbeds/pidgy/master?urlpath=lab)
 [![Documentation Status](https://readthedocs.org/projects/pidgy/badge/?version=latest)](https://pidgin-notebook.readthedocs.io/en/latest/?badge=latest)
@@ -16,22 +13,34 @@ to tell stories with data and code in your favorite IDE ([jupyter], [nteract], [
 pip install pidgy    # Install pidgy
 ```
 
-## The pidgy shell and kernel
+## `pidgy` features
 
-`pidgy` can be used as a native `jupyter` kernel in Jupyter, nteract, colab, and vscode. Install the kernel with
+* interleave narrative and code in the same cells
+* test literate notebooks and programs
+* transclude real data into narratives with `jinja2` templates
+* reactive displays that update on rendering
+
+## the pidgy shell/kernel
+
+`pidgy` is installed as `jupyter` kernel that can be used in lab or classic.
+`pidgy` opens authors into a markdown forward programming interface.
+
+* the kernel can be installed manually using the cli.
 
 ```bash
 pidgy kernel install # install the pidgy kernel.
 ```
 
-Or, in your standard Python shell, load the `pidgy` `IPython` extension.
+## authoring `pidgy` documents
+
+in `pidgy`, code is indented. both markdown and python cells accept markdown in `pidgy`. as a result, in `pidgy` markdown cells are consider off and code are considered on. the indented code pattern is valid in standard `IPython` kernels and pidgy.
 
 ## Importing `pidgy` documents
 
-`pidgy` uses the `importnb` machinery to import files into [Python] that are not native `".py"` files.
+`pidgy` extends the python import system to include `".ipynb"` and `".md"` files along with native `".py"` files.
 
-    import pidgy
-    with pidgy.pidgyLoader(): ...
+    with __import__("pidgy").pidgyLoader(): 
+        import README
 
 ## The `pidgy` CLI
 
