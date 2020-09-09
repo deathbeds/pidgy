@@ -7,8 +7,8 @@ isort
 click
 stringcase
 IPython
-ipykernel
-myst-nb
+ipykernel 
+sphinx>=3
 sphinxcontrib-svg2pdfconverter
 sphinx-autoapi
 sphinx_togglebutton
@@ -18,3 +18,4 @@ sphinxcontrib-bibtex
 sphinx_book_theme>=0.0.36
 sphinx-thebe>=0.0.6
 sphinx-panels~=0.4.1
+jupyter-book
