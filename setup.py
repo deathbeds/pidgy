@@ -31,10 +31,17 @@ def install_jupyter_hook():
         KernelSpecManager().install_kernel_spec(
             "./pidgy/kernelspec", "pidgy", user=user
         )
+        return
     except:
+        pass
+
+    try:
         KernelSpecManager().install_kernel_spec(
             "./pidgy/kernelspec", "pidgy", user=not user
         )
+        return
+    except:
+        pass
 
 
 name = "pidgy"
