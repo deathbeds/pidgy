@@ -1,6 +1,6 @@
 from pathlib import Path
 import setuptools, datetime, sys, os
-from setuptools.command.build_ext import build_ext
+from setuptools.command.install import install
 
 
 try:
@@ -11,7 +11,7 @@ except ImportError:
     HAVE_JUPYTER = False
 
 
-class kernelspec(build_ext):
+class kernelspec(install):
     def run(self, *args, **kwargs):
         install_jupyter_hook()
         build_ext.run(self, *args, **kwargs)
@@ -83,7 +83,7 @@ setup_args = dict(
         "Programming Language :: Python :: 3.8",
         "Framework :: Pytest",
     ],
-    cmdclass={"build_ext": kernelspec},
+    cmdclass={"install": kernelspec},
     zip_safe=False,
 )
 
