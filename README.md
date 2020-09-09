@@ -1,6 +1,6 @@
 # `pidgy` hyperactive programmings
 
-`pidgy` is a fun way to interactively program in [Markdown] and [IPython]. It is design
+`pidgy` is a fun way to interactively program in [Markdown] and [`IPython`]. It is design
 to tell stories with code, tests, and data in your favorite IDE ([jupyter], [nteract], [colab], [vscode]).
  It that allows fluid combinations of code and prose with added language features like block markdown variables, emoji variables names, and interactive formal testing. It is designed primarily for Jupyter notebooks and Markdown source files that can be used as python modules, scripts, and applications.
 
@@ -37,7 +37,7 @@ in `pidgy`, code is indented. both markdown and python cells accept markdown in 
 
 ## Importing `pidgy` documents
 
-`pidgy` extends the python import system to include `".ipynb"` and `".md"` files along with native `".py"` files.
+after computing your `pidgy` programs you may reuse them as modules. `pidgy` extends the python import system to include `".ipynb"` and `".md"` files along with native `".py"` files.
 
     with __import__("pidgy").pidgyLoader(): 
         import README
@@ -99,3 +99,4 @@ the `"conf.py"` for sphinx in generated from the `jupyter_book` cli and built wi
 [`nbval`]: https://github.com/computationalmodelling/nbval/
 [`sphinx`]: https://www.sphinx-doc.org/en/master/
 [`jupyter_book`]: https://github.com/executablebooks/jupyter-book
+[`IPython`]: https://ipython.org/
