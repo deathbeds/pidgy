@@ -35,16 +35,16 @@ pidgy kernel install # install the pidgy kernel.
 
 in `pidgy`, code is indented. both markdown and python cells accept markdown in `pidgy`. as a result, in `pidgy` markdown cells are consider off and code are considered on. the indented code pattern is valid in standard `IPython` kernels and pidgy.
 
-## Importing `pidgy` documents
+## importing `pidgy` documents
 
 after computing your `pidgy` programs you may reuse them as modules. `pidgy` extends the python import system to include `".ipynb"` and `".md"` files along with native `".py"` files.
 
     with __import__("pidgy").pidgyLoader(): 
         import README
 
-## The `pidgy` CLI
+## the `pidgy` CLI
 
-The `pidgy` cli helps to tangle and weave entire literate pidgy programs.
+the `pidgy` cli helps to tangle and weave entire literate pidgy programs.
 
 ```text
 Usage: pidgy [OPTIONS] COMMAND [ARGS]...
