@@ -69,33 +69,24 @@ Commands:
 
 ### tasks
 
-    def task_sphinx():
-build the pidgy docs with sphinx and is configured by conf.py
-    
-        return dict(actions="sphinx-build . docs".splitlines())
-    
+
     def task_book():
-build the pidgy docs with jupyter book. 
-    
+`pidgy` builds document with the `jupyter_book` project. 
+
         return dict(actions="jupyter-book build .".splitlines())
-    
-    def task_docs_config():
-build the pidgy docs with jupyter book. 
-    
-        return dict(actions="jupyter-book config sphinx . > conf.py".splitlines())
+
+    def task_sphinx():
+
+the `"conf.py"` for sphinx in generated from the `jupyter_book` cli.
+
+        return dict(actions="sphinx-build . docs".splitlines())
 
     def task_test():
-test the pidgy package.
+`pidgy` tests notebooks using plugins from `importnb` and [`nbval`]
     
         return dict(actions=[
             doit.tools.Interactive("pytest --nbval --sanitize-with sanitize.cfg -p no:warnings pidgy/tests/test_* docs/examples")
-            ])
-
-
-    def task_build():
-build the pidgy package
-    
-        return dict(actions="".splitlines())        
+        ])
 
 
 [markdown]: https://en.wikipedia.org/wiki/Markdown
@@ -104,3 +95,5 @@ build the pidgy package
 [nteract]: https://nteract.io
 [colab]: #
 [vscode]: #
+[`importnb`]: https://github.com/deathbeds/importnb
+[`nbval`]: https://github.com/computationalmodelling/nbval/
