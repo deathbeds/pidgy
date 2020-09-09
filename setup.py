@@ -14,7 +14,7 @@ except ImportError:
 class kernelspec(install):
     def run(self, *args, **kwargs):
         install_jupyter_hook()
-        build_ext.run(self, *args, **kwargs)
+        install.run(self, *args, **kwargs)
 
 
 def install_jupyter_hook():
