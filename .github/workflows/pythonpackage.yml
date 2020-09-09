@@ -26,12 +26,11 @@ jobs:
       #             ${{ runner.os }}-
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip setuptools
+          python -m pip install --upgrade pip setuptools doit wheel
           pip install git+https://github.com/deathbeds/importnb
           pip install -r requirements.txt
           pip install -r requirements-test.txt
-          pip install doit wheel
-          pip install .
+          pip install . -v
           
       - name: Test with pytest
         run: |
