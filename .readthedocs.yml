@@ -1,5 +1,5 @@
 python:
   version: 3
   install:
-    - requirements: doc/requirements-rtd.txt
+    - requirements: docs/requirements-rtd.txt
   setup_py_install: true
