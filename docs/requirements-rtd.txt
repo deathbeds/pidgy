@@ -8,7 +8,7 @@ click
 stringcase
 IPython
 ipykernel 
-nbsphinx
+myst-nb
 sphinxcontrib-svg2pdfconverter
 sphinx-autoapi
 sphinx_togglebutton
