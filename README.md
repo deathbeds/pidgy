@@ -77,7 +77,7 @@ Commands:
 
     def task_sphinx():
 
-the `"conf.py"` for sphinx in generated from the `jupyter_book` cli.
+the `"conf.py"` for sphinx in generated from the `jupyter_book` cli and built with [`sphinx`].
 
         return dict(actions="sphinx-build . docs".splitlines())
 
@@ -93,7 +93,9 @@ the `"conf.py"` for sphinx in generated from the `jupyter_book` cli.
 [python]: https://python.org
 [jupyter]: https://jupyter.org
 [nteract]: https://nteract.io
-[colab]: #
-[vscode]: #
+[colab]: https://colab.research.google.com/
+[vscode]: https://code.visualstudio.com/
 [`importnb`]: https://github.com/deathbeds/importnb
 [`nbval`]: https://github.com/computationalmodelling/nbval/
+[`sphinx`]: https://www.sphinx-doc.org/en/master/
+[`jupyter_book`]: https://github.com/executablebooks/jupyter-book
