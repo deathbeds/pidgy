@@ -7,8 +7,8 @@ isort
 click
 stringcase
 IPython
-ipykernel 
-nbsphinx
+ipykernel
+myst-nb
 sphinxcontrib-svg2pdfconverter
 sphinx-autoapi
 sphinx_togglebutton
