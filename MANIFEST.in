@@ -1,2 +1,2 @@
-include LICENSE readme.md requirements.txt
+include LICENSE README.md requirements.txt
 recursive-include pidgy *.ipynb *.json *.png *.md
