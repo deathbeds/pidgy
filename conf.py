@@ -17,7 +17,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx_panels",
 ]
-globaltoc_path = "pidgy/_toc.yml"
+globaltoc_path = "_toc.yml"
 html_add_permalinks = "¶"
 html_baseurl = ""
 html_favicon = ""
