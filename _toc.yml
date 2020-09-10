@@ -1,12 +1,7 @@
-- file: README
-
-- part: literate programming and computing
-  chapters:
-  - file: docs/discussion.md.ipynb
-  - file: docs/examples/working-within-dataframes.md.ipynb
-  
+- file: README.md
 - part: literate shell
   chapters:
+  - file: docs/discussion.md.ipynb  
   - file: pidgy/shell
   - file: pidgy/tangle
   - file: pidgy/loader
@@ -17,6 +12,7 @@
 
 - part: pidgy syntax
   chapters: 
+  - file: docs/examples/working-within-dataframes.md.ipynb
   - file: pidgy/tests/test_pidgin_syntax.md.ipynb
 
 - part: tangling

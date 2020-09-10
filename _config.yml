@@ -6,4 +6,4 @@ description: >- # this means to ignore newlines until "baseurl:"
   Hyperactive literate programming and computing
 
 execute:
-  execute_notebooks:  off
+  execute_notebooks:  "off"
