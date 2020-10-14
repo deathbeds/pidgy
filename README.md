@@ -1,6 +1,8 @@
-# The `pidgy` package and paper
+# `pidgy` hyperactive programmings
 
-`pidgy` is a fun way to program in [Markdown] in your favorite IDE (jupyter, nteract, colab, vscode) and use them in python modules, scripts, and applications.
+`pidgy` is a fun way to interactively program in [Markdown] and [`IPython`]. It is design
+to tell stories with code, tests, and data in your favorite IDE ([jupyter], [nteract], [colab], [vscode]).
+ It that allows fluid combinations of code and prose with added language features like block markdown variables, emoji variables names, and interactive formal testing. It is designed primarily for Jupyter notebooks and Markdown source files that can be used as python modules, scripts, and applications.
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/deathbeds/pidgy/master?urlpath=lab)
 [![Documentation Status](https://readthedocs.org/projects/pidgy/badge/?version=latest)](https://pidgin-notebook.readthedocs.io/en/latest/?badge=latest)
@@ -11,28 +13,38 @@
 pip install pidgy    # Install pidgy
 ```
 
-`pidgy` provides an interactive literate programming experience that allows fluid combinations of code and prose. It has some added language features like block markdown variables, emoji variables names, and interactive formal testing. It is designed primarily for Jupyter notebooks and Markdown source files.
+## `pidgy` features
 
-## The pidgy shell and kernel
+* interleave narrative and code in the same cells
+* test literate notebooks and programs
+* transclude real data into narratives with `jinja2` templates
+* reactive displays that update on rendering
 
-`pidgy` can be used as a native `jupyter` kernel in Jupyter, nteract, colab, and vscode. Install the kernel with
+## the pidgy shell/kernel
+
+`pidgy` is installed as `jupyter` kernel that can be used in lab or classic.
+`pidgy` opens authors into a markdown forward programming interface.
+
+* the kernel can be installed manually using the cli.
 
 ```bash
 pidgy kernel install # install the pidgy kernel.
 ```
 
-Or, in your standard Python shell, load the `pidgy` `IPython` extension.
+## authoring `pidgy` documents
 
-## Importing `pidgy` documents
+in `pidgy`, code is indented. both markdown and python cells accept markdown in `pidgy`. as a result, in `pidgy` markdown cells are consider off and code are considered on. the indented code pattern is valid in standard `IPython` kernels and pidgy.
 
-`pidgy` uses the `importnb` machinery to import files into [Python] that are not native `".py"` files.
+## importing `pidgy` documents
 
-    import pidgy
-    with pidgy.pidgyLoader(): ...
+after computing your `pidgy` programs you may reuse them as modules. `pidgy` extends the python import system to include `".ipynb"` and `".md"` files along with native `".py"` files.
 
-## The `pidgy` CLI
+    with __import__("pidgy").pidgyLoader(): 
+        import README
 
-The `pidgy` cli helps to tangle and weave entire literate pidgy programs.
+## the `pidgy` CLI
+
+the `pidgy` cli helps to tangle and weave entire literate pidgy programs.
 
 ```text
 Usage: pidgy [OPTIONS] COMMAND [ARGS]...
@@ -48,3 +60,43 @@ Commands:
   test      Formally test markdown documents, notebooks, and python files.
   to
 ```
+
+## developer
+
+`pidgy` uses `doit` to make tests and documentation work.
+
+    import doit.tools
+
+### tasks
+
+
+    def task_book():
+`pidgy` builds document with the `jupyter_book` project. 
+
+        return dict(actions="jupyter-book build .".splitlines())
+
+    def task_sphinx():
+
+the `"conf.py"` for sphinx in generated from the `jupyter_book` cli and built with [`sphinx`].
+
+        return dict(actions="sphinx-build . docs".splitlines())
+
+    def task_test():
+`pidgy` tests notebooks using plugins from `importnb` and [`nbval`]
+    
+        return dict(actions=[
+            doit.tools.Interactive("pytest --nbval --sanitize-with sanitize.cfg -p no:warnings pidgy/tests/test_* docs/examples")
+        ])
+
+
+[markdown]: https://en.wikipedia.org/wiki/Markdown
+[python]: https://python.org
+[jupyter]: https://jupyter.org
+[nteract]: https://nteract.io
+[colab]: https://colab.research.google.com/
+[vscode]: https://code.visualstudio.com/
+[`importnb`]: https://github.com/deathbeds/importnb
+[`nbval`]: https://github.com/computationalmodelling/nbval/
+[`sphinx`]: https://www.sphinx-doc.org/en/master/
+[`jupyter_book`]: https://github.com/executablebooks/jupyter-book
+[`IPython`]: https://ipython.org/

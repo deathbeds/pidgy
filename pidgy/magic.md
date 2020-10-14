@@ -4,7 +4,7 @@
     @IPython.core.magic_arguments.argument('--ipython', action='store_false', help='Apply IPython transforms.')
     @IPython.core.magic_arguments.argument('--tokens', action='store_true', help='Show tokens.')
     def tangle(line, cell):
-        import pidgy.autocli, IPython
+        import IPython
         args = IPython.core.magic_arguments.parse_argstring(tangle, line)
         if cell:
             if args.tokens:

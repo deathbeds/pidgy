@@ -1,5 +1,48 @@
 from pathlib import Path
-import setuptools, datetime
+import setuptools, datetime, sys, os
+from setuptools.command.install import install
+
+
+try:
+    from jupyter_client.kernelspec import KernelSpecManager
+
+    HAVE_JUPYTER = True
+except ImportError:
+    HAVE_JUPYTER = False
+
+
+class kernelspec(install):
+    def run(self, *args, **kwargs):
+        install_jupyter_hook()
+        install.run(self, *args, **kwargs)
+
+
+def install_jupyter_hook():
+    """Make pidgy available as a Jupyter kernel."""
+
+    if not HAVE_JUPYTER:
+        return print(
+            "Could not install Jupyter kernel spec, please install " "Jupyter/IPython."
+        )
+
+    user = "--user" in sys.argv
+    print("Installing Jupyter kernel spec:")
+    try:
+        KernelSpecManager().install_kernel_spec(
+            "./pidgy/kernelspec", "pidgy", user=user
+        )
+        return
+    except:
+        pass
+
+    try:
+        KernelSpecManager().install_kernel_spec(
+            "./pidgy/kernelspec", "pidgy", user=not user
+        )
+        return
+    except:
+        pass
+
 
 name = "pidgy"
 
@@ -40,6 +83,7 @@ setup_args = dict(
         "Programming Language :: Python :: 3.8",
         "Framework :: Pytest",
     ],
+    cmdclass={"install": kernelspec},
     zip_safe=False,
 )
 
