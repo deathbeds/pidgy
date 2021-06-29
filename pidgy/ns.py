@@ -9,7 +9,7 @@ def pre_execute():
 
     ns = get_ipython().user_ns
     ns.update({k: v for k, v in sys.modules.items() if "." not in k and k not in ns})
-    ns.update({k: v for k, v in ns.get("__annotations__", {}) if k not in ns})
+    ns.update({k: v for k, v in ns.get("__annotations__", {}).items() if k not in ns})
 
 
 def load_ipython_extension(shell):

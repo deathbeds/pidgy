@@ -12,6 +12,11 @@ from . import get_ipython
 
 HY_MATCH = re.compile(r"(^\s*\().*(\)\s*$)", re.MULTILINE)
 LIT_HY_MATCH = re.compile(r"(^\s{4,}\().*(\s{4,}\)\s*$)", re.MULTILINE)
+LIT_HY_MATCH = re.compile(r"^\s*\(.*\)\s*$", re.MULTILINE)
+
+def is_lisp(s):
+    s = s.strip()
+    return s.startswith("(") and s.endswith(")")
 
 
 class HyCompiler(IPython.core.compilerop.CachingCompiler, traitlets.HasTraits):
@@ -29,7 +34,6 @@ class HyCompiler(IPython.core.compilerop.CachingCompiler, traitlets.HasTraits):
 
     def ast_parse(self, source, filename="<unknown>", symbol="exec"):
         import hy
-
         return hy.compiler.hy_compile(
             hy.lex.hy_parse(source), get_ipython().user_module
         )
@@ -37,7 +41,7 @@ class HyCompiler(IPython.core.compilerop.CachingCompiler, traitlets.HasTraits):
 
 def pre_run_cell(info):
     s = info.raw_cell.strip()
-    if HY_MATCH.match(s):
+    if is_lisp(s):
         get_ipython().compiler_class = HyCompiler
         get_ipython().compile = HyCompiler()
 

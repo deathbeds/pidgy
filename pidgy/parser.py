@@ -72,15 +72,14 @@ class Markdown(markdown_it.MarkdownIt):
     def runner(self, name, src, env=None):
         """a partial method used by both the parse and render methods"""
         # we have to initialize a special environment for this translation
-        from .lisp import LIT_HY_MATCH
+        from .lisp import is_lisp
 
         # initialize the environment
         if env is None:
             env = {}
         self.init_env(src, env)
-
         # dispatch different renderes
-        if MAGIC.match(src) or LIT_HY_MATCH.match(src):
+        if MAGIC.match(src) or is_lisp(src):
             # when magics or lisp like syntaxes are encountered
             # use the null render
             self.renderer_cls = tangle.Null
