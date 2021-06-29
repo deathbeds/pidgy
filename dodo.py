@@ -1,2 +1,4 @@
-with __import__('pidgy').pidgyLoader():
-    from README import *
+import pidgy
+
+with pidgy.loader.Pidgy():
+    from tasks import *
