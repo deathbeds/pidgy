@@ -1,7 +1,11 @@
+import datetime
+import os
+import sys
 from pathlib import Path
-import setuptools, datetime, sys, os
-from setuptools.command.install import install
 
+import setuptools
+from setuptools.command.develop import develop
+from setuptools.command.install import install
 
 try:
     from jupyter_client.kernelspec import KernelSpecManager
@@ -11,10 +15,18 @@ except ImportError:
     HAVE_JUPYTER = False
 
 
-class kernelspec(install):
+class kernelspec:
     def run(self, *args, **kwargs):
         install_jupyter_hook()
         install.run(self, *args, **kwargs)
+
+
+class install_hook(install, kernelspec):
+    pass
+
+
+class develop_hook(develop, kernelspec):
+    pass
 
 
 def install_jupyter_hook():
@@ -44,32 +56,9 @@ def install_jupyter_hook():
         pass
 
 
-name = "pidgy"
-
-__version__ = None
-
-here = Path(__file__).parent
-
 setup_args = dict(
-    name=name,
+    setup_cfg=True,
     version=datetime.datetime.now().strftime("%Y.%m.%d"),
-    author="deathbeds",
-    author_email="tony.fast@gmail.com",
-    description="Literate computing for literate programming",
-    long_description=((here / "README.md").read_text() + "\n\n"),
-    long_description_content_type="text/markdown",
-    url="https://github.com/deathbeds/pidgy",
-    python_requires=">=3.6",
-    license="BSD-3-Clause",
-    setup_requires=["pytest-runner"],
-    tests_require=["pytest", "hypothesis", "nbval"],
-    install_requires=Path("requirements.txt").read_text().strip().splitlines(),
-    include_package_data=True,
-    packages=setuptools.find_packages(),
-    entry_points={
-        "pytest11": ["pytest-pidgy=pidgy.pytest_config"],
-        "console_scripts": ["pidgy=pidgy.__main__:application"],
-    },
     classifiers=[
         "Development Status :: 4 - Beta",
         "Framework :: IPython",
@@ -83,7 +72,7 @@ setup_args = dict(
         "Programming Language :: Python :: 3.8",
         "Framework :: Pytest",
     ],
-    cmdclass={"install": kernelspec},
+    cmdclass={"install": install_hook, "develop": develop_hook},
     zip_safe=False,
 )
 
