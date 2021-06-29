@@ -1,2 +1,0 @@
-The compatability module exists to defer the discussion of specific features and modifications.
-These modules dig deeper into specific implementations of `pidgy` features using specific [Python] tools.

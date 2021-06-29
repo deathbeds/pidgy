@@ -1,57 +1,50 @@
-# `pidgy` command line interface
+# tangling `pidgy`
 
-> [**Eat Me, Drink Me, Read Me.**][readme history]
+`tyrm` tangles markdown code to source by applying heuristics to block tokens in the CommonMark spec* that convert markdown to:
 
-    import IPython, pidgy, pathlib, typing, click, functools, contextlib, sys, types, pidgy.compat.autoclick
+1. python scripts
 
-    with pidgy.pidgyLoader():
-        try: from . import kernel, runpidgy, util, export, weave
-        except: import kernel, runpidgy, util, export, weave
+    the current program only applies to python. different languages require different heuristics.
 
-<!--excerpt-->
+2. notebook formats
+3. [todo] other code formats
 
-    def run(ctx, ref: str):
+### markdown rules
 
-`pidgy` `run` executes `pidgy` documents as programs.
+in processing markdown code to execute our main goal is to separate _code_ and _non-code_, or things cause execution and things that don't.
 
-        import pidgy, click
-        click.echo(F"Running {ref}.")
-        with pidgy.util.sys_path(), pidgy.util.argv(*([ref] + ctx.args)):
-            runpidgy.run(ref)
+#### front matter _code_
 
-    def template(ctx, ref: str, no_show:bool=False):
+front matter is the only convention we uphold outside of the CommonMark spec. `tyrm` uses front matter to define document level metadata. a block of `yaml` or `toml` is expected; `yaml` is delimited by `---` and `toml` is delimited by `+++` as per the hugo convention.
 
-`pidgy` `template` executes `pidgy` documents as programs and publishes the templated results.
+objects in the front matter are available in your namespace for quick reuse and defining key variables.
 
-        import pidgy, click
-        with pidgy.util.sys_path(), pidgy.util.argv(*([ref] + ctx.args)):
-            data = pidgy.runpidgy.render(ref)
-            if not no_show: click.echo(pidgy.util.ansify(data))
+#### themactic breaks _non-code_
 
-    def to(to:{'markdown', 'python'}, files: typing.List[pathlib.Path], write:bool=False):
+when a markdown document is saved as notebook, the themactic breaks are used to identify individual cells.  `---` begin code blocks and `~~~` begin markdown cells. this rule does not apply to thematic breaks nested in blocks like list items.
 
-Convert pidgy documents to other formats.
+#### indented _code_
 
-        pidgy.export.convert(*files, to=to, write=write)
+indented code is executed by python, and hopefully other languages in the future. in between themactic breaks.
 
-<!---->
+##### using markdown objects in _code_
 
-    def test(ctx, files: list):
+###### markdown docstrings _code/non-code_
 
-Formally test markdown documents, notebooks, and python files.
+all _non-code_ objects are wrapped as block strings
 
-         import pytest
-         pytest.main(ctx.args+['--doctest-modules', '--disable-pytest-warnings']+list(files))
+###### line continuations acroos indented _code_
 
-<!---->
+#### code fences 
 
-    application = pidgy.compat.autoclick.autoclick(
-        run, test, to, template,
-        pidgy.compat.autoclick.autoclick(
-            pidgy.kernel.install, pidgy.kernel.uninstall, pidgy.kernel.start, group=click.Group("kernel")
-        ),
-        context_settings=dict(allow_extra_args=True, ignore_unknown_options=True),
-    )
+popular literate programming tools in markdown, like rmarkdown or pyweave, use the language string to apply directives to executed the enclosed. in `tyrm`, we take no opinions about the language string of the code fence. in `tyrm`, code fences are treated a _non-code_ objects by default. instead we rely on indented code blocks to delineate _code_ and _non-code_ objects; this approach inspired by coffeescript.
 
-[art of the readme]: https://github.com/noffle/art-of-readme
-[readme history]: https://medium.com/@NSomar/readme-md-history-and-components-a365aff07f10
+#### doctests
+
+i told a non-truth earlier, doctests are another convention we add to markdown. these blocks are verified after each execution.
+
+##### the `__test__` variable
+
+#### `jinja2` templating
+
+`tyrm` uses `jinja2` templates to allow authors insert variables defined by code that has been executed.    
