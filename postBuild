@@ -1,3 +1,2 @@
-pip install -rrequirements-test.txt
 python setup.py develop
 python -m pidgy kernel install
