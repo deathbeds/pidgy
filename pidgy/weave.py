@@ -34,13 +34,12 @@ def is_first_line_blank(s):
     return not bool(io.StringIO(s).readline().strip())
 
 
-def get_environment(async_=True):
+def get_environment(async_=False):
     """retrieve singleton jinja2 environment."""
     # we maintain sync and async environments separately
     global ENVS
     if async_ in ENVS:
         return ENVS[async_]
-    import warnings
 
     ENVS[async_] = ENVIRONMENT = jinja2.Environment(
         enable_async=async_,
@@ -49,21 +48,9 @@ def get_environment(async_=True):
         ),
         cache_size=0,
         undefined=Undefined,
+        finalize=Finalize(),
     )
-    if async_:
-        # in python we receive a runtime warning because the loop is arleady in use.
-        # this block brings in nest_asyncio to circumvent the challenges
-        warnings.simplefilter("ignore", category=RuntimeWarning)
 
-        try:
-            ENVIRONMENT.from_string("").render()
-        except RuntimeError:
-            import nest_asyncio
-
-            nest_asyncio.apply()
-
-    # customize how the finalize method works to access the IPython display formatter
-    ENVIRONMENT.finalize = Finalize()
     return ENVIRONMENT
 
 
@@ -78,10 +65,15 @@ class Env(traitlets.HasTraits):
         return get_environment()
 
     def ns(self):
-        return collections.ChainMap(*(vars(__import__(x)) for x in self.modules))
+        return collections.ChainMap(
+            *(vars(__import__(x)) for x in self.modules),
+            get_ipython().user_ns.get("__annotations__", {}),
+        )
 
 
 class Value(traitlets.HasTraits):
+    """a non widget widget that has an observable value"""
+
     value = traitlets.Any()
 
     @traitlets.observe("value")
@@ -127,33 +119,26 @@ class Template(Env, Value):
             else:
                 self.display_handle.update(self.get_display())
 
-    async def aupdate(self):
-        if self.display_handle and self.vars:
-            self.display_handle.update(await self.aget_display())
-
     def render(self):
         self.value = self.template.render(**self.ns())
         return self.value
 
-    async def arender(self):
-        self.value = await self.template.render_async(**self.ns())
-        return self.value
-
     def get_display(self):
-        object = self.render() if self.vars else self.template
-        if object.startswith(("http://", "https://")):
-            return IPython.display.IFrame(object, self.iframe_width, self.iframe_height)
-        return IPython.display.Markdown(object)
+        try:
+            object = self.render()
+        except RuntimeError:
+            from nest_asyncio import apply
 
-    async def aget_display(self):
-        object = (await self.arender()) if self.vars else self.template
+            apply()
+            return self.get_display()
         if object.startswith(("http://", "https://")):
             return IPython.display.IFrame(object, self.iframe_width, self.iframe_height)
         return IPython.display.Markdown(object)
 
     def _ipython_display_(self):
+        import IPython
+
         if self.display_handle is None:
-            import IPython
 
             self.display_handle = IPython.display.DisplayHandle()
 
@@ -180,32 +165,18 @@ class IDisplays(Env):
     def display(self, object):
         import jinja2.meta
 
-        id = get_ipython().id
         vars = jinja2.meta.find_undeclared_variables(self.environment.parse(object))
 
         import emoji
 
         object = emoji.emojize(object, use_aliases=True)
 
-        if vars:
-            self.loader().mapping[id] = object
-
-        if id is not None and id in self.displays:
-            self.displays[id].vars = vars
-            self.displays[id].template = (
-                vars and self.environment.get_template(id) or object
-            )
-        else:
-            self.displays[id] = Template(
-                template=vars and self.environment.get_template(id) or object,
-                vars=vars,
-                id=id,
-            )
-            for k, v in self.get_state(*vars).items():
-                if is_widget(v):
-                    v.observe(functools.partial(observe, self, id), "value")
-
-        IPython.display.display(self.displays[id])
+        template = Template(
+            template=self.environment.from_string(object),
+            vars=vars,
+            id=id,
+        )
+        IPython.display.display(template)
 
     def vars(self):
         return set(
@@ -275,69 +246,22 @@ class Finalize:
         return self.normalize(key, data[key], metadata)
 
 
-def pre_run_cell(result):
-    get_ipython().displays_manager.displays = {
-        k: v
-        for k, v in get_ipython().displays_manager.displays.items()
-        if k in get_ipython().cell_ids
-    }
-    get_ipython().displays_manager.tests = {
-        k: v
-        for k, v in get_ipython().displays_manager.tests.items()
-        if k in get_ipython().cell_ids
-    }
-
-    get_ipython().displays_manager.state = get_ipython().displays_manager.get_state()
-
-
 def post_run_cell(result):
-    import io
-
     if not (result.error_before_exec or result.error_in_exec):
         self = get_ipython().displays_manager
 
         if not is_first_line_blank(result.info.raw_cell):
             self.display(result.info.raw_cell)
 
-        new = self.get_state()
-        mark = set()
-        new_widgets = set()
-        for k, v in get_ipython().displays_manager.state.items():
-            if k not in new:
-                continue
-            if new[k] is v:
-                continue
-            elif is_widget(new[k]):
-                if not was_displayed(new[k]):
-                    IPython.display.display(new[k])
-                    assert was_displayed(new[k])
-                    new_widgets.add(k)
-                    mark.add(k)
-                elif new[k].value == v.value:
-                    mark.add(k)
-            else:
-                mark.add(k)
-
-        for id, display in get_ipython().displays_manager.displays.items():
-            for k in display.vars.intersection(new_widgets):
-                new[k].observe(functools.partial(observe, self, id), "value")
-
-            if display.vars.intersection(mark):
-                import asyncio
-
-                asyncio.ensure_future(display.aupdate())
-
 
 def load_ipython_extension(shell):
     shell.add_traits(displays_manager=traitlets.Any())
     shell.displays_manager = IDisplays()
-    shell.events.register(pre_run_cell.__name__, pre_run_cell)
     shell.events.register(post_run_cell.__name__, post_run_cell)
 
 
 def unload_ipython_extension(shell):
 
-    shell.events.unregister(pre_run_cell.__name__, pre_run_cell)
     shell.events.unregister(post_run_cell.__name__, post_run_cell)
 
 

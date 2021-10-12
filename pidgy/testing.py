@@ -51,7 +51,8 @@ def get_test(object):
 
 @get_test.register
 def get_test_ast(object: ast.AST):
-    return get_test(get_ipython().user_ns[object.name])
+    if object.name in get_ipython().user_ns:
+        return get_test(get_ipython().user_ns[object.name])
 
 
 @get_test.register
@@ -99,17 +100,18 @@ def get_test_objects(*x):
 
 
 def get_formatted_results(result):
+    import emoji
+
     body = io.StringIO()
-    if result.testsRun:
-        if result.errors:
-            body.writelines("\n".join(msg for text, msg in result.errors))
+    if result is not None:
+        if result.testsRun:
+            if result.errors:
+                body.writelines("\n".join(msg for text, msg in result.errors))
 
-        if result.failures:
-            body.writelines("\n".join(msg for text, msg in result.failures))
+            if result.failures:
+                body.writelines("\n".join(msg for text, msg in result.failures))
 
-    body = body.getvalue()
-    if body:
-        import emoji
+        body = body.getvalue()
 
         return f"""```pytb\n{emoji.emojize(body, use_aliases=True)}\n```"""
     return "✔"
@@ -153,10 +155,11 @@ def collect(*object):
 
 
 def run(suite):
-    with ipython_compiler(get_ipython()):
-        result = unittest.TestResult()
-        suite.run(result)
-    return result
+    if suite:
+        with ipython_compiler(get_ipython()):
+            result = unittest.TestResult()
+            suite.run(result)
+        return result
 
 
 def get_markdown_test_results(objects):

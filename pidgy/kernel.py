@@ -17,12 +17,15 @@ class Kernel(ipykernel.ipkernel.IPythonKernel):
 
     def do_inspect(self, code, cursor_pos, detail_level=0):
         from . import weave
+
         return super().do_inspect(code, cursor_pos, detail_level)
         if code[:cursor_pos].rstrip()[-3:] == "!!!":
             if code[:cursor_pos].rstrip()[-6:] == "!!!" * 2:
                 self.shell.run_cell(code[:cursor_pos], silent=True)
-                
-            return self.markdown_result(self.shell.displays_manager.get_display(code[:cursor_pos]).data)
+
+            return self.markdown_result(
+                self.shell.displays_manager.get_display(code[:cursor_pos]).data
+            )
         result = super().do_inspect(code, cursor_pos, detail_level)
         if not result["found"]:
             return self.markdown_result(code)

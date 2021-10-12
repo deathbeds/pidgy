@@ -4,17 +4,11 @@ tangle is the step in literate programming where the document language is
 translated to the programming language. in this module, we have a null transformer
 and a `pidgy`'s custom heuristics for translating markdown to python.
 """
-import ast
-import functools
 import io
 import itertools
-import re
 import textwrap
 
 import markdown_it
-import mdit_py_plugins
-
-from pidgy.lisp import HY_MATCH
 
 
 def get_num_indent(str):
@@ -110,6 +104,7 @@ class Python(markdown_it.renderer.RendererProtocol):
         return textwrap.indent(unindented, " " * env.get("reference_indent", 0))
 
     def compute_indent(self, env):
+        """compute the current indent based on the enclosing blocks"""
         if env["ends_with_quotes"]:
             # explicit quotes require no adjustements
             indent = env["last_indent"]
@@ -125,7 +120,7 @@ class Python(markdown_it.renderer.RendererProtocol):
         return indent
 
     def fence(self, token, options, env):
-        """render a code fence, if and of if there is info."""
+        """render a code fence, iff there is NO info."""
         if not token.info:
             env["in_fence"] = True
             try:
@@ -199,16 +194,14 @@ class Python(markdown_it.renderer.RendererProtocol):
         # buffer to string
         code = code.getvalue()
 
-
         # combine the front_matter block (it can only be nonempty at most one time), noncode and code into a python block
         noncode = self.flush(env)
 
         self.push_env(code, env)
-        
+
         env["last_indent"] = last_indent
         # update the environment state
-        
-        
+
         return noncode + code
 
     def push_env(self, code, env):

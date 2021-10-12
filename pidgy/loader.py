@@ -6,6 +6,8 @@ from . import get_ipython, parser, weave
 
 
 class Pidgy(importnb.Notebook):
+    """an importnb extension for pidgy documents"""
+
     extensions = ".py.md", ".md", ".md.ipynb"
 
     def get_data(self, path):

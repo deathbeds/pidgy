@@ -6,11 +6,10 @@ import pprint
 
 from . import get_ipython, parser, weave
 
-LOADED = False
-
 
 def weave(line, cell=None):
     import IPython
+
     return IPython.display.display(IPython.display.Markdown(cell or ""))
 
 
@@ -19,12 +18,12 @@ def tangle(line, cell=None):
 
 
 def pidgy(line, cell=None):
-    from . import LOADED, load_ipython_extension, unload_ipython_extension
+    from . import get_ipython, load_ipython_extension, unload_ipython_extension
 
     load_ipython_extension(get_ipython())
     try:
 
-        result = get_ipython().run_cell(cell)
+        get_ipython().run_cell(cell)
 
     finally:
 
@@ -38,8 +37,6 @@ def parse(line, cell=None):
 
 
 def load_ipython_extension(shell):
-    from . import kernel
-
     shell.register_magic_function(tangle, "cell")
     shell.register_magic_function(parse, "cell")
     shell.register_magic_function(weave, "cell")
@@ -48,4 +45,4 @@ def load_ipython_extension(shell):
 
 
 def unload_ipython_extension(shell):
-    None
+    pass

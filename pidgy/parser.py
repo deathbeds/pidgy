@@ -71,23 +71,15 @@ class Markdown(markdown_it.MarkdownIt):
 
     def runner(self, name, src, env=None):
         """a partial method used by both the parse and render methods"""
-        # we have to initialize a special environment for this translation
-        from .lisp import is_lisp
 
         # initialize the environment
         if env is None:
             env = {}
         self.init_env(src, env)
         # dispatch different renderes
-        if MAGIC.match(src) or is_lisp(src):
-            # when magics or lisp like syntaxes are encountered
-            # use the null render
-            self.renderer_cls = tangle.Null
-            self.renderer = tangle.Null()
-        else:
-            # otherwise we use pidgy's heuristics to render python
-            self.renderer_cls = tangle.Python
-            self.renderer = tangle.Python()
+        # otherwise we use pidgy's heuristics to render python
+        self.renderer_cls = tangle.Python
+        self.renderer = tangle.Python()
 
         # trigger either the parse or rende methods
         return getattr(super(), name)(src, env)
@@ -245,7 +237,11 @@ def footnote(state, start, end, silent=False):
 def load_ipython_extension(shell):
     import traitlets
 
+    # add a tangle trait to the shell
     shell.add_traits(tangle=traitlets.Any(Markdown()))
+
+    # the markdown tangle renderer converts md->py when called
+    # introduce this as the first ipython string transformer.
     shell.input_transformer_manager.cleanup_transforms.insert(0, shell.tangle)
 
 
