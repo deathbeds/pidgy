@@ -1,14 +1,4 @@
-"""midgy.tangle is a minimal translation of markdown to python.
-
-markdown tangles to python on indented code blocks [fences]. markdown
-blocks are treated translated to python as regular block strings. the
-tangled python code represents a line-for-line translate of the markdown.
-
-other implementations can extend these objects to extend their own literate
-programming interfaces through the base `markdown-it-py` api.
-
-[fences]: code fences are not in scope for a minimal implementation
-"""
+"""translate markdown to python, based on indented code, using markdown it."""
 
 from dataclasses import dataclass, field
 from io import StringIO
@@ -16,8 +6,7 @@ from re import compile
 from textwrap import dedent, indent
 
 from markdown_it import MarkdownIt
-from markdown_it.renderer import RendererHTML
-from markdown_it.renderer import RendererProtocol as Protocol
+from markdown_it.renderer import RendererHTML, RendererProtocol
 
 BLANK, CONTINUATION, COLON, FENCE, SPACE = "", "\\", ":", "```", " "
 QUOTES = "'''", '"""'
@@ -38,7 +27,6 @@ class Env:
         reference CODECODECODECODECODECODECODECODE
         trailing  CODECODECODECODECODECODECODECODE
 
-        MMMMMMDDDDDDDDDMMMMMMDDDDDDDDDMMMMMMDDDDDDDDD
         MMMMMMDDDDDDDDDMMMMMMDDDDDDDDDMMMMMMDDDDDDDDD
         MMMMMMDDDDDDDDDMMMMMMDDDDDDDDDMMMMMMDDDDDDDDD
 
@@ -70,10 +58,6 @@ class Env:
         rendering step behaves. these conditions let us define markdown in python
         variables and write docstrings with markdown"""
 
-        continuation: bool = field(
-            default=False,
-            metadata=dict(description="The code before the markdown ends with `\\`"),
-        )
         colon: bool = field(
             default=False,
             metadata=dict(description="The code before the markdown ends with `:`"),
@@ -91,12 +75,10 @@ class Env:
 
         def get_state(self, str, **kw):
             """get the last character state of a string"""
-            str = str.rstrip()
-            kw["continuation"] = str.endswith(CONTINUATION)
-            str = str.rstrip(CONTINUATION)
-            return dict(colon=str.endswith(COLON), quotes=str.endswith(QUOTES), **kw)
+            str = str.rstrip().rstrip(CONTINUATION)
+            return dict(colon=str.endswith(COLON), quotes=str.endswith(QUOTES))
 
-    source: object = field(metadata=dict(description="input code being translated"))
+    source: StringIO = field(metadata=dict(description="input code being translated"))
     last_line: int = field(
         default=0, metadata=dict(description="the last code line visited")
     )
@@ -135,7 +117,7 @@ class Tangle(MarkdownIt):
         """a shim that includes the tangler in the ipython transformer"""
         return self.render("".join(src)).splitlines(True)
 
-    class Python(Protocol):
+    class Python(RendererProtocol):
         __init__ = RendererHTML.__init__
 
         class Noncode(str):
@@ -179,65 +161,46 @@ class Tangle(MarkdownIt):
 
         def code_block(self, token, options, env):
             """render a code block"""
-            indents, chars = env["indents"], env["chars"]
-            current_line_indent = 0
-            last_non_empty_line = BLANK
-            found_first_line = False  # false until we find the first code line
-
-            code = StringIO()
+            current_line_indent, last_non_empty_line, found_first_line = 0, BLANK, False
+            indents, chars, code = env["indents"], env["chars"], StringIO()
             while env["last_line"] < token.map[-1]:
                 line = self.readline(env)
-
                 if line.strip():
                     last_non_empty_line = line
                     current_line_indent = _get_num_indent(last_non_empty_line)
-
-                    if not found_first_line:
-                        # when we hit the first line we can compute the constraints on
-                        if not indents.reference:
+                    if not found_first_line:  # we can compute the indent constraints
+                        if not indents.reference:  # we initialize all the indents
                             indents.reference = indents.trailing = current_line_indent
                         indents.leading = current_line_indent
-
-                        # write our noncode as code
+                        # write to the buffer our noncode as code
                         code.writelines(self.noncode_block(env))
-
                     found_first_line = True
-
                 code.writelines(line)
-            # update the indents based on the last non empty line's trailing characterss
+            # update the last character state based on the last line.
             vars(chars).update(chars.get_state(last_non_empty_line))
             indents.trailing = current_line_indent
-
-            if chars.continuation:
-                return _get_continued_code_block(code.getvalue(), current_line_indent)
 
             return code.getvalue()
 
         def noncode_block(self, env):
             """unquoted markdown -quote-> unindented string -indent-> python block string"""
             indents, chars = env["indents"], env["chars"]
-
             noncode = not_indented = BLANK
             noncode_indent = _get_noncode_indent(**env)
             for x in env["noncode_lines"] + [self.NotIndented(BLANK)]:
                 if isinstance(x, self.Noncode):
                     noncode += x
                 if isinstance(x, self.NotIndented):
-                    if chars.quotes:
-                        # inside of quotes we only do some indenting
+                    if chars.quotes:  # indent the code according
                         noncode = indent(noncode, SPACE * noncode_indent)
-                    else:
-                        # quote the markdown block
+                    else:  # quote the markdown block
                         noncode = _get_quoted(noncode, noncode_indent, env)
-                    # promote unquoted to unindented
-                    not_indented += noncode
+                    not_indented += noncode  # promote not quoted to not indented
 
                     # clear the unquoted buffer
                     noncode = BLANK
-                    if x.strip():
-                        # add the non empty lines to the unindented block
+                    if x.strip():  # add the non empty lines to the unindented block
                         not_indented += SPACE * noncode_indent + x
-
             env["noncode_lines"].clear()
             return indent(not_indented, SPACE * indents.reference)
 
@@ -252,7 +215,6 @@ def _get_noncode_indent(indents, chars, **_):
         indent = indents.leading  # the leading indent defines the indent
     else:
         indent = indents.trailing  # the trailing indent defines in the indent
-
     indent -= indents.reference  # remove the reference indent
     return indent
 
@@ -263,38 +225,18 @@ def _get_num_indent(str):
     return len(line) - len(line.lstrip())
 
 
-def _get_continued_code_block(input, indent):
-    lines = input.splitlines(True)
-    end = []
-    while lines:
-        if not lines[-1].strip():
-            end.append(SPACE * indent + CONTINUATION + lines.pop(-1))
-        break
-    return "".join(lines + list(reversed(end)))
-
-
 def _get_quoted(input, indent=0, env=None):
     """heuristics that quote a narrative block as a block string."""
     input = dedent(input)
     quote = QUOTES[QUOTES[0] in input]
-    quote, l, r = (
-        QUOTES[QUOTES[0] in input],
-        input.lstrip(),
-        input.rstrip(),
-    )
-    continues = r.endswith(CONTINUATION)
-    r = r.rstrip(CONTINUATION)
-
+    quote = QUOTES[QUOTES[0] in input]
+    l, r = input.lstrip(), input.rstrip().rstrip(CONTINUATION)
     if r and (r[-1] == quote[0]):
         quote = QUOTES[QUOTES.index(quote) - 1]
-    if not (l or r):
-        return input  # this represents the case of a blank string
+    if not (l or r):  # we have a blank string
+        return input
     begin, end = input[: len(input) - len(l)], input[len(r) :]
-    if env["chars"].continuation:
-        begin = "".join(map(CONTINUATION.__add__, begin.splitlines(True)))
-    if continues:
-        end = "".join(_get_continued_code_block(end, indent))
-    return (
+    return (  # recombine all of the parts into quoted python
         begin  # leading whitespace
         + SPACE * indent  # computed indent
         + "r"  # experimental, but i think regular strings make sense

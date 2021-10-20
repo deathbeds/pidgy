@@ -1,8 +1,10 @@
-from importnb import Notebook
-from .tangle import Tangle
-from .weave import Weave
 from argparse import ArgumentParser
 from sys import argv
+
+from importnb import Notebook
+
+from .tangle import Tangle
+from .weave import Weave
 
 parser = ArgumentParser()
 parser.add_argument("file")

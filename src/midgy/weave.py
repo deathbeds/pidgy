@@ -47,7 +47,7 @@ class Weave:
         return input
 
     def display(self, input):
-        from IPython.display import display, Markdown
+        from IPython.display import Markdown, display
 
         display(self.display_cls(self.render(input)))
         if self.debug:
@@ -64,7 +64,6 @@ class Weave:
 
 def load_ipython_extension(shell):
     from IPython.display import Markdown
-
     from traitlets import Instance
 
     if not shell.has_trait("weave"):
