@@ -13,6 +13,8 @@ donald knuth defined to aspects of literate programming:
 
 `tangle.py` codifies the heuristics for translating markdown to python. it provides an extensible class that can be extending using the underlying `markdown-it-py` machinery.
 
+in `tangle.py`, significant work happens in the `Tangle.Python.code_block` and `Tangle.Python.noncode_block` methods. these methods do the work of translating markdown elements to python.
+
 ### `weave.py`
 
 `midgy` can be used as:
