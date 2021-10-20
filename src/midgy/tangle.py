@@ -16,6 +16,12 @@ QUOTES = "'''", '"""'
 class Env:
     """the rendering environment for the markdown it rendered"""
 
+    def _field(default=None, description=None, **metadata):
+        param = {callable(default) and "default_factory" or "default": description}
+        if description:
+            metadata["description"] = description
+        return field(metadata=metadata or None, **param)
+
     @dataclass
     class IndentState:
         """the indent state during rendering
@@ -33,24 +39,13 @@ class Env:
         leading        CODECODECODECODECODECODECODE
                   CODECODECODECODECODECODECODE"""
 
-        reference: int = field(
-            default=0,
-            metadata=dict(
-                description="The first indent of the first line of code in a document"
-            ),
+        reference: int = _field(
+            0, "The first indent of the first line of code in a document"
         )
-        trailing: int = field(
-            default=0,
-            metadata=dict(
-                description="The indent of last code line before a markdown block"
-            ),
+        trailing: int = _field(
+            0, "The indent of last code line before a markdown block"
         )
-        leading: int = field(
-            default=0,
-            metadata=dict(
-                description="The indent of last code line before a markdown block"
-            ),
-        )
+        leading: int = _field(0, "The indent of last code line before a markdown block")
 
     @dataclass
     class LastCharacterState:
@@ -58,41 +53,26 @@ class Env:
         rendering step behaves. these conditions let us define markdown in python
         variables and write docstrings with markdown"""
 
-        colon: bool = field(
-            default=False,
-            metadata=dict(description="The code before the markdown ends with `:`"),
+        colon: bool = _field(False, "The code before the markdown ends with `:`")
+        quotes: bool = _field(
+            False, "The code before the markdown ends with triple quotes"
         )
-        quotes: bool = field(
-            default=False,
-            metadata=dict(
-                description="The code before the markdown ends with triple quotes"
-            ),
-        )
-        fence: bool = field(
-            default=False,
-            metadata=dict(description="The code is inside a markdown fence"),
-        )
+        fence: bool = _field(False, "The code is inside a markdown fence")
 
         def get_state(self, str, **kw):
             """get the last character state of a string"""
             str = str.rstrip().rstrip(CONTINUATION)
             return dict(colon=str.endswith(COLON), quotes=str.endswith(QUOTES))
 
-    source: StringIO = field(metadata=dict(description="input code being translated"))
-    last_line: int = field(
-        default=0, metadata=dict(description="the last code line visited")
-    )
+    source: StringIO = _field(None, "input code being translated")
+    last_line: int = _field(0, "the last code line visited")
     indents: IndentState = field(default_factory=IndentState)
     chars: LastCharacterState = field(default_factory=LastCharacterState)
-    noncode_lines: list = field(
-        default_factory=list,
-        metadata=dict(
-            description="lines of input collected while looking for code blocks."
-        ),
+    noncode_lines: list = _field(
+        list, "lines of input collected while looking for code blocks."
     )
-    terminal_character: str = field(
-        default=BLANK,
-        metadata=dict(description="trailing character after the non-code block"),
+    terminal_character: str = _field(
+        BLANK, "trailing character after the non-code block"
     )
 
 
@@ -175,12 +155,11 @@ class Tangle(MarkdownIt):
                         # write to the buffer our noncode as code
                         code.writelines(self.noncode_block(env))
                     found_first_line = True
-                code.writelines(line)
+                code.writelines(line)  # write the line of code to the buffer
             # update the last character state based on the last line.
             vars(chars).update(chars.get_state(last_non_empty_line))
-            indents.trailing = current_line_indent
-
-            return code.getvalue()
+            indents.trailing = current_line_indent  # update the trailing indent state
+            return code.getvalue()  # generate a string from the buffer
 
         def noncode_block(self, env):
             """unquoted markdown -quote-> unindented string -indent-> python block string"""
@@ -196,7 +175,6 @@ class Tangle(MarkdownIt):
                     else:  # quote the markdown block
                         noncode = _get_quoted(noncode, noncode_indent, env)
                     not_indented += noncode  # promote not quoted to not indented
-
                     # clear the unquoted buffer
                     noncode = BLANK
                     if x.strip():  # add the non empty lines to the unindented block
@@ -207,16 +185,15 @@ class Tangle(MarkdownIt):
 
 def _get_noncode_indent(indents, chars, **_):
     """compute the current indent based on the enclosing blocks"""
-    if chars.quotes:  # then we require no adjustment
-        indent = indents.trailing
-    elif chars.colon:  # then we want to indent things like docstrings
-        indent = max(indents.trailing + 4, indents.leading)
-    elif indents.leading >= indents.trailing:
-        indent = indents.leading  # the leading indent defines the indent
-    else:
-        indent = indents.trailing  # the trailing indent defines in the indent
-    indent -= indents.reference  # remove the reference indent
-    return indent
+    return (
+        indents.trailing
+        if chars.quotes  # then we require no adjustment
+        else max(indents.trailing + 4, indents.leading)
+        if chars.colon  # then we want to indent things like docstrings
+        else indents.leading
+        if indents.leading >= indents.trailing  # the leading indent defines the indent
+        else indents.trailing  # the trailing indent defines in the indent
+    ) - indents.reference  # remove the reference indent
 
 
 def _get_num_indent(str):
