@@ -42,7 +42,7 @@ def install_jupyter_hook():
     print("Installing Jupyter kernel spec:")
     try:
         KernelSpecManager().install_kernel_spec(
-            "./pidgy/kernelspec", "pidgy", user=user
+            "./src/pidgy/kernel/kernelspec", "pidgy", user=user
         )
         return
     except:
@@ -50,7 +50,7 @@ def install_jupyter_hook():
 
     try:
         KernelSpecManager().install_kernel_spec(
-            "./pidgy/kernelspec", "pidgy", user=not user
+            "./src/pidgy/kernel/kernelspec", "pidgy", user=not user
         )
         return
     except:
@@ -59,7 +59,6 @@ def install_jupyter_hook():
 
 setup_args = dict(
     setup_cfg=True,
-    version=datetime.datetime.now().strftime("%Y.%m.%d"),
     classifiers=[
         "Development Status :: 4 - Beta",
         "Framework :: IPython",

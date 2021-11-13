@@ -1,3 +1,5 @@
+*.sqlite
+.vscode
 _build
 .nbstream
 # Byte-compiled / optimized / DLL files

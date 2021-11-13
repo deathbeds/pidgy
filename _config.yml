@@ -4,6 +4,11 @@ author: deathbeds
 email: tony.fast@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   Hyperactive literate programming and computing
-
+exclude_patterns: [_build, Thumbs.db, .DS_Store, "**.ipynb_checkpoints", ".nox"]
 execute:
   execute_notebooks:  "off"
+sphinx:
+  extra_extensions:
+  - sphinx.ext.autodoc
+  config:
+    html_static_path: .
