@@ -8,14 +8,14 @@ CI = bool(getenv("CI"))
 @session(reuse_venv=True)
 def docs(session):
     session.install("jupyter-book", "sphinx-autoapi", "-e.")
-    session.run("python", "-m", "pidgy.kernel.install")
     session.run("jb", "build", ".")
 
 
 @session(reuse_venv=not CI, python=False)
 def test(session):
-    session.install(CI and ".[test]" or "-e.[test]")
+    session.install(CI and ".[test,kernel]" or "-e.[test,kernel]")
     session.run("python", "-m", "pidgy.kernel.install")
+    session.run("jupyter", "kernelspec", "list")
     session.run("pytest", "--nbval", *session.posargs)
 
 
