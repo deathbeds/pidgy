@@ -38,7 +38,7 @@ jobs:
 
       - name: Publish package
         if: matrix.python-version == 3.7 && github.event_name == 'push' && startsWith(github.event.ref,
-          'refs/tags') && 
+          'refs/tags') 
         uses: pypa/gh-action-pypi-publish@master
         with:
           user: docfast
