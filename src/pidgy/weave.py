@@ -3,9 +3,11 @@ from typing import Any
 from . import get_ipython
 from .models import Weave, dataclass, field
 
+__all__ = ("Weave",)
+
 
 @dataclass
-class Reactive(Weave):
+class Weave(Weave):
     @staticmethod
     def get_environment(async_=False, ENVS={}):
         """retrieve singleton jinja2 environment."""
@@ -19,8 +21,8 @@ class Reactive(Weave):
             enable_async=async_,
             loader=ChoiceLoader([DictLoader({}), FileSystemLoader(".")]),
             cache_size=0,
-            undefined=Reactive.Undefined,
-            finalize=Reactive.Finalize(),
+            undefined=Weave.Undefined,
+            finalize=Weave.Finalize(),
         )
 
         return ENVIRONMENT
@@ -32,8 +34,12 @@ class Reactive(Weave):
     shell: Any = field(get_ipython, "the current interactive shell")
     environment: Any = field(get_environment, "a jinja templating environment")
 
+    def use_asynch(self, input=True):
+        self.asynch = input
+        self.environment = self.get_environment(input)
+
     def __post_init__(self):
-        self.asynch = self.environment.is_async
+        self.use_asynch(self.asynch)
 
     from jinja2 import Undefined
 
@@ -170,13 +176,16 @@ class Reactive(Weave):
 
             if self.display_handle is None:
                 self.display_handle = DisplayHandle()
-            self.display_handle.display(self.display_cls(""))
-            if self.parent.asynch:
-                from asyncio import ensure_future
+            if self.parent.reactive:
+                self.display_handle.display(self.display_cls(""))
+                if self.parent.asynch:
+                    from asyncio import ensure_future
 
-                ensure_future(self.aupdate())
+                    ensure_future(self.aupdate())
+                else:
+                    self.update()
             else:
-                self.update()
+                self.display()
 
         @property
         def template(self):
@@ -186,6 +195,11 @@ class Reactive(Weave):
 
         def update(self):
             self.display_handle.update(
+                self.display_cls(self.template.render(**self.parent.get_ns()))
+            )
+
+        def display(self):
+            self.display_handle.display(
                 self.display_cls(self.template.render(**self.parent.get_ns()))
             )
 
@@ -203,10 +217,10 @@ def load_ipython_extension(shell):
 
     if not shell.has_trait("weave"):
         shell.add_traits(weave=Instance(Weave, ()))
-    shell.weave = Reactive(
+    shell.weave = Weave(
         shell=shell,
         display_cls=Markdown,
-        environment=Reactive.get_environment(True),
+        environment=Weave.get_environment(True),
         reactive=True,
     )
     shell.weave.load()
