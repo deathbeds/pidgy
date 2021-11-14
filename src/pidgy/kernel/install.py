@@ -23,13 +23,13 @@ def install_jupyter_hook():
     user = "--user" in argv
     print("Installing Jupyter kernel spec:")
     try:
-        KernelSpecManager().install_kernel_spec(str(KERNELSPEC), "midgy", user=user)
+        KernelSpecManager().install_kernel_spec(str(KERNELSPEC), "pidgy", user=user)
         return
     except:
         pass
 
     try:
-        KernelSpecManager().install_kernel_spec(str(KERNELSPEC), "midgy", user=not user)
+        KernelSpecManager().install_kernel_spec(str(KERNELSPEC), "pidgy", user=not user)
         return
     except:
         pass
