@@ -17,7 +17,6 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx_panels",
     "sphinx_book_theme",
-    "sphinx.ext.autodoc",
     "sphinx_jupyterbook_latex",
 ]
 external_toc_exclude_missing = False
@@ -27,7 +26,6 @@ html_baseurl = ""
 html_favicon = ""
 html_logo = "pidgy.png"
 html_sourcelink_suffix = ""
-html_static_path = "."
 html_theme = "sphinx_book_theme"
 html_theme_options = {
     "search_bar_text": "Search this book...",
