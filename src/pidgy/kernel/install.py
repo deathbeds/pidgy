@@ -14,6 +14,7 @@ except ImportError:
 
 def install_jupyter_hook():
     """Make pidgy available as a Jupyter kernel."""
+    from sys import prefix
 
     if not HAVE_JUPYTER:
         return print(
@@ -24,7 +25,7 @@ def install_jupyter_hook():
     print("Installing Jupyter kernel spec:")
     try:
         KernelSpecManager().install_kernel_spec(
-            str(KERNELSPEC), kernel_name="pidgy", user=user
+            str(KERNELSPEC), kernel_name="pidgy", user=user, prefix=prefix
         )
         return
     except:
@@ -32,7 +33,7 @@ def install_jupyter_hook():
 
     try:
         KernelSpecManager().install_kernel_spec(
-            str(KERNELSPEC), kernel_name="pidgy", user=not user
+            str(KERNELSPEC), kernel_name="pidgy", user=not user, prefix=prefix
         )
         return
     except:

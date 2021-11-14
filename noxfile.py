@@ -11,7 +11,7 @@ def docs(session):
     session.run("jb", "build", ".")
 
 
-@session(reuse_venv=not CI, python=False)
+@session(reuse_venv=not CI)
 def test(session):
     session.install(CI and ".[test,kernel]" or "-e.[test,kernel]")
     session.run("python", "-m", "pidgy.kernel.install")
