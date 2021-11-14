@@ -8,6 +8,7 @@ CI = bool(getenv("CI"))
 @session(reuse_venv=True)
 def docs(session):
     session.install("jupyter-book", "sphinx-autoapi", "-e.")
+    session.run("python", "-m", "pidgy.kernel.install")
     session.run("jb", "build", ".")
 
 
