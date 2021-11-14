@@ -1,5 +1,7 @@
 format: jb-book
 root: readme
 chapters:
-- file: src/pidgy/readme
-- file: src/pidgy/kernel/readme
+- file: src/pidgy/readme.md
+- file: docs/pidgy_examples.md.ipynb
+- file: docs/tangle_examples.ipynb
+- file: src/pidgy/kernel/readme.md
