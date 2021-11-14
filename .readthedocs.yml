@@ -1,5 +1,8 @@
 python:
   version: 3
   install:
-    - requirements: docs/requirements-rtd.txt
+    - requirements: docs/requirements.txt
   setup_py_install: true
+
+sphinx:
+  configuration: docs/conf.py
