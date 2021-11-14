@@ -1,30 +1,29 @@
-# `pidgy` literate computing toolkit
+# `pidgy` minimal literate computing
 
-`pidgy` is a extension of `IPython` that allows for literate programming in notebooks and markdown files.
+`pidgy` is formal [literate computing] library that translates markdown into executable python. it presents a new style of programming, in the `pidgy` metalanguage, that brings new affords markdown files and notebooks.
 
+this project features some serious things and some fun things:
 
-## `pidgy` features
+* a python package for literate progamming with documentation and tests
 
-### programming python in markdown
+        pip install pidgy
 
-the primary work of `pidgy` is define heuristics that translate markdown into valid python code. `pidgy` attaches special rules that interleave blocks of markdown into python code; for example, in `pidgy` docstrings look just like normal markdown.
+* a command line application for executing markdown files
 
-#### lisp flavored literate programming in python
+        pidgy filename.md
 
-python is a whitespace aware language, and requires special rules for rendering python code. `pidgy` provides `hy` a python flavored lisp that allows for another mode literate programming.
+* interactive computing tools for jupyter notebooks
 
-### writing scripts in markdown files
+        %load_ext pidgy
 
-by translating markdown to python, `pidgy` can use markdown as a literate scripting language where markdown files operate as if they were python modules
+* a jupyter kernel
 
-### interactive notebook displays
+        python -m pidgy.kernel.install
 
-`pidgy` supports `jinja2` templates out of the box, and can embed rich display objects created by `IPython`.
+* a complete research paper describing the project and history
 
-### formal testing interfaces
+        nox -s docs
 
-`pidgy` brings support for `unittest` and `doctest`. testing fixtures are executed with each cell executed.
+* a lot of care
 
-### em😄ji suport
-
-`pidgy` supports emojis through their aliases or explicit emoji.
+a goal with `pidgy`, and its derivatives, is to have fun writing and reading programs. to evoke joy in the author(s) and transmit their spirit. we'll begin by writing the programs we wish we'd read.
