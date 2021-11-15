@@ -174,6 +174,26 @@ class Weave(Weave):
         def _ipython_display_(self):
             from IPython.core.display import DisplayHandle
 
+            if self.input.startswith(("http://", "https://")):
+                lines = self.input.splitlines()
+                if all(
+                    line.startswith(("http://", "https://"))
+                    for line in lines
+                    if line.strip()
+                ):
+                    from IPython.display import IFrame, Image, display
+                    from mimetypes import guess_type
+
+                    displays = []
+                    for line in lines:
+                        if line.strip():
+                            type, _ = guess_type(line)
+                            if type and type.startswith(("image/",)):
+                                displays.append(Image(url=line))
+                            else:
+                                displays.append(IFrame(line, height=600, width="100%"))
+                    return display(*displays)
+
             if self.display_handle is None:
                 self.display_handle = DisplayHandle()
             if self.parent.reactive:
