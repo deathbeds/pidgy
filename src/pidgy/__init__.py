@@ -5,16 +5,6 @@
 LOADED = False
 
 
-def get_ipython():
-    import IPython
-
-    shell = IPython.get_ipython()
-    if shell is None:
-        shell = IPython.InteractiveShell()
-        IPython.get_ipython = shell.get_ipython
-    return shell
-
-
 def load_ipython_extension(shell):
     from . import tangle, weave
 

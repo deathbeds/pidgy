@@ -1,23 +1,14 @@
-import dataclasses
 from dataclasses import dataclass
 from io import StringIO
 from re import compile
 from typing import Pattern
+from .utils import dataclass, field
 
 BLANK, CONTINUATION, COLON, FENCE, SPACE = "", "\\", ":", "```", " "
 QUOTES = "'''", '"""'
 CELL_MAGIC, DOCTEST_LINE = compile("^\S%{3}\s"), compile("^\s*>{3}\s+")
 
 _RE_BLANK_LINE = compile(r"^\s*\r?\n")
-
-
-def field(default=None, description=None, **metadata):
-    from dataclasses import field
-
-    param = {callable(default) and "default_factory" or "default": default}
-    if description:
-        metadata["description"] = description
-    return field(metadata=metadata or None, **param)
 
 
 @dataclass
