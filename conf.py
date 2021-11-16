@@ -1,7 +1,14 @@
 author = "deathbeds"
 comments_config = {"hypothesis": False, "utterances": False}
 copyright = "2021"
-exclude_patterns = ["**.ipynb_checkpoints", ".DS_Store", ".nox", "Thumbs.db", "_build"]
+exclude_patterns = [
+    "**.ipynb_checkpoints",
+    ".DS_Store",
+    ".nox",
+    "Thumbs.db",
+    "_build",
+    ".pytest_cache",
+]
 execution_allow_errors = False
 execution_excludepatterns = []
 execution_in_temp = False
