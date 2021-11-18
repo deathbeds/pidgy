@@ -62,85 +62,9 @@ def was_displayed(object):
     return object._trait_values.get("_display_callbacks") is not None
 
 
-@dataclass
-class Output:
-    parent: Any
-    display_cls: Any = None
-    input: str = ""
-    display_handle: Any = None
-    cell_id: str = None
-    vars: set = field(set)
-
-    def set_input(self, input):
-        from jinja2.meta import find_undeclared_variables
-
-        self.input = input
-        self.vars.clear()
-        vars = find_undeclared_variables(self.parent.environment.parse(input))
-        self.vars.update(vars)
-        primary_loader = self.parent.environment.loader.loaders[0]
-        primary_loader.mapping.update({self.cell_id: input})
-
-    def _ipython_display_(self):
-        from IPython.core.display import DisplayHandle
-
-        if self.input.startswith(("http://", "https://")):
-            lines = self.input.splitlines()
-            if all(
-                line.startswith(("http://", "https://"))
-                for line in lines
-                if line.strip()
-            ):
-                from mimetypes import guess_type
-
-                from IPython.display import IFrame, Image, display
-
-                displays = []
-                for line in lines:
-                    if line.strip():
-                        type, _ = guess_type(line)
-                        if type and type.startswith(("image/",)):
-                            displays.append(Image(url=line))
-                        else:
-                            displays.append(
-                                IFrame(
-                                    line,
-                                    height=self.parent.iframe_height,
-                                    width="100%",
-                                )
-                            )
-                return display(*displays)
-
-        if self.display_handle is None:
-            self.display_handle = DisplayHandle()
-        if self.parent.reactive:
-            self.display_handle.display(self.display_cls(""))
-            if self.parent.asynch:
-                from asyncio import ensure_future
-
-                ensure_future(self.aupdate())
-            else:
-                self.update()
-        else:
-            self.display()
-
-    @property
-    def template(self):
-        if self.cell_id:
-            return self.parent.environment.get_template(self.cell_id)
-        return self.parent.environment.from_string(self.input)
-
-    def update(self):
-        self.display_handle.update(
-            self.display_cls(self.template.render(**self.parent.get_ns()))
-        )
-
-    def display(self):
-        self.display_handle.display(
-            self.display_cls(self.template.render(**self.parent.get_ns()))
-        )
-
-    async def aupdate(self):
-        self.display_handle.update(
-            self.display_cls(await self.template.render_async(**self.parent.get_ns()))
-        )
+def is_list_of_url(str):
+    return all(
+        line.startswith(("http://", "https://"))
+        for line in str.splitlines()
+        if line.strip()
+    )

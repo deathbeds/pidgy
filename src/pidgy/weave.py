@@ -7,6 +7,89 @@ __all__ = ("Weave",)
 
 
 @dataclass
+class Output:
+    parent: Any
+    display_cls: Any = None
+    input: str = ""
+    display_handle: Any = None
+    cell_id: str = None
+    vars: set = field(set)
+
+    def set_input(self, input):
+        from jinja2.meta import find_undeclared_variables
+
+        self.input = input
+        self.vars.clear()
+        vars = find_undeclared_variables(self.parent.environment.parse(input))
+        self.vars.update(vars)
+        primary_loader = self.parent.environment.loader.loaders[0]
+        primary_loader.mapping.update({self.cell_id: input})
+
+    def display_urls(self):
+        lines = self.input.splitlines()
+        from mimetypes import guess_type
+
+        from IPython.display import IFrame, Image
+
+        displays = []
+        for line in lines:
+            if line.strip():
+                type, _ = guess_type(line)
+                if type and type.startswith(("image/",)):
+                    displays.append(Image(url=line))
+                else:
+                    displays.append(
+                        IFrame(
+                            line,
+                            height=self.parent.iframe_height,
+                            width="100%",
+                        )
+                    )
+        return displays
+
+    def _ipython_display_(self):
+        from IPython.core.display import DisplayHandle, display
+        from .utils import is_list_of_url
+
+        if is_list_of_url(self.input):
+            return display(*self.display_urls())
+
+        if self.display_handle is None:
+            self.display_handle = DisplayHandle()
+        if self.parent.reactive:
+            self.display_handle.display(self.display_cls(""))
+            if self.parent.asynch:
+                from asyncio import ensure_future
+
+                ensure_future(self.aupdate())
+            else:
+                self.update()
+        else:
+            self.display()
+
+    @property
+    def template(self):
+        if self.cell_id:
+            return self.parent.environment.get_template(self.cell_id)
+        return self.parent.environment.from_string(self.input)
+
+    def update(self):
+        self.display_handle.update(
+            self.display_cls(self.template.render(**self.parent.get_ns()))
+        )
+
+    def display(self):
+        self.display_handle.display(
+            self.display_cls(self.template.render(**self.parent.get_ns()))
+        )
+
+    async def aupdate(self):
+        self.display_handle.update(
+            self.display_cls(await self.template.render_async(**self.parent.get_ns()))
+        )
+
+
+@dataclass
 class Weave(Weave):
     @staticmethod
     def get_environment(async_=False, ENVS={}):
@@ -83,13 +166,11 @@ class Weave(Weave):
             return self.normalize(key, data[key], metadata)
 
     def post_run_cell(self, result):
-        from IPython.display import display
-
-        from .utils import Output
-
         if result.error_in_exec or result.error_before_exec:
             pass  # don't do anything when there are errors
         elif not self.no_show.match(result.info.raw_cell):
+            from IPython.display import display
+
             metadata = self.shell.kernel.get_parent().get("metadata", {})
             id = metadata.get("cellId")
             output = self.outputs.setdefault(
