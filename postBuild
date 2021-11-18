@@ -1,1 +1,3 @@
-pip install -e.
+nox -l
+nox -s test --no-venv --no-reuse-existing-virtualenvs
+nox -s docs

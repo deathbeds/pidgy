@@ -72,7 +72,7 @@ setup_args = dict(
         "Programming Language :: Python :: 3.8",
         "Framework :: Pytest",
     ],
-    cmdclass={"install": install_hook, "develop": develop_hook},
+    # cmdclass={"install": install_hook, "develop": develop_hook},
     zip_safe=False,
 )
 

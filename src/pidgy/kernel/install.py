@@ -2,7 +2,7 @@ from pathlib import Path
 from sys import argv
 
 HERE = Path(__file__).parent
-KERNELSPEC = HERE / "kernelspec"
+KERNELSPEC = HERE / "pidgy"
 
 try:
     from jupyter_client.kernelspec import KernelSpecManager

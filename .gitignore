@@ -1,3 +1,4 @@
+.nox
 *.sqlite
 .vscode
 _build

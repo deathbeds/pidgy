@@ -1,8 +1,8 @@
-"""``midgy``s approach to converting markdown to python
+"""``pidgy``s approach to converting markdown to python
 -------------------------------
 
-``midgy``s novelty comes from its heuristics for converting markdown into python code.
-unlike most literate programming implementations, ``midgy``s approach relies on indented
+``pidgy``s novelty comes from its heuristics for converting markdown into python code.
+unlike most literate programming implementations, ``pidgy``s approach relies on indented
 code blocks defining a powerful metalanguage that allows markdown and python to cooperate
 in a literate documentation.
 """
