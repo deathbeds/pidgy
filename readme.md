@@ -1,6 +1,6 @@
 # `pidgy` minimal literate computing
 
-`pidgy` is formal [literate computing] library that translates markdown into executable python. it presents a new style of programming, in the `pidgy` metalanguage, that brings new affords markdown files and notebooks.
+`pidgy` is a [literate computing] tool that translates markdown into executable python. it presents a new style of programming, in the `pidgy` metalanguage, that treat literature written in markdown as python programs.
 
 this project features some serious things and some fun things:
 
@@ -22,8 +22,13 @@ this project features some serious things and some fun things:
 
 * a complete research paper describing the project and history
 
-        nox -s docs
+    published on the [readthedocs] with jupyter book.
+
+        nox -s docs # build the docs locally
 
 * a lot of care
 
 a goal with `pidgy`, and its derivatives, is to have fun writing and reading programs. to evoke joy in the author(s) and transmit their spirit. we'll begin by writing the programs we wish we'd read.
+
+[literate computing]: docs/literate-programming.html#literate-computing
+[readthedocs]: https://pidgy.readthedocs.io/

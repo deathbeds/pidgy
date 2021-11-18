@@ -1,6 +1,7 @@
 from typing import Any
-from .utils import get_ipython, is_widget
+
 from .models import Weave, dataclass, field
+from .utils import get_ipython, is_widget
 
 __all__ = ("Weave",)
 
@@ -53,7 +54,7 @@ class Weave(Weave):
 
         def normalize(self, type, object, metadata) -> str:
             """normalize and object with (mime)type and return a string."""
-            from .utils import get_minified, get_decoded
+            from .utils import get_decoded, get_minified
 
             if type == "text/html" or "svg" in type:
                 object = get_minified(object)
@@ -82,8 +83,9 @@ class Weave(Weave):
             return self.normalize(key, data[key], metadata)
 
     def post_run_cell(self, result):
-        from .utils import Output
         from IPython.display import display
+
+        from .utils import Output
 
         if result.error_in_exec or result.error_before_exec:
             pass  # don't do anything when there are errors

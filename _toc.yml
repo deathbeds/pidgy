@@ -1,7 +1,9 @@
 format: jb-book
 root: readme
 chapters:
+- file: docs/literate-programming.md
 - file: src/pidgy/readme.md
 - file: docs/pidgy_examples.md.ipynb
 - file: docs/tangle_examples.ipynb
 - file: src/pidgy/kernel/readme.md
+- file: docs/outcomes.md

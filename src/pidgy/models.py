@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from io import StringIO
 from re import compile
 from typing import Pattern
+
 from .utils import dataclass, field
 
 BLANK, CONTINUATION, COLON, FENCE, SPACE = "", "\\", ":", "```", " "

@@ -1,5 +1,5 @@
-from typing import Any
 from dataclasses import dataclass
+from typing import Any
 
 
 def field(default=None, description=None, **metadata):
@@ -91,8 +91,9 @@ class Output:
                 for line in lines
                 if line.strip()
             ):
-                from IPython.display import IFrame, Image, display
                 from mimetypes import guess_type
+
+                from IPython.display import IFrame, Image, display
 
                 displays = []
                 for line in lines:
