@@ -1,17 +1,21 @@
 from os import getenv
 
-from nox import session
+from nox import session, parametrize, options
+
+options.sessions = ["docs(html)", "test"]
 
 CI = bool(getenv("CI"))
 
 
-@session(venv_backend="conda", reuse_venv=True)
-def docs(session):
+@session(venv_backend="conda", reuse_venv=True, python="3.9")
+@parametrize("pdf", [False, True], ids=["html", "pdf"])
+def docs(session, pdf):
     "build the `pidgy` documentation with `jupyter-book`"
-    PDF = any("pdf" in x for x in session.posargs)
-    session.install("jupyter-book", "jupyterbook-latex", "sphinx-autoapi", "-e.")
-    if PDF:
+    if pdf:
+        session.posargs += "-builder", "pdflatex"
         session.conda_install("-c", "conda-forge", "tectonic")
+    session.install("jupyter-book", "jupyterbook-latex", "sphinx-autoapi", "-e.")
+
     session.run("jb", "build", ".", *session.posargs)
 
 
@@ -26,6 +30,6 @@ def test(session):
 
 @session(reuse_venv=True)
 def lint(session):
-    "test the `pidgy` project with `black and isort` via `pre-commit`"
+    "test the `pidgy` project with `black and isort` w `pre-commit`"
     session.install("pre-commit")
     session.run("pre-commit", "run", "--all-files", *session.posargs)

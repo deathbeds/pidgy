@@ -6,4 +6,4 @@ chapters:
 - file: docs/pidgy_examples.md.ipynb
 - file: docs/tangle_examples.ipynb
 - file: src/pidgy/kernel/readme.md
-- file: docs/outcomes.md
+- file: docs/outcomes.ipynb
