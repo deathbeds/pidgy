@@ -12,30 +12,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      #       - name: Cache pip
-      #         uses: actions/cache@v1
-      #         with:
-      #           path: ~/.cache/pip # This path is specific to Ubuntu
-      #           # Look to see if there is a cache hit for the corresponding requirements file
-      #           key: ${{ runner.os }}-pip-${{ hashFiles('requirements-test.txt') }}
-      #           restore-keys: |
-      #             ${{ runner.os }}-pip-
-      #             ${{ runner.os }}-
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip setuptools nox wheel
-          
+          python -m pip install --upgrade pip nox build
       - name: Test with pytest
         run: |
           nox -s test
       - name: Build package
         run: |
-          python setup.py sdist
-          python setup.py bdist_wheel
-
+          python -m build
       - name: Publish package
         if: matrix.python-version == 3.7 && github.event_name == 'push' && startsWith(github.event.ref,
           'refs/tags') 
