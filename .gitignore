@@ -1,3 +1,4 @@
+src/pidgy/_version.py
 .nox
 *.sqlite
 .vscode
