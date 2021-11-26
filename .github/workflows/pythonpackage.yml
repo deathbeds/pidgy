@@ -1,4 +1,4 @@
-name: Python package
+name: test
 
 on: [push]
 
@@ -12,24 +12,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Fetch all history for all tags and branches
-        run: git fetch --prune --unshallow
+        with:
+          fetch-depth: 0
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip nox build
+          python -m pip install --upgrade pip nox
       - name: Test with pytest
         run: |
           nox -s test
-      - name: Build package
-        run: |
-          python -m build
-      - name: Publish package
-        if: matrix.python-version == 3.7 && github.event_name == 'push' && startsWith(github.event.ref,
-          'refs/tags') 
-        uses: pypa/gh-action-pypi-publish@master
-        with:
-          user: docfast
-          password: ${{ secrets.pypi_password }}
