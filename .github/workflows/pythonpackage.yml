@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Fetch all history for all tags and branches
+        name: Fetch all history for all tags and branches
         with:
           fetch-depth: 0
       - name: Set up Python ${{ matrix.python-version }}
