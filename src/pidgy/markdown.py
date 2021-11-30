@@ -2,7 +2,6 @@
 from io import StringIO
 
 from markdown_it import MarkdownIt
-from markdown_it.renderer import RendererProtocol
 
 from .models import (
     CELL_MAGIC,
@@ -90,10 +89,18 @@ def code(state, start, end, silent=False):
 class Renderer(MarkdownIt):
     def __init__(self, *args, **kwargs):
         args = args or ("gfm-like",)
+
+        renderer = kwargs.pop("renderer_cls", Markdown)
         super().__init__(*args, **kwargs)
+
         self.block.ruler.before("code", "doctest", doctest)
         self.block.ruler.disable("code")
         self.block.ruler.after("doctest", "code", code)
+
+        # something is weird about markdown instantiating
+        # the renderer_cls Protocol so we do our own thing.
+        self.renderer_cls = renderer
+        self.renderer = renderer()
 
     def parse(self, src, env=None):
         """parse the source and return the markdown tokens"""
@@ -116,7 +123,7 @@ class Renderer(MarkdownIt):
         return self.render("".join(src)).splitlines(True)
 
 
-class Markdown(RendererProtocol):
+class Markdown:
     def generic(self, env, next=None):
         return (
             "".join(env["source"]) if next is None else self.readlines(next.map[0], env)
