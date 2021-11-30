@@ -1,7 +1,3 @@
-from dataclasses import dataclass
-from typing import Any
-
-
 def field(default=None, description=None, **metadata):
     from dataclasses import field
 
@@ -68,3 +64,9 @@ def is_list_of_url(str):
         for line in str.splitlines()
         if line.strip()
     )
+
+
+def get_escaped_string(object, quote='"'):
+    from re import subn
+
+    return subn(r"%s{1,1}" % quote, "\\" + quote, object)[0]
