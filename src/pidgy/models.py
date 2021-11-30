@@ -1,3 +1,5 @@
+"""models.py contains models for holding state during parsing."""
+
 from dataclasses import dataclass
 from io import StringIO
 from re import compile
@@ -7,8 +9,8 @@ from .utils import dataclass, field
 
 BLANK, CONTINUATION, COLON, FENCE, SPACE = "", "\\", ":", "```", " "
 QUOTES = "'''", '"""'
-CELL_MAGIC, DOCTEST_LINE = compile("^\S%{3}\s"), compile("^\s*>{3}\s+")
-
+CELL_MAGIC, DOCTEST_LINE = compile("^\s*%{2}\S"), compile("^\s*>{3}\s+")
+DOCTEST_CHAR, CONTINUATION_CHAR, COLON_CHAR, QUOTES_CHARS = 62, 92, 58, {39, 34}
 _RE_BLANK_LINE = compile(r"^\s*\r?\n")
 
 
@@ -49,20 +51,11 @@ class Env:
         quotes: bool = field(
             False, "The code before the markdown ends with triple quotes"
         )
-        fence: bool = field(False, "The code is inside a markdown fence")
-
-        def get_state(self, str, **kw):
-            """get the last character state of a string"""
-            str = str.rstrip().rstrip(CONTINUATION)
-            return dict(colon=str.endswith(COLON), quotes=str.endswith(QUOTES))
 
     source: StringIO = field(None, "input code being translated")
     last_line: int = field(0, "the last code line visited")
     indents: IndentState = field(IndentState)
     chars: LastCharacterState = field(LastCharacterState)
-    noncode_lines: list = field(
-        list, "lines of input collected while looking for code blocks."
-    )
     terminal_character: str = field(
         BLANK, "trailing character after the non-code block"
     )
@@ -71,7 +64,6 @@ class Env:
 @dataclass
 class Weave:
     template: bool = field(True, "flag to render the output with or without jinja")
-
     asynch: bool = field(False, "use the async loop for reactive changes")
     reactive: bool = field(False, "reactive templates with the namespace.")
     no_show: Pattern = field(_RE_BLANK_LINE, "the pattern for suppressing output")

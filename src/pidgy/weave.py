@@ -1,6 +1,8 @@
+"""weave.py provides the Markdown rendering models."""
+
 from typing import Any
 
-from .models import Weave, dataclass, field
+from .models import CELL_MAGIC, Weave, dataclass, field
 from .utils import get_ipython, is_widget
 
 __all__ = ("Weave",)
@@ -49,6 +51,7 @@ class Output:
 
     def _ipython_display_(self):
         from IPython.core.display import DisplayHandle, display
+
         from .utils import is_list_of_url
 
         if is_list_of_url(self.input):
@@ -168,7 +171,11 @@ class Weave(Weave):
     def post_run_cell(self, result):
         if result.error_in_exec or result.error_before_exec:
             pass  # don't do anything when there are errors
-        elif not self.no_show.match(result.info.raw_cell):
+        elif self.no_show.match(result.info.raw_cell):
+            pass
+        elif CELL_MAGIC.match(result.info.raw_cell):
+            pass
+        else:
             from IPython.display import display
 
             metadata = self.shell.kernel.get_parent().get("metadata", {})
