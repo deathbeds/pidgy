@@ -1,10 +1,4 @@
-"""``pidgy``s approach to converting markdown to python
--------------------------------
-
-``pidgy``s novelty comes from its heuristics for converting markdown into python code.
-unlike most literate programming implementations, ``pidgy``s approach relies on indented
-code blocks defining a powerful metalanguage that allows markdown and python to cooperate
-in a literate documentation.
+"""tangle.py provides the Markdown to Python translation model.
 """
 from textwrap import dedent, indent
 

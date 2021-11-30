@@ -1,3 +1,5 @@
+"""models.py contains models for holding state during parsing."""
+
 from dataclasses import dataclass
 from io import StringIO
 from re import compile

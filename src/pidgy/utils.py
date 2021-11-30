@@ -1,3 +1,5 @@
+"""utils.py contains general utility functions for pidgy."""
+
 from dataclasses import dataclass
 
 

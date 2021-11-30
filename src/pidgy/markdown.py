@@ -1,3 +1,4 @@
+"""markdown.py contains the lexer and renderer for pidgy."""
 from io import StringIO
 
 from markdown_it import MarkdownIt

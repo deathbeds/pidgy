@@ -1,3 +1,5 @@
+"""weave.py provides the Markdown rendering models."""
+
 from typing import Any
 
 from .models import CELL_MAGIC, Weave, dataclass, field
