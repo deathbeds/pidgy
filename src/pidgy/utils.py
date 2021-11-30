@@ -1,3 +1,6 @@
+from dataclasses import dataclass
+
+
 def field(default=None, description=None, **metadata):
     from dataclasses import field
 
