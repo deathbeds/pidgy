@@ -116,3 +116,11 @@ rites/markdown.ipynb
 
 # Rever
 rever/
+
+# sphinx
+jupyter_execute/
+
+# lite
+.cache
+*.doit.db*
+_output

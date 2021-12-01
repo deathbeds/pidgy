@@ -1,3 +1,21 @@
+def setup(app):
+    def on_config_inited(app, error):
+        try:
+            __import__("jupyterlite")
+        except (ImportError, AttributeError):
+            print("jupyterlite not available, no big")
+            return
+
+        from subprocess import check_call
+
+        wheel = ["pip", "wheel", "--w=dist", "--no-deps"]
+        check_call([*wheel, "."])
+        check_call([*wheel, "htmlmin"])
+        check_call(["jupyter", "lite", "build"], cwd="lite")
+
+    app.connect("config-inited", on_config_inited)
+
+
 author = "deathbeds"
 comments_config = {"hypothesis": False, "utterances": False}
 copyright = "2021"
@@ -8,6 +26,7 @@ exclude_patterns = [
     "Thumbs.db",
     "_build",
     ".pytest_cache",
+    "jupyter_execute",
 ]
 execution_allow_errors = False
 execution_excludepatterns = []
@@ -33,6 +52,7 @@ html_baseurl = ""
 html_favicon = ""
 html_logo = "pidgy.png"
 html_sourcelink_suffix = ""
+html_static_path = ["lite/_output"]
 html_theme = "sphinx_book_theme"
 html_theme_options = {
     "search_bar_text": "Search this book...",
