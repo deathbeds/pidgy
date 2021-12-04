@@ -124,3 +124,4 @@ jupyter_execute/
 .cache
 *.doit.db*
 _output
+lite/pypi

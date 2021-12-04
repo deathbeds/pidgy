@@ -1,9 +1,5 @@
 {
   "LiteBuildConfig": {
-    "lite_dir": ".",
-    "piplite_urls": [
-      "../dist"
-    ],
     "contents": [
       "../docs"
     ]

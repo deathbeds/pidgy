@@ -10,4 +10,5 @@ ipylab
 ipywidgets
 jupyter-server-mathjax
 jupyterlab-fonts
+jupyter-videochat
 wxyz-lab
