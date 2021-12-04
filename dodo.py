@@ -11,26 +11,39 @@ import doit.tools
 
 PY = Path(sys.executable)
 DOIT_CONFIG = dict(verbosity=2)
-HERE = Path(__file__).parent
+DODO = Path(__file__)
+HERE = DODO.parent
 CONF = HERE / "conf.py"
 DIST = HERE / "dist"
 DOCS = HERE / "docs"
 LITE = HERE / "lite"
 SHA256SUMS = DIST / "SHA256SUMS"
-WHL_DEPS = [
-    "pyproject.toml",
-    "readme.md",
-    "setup.cfg",
+WHL_PY = [
     "setup.py",
     *Path("src").rglob("*.py"),
-    *Path("src/pidgy/kernel/pidgy").rglob("*"),
 ]
+WHL_MD = ["readme.md", Path("src/pidgy/readme.md")]
+WHL_DEPS = [
+    "pyproject.toml",
+    "setup.cfg",
+    *Path("src/pidgy/kernel/pidgy").rglob("*"),
+    *WHL_MD,
+    *WHL_PY,
+]
+ALL_PY = [DODO, *WHL_PY]
+ALL_MD = [*WHL_MD]
 SOURCE_DATE_EPOCH = (
     subprocess.check_output(["git", "log", "-1", "--format=%ct"])
     .decode("utf-8")
     .strip()
 )
 os.environ.update(SOURCE_DATE_EPOCH=SOURCE_DATE_EPOCH)
+
+
+def task_lint():
+    """apply source formatting"""
+    yield dict(name="black", file_dep=ALL_PY, actions=[["black", *ALL_PY]])
+    yield dict(name="md", file_dep=ALL_MD, actions=[["mdformat", *ALL_MD]])
 
 
 def task_dist():
@@ -130,5 +143,5 @@ def task_docs():
         file_dep=[CONF, *DOCS.rglob("*.ipynb")],
         actions=["sphinx-build . _build/html %(pos)s"],
         pos_arg="pos",
-        targets=[HERE / "_build/html/.buildinfo"]
+        targets=[HERE / "_build/html/.buildinfo"],
     )

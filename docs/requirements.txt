@@ -1,6 +1,7 @@
 # docs
 jupyter-book
 black
+mdformat
 sphinx-autoapi
 # apps (for labextension version compatibility)
 jupyterlab >=3.2,<4

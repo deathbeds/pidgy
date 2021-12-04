@@ -1,6 +1,6 @@
-#!/usr/bin/env -S python -m pidgy 
-# `pidgy`'s tangle and weave implementations
+#!/usr/bin/env -S python -m pidgy
 
+# `pidgy`'s tangle and weave implementations
 
 `pidgy` is a literate computing implementation that turns converts markdown into valid python. when working in `pidgy`, we simultaneously develop narrative and code together. `pidgy` brings new affordances to communicating computational narratives in markdown scripts and jupyter notebooks
 
@@ -11,14 +11,14 @@
 from a technical position, knuth - the patron saint of yakshaves - defines two key units of work when operating on literate programs:
 
 1. the tangle step refers to translating a document language to a programming language
-2. the weave step that formats and displays that document
+1. the weave step that formats and displays that document
 
 ### tangle and weave language choices
 
 the reference `web` implementation of literate programming chose:
 
 1. tex as a document language
-2. pascal as a scripting language
+1. pascal as a scripting language
 
 `pidgy` is an ~~post~~modern take that chooses markdown and python, respectively.
 
@@ -33,12 +33,6 @@ markdown-it-py is commonmark
 
 python is an idiomatic programming language that, at times, can read _near_ to natural language. we can look back to the early roots of python and its goal of computing for everyone. python is now the most popular programming language, and markdown is the gateway to programming.
 
-cp4e 
+cp4e
 
-
-[literate programming]: #
 [donald knuth]: #
-[literate computing]: #
-[cp4e]: #
-[indented code blocks]: https://spec.commonmark.org/0.30/#indented-code-blocks
-[fenced code blocks]: https://spec.commonmark.org/0.30/#fenced-code-blocks
