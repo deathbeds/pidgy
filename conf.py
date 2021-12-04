@@ -20,13 +20,13 @@ author = "deathbeds"
 comments_config = {"hypothesis": False, "utterances": False}
 copyright = "2021"
 exclude_patterns = [
-    "**.ipynb_checkpoints",
+    "_build",
     ".DS_Store",
     ".nox",
     ".pytest_cache",
-    "Thumbs.db",
-    "_build",
+    "**.ipynb_checkpoints",
     "jupyter_execute",
+    "Thumbs.db",
 ]
 execution_allow_errors = False
 execution_excludepatterns = []
