@@ -93,7 +93,7 @@ def task_lite():
                 [PY, "-m", "jupyter", "lite", "archive"], cwd=str(LITE), shell=False
             )
         ],
-        targets=[LITE / "_output/SHA256SUMS"],
+        targets=[LITE / "_/_/SHA256SUMS"],
     )
 
 
@@ -130,4 +130,5 @@ def task_docs():
         file_dep=[CONF, *DOCS.rglob("*.ipynb")],
         actions=["sphinx-build . _build/html %(pos)s"],
         pos_arg="pos",
+        targets=[HERE / "_build/html/.buildinfo"]
     )

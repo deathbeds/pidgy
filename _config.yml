@@ -6,11 +6,15 @@ description: >- # this means to ignore newlines until "baseurl:"
   Hyperactive literate programming and computing
 exclude_patterns:
   - "_build"
+  - "build"
+  - ".doit*"
   - ".DS_Store"
   - ".nox"
   - ".pytest_cache"
   - "**.ipynb_checkpoints"
+  - "dist"
   - "jupyter_execute"
+  - "lite"
   - "Thumbs.db"
 execute:
   execute_notebooks: "off"
@@ -18,9 +22,9 @@ execute:
 sphinx:
   config:
     latex_logo: pidgy.png
-    html_static_path:
-      - "lite/_output"
     external_toc_path: ./_toc.yml
+    html_extra_path:
+      - lite/_
 latex:
   latex_documents:
     targetname: pidgy.tex

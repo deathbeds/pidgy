@@ -123,5 +123,5 @@ jupyter_execute/
 # lite
 .cache
 *.doit.db*
-_output
+lite/_/
 lite/pypi

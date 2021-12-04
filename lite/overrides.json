@@ -1,4 +1,7 @@
 {
+  "jupyterlab-videochat:plugin": {
+    "disablePublicRooms": false
+  },
   "@deathbeds/jupyterlab-fonts:fonts": {
     "styles": {
       "@import": [

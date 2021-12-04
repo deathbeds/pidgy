@@ -12,11 +12,15 @@ copyright = "2021"
 exclude_patterns = [
     "**.ipynb_checkpoints",
     ".DS_Store",
+    ".doit*",
     ".nox",
     ".pytest_cache",
     "Thumbs.db",
     "_build",
+    "build",
+    "dist",
     "jupyter_execute",
+    "lite",
 ]
 execution_allow_errors = False
 execution_excludepatterns = []
@@ -38,10 +42,10 @@ extensions = [
 external_toc_exclude_missing = False
 external_toc_path = "_toc.yml"
 html_baseurl = ""
+html_extra_path = ["lite/_"]
 html_favicon = ""
 html_logo = "pidgy.png"
 html_sourcelink_suffix = ""
-html_static_path = ["lite/_output"]
 html_theme = "sphinx_book_theme"
 html_theme_options = {
     "search_bar_text": "Search this book...",
