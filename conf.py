@@ -23,9 +23,9 @@ exclude_patterns = [
     "**.ipynb_checkpoints",
     ".DS_Store",
     ".nox",
+    ".pytest_cache",
     "Thumbs.db",
     "_build",
-    ".pytest_cache",
     "jupyter_execute",
 ]
 execution_allow_errors = False
@@ -47,7 +47,6 @@ extensions = [
 ]
 external_toc_exclude_missing = False
 external_toc_path = "_toc.yml"
-html_add_permalinks = "¶"
 html_baseurl = ""
 html_favicon = ""
 html_logo = "pidgy.png"
@@ -79,7 +78,14 @@ jupyter_cache = ""
 jupyter_execute_notebooks = "off"
 language = None
 latex_engine = "pdflatex"
-myst_enable_extensions = ["colon_fence", "dollarmath", "linkify", "substitution"]
+latex_logo = "pidgy.png"
+myst_enable_extensions = [
+    "colon_fence",
+    "dollarmath",
+    "linkify",
+    "substitution",
+    "tasklist",
+]
 myst_url_schemes = ["mailto", "http", "https"]
 nb_output_stderr = "show"
 numfig = True
