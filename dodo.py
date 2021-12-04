@@ -1,11 +1,11 @@
 """dodo.py"""
-from inspect import getsource
 from pathlib import Path
 from re import sub
 import shutil
-from textwrap import dedent
 from hashlib import sha256
 import sys
+import os
+import subprocess
 
 import doit.tools
 
@@ -25,6 +25,12 @@ WHL_DEPS = [
     *Path("src").rglob("*.py"),
     *Path("src/pidgy/kernel/pidgy").rglob("*"),
 ]
+SOURCE_DATE_EPOCH = (
+    subprocess.check_output(["git", "log", "-1", "--format=%ct"])
+    .decode("utf-8")
+    .strip()
+)
+os.environ.update(SOURCE_DATE_EPOCH=SOURCE_DATE_EPOCH)
 
 
 def task_dist():
@@ -67,7 +73,7 @@ def task_lite():
         actions=[
             (doit.tools.create_folder, [LITE / "pypi"]),
             doit.tools.CmdAction(
-                [PY, "-m", "pip", "download", "--prefer-binary", wheel],
+                [PY, "-m", "pip", "wheel", "--prefer-binary", wheel],
                 cwd=str(LITE / "pypi"),
                 shell=False,
             ),
@@ -87,53 +93,41 @@ def task_lite():
                 [PY, "-m", "jupyter", "lite", "archive"], cwd=str(LITE), shell=False
             )
         ],
-        targets=[LITE / "output/SHA256SUMS"],
+        targets=[LITE / "_output/SHA256SUMS"],
     )
 
 
 @doit.create_after("lite")
 def task_docs():
-    def write_addon():
-        def setup(app):
-            def on_config_inited(app, error):
-                try:
-                    __import__("jupyterlite")
-                except (ImportError, AttributeError):
-                    print("jupyterlite not available, no big")
-                    return
-
-                from subprocess import check_call
-
-                wheel = ["pip", "wheel", "--w=dist", "--no-deps"]
-                check_call([*wheel, "."])
-                check_call([*wheel, "htmlmin"])
-                check_call(["jupyter", "lite", "build"], cwd="lite")
-
-            app.connect("config-inited", on_config_inited)
-
-        CONF.write_text(dedent(getsource(setup)))
-
     def post():
         CONF.write_text(
-            sub(
-                r'external_toc_path = "\S+_toc.yml"',
-                r'external_toc_path = "_toc.yml"',
-                CONF.read_text(),
+            "\n".join(
+                [
+                    "import subprocess",
+                    """subprocess.check_call(["doit", "lite"])""",
+                    sub(
+                        r'external_toc_path = "\S+_toc.yml"',
+                        r'external_toc_path = "_toc.yml"',
+                        CONF.read_text(),
+                    ),
+                ]
             )
         )
 
     yield dict(
         name="sphinx-config",
+        file_dep=["_toc.yml", "_config.yml"],
         actions=[
-            write_addon,
-            "jb config sphinx . >> conf.py",
-            "black conf.py",
+            "jb config sphinx .",
             post,
+            "black conf.py",
         ],
         targets=[CONF],
     )
+
     yield dict(
         name="sphinx-build",
+        file_dep=[CONF, *DOCS.rglob("*.ipynb")],
         actions=["sphinx-build . _build/html %(pos)s"],
         pos_arg="pos",
     )
