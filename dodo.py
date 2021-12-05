@@ -54,7 +54,6 @@ os.environ.update(SOURCE_DATE_EPOCH=SOURCE_DATE_EPOCH)
 def task_lint():
     """apply source formatting"""
     yield dict(name="black", file_dep=ALL_PY, actions=[["black", *ALL_PY]])
-    yield dict(name="md", file_dep=ALL_MD, actions=[["mdformat", *ALL_MD]])
 
     for a_json in ALL_JSON:
         yield dict(
