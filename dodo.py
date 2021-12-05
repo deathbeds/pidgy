@@ -1,4 +1,5 @@
 """dodo.py"""
+from json import encoder
 from pathlib import Path
 from re import sub
 import shutil
@@ -6,6 +7,7 @@ from hashlib import sha256
 import sys
 import os
 import subprocess
+import json
 
 import doit.tools
 
@@ -26,16 +28,21 @@ WHL_PY = [
     ]
     if p.name != "_version.py"
 ]
-WHL_MD = ["readme.md", Path("src/pidgy/readme.md")]
+WHL_MD = [HERE / "readme.md", Path("src/pidgy/readme.md")]
 WHL_DEPS = [
-    "pyproject.toml",
-    "setup.cfg",
+    HERE / "pyproject.toml",
+    HERE / "setup.cfg",
     *Path("src/pidgy/kernel/pidgy").rglob("*"),
     *WHL_MD,
     *WHL_PY,
 ]
 ALL_PY = [DODO, *WHL_PY]
 ALL_MD = [*WHL_MD]
+ALL_JSON = [
+    *LITE.glob("*.json"),
+    *LITE.glob("*/*.json"),
+    *[p for p in WHL_DEPS if p.suffix == "json"],
+]
 SOURCE_DATE_EPOCH = (
     subprocess.check_output(["git", "log", "-1", "--format=%ct"])
     .decode("utf-8")
@@ -48,6 +55,24 @@ def task_lint():
     """apply source formatting"""
     yield dict(name="black", file_dep=ALL_PY, actions=[["black", *ALL_PY]])
     yield dict(name="md", file_dep=ALL_MD, actions=[["mdformat", *ALL_MD]])
+
+    for a_json in ALL_JSON:
+        yield dict(
+            name=f"json:{a_json.relative_to(HERE)}",
+            file_dep=[a_json],
+            actions=[
+                lambda: a_json.write_text(
+                    json.dumps(
+                        json.loads(a_json.read_text(encoding="utf-8")),
+                        indent=2,
+                        sort_keys=True,
+                    )
+                    + "\n",
+                    encoding="utf-8",
+                )
+                > 0
+            ],
+        )
 
 
 def task_dist():
