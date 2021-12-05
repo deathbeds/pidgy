@@ -5,4 +5,4 @@ python:
   setup_py_install: true
 
 sphinx:
-  configuration: docs/conf.py
+  configuration: conf.py

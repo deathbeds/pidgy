@@ -4,13 +4,29 @@ author: deathbeds
 email: tony.fast@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   Hyperactive literate programming and computing
-exclude_patterns: [_build, Thumbs.db, .DS_Store, "**.ipynb_checkpoints", ".nox"]
+exclude_patterns:
+  - "_build"
+  - "build"
+  - ".doit*"
+  - ".DS_Store"
+  - ".nox"
+  - ".pytest_cache"
+  - "**.ipynb_checkpoints"
+  - "dist"
+  - "jupyter_execute"
+  - "lite"
+  - "Thumbs.db"
 execute:
-  execute_notebooks:  "off"
+  execute_notebooks: "off"
 
 sphinx:
   config:
     latex_logo: pidgy.png
+    external_toc_path: ./_toc.yml
+    html_extra_path:
+      - lite/_
+    templates_path:
+      - _templates
 latex:
   latex_documents:
-     targetname: pidgy.tex
+    targetname: pidgy.tex

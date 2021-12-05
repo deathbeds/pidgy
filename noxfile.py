@@ -1,6 +1,6 @@
 from os import getenv
 
-from nox import session, parametrize, options
+from nox import options, parametrize, session
 
 options.sessions = ["docs(html)", "test"]
 
@@ -11,12 +11,18 @@ CI = bool(getenv("CI"))
 @parametrize("pdf", [False, True], ids=["html", "pdf"])
 def docs(session, pdf):
     "build the `pidgy` documentation with `jupyter-book`"
-    if pdf:
-        session.posargs += "-builder", "pdflatex"
-        session.conda_install("-c", "conda-forge", "tectonic")
-    session.install("jupyter-book", "jupyterbook-latex", "sphinx-autoapi", "-e.")
+    posargs = ()
+    session.install(
+        "doit", "jupyter-book", "jupyterbook-latex", "sphinx-autoapi", "-e."
+    )
 
-    session.run("jb", "build", ".", *session.posargs)
+    if pdf:
+        posargs += "-M", "latexpdf"
+        session.conda_install("-c", "conda-forge", "tectonic")
+        session.run("doit", "docs:sphinx-config")
+        session.run("sphinx-build", "-M", "latexpdf", ".", "_build/pdf")
+    else:
+        session.run("doit", "docs", *posargs)
 
 
 @session(reuse_venv=not CI)
