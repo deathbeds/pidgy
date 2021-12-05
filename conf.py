@@ -86,5 +86,6 @@ numfig = True
 panels_add_bootstrap_css = False
 pygments_style = "sphinx"
 suppress_warnings = ["myst.domains"]
+templates_path = ["_templates"]
 use_jupyterbook_latex = True
 use_multitoc_numbering = True

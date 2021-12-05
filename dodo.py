@@ -19,8 +19,12 @@ DOCS = HERE / "docs"
 LITE = HERE / "lite"
 SHA256SUMS = DIST / "SHA256SUMS"
 WHL_PY = [
-    "setup.py",
-    *Path("src").rglob("*.py"),
+    p
+    for p in [
+        HERE / "setup.py",
+        *Path("src").rglob("*.py"),
+    ]
+    if p.name != "_version.py"
 ]
 WHL_MD = ["readme.md", Path("src/pidgy/readme.md")]
 WHL_DEPS = [
@@ -98,15 +102,16 @@ def task_lite():
         file_dep=[
             SHA256SUMS,
             wheel,
-            LITE / "jupyter_lite_config.json",
+            *LITE.glob("*.json"),
+            *(LITE / "retro").glob("*.json"),
             *DOCS.rglob("*.ipynb"),
         ],
         actions=[
             doit.tools.CmdAction(
-                [PY, "-m", "jupyter", "lite", "archive"], cwd=str(LITE), shell=False
+                [PY, "-m", "jupyter", "lite", "build"], cwd=str(LITE), shell=False
             )
         ],
-        targets=[LITE / "_/_/SHA256SUMS"],
+        targets=[LITE / "_/_/jupyter-lite.json"],
     )
 
 
@@ -140,7 +145,12 @@ def task_docs():
 
     yield dict(
         name="sphinx-build",
-        file_dep=[CONF, *DOCS.rglob("*.ipynb")],
+        file_dep=[
+            CONF,
+            *DOCS.rglob("*.ipynb"),
+            *(HERE / "_templates").glob("*.html"),
+            LITE / "_/_/jupyter-lite.json",
+        ],
         actions=["sphinx-build . _build/html %(pos)s"],
         pos_arg="pos",
         targets=[HERE / "_build/html/.buildinfo"],

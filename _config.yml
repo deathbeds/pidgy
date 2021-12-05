@@ -25,6 +25,8 @@ sphinx:
     external_toc_path: ./_toc.yml
     html_extra_path:
       - lite/_
+    templates_path:
+      - _templates
 latex:
   latex_documents:
     targetname: pidgy.tex

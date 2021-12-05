@@ -1,7 +1,8 @@
 {
   "jupyter-config-data": {
     "appName": "PidgyLite",
-    "collaborative": true
+    "collaborative": true,
+    "disabledExtensons": ["nbdime-jupyterlab:plugin"]
   },
   "jupyter-lite-schema-version": 0
 }
