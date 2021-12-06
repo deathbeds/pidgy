@@ -5,11 +5,10 @@ sphinx-autoapi
 # apps (for labextension version compatibility)
 jupyterlab >=3.2,<4
 # lite deps
-jupyterlite[all] ==0.1.0a17
+jupyterlite[all] ==0.1.0a18
 # pretties
 ipylab
 ipywidgets
-jupyter-server-mathjax
 jupyterlab-fonts
 jupyter-videochat
 wxyz-lab

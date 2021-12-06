@@ -1,7 +1,7 @@
 """dodo.py"""
 from json import encoder
 from pathlib import Path
-from re import sub
+from re import L, sub
 import shutil
 from hashlib import sha256
 import sys
@@ -19,6 +19,8 @@ CONF = HERE / "conf.py"
 DIST = HERE / "dist"
 DOCS = HERE / "docs"
 LITE = HERE / "lite"
+EXT = LITE / "jupyterlite-pidgy"
+EXT_DIST = EXT / "py_src/jupyterlite_pidgy/labextension/package.json"
 SHA256SUMS = DIST / "SHA256SUMS"
 WHL_PY = [
     p
@@ -104,6 +106,40 @@ def task_dist():
 
 
 @doit.create_after("dist")
+def task_labext():
+    pkg = EXT / "package.json"
+    lock = EXT / "yarn.lock"
+    integrity = EXT / "node_modules/.yarn-integrity"
+    ts_src = [*(EXT / "src").rglob("*.ts")]
+    ts_buildinfo = EXT / "tsconfig.tsbuildinfo"
+
+    def do(*args, **kwargs):
+        cwd = str(kwargs.pop("cwd", EXT))
+        return doit.tools.CmdAction([*args], **kwargs, cwd=cwd, shell=False)
+
+    yield dict(
+        name="yarn",
+        file_dep=[pkg, lock],
+        targets=[integrity],
+        actions=[do("jlpm", "--prefer-offline", "--ignore-optional")],
+    )
+
+    yield dict(
+        name="build:ts",
+        file_dep=[*ts_src, pkg, integrity],
+        targets=[ts_buildinfo],
+        actions=[do("jlpm", "build:lib")],
+    )
+
+    yield dict(
+        name="build:ext",
+        file_dep=[ts_buildinfo, integrity, pkg],
+        targets=[EXT_DIST],
+        actions=[do("jlpm", "build:labextension")],
+    )
+
+
+@doit.create_after("labext")
 def task_lite():
     """build jupyterlite site and pre-requisites"""
     wheel = sorted(DIST.glob("pidgy*.whl"))[-1]
@@ -126,6 +162,7 @@ def task_lite():
         file_dep=[
             SHA256SUMS,
             wheel,
+            EXT_DIST,
             *LITE.glob("*.json"),
             *(LITE / "retro").glob("*.json"),
             *DOCS.rglob("*.ipynb"),

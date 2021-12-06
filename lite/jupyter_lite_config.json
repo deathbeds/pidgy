@@ -3,6 +3,9 @@
     "output_dir": "./_/_",
     "contents": [
       "../docs"
+    ],
+    "federated_extensions": [
+      "./jupyterlite-pidgy/py_src/jupyterlite_pidgy/labextension"
     ]
   }
 }
