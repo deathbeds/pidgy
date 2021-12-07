@@ -223,6 +223,13 @@
     async-mutex "^0.3.1"
     mock-socket "^9.0.3"
 
+"@jupyterlite/pyolite-kernel@0.1.0-alpha.18":
+  version "0.1.0-alpha.18"
+  resolved "https://registry.yarnpkg.com/@jupyterlite/pyolite-kernel/-/pyolite-kernel-0.1.0-alpha.18.tgz#faa8efc8a4fb5a7ab31747c3e9ef2473093dcb84"
+  integrity sha512-9DTRj08g7xdKZ06YYPOGv/3lnksBuhBLgvVu2x7yu9VDKtzbu6tMlOhqSBnxh7eJ4cyXfVb6dPegN3epFyYC2g==
+  dependencies:
+    "@jupyterlite/kernel" "^0.1.0-alpha.18"
+
 "@jupyterlite/server@^0.1.0-alpha.18":
   version "0.1.0-alpha.18"
   resolved "https://registry.yarnpkg.com/@jupyterlite/server/-/server-0.1.0-alpha.18.tgz#8fee115eafa1301edb9e9d6d7eda38f9bde76208"
@@ -4754,6 +4761,11 @@ typescript@~4.1.3:
   version "4.1.6"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.1.6.tgz#1becd85d77567c3c741172339e93ce2e69932138"
   integrity sha512-pxnwLxeb/Z5SP80JDRzVjh58KsM6jZHRAOtTpS7sXLS4ogXNKC9ANxHHZqLLeVHZN35jCtI4JdmLLbLiC1kBow==
+
+typescript@~4.2.3:
+  version "4.2.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.2.4.tgz#8610b59747de028fda898a8aef0e103f156d0961"
+  integrity sha512-V+evlYHZnQkaz8TRBuxTA92yZBPotr5H+WhQ7bD3hZUndx5tGOa1fuCgeSjxAzM1RiN5IzvadIXTVefuuwZCRg==
 
 uglify-js@^3.1.4:
   version "3.14.4"

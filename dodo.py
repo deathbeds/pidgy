@@ -112,30 +112,53 @@ def task_labext():
     integrity = EXT / "node_modules/.yarn-integrity"
     ts_src = [*(EXT / "src").rglob("*.ts")]
     ts_buildinfo = EXT / "tsconfig.tsbuildinfo"
+    pypi = EXT / "pypi"
+    pypi_ts = EXT / "src/_pypi.ts"
 
-    def do(*args, **kwargs):
+    def _do(*args, **kwargs):
         cwd = str(kwargs.pop("cwd", EXT))
         return doit.tools.CmdAction([*args], **kwargs, cwd=cwd, shell=False)
+
+    def _copy_wheels():
+        src = sorted(DIST.glob("*.whl"))[-1]
+        dest = pypi / src.name
+        if pypi.exists():
+            shutil.rmtree(pypi)
+        pypi.mkdir(exist_ok=True)
+        shutil.copy2(src, dest)
+        ctx = "!!file-loader?name=pypi/[name].[ext]&context=.!../pypi"
+        lines = [
+            f"""export * as allJSONUrl from '{ctx}/all.json';""",
+            f"""export * as pidgyWheelUrl from '{ctx}/{dest.name}';""",
+        ]
+        pypi_ts.write_text("\n".join(lines))
 
     yield dict(
         name="yarn",
         file_dep=[pkg, lock],
         targets=[integrity],
-        actions=[do("jlpm", "--prefer-offline", "--ignore-optional")],
+        actions=[_do("jlpm", "--prefer-offline", "--ignore-optional")],
+    )
+
+    yield dict(
+        name="wheel",
+        file_dep=[*DIST.glob("*.whl")],
+        targets=[pypi / "all.json", pypi_ts],
+        actions=[_copy_wheels, _do("jupyter", "lite", "pip", "index", pypi)],
     )
 
     yield dict(
         name="build:ts",
-        file_dep=[*ts_src, pkg, integrity],
+        file_dep=[*ts_src, pkg, integrity, pypi_ts],
         targets=[ts_buildinfo],
-        actions=[do("jlpm", "build:lib")],
+        actions=[_do("jlpm", "build:lib")],
     )
 
     yield dict(
         name="build:ext",
-        file_dep=[ts_buildinfo, integrity, pkg],
+        file_dep=[ts_buildinfo, integrity, pkg, pypi_ts, pypi / "all.json"],
         targets=[EXT_DIST],
-        actions=[do("jlpm", "build:labextension")],
+        actions=[_do("jlpm", "build:labextension")],
     )
 
 
