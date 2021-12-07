@@ -3,7 +3,7 @@
     "appName": "PidgyLite",
     "exposeAppInBrowser": true,
     "collaborative": true,
-    "disabledExtensons": ["nbdime-jupyterlab"],
+    "disabledExtensions": ["nbdime-jupyterlab"],
     "litePluginSettings": {
       "@jupyterlite/pyolite-kernel-extension:kernel": {
         "pipliteUrls": [
