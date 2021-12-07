@@ -3,9 +3,6 @@
     "output_dir": "./_/_",
     "contents": [
       "../docs"
-    ],
-    "federated_extensions": [
-      "./jupyterlite-pidgy/dist/jupyterlite_pidgy-0.1.0-py3-none-any.whl"
     ]
   }
 }

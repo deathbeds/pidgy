@@ -190,6 +190,10 @@ export class PidgyKernel extends BaseKernel implements IKernel {
       banner: 'pidgy: literate programming in ipython',
       help_links: [
         {
+          text: 'pidgy: literate programming in ipython',
+          url: 'https://pidgy.github.io'
+        },
+        {
           text: 'Python (WASM) Kernel',
           url: 'https://pyodide.org'
         }

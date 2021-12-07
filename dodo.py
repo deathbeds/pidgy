@@ -1,7 +1,6 @@
 """dodo.py"""
-from json import encoder
 from pathlib import Path
-from re import L, sub
+from re import sub
 import shutil
 from hashlib import sha256
 import sys
@@ -19,10 +18,14 @@ CONF = HERE / "conf.py"
 DIST = HERE / "dist"
 DOCS = HERE / "docs"
 LITE = HERE / "lite"
+LICENSE = HERE / "LICENSE"
 EXT = LITE / "jupyterlite-pidgy"
+EXT_LICENSE = EXT / LICENSE.name
 EXT_DIST_PKG = EXT / "py_src/jupyterlite_pidgy/labextension/package.json"
+EXT_DIST_PKG_DATA = json.load(EXT_DIST_PKG.open())
 EXT_DIST = EXT / "dist"
-EXT_WHL = EXT_DIST / "jupyterlite_pidgy-0.1.0-py3-none-any.whl"
+EXT_WHL_NAME = f"""jupyterlite_pidgy-{EXT_DIST_PKG_DATA["version"]}-py3-none-any.whl"""
+EXT_WHL = EXT_DIST / EXT_WHL_NAME
 EXT_ICON = EXT / "style/pidgy.png"
 SHA256SUMS = DIST / "SHA256SUMS"
 KERNEL_DATA = HERE / "src/pidgy/kernel/pidgy"
@@ -124,22 +127,21 @@ def task_labext():
         cwd = str(kwargs.pop("cwd", EXT))
         return doit.tools.CmdAction([*args], **kwargs, cwd=cwd, shell=False)
 
-    def _copy_wheels():
+    def _copy_static():
         src = sorted(DIST.glob("*.whl"))[-1]
         dest = pypi / src.name
         if pypi.exists():
             shutil.rmtree(pypi)
-        pypi.mkdir(exist_ok=True, parents=True)
-        shutil.copy2(src, dest)
+        copy_one(src, dest)
         ctx = "!!file-loader?name=pypi/pidgy/[name].[ext]&context=.!../pypi/pidgy"
         lines = [
             f"""export * as allJSONUrl from '{ctx}/all.json';""",
             f"""export * as pidgyWheelUrl from '{ctx}/{dest.name}';""",
         ]
         pypi_ts.write_text("\n".join(lines))
-        if EXT_ICON.exists():
-            EXT_ICON.unlink()
-        shutil.copy2(KERNEL_ICON, EXT_ICON)
+
+        copy_one(KERNEL_ICON, EXT_ICON)
+        copy_one(LICENSE, EXT_LICENSE)
 
     yield dict(
         name="yarn",
@@ -149,10 +151,10 @@ def task_labext():
     )
 
     yield dict(
-        name="wheel:pidgy",
-        file_dep=[*DIST.glob("*.whl"), KERNEL_ICON],
-        targets=[pypi / "all.json", pypi_ts, EXT_ICON],
-        actions=[_copy_wheels, _do("jupyter", "lite", "pip", "index", pypi)],
+        name="copy:static",
+        file_dep=[*DIST.glob("*.whl"), KERNEL_ICON, LICENSE],
+        targets=[pypi / "all.json", pypi_ts, EXT_ICON, EXT_LICENSE],
+        actions=[_copy_static, _do("jupyter", "lite", "pip", "index", pypi)],
     )
 
     yield dict(
@@ -179,7 +181,7 @@ def task_labext():
 
     yield dict(
         name="wheel:ext",
-        file_dep=[EXT_DIST_PKG],
+        file_dep=[EXT_DIST_PKG, EXT_LICENSE],
         actions=[_do(PY, "-m", "pip", "wheel", "--no-deps", "-w", EXT_DIST, ".")],
         targets=[EXT_WHL],
     )
@@ -208,14 +210,23 @@ def task_lite():
         file_dep=[
             SHA256SUMS,
             wheel,
-            *EXT_DIST.glob("*.whl"),
+            EXT_WHL,
             *LITE.glob("*.json"),
             *(LITE / "retro").glob("*.json"),
             *DOCS.rglob("*.ipynb"),
         ],
         actions=[
             doit.tools.CmdAction(
-                [PY, "-m", "jupyter", "lite", "build", "--debug"],
+                [
+                    PY,
+                    "-m",
+                    "jupyter",
+                    "lite",
+                    "build",
+                    "--debug",
+                    "--LiteBuildConfig.federated_extensions",
+                    EXT_WHL,
+                ],
                 cwd=str(LITE),
                 shell=False,
             )
@@ -264,3 +275,19 @@ def task_docs():
         pos_arg="pos",
         targets=[HERE / "_build/html/.buildinfo"],
     )
+
+
+def copy_one(src, dest):
+    if not src.exists():
+        return False
+    if not dest.parent.exists():
+        dest.parent.mkdir(parents=True)
+    if dest.exists():
+        if dest.is_dir():
+            shutil.rmtree(dest)
+        else:
+            dest.unlink()
+    if src.is_dir():
+        shutil.copytree(src, dest)
+    else:
+        shutil.copy2(src, dest)
