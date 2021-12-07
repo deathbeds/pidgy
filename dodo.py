@@ -20,8 +20,13 @@ DIST = HERE / "dist"
 DOCS = HERE / "docs"
 LITE = HERE / "lite"
 EXT = LITE / "jupyterlite-pidgy"
-EXT_DIST = EXT / "py_src/jupyterlite_pidgy/labextension/package.json"
+EXT_DIST_PKG = EXT / "py_src/jupyterlite_pidgy/labextension/package.json"
+EXT_DIST = EXT / "dist"
+EXT_WHL = EXT_DIST / "jupyterlite_pidgy-0.1.0-py3-none-any.whl"
+EXT_ICON = EXT / "style/pidgy.png"
 SHA256SUMS = DIST / "SHA256SUMS"
+KERNEL_DATA = HERE / "src/pidgy/kernel/pidgy"
+KERNEL_ICON = KERNEL_DATA / "logo-64x64.png"
 WHL_PY = [
     p
     for p in [
@@ -34,7 +39,7 @@ WHL_MD = [HERE / "readme.md", Path("src/pidgy/readme.md")]
 WHL_DEPS = [
     HERE / "pyproject.toml",
     HERE / "setup.cfg",
-    *Path("src/pidgy/kernel/pidgy").rglob("*"),
+    *KERNEL_DATA.rglob("*"),
     *WHL_MD,
     *WHL_PY,
 ]
@@ -112,7 +117,7 @@ def task_labext():
     integrity = EXT / "node_modules/.yarn-integrity"
     ts_src = [*(EXT / "src").rglob("*.ts")]
     ts_buildinfo = EXT / "tsconfig.tsbuildinfo"
-    pypi = EXT / "pypi"
+    pypi = EXT / "pypi/pidgy"
     pypi_ts = EXT / "src/_pypi.ts"
 
     def _do(*args, **kwargs):
@@ -124,27 +129,38 @@ def task_labext():
         dest = pypi / src.name
         if pypi.exists():
             shutil.rmtree(pypi)
-        pypi.mkdir(exist_ok=True)
+        pypi.mkdir(exist_ok=True, parents=True)
         shutil.copy2(src, dest)
-        ctx = "!!file-loader?name=pypi/[name].[ext]&context=.!../pypi"
+        ctx = "!!file-loader?name=pypi/pidgy/[name].[ext]&context=.!../pypi/pidgy"
         lines = [
             f"""export * as allJSONUrl from '{ctx}/all.json';""",
             f"""export * as pidgyWheelUrl from '{ctx}/{dest.name}';""",
         ]
         pypi_ts.write_text("\n".join(lines))
+        if EXT_ICON.exists():
+            EXT_ICON.unlink()
+        shutil.copy2(KERNEL_ICON, EXT_ICON)
 
     yield dict(
         name="yarn",
-        file_dep=[pkg, lock],
+        file_dep=[pkg] + ([lock] if lock.exists() else []),
         targets=[integrity],
         actions=[_do("jlpm", "--prefer-offline", "--ignore-optional")],
     )
 
     yield dict(
-        name="wheel",
-        file_dep=[*DIST.glob("*.whl")],
-        targets=[pypi / "all.json", pypi_ts],
+        name="wheel:pidgy",
+        file_dep=[*DIST.glob("*.whl"), KERNEL_ICON],
+        targets=[pypi / "all.json", pypi_ts, EXT_ICON],
         actions=[_copy_wheels, _do("jupyter", "lite", "pip", "index", pypi)],
+    )
+
+    yield dict(
+        name="lint",
+        file_dep=[*ts_src],
+        actions=[
+            _do("jlpm", "eslint"),
+        ],
     )
 
     yield dict(
@@ -157,8 +173,15 @@ def task_labext():
     yield dict(
         name="build:ext",
         file_dep=[ts_buildinfo, integrity, pkg, pypi_ts, pypi / "all.json"],
-        targets=[EXT_DIST],
+        targets=[EXT_DIST_PKG],
         actions=[_do("jlpm", "build:labextension")],
+    )
+
+    yield dict(
+        name="wheel:ext",
+        file_dep=[EXT_DIST_PKG],
+        actions=[_do(PY, "-m", "pip", "wheel", "--no-deps", "-w", EXT_DIST, ".")],
+        targets=[EXT_WHL],
     )
 
 
@@ -185,14 +208,16 @@ def task_lite():
         file_dep=[
             SHA256SUMS,
             wheel,
-            EXT_DIST,
+            *EXT_DIST.glob("*.whl"),
             *LITE.glob("*.json"),
             *(LITE / "retro").glob("*.json"),
             *DOCS.rglob("*.ipynb"),
         ],
         actions=[
             doit.tools.CmdAction(
-                [PY, "-m", "jupyter", "lite", "build"], cwd=str(LITE), shell=False
+                [PY, "-m", "jupyter", "lite", "build", "--debug"],
+                cwd=str(LITE),
+                shell=False,
             )
         ],
         targets=[LITE / "_/_/jupyter-lite.json"],

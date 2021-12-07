@@ -7,6 +7,7 @@
     "url": "https://github.com/deathbeds/pidgy/issues"
   },
   "dependencies": {
+    "@jupyterlite/kernel": "^0.1.0-alpha.18",
     "@jupyterlite/pyolite-kernel": "0.1.0-alpha.18",
     "@jupyterlite/server": "^0.1.0-alpha.18"
   },
@@ -34,7 +35,7 @@
     "webpackConfig": "./webpack.config.js"
   },
   "jupyterlite": {
-    "liteExtension": "lib/plugin.js"
+    "liteExtension": true
   },
   "keywords": [
     "jupyter",
@@ -46,7 +47,7 @@
   "main": "lib/index.js",
   "name": "@deathbeds/pidgy",
   "piplite": {
-    "wheelDir": "./pypi"
+    "wheelDir": "./pypi/pidgy"
   },
   "publishConfig": {
     "access": "public"
