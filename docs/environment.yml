@@ -14,7 +14,7 @@ dependencies:
   - ipywidgets
   - jupyterlab-fonts
   - jupyter-videochat
-  - wxyz-lab
+  - wxyz_lab
   # dev stuff
   - pip
   - doit
