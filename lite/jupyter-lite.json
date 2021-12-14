@@ -1,10 +1,18 @@
 {
-  "$schema": "./_/_/jupyterlite.schema.v0.json",
   "jupyter-config-data": {
     "appName": "PidgyLite",
     "exposeAppInBrowser": true,
     "collaborative": true,
-    "disabledExtensons": ["nbdime-jupyterlab:plugin"]
+    "disabledExtensions": ["nbdime-jupyterlab"],
+    "litePluginSettings": {
+      "@jupyterlite/pyolite-kernel-extension:kernel": {
+        "pipliteUrls": [
+          "./lab/extensions/@deathbeds/pidgy/static/pypi/pidgy/all.json",
+          "./lab/extensions/@deathbeds/pidgy/static/pypi/all.json",
+          "./pypi/all.json"
+        ]
+      }
+    }
   },
   "jupyter-lite-schema-version": 0
 }
