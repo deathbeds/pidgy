@@ -12,15 +12,15 @@ dependencies:
   # pretties
   - ipylab
   - ipywidgets
-  - jupyterlab-fonts
   - jupyter-videochat
+  - jupyterlab-fonts
+  - jupyterlab-markup
   - wxyz_lab
   # dev stuff
   - pip
   - doit
   - pkginfo
-  - nodejs >=14,<15
+  - nodejs >=14,!=15.*,<17
   - setuptools_scm >=6.2
   - pip:
-    # lite deps
-    - jupyterlite[all] ==0.1.0a18
+    - jupyterlite[all] ==0.1.0a20
