@@ -20,6 +20,7 @@ DOCS = HERE / "docs"
 LITE = HERE / "lite"
 LICENSE = HERE / "LICENSE"
 EXT = LITE / "jupyterlite-pidgy"
+LITE_REQS = LITE / "requirements.txt"
 EXT_LICENSE = EXT / LICENSE.name
 EXT_SRC_PKG = EXT / "package.json"
 EXT_SRC_PKG_DATA = json.load(EXT_SRC_PKG.open())
@@ -195,11 +196,11 @@ def task_lite():
 
     yield dict(
         name="wheels",
-        file_dep=[SHA256SUMS, wheel],
+        file_dep=[SHA256SUMS, wheel, LITE_REQS],
         actions=[
             (doit.tools.create_folder, [LITE / "pypi"]),
             doit.tools.CmdAction(
-                [PY, "-m", "pip", "wheel", "--prefer-binary", wheel],
+                [PY, "-m", "pip", "wheel", "--prefer-binary", wheel, "-r", LITE_REQS],
                 cwd=str(LITE / "pypi"),
                 shell=False,
             ),

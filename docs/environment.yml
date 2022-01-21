@@ -1,3 +1,5 @@
+name: pidgy-docs
+
 channels:
   - conda-forge
   - nodefaults

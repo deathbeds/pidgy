@@ -4,7 +4,7 @@ export * from './_pypi';
  * The default CDN fallback for Pyodide
  */
 export const PYODIDE_CDN_URL =
-  'https://cdn.jsdelivr.net/pyodide/v0.18.1/full/pyodide.js';
+  'https://cdn.jsdelivr.net/pyodide/v0.19.0/full/pyodide.js';
 
 /**
  * The id for the upstream extension, and key in the litePlugins.
