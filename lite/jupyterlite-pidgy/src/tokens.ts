@@ -10,8 +10,7 @@ export const PYODIDE_CDN_URL =
  * The id for the upstream extension, and key in the litePlugins.
  */
 
-export const UPSTREAM_PLUGIN_ID =
-  '@jupyterlite/pyolite-kernel-extension:kernel';
+export const UPSTREAM_PLUGIN_ID = '@jupyterlite/pyolite-kernel-extension:kernel';
 
 /**
  * The id for the extension.

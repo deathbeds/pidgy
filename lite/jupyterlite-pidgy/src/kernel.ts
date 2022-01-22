@@ -44,16 +44,9 @@ export class PidgyKernel extends BaseKernel implements IKernel {
 
     const { origin } = window.location;
 
-    const pypi = URLExt.join(
-      origin,
-      PageConfig.getOption('appUrl'),
-      'build/pypi'
-    );
+    const pypi = URLExt.join(origin, PageConfig.getOption('appUrl'), 'build/pypi');
 
-    const pipliteUrls = [
-      ...(options.pipliteUrls || []),
-      URLExt.join(pypi, 'all.json')
-    ];
+    const pipliteUrls = [...(options.pipliteUrls || []), URLExt.join(pypi, 'all.json')];
 
     const pipliteWheelUrl = URLExt.join(pypi, PIPLITE_WHEEL);
 
@@ -67,9 +60,7 @@ export class PidgyKernel extends BaseKernel implements IKernel {
       // ...and the locations of custom wheel APIs and indices...
       `var _pipliteUrls = ${JSON.stringify(pipliteUrls)};`,
       // ...but maybe not PyPI...
-      `var _disablePyPIFallback = ${JSON.stringify(
-        !!options.disablePyPIFallback
-      )};`,
+      `var _disablePyPIFallback = ${JSON.stringify(!!options.disablePyPIFallback)};`,
       // ...finally, the worker... which _must_ appear last!
       worker.toString()
     ];
@@ -210,10 +201,7 @@ export class PidgyKernel extends BaseKernel implements IKernel {
   async executeRequest(
     content: KernelMessage.IExecuteRequestMsg['content']
   ): Promise<KernelMessage.IExecuteReplyMsg['content']> {
-    const result = await this._sendRequestMessageToWorker(
-      'execute-request',
-      content
-    );
+    const result = await this._sendRequestMessageToWorker('execute-request', content);
 
     return {
       execution_count: this.executionCount,
@@ -255,10 +243,7 @@ export class PidgyKernel extends BaseKernel implements IKernel {
   async isCompleteRequest(
     content: KernelMessage.IIsCompleteRequestMsg['content']
   ): Promise<KernelMessage.IIsCompleteReplyMsg['content']> {
-    return await this._sendRequestMessageToWorker(
-      'is-complete-request',
-      content
-    );
+    return await this._sendRequestMessageToWorker('is-complete-request', content);
   }
 
   /**
@@ -320,10 +305,7 @@ export class PidgyKernel extends BaseKernel implements IKernel {
    * @param type The message type to send to the worker.
    * @param data The message to send to the worker.
    */
-  private async _sendRequestMessageToWorker(
-    type: string,
-    data: any
-  ): Promise<any> {
+  private async _sendRequestMessageToWorker(type: string, data: any): Promise<any> {
     this._executeDelegate = new PromiseDelegate<any>();
     this._worker.postMessage({ type, data, parent: this.parent });
     return await this._executeDelegate.promise;

@@ -192,7 +192,12 @@ def task_labext():
 @doit.create_after("labext")
 def task_lite():
     """build jupyterlite site and pre-requisites"""
-    wheel = sorted(DIST.glob("pidgy*.whl"))[-1]
+    wheels = sorted(DIST.glob("pidgy*.whl"))
+
+    if not wheels:
+        return
+
+    wheel = wheels[-1]
 
     yield dict(
         name="wheels",
