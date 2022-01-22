@@ -21,6 +21,9 @@ LITE = HERE / "lite"
 LICENSE = HERE / "LICENSE"
 EXT = LITE / "jupyterlite-pidgy"
 LITE_REQS = LITE / "requirements.txt"
+LITE_PYPI = LITE / "pypi"
+LITE_PYPI_SHA256SUMS = LITE_PYPI / "SHA256SUMS"
+LITE_SHA256SUMS = LITE / "_/_/SHA256SUMS"
 EXT_LICENSE = EXT / LICENSE.name
 EXT_SRC_PKG = EXT / "package.json"
 EXT_SRC_PKG_DATA = json.load(EXT_SRC_PKG.open())
@@ -85,22 +88,23 @@ def task_lint():
             ],
         )
 
+def build_hashfile(hashfile, get_deps):
+    deps = sorted(get_deps())
+
+    if not deps:
+        raise Exception(f"no files found to hash for {hashfile}")
+    lines = []
+
+    for p in deps:
+        lines += ["  ".join([sha256(p.read_bytes()).hexdigest(), p.name])]
+
+    output = "\n".join(lines)
+    print(output)
+    hashfile.write_text(output)
+
 
 def task_dist():
     """build distributions"""
-
-    def hashfile():
-        lines = []
-
-        for p in sorted([*DIST.glob("pidgy*.whl"), *DIST.glob("pidgy*.tar.gz")]):
-            if p == SHA256SUMS:
-                continue
-            lines += ["  ".join([sha256(p.read_bytes()).hexdigest(), p.name])]
-
-        output = "\n".join(lines)
-        print(output)
-        SHA256SUMS.write_text(output)
-
     yield dict(
         name="pidgy",
         doc="build pidgy distributions",
@@ -109,13 +113,15 @@ def task_dist():
             lambda: [shutil.rmtree(DIST) if DIST.is_dir() else None, None][-1],
             [PY, "setup.py", "sdist"],
             [PY, "-m", "pip", "wheel", "-w", DIST, "--no-deps", "."],
-            hashfile,
+            (build_hashfile, [
+                SHA256SUMS,
+                lambda: [*DIST.glob("pidgy*.whl"), *DIST.glob("pidgy*.tar.gz")]
+            ]),
         ],
         targets=[SHA256SUMS],
     )
 
 
-@doit.create_after("dist")
 def task_labext():
     pkg = EXT / "package.json"
     lock = EXT / "yarn.lock"
@@ -183,62 +189,68 @@ def task_labext():
 
     yield dict(
         name="wheel:ext",
-        file_dep=[EXT_DIST_PKG, EXT_LICENSE],
+        file_dep=[EXT_DIST_PKG, EXT_LICENSE, SHA256SUMS],
         actions=[_do(PY, "-m", "pip", "wheel", "--no-deps", "-w", EXT_DIST, ".")],
         targets=[EXT_WHL],
     )
 
 
-@doit.create_after("labext")
 def task_lite():
     """build jupyterlite site and pre-requisites"""
-    wheels = sorted(DIST.glob("pidgy*.whl"))
 
-    if not wheels:
-        return
+    def _wheels():
+        if LITE_PYPI_SHA256SUMS.exists():
+            LITE_PYPI_SHA256SUMS.unlink()
 
-    wheel = wheels[-1]
+        wheel = sorted(DIST.glob("pidgy-*.whl"))[-1]
+
+        for old_wheel in LITE_PYPI.glob("pidgy-*.whl"):
+            old_wheel.unlink()
+
+        rc = subprocess.check_call(
+            [PY, "-m", "pip", "wheel", "--prefer-binary", wheel, "-r", LITE_REQS],
+            cwd=str(LITE_PYPI),
+        )
+
+        if rc == 0:
+            build_hashfile(
+                LITE_PYPI_SHA256SUMS,
+                lambda: [*LITE_PYPI.glob("*py3-none-any.whl")]
+            )
+            return True
+
+        return False
 
     yield dict(
         name="wheels",
-        file_dep=[SHA256SUMS, wheel, LITE_REQS],
-        actions=[
-            (doit.tools.create_folder, [LITE / "pypi"]),
-            doit.tools.CmdAction(
-                [PY, "-m", "pip", "wheel", "--prefer-binary", wheel, "-r", LITE_REQS],
-                cwd=str(LITE / "pypi"),
-                shell=False,
-            ),
-        ],
+        file_dep=[SHA256SUMS, LITE_REQS, EXT_WHL],
+        actions=[(doit.tools.create_folder, [LITE / "pypi"]), _wheels],
     )
+
+    def _lite(args, extra_args=None):
+        lite_cmd = [PY, "-m", "jupyter", "lite"]
+        lite_args = ["--debug", "--LiteBuildConfig.federated_extensions", EXT_WHL]
+        extra_args = extra_args or []
+        return doit.tools.CmdAction(
+            [*lite_cmd, *args, *lite_args, *extra_args],
+            cwd=str(LITE),
+            shell=False,
+        )
 
     yield dict(
         name="build",
         file_dep=[
             SHA256SUMS,
-            wheel,
             EXT_WHL,
             *LITE.glob("*.json"),
             *(LITE / "retro").glob("*.json"),
             *DOCS.rglob("*.ipynb"),
         ],
         actions=[
-            doit.tools.CmdAction(
-                [
-                    PY,
-                    "-m",
-                    "jupyter",
-                    "lite",
-                    "build",
-                    "--debug",
-                    "--LiteBuildConfig.federated_extensions",
-                    EXT_WHL,
-                ],
-                cwd=str(LITE),
-                shell=False,
-            )
+            _lite(["build"]),
+            _lite(["doit"], ["--", "pre_archive:report:SHA256SUMS"]),
         ],
-        targets=[LITE / "_/_/jupyter-lite.json"],
+        targets=[LITE_SHA256SUMS],
     )
 
 
@@ -276,7 +288,7 @@ def task_docs():
             CONF,
             *DOCS.rglob("*.ipynb"),
             *(HERE / "_templates").glob("*.html"),
-            LITE / "_/_/jupyter-lite.json",
+            LITE_SHA256SUMS,
         ],
         actions=["sphinx-build . _build/html %(pos)s"],
         pos_arg="pos",

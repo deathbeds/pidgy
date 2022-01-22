@@ -17,6 +17,8 @@ dependencies:
   - jupyter-videochat
   - jupyterlab-fonts
   - jupyterlab-markup
+  - wxyz_datagrid
+  - wxyz_json_schema_form
   - wxyz_lab
   # dev stuff
   - pip
