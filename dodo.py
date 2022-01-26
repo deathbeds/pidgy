@@ -88,6 +88,7 @@ def task_lint():
             ],
         )
 
+
 def build_hashfile(hashfile, get_deps):
     deps = sorted(get_deps())
 
@@ -113,10 +114,13 @@ def task_dist():
             lambda: [shutil.rmtree(DIST) if DIST.is_dir() else None, None][-1],
             [PY, "setup.py", "sdist"],
             [PY, "-m", "pip", "wheel", "-w", DIST, "--no-deps", "."],
-            (build_hashfile, [
-                SHA256SUMS,
-                lambda: [*DIST.glob("pidgy*.whl"), *DIST.glob("pidgy*.tar.gz")]
-            ]),
+            (
+                build_hashfile,
+                [
+                    SHA256SUMS,
+                    lambda: [*DIST.glob("pidgy*.whl"), *DIST.glob("pidgy*.tar.gz")],
+                ],
+            ),
         ],
         targets=[SHA256SUMS],
     )
@@ -214,8 +218,7 @@ def task_lite():
 
         if rc == 0:
             build_hashfile(
-                LITE_PYPI_SHA256SUMS,
-                lambda: [*LITE_PYPI.glob("*py3-none-any.whl")]
+                LITE_PYPI_SHA256SUMS, lambda: [*LITE_PYPI.glob("*py3-none-any.whl")]
             )
             return True
 
@@ -257,11 +260,14 @@ def task_lite():
 @doit.create_after("lite")
 def task_docs():
     def post():
+        lite_once = """check_call(["doit", "lite"])"""
         CONF.write_text(
             "\n".join(
                 [
-                    "import subprocess",
-                    """subprocess.check_call(["doit", "lite"])""",
+                    "from subprocess import check_call",
+                    # run it twice, just to be sure
+                    lite_once,
+                    lite_once,
                     sub(
                         r'external_toc_path = "\S+_toc.yml"',
                         r'external_toc_path = "_toc.yml"',
