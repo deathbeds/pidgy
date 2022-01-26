@@ -126,6 +126,7 @@ def task_dist():
     )
 
 
+@doit.create_after("dist")
 def task_labext():
     pkg = EXT / "package.json"
     lock = EXT / "yarn.lock"
@@ -199,6 +200,7 @@ def task_labext():
     )
 
 
+@doit.create_after("labext")
 def task_lite():
     """build jupyterlite site and pre-requisites"""
 
@@ -264,9 +266,6 @@ def task_docs():
             "\n".join(
                 [
                     "import subprocess",
-                    """subprocess.call(["doit", "dist"])""",
-                    """subprocess.call(["doit", "labext"])""",
-                    """subprocess.call(["doit", "lite"])""",
                     """subprocess.check_call(["doit", "lite"])""",
                     sub(
                         r'external_toc_path = "\S+_toc.yml"',
