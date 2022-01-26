@@ -260,14 +260,14 @@ def task_lite():
 @doit.create_after("lite")
 def task_docs():
     def post():
-        lite_once = """check_call(["doit", "lite"])"""
         CONF.write_text(
             "\n".join(
                 [
-                    "from subprocess import check_call",
-                    # run it twice, just to be sure
-                    lite_once,
-                    lite_once,
+                    "import subprocess",
+                    """subprocess.call(["doit", "dist"])""",
+                    """subprocess.call(["doit", "labext"])""",
+                    """subprocess.call(["doit", "lite"])""",
+                    """subprocess.check_call(["doit", "lite"])""",
                     sub(
                         r'external_toc_path = "\S+_toc.yml"',
                         r'external_toc_path = "_toc.yml"',
