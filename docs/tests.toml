@@ -1,0 +1,73 @@
+[no-indent]
+description = "A Markdown paragraph is a block string."
+in = "This is a Markdown paragraph"
+out = "'''This is a Markdown paragraph''';"
+
+[yes-indent]
+description = "Indented Markdown block code is Python."
+in = "    print('this is code')"
+out = "print('this is code')"
+
+[continued-markdown-statement]
+description = "Markdown blocks care defined as variables using line continuations"
+in = """     foo = \\
+This is a Markdown paragraph.
+"""
+out = """
+foo = \\
+'''This is a Markdown paragraph.''';
+"""
+
+[paren-markdown-statement]
+description = "Parenthesis can group markdown blocks"
+in = """    foo = (
+This is a Markdown paragraph.
+
+    )
+"""
+out = """
+foo = (
+'''This is a Markdown paragraph.'''
+
+)
+"""
+
+[explict-single-quotes]
+in = """    foo = '''
+This is a Markdown paragraph.
+
+    '''.lower()
+"""
+out = """foo = '''
+This is a Markdown paragraph.
+
+'''.lower()
+"""
+
+[explict-double-quotes]
+in = '''    foo = """
+This is a Markdown paragraph.
+
+    """.lower()
+'''
+out = '''foo = """
+This is a Markdown paragraph.
+
+""".lower()
+'''
+
+[function-docstring]
+in = '''    def func(x: object) -> None:
+A Markdown paragraph as a docstring
+'''
+out = """def func(x: object) -> None:
+    '''A Markdown paragraph as a docstring''';
+"""
+
+[class-docstring]
+in = '''    class Class(Object):
+A Markdown paragraph as a docstring
+'''
+out = """class Class(Object):
+    '''A Markdown paragraph as a docstring''';
+"""
