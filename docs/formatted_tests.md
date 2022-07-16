@@ -4,131 +4,191 @@
 
   ### Markdown Input 1
 
-  ```
-  This is a Markdown paragraph
-  ```
+    This is a Markdown paragraph
   ### Python Output 1
 
-  ```
-  '''This is a Markdown paragraph''';
-  ```
+    '''This is a Markdown paragraph''';
 ## Indented Markdown block code is Python.
 
   ### Markdown Input 2
 
-  ```
-      print('this is code')
-  ```
+        print('this is code')
   ### Python Output 2
 
-  ```
-  print('this is code')
-  ```
-## Markdown blocks care defined as variables using line continuations
+    print('this is code')
+## code fence is block string
 
   ### Markdown Input 3
 
-  ```
-       foo = \
-  This is a Markdown paragraph.
+    ```{code} fence
+    code shenanigans
+    ```
 
-  ```
   ### Python Output 3
 
-  ```
-  foo = \
-  '''This is a Markdown paragraph.''';
+    '''```{code} fence
+    code shenanigans
+    ```''';
 
-  ```
-## Parenthesis can group markdown blocks
+## Markdown blocks care defined as variables using line continuations
 
   ### Markdown Input 4
 
-  ```
-      foo = (
-  This is a Markdown paragraph.
+         foo = \
+    This is a Markdown paragraph.
 
-      )
-
-  ```
   ### Python Output 4
 
-  ```
-  foo = (
-  '''This is a Markdown paragraph.'''
+    foo = \
+    '''This is a Markdown paragraph.''';
 
-  )
-
-  ```
-## explict single quotes
+## Parenthesis can group markdown blocks
 
   ### Markdown Input 5
 
-  ```
-      foo = '''
-  This is a Markdown paragraph.
+        foo = (
+    This is a Markdown paragraph.
 
-      '''.lower()
+        )
 
-  ```
   ### Python Output 5
 
-  ```
-  foo = '''
-  This is a Markdown paragraph.
+    foo = (
+    '''This is a Markdown paragraph.'''
 
-  '''.lower()
+    )
 
-  ```
-## explict double quotes
+## explict single quotes
 
   ### Markdown Input 6
 
-  ```
-      foo = """
-  This is a Markdown paragraph.
+        foo = '''
+    This is a Markdown paragraph.
 
-      """.lower()
+        '''.lower()
 
-  ```
   ### Python Output 6
 
-  ```
-  foo = """
-  This is a Markdown paragraph.
+    foo = '''
+    This is a Markdown paragraph.
 
-  """.lower()
+    '''.lower()
 
-  ```
-## function docstring
+## explict double quotes
 
   ### Markdown Input 7
 
-  ```
-      def func(x: object) -> None:
-  A Markdown paragraph as a docstring
+        foo = """
+    This is a Markdown paragraph.
 
-  ```
+        """.lower()
+
   ### Python Output 7
 
-  ```
-  def func(x: object) -> None:
-      '''A Markdown paragraph as a docstring''';
+    foo = """
+    This is a Markdown paragraph.
 
-  ```
-## class docstring
+    """.lower()
+
+## function docstring
 
   ### Markdown Input 8
 
-  ```
-      class Class(Object):
-  A Markdown paragraph as a docstring
+        def func(x: object) -> None:
+    A Markdown paragraph as a docstring
 
-  ```
   ### Python Output 8
 
-  ```
-  class Class(Object):
-      '''A Markdown paragraph as a docstring''';
+    def func(x: object) -> None:
+        '''A Markdown paragraph as a docstring''';
 
-  ```
+## function docstring extra trailing indent
+
+  ### Markdown Input 9
+
+        def func(x: object) -> None:
+    A Markdown paragraph as a docstring
+             
+                    ...
+
+  ### Python Output 9
+
+    def func(x: object) -> None:
+                '''A Markdown paragraph as a docstring'''
+
+                ...
+
+## class docstring
+
+  ### Markdown Input 10
+
+        class Class(Object):
+    A Markdown paragraph as a docstring
+
+  ### Python Output 10
+
+    class Class(Object):
+        '''A Markdown paragraph as a docstring''';
+
+## class docstring extra indent
+
+  ### Markdown Input 11
+
+            class Class(Object):
+    A Markdown paragraph as a docstring
+
+                                def prop(self):
+                                    pass
+
+  ### Python Output 11
+
+    class Class(Object):
+                        '''A Markdown paragraph as a docstring'''
+
+                        def prop(self):
+                            pass
+
+## class method docstring
+
+  ### Markdown Input 12
+
+            class Class(Object):
+    A Markdown paragraph as a docstring
+
+                                def prop(self):
+      A Markdown paragraph as a method docstring
+
+                                            pass
+
+  ### Python Output 12
+
+    class Class(Object):
+                        '''A Markdown paragraph as a docstring'''
+
+                        def prop(self):
+                                    '''A Markdown paragraph as a method docstring'''
+
+                                    pass
+
+## single indent is paragraph in a markdown list
+
+  ### Markdown Input 13
+
+    *  A Markdown List
+
+        This line is not code
+
+    * Another item in the list
+
+            # This line IS code
+
+  ### Python Output 13
+
+    '''*  A Markdown List
+
+        This line is not code
+
+    * Another item in the list'''
+
+    # This line IS code
+

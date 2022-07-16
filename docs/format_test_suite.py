@@ -19,8 +19,10 @@ if MAIN:
             test.get("out", ""),
             test.get("description", ""),
         )
+        input = indent(input, IN)
+        output = indent(output, IN)
         body += f"""## {description or anchor.replace(*'- ')}\n\n"""
-        body += indent(f"""### Markdown Input {i}\n\n```\n{input}\n```\n""", IN)
-        body += indent(f"""### Python Output {i}\n\n```\n{output}\n```\n""", IN)
+        body += indent(f"""### Markdown Input {i}\n\n{input}\n""", IN)
+        body += indent(f"""### Python Output {i}\n\n{output}\n""", IN)
 
     Path(HERE / "formatted_tests.md").write_text(body)
