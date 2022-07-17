@@ -7,9 +7,9 @@
     "url": "https://github.com/deathbeds/pidgy/issues"
   },
   "dependencies": {
-    "@jupyterlite/kernel": "^0.1.0-alpha.18",
-    "@jupyterlite/pyolite-kernel": "0.1.0-alpha.18",
-    "@jupyterlite/server": "^0.1.0-alpha.18"
+    "@jupyterlite/kernel": "^0.1.0-alpha.20",
+    "@jupyterlite/pyolite-kernel": "0.1.0-alpha.20",
+    "@jupyterlite/server": "^0.1.0-alpha.20"
   },
   "description": "A pidgy kernel for JupyterLite",
   "devDependencies": {
@@ -80,5 +80,5 @@
   "style": "style/index.css",
   "styleModule": "style/index.js",
   "types": "lib/index.d.ts",
-  "version": "0.1.0"
+  "version": "0.2.0"
 }

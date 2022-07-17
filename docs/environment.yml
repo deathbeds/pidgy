@@ -1,3 +1,5 @@
+name: pidgy-docs
+
 channels:
   - conda-forge
   - nodefaults
@@ -12,15 +14,18 @@ dependencies:
   # pretties
   - ipylab
   - ipywidgets
-  - jupyterlab-fonts
   - jupyter-videochat
+  - jupyterlab-fonts
+  - jupyterlab-markup
+  - jupyterlab-myst
+  - wxyz_datagrid
+  - wxyz_json_schema_form
   - wxyz_lab
   # dev stuff
   - pip
   - doit
   - pkginfo
-  - nodejs >=14,<15
+  - nodejs >=14,!=15.*,<17
   - setuptools_scm >=6.2
   - pip:
-    # lite deps
-    - jupyterlite[all] ==0.1.0a18
+    - jupyterlite[all] ==0.1.0a20

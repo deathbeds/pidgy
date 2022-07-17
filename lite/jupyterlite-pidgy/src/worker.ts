@@ -43,9 +43,7 @@ async function loadPyodideAndPackages() {
     import micropip
     await micropip.install('${_pipliteWheelUrl}')
     import piplite.piplite
-    piplite.piplite._PIPLITE_DISABLE_PYPI = ${
-      _disablePyPIFallback ? 'True' : 'False'
-    }
+    piplite.piplite._PIPLITE_DISABLE_PYPI = ${_disablePyPIFallback ? 'True' : 'False'}
     piplite.piplite._PIPLITE_URLS = ${JSON.stringify(_pipliteUrls)}
   `);
 
@@ -84,9 +82,7 @@ function mapToObject(obj: any) {
   const out: any = obj instanceof Array ? [] : {};
   obj.forEach((value: any, key: string) => {
     out[key] =
-      value instanceof Map || value instanceof Array
-        ? mapToObject(value)
-        : value;
+      value instanceof Map || value instanceof Array ? mapToObject(value) : value;
   });
   return out;
 }
@@ -197,11 +193,7 @@ async function execute(content: any) {
     });
   };
 
-  const publishExecutionError = (
-    ename: any,
-    evalue: any,
-    traceback: any
-  ): void => {
+  const publishExecutionError = (ename: any, evalue: any, traceback: any): void => {
     const bundle = {
       ename: ename,
       evalue: evalue,
@@ -225,11 +217,7 @@ async function execute(content: any) {
     });
   };
 
-  const displayDataCallback = (
-    data: any,
-    metadata: any,
-    transient: any
-  ): void => {
+  const displayDataCallback = (data: any, metadata: any, transient: any): void => {
     const bundle = {
       data: formatResult(data),
       metadata: formatResult(metadata),
@@ -275,8 +263,7 @@ async function execute(content: any) {
   stderr_stream.publish_stream_callback = publishStreamCallback;
   interpreter.display_pub.clear_output_callback = clearOutputCallback;
   interpreter.display_pub.display_data_callback = displayDataCallback;
-  interpreter.display_pub.update_display_data_callback =
-    updateDisplayDataCallback;
+  interpreter.display_pub.update_display_data_callback = updateDisplayDataCallback;
   interpreter.displayhook.publish_execution_result = publishExecutionResult;
   interpreter.input = input;
   interpreter.getpass = getpass;
@@ -285,11 +272,7 @@ async function execute(content: any) {
   const results = formatResult(res);
 
   if (results['status'] === 'error') {
-    publishExecutionError(
-      results['ename'],
-      results['evalue'],
-      results['traceback']
-    );
+    publishExecutionError(results['ename'], results['evalue'], results['traceback']);
   }
 
   return results;
@@ -310,16 +293,8 @@ function complete(content: any) {
  *
  * @param content The incoming message with the code to inspect.
  */
-function inspect(content: {
-  code: string;
-  cursor_pos: number;
-  detail_level: 0 | 1;
-}) {
-  const res = kernel.inspect(
-    content.code,
-    content.cursor_pos,
-    content.detail_level
-  );
+function inspect(content: { code: string; cursor_pos: number; detail_level: 0 | 1 }) {
+  const res = kernel.inspect(content.code, content.cursor_pos, content.detail_level);
   const results = formatResult(res);
   return results;
 }

@@ -3,10 +3,7 @@
 
 import { PageConfig, URLExt } from '@jupyterlab/coreutils';
 
-import {
-  JupyterLiteServer,
-  JupyterLiteServerPlugin
-} from '@jupyterlite/server';
+import { JupyterLiteServer, JupyterLiteServerPlugin } from '@jupyterlite/server';
 
 import * as kernelIcon from '!!file-loader!../style/pidgy.png';
 
@@ -22,13 +19,7 @@ const kernel: JupyterLiteServerPlugin<void> = {
   autoStart: true,
   optional: [IKernelSpecs],
   activate: (app: JupyterLiteServer, kernelspecs: IKernelSpecs) => {
-    console.log(
-      UPSTREAM_PLUGIN_ID,
-      PYODIDE_CDN_URL,
-      PageConfig,
-      URLExt,
-      kernelspecs
-    );
+    console.log(UPSTREAM_PLUGIN_ID, PYODIDE_CDN_URL, PageConfig, URLExt, kernelspecs);
     // const baseUrl = PageConfig.getBaseUrl();
     const config =
       JSON.parse(PageConfig.getOption('litePluginSettings') || '{}')[
@@ -37,9 +28,7 @@ const kernel: JupyterLiteServerPlugin<void> = {
     const url = config.pyodideUrl || PYODIDE_CDN_URL;
     const pyodideUrl = URLExt.parse(url).href;
     const rawPipUrls = config.pipliteUrls || [];
-    const pipliteUrls = rawPipUrls.map(
-      (pipUrl: string) => URLExt.parse(pipUrl).href
-    );
+    const pipliteUrls = rawPipUrls.map((pipUrl: string) => URLExt.parse(pipUrl).href);
     const disablePyPIFallback = !!config.disablePyPIFallback;
 
     kernelspecs.register({
