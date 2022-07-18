@@ -6,15 +6,16 @@ LOADED = False
 
 
 def load_ipython_extension(shell):
-    from . import tangle, weave
+    from . import tangle, weave, extras
 
-    shell.user_ns.setdefault("shell", shell)
+    extras.load_ipython_extension(shell)
     tangle.load_ipython_extension(shell)
     weave.load_ipython_extension(shell)
 
 
 def unload_ipython_extension(shell):
-    from . import tangle, weave
+    from . import tangle, weave, extras
 
+    extras.unload_ipython_extension(shell)
     tangle.unload_ipython_extension(shell)
     weave.unload_ipython_extension(shell)
