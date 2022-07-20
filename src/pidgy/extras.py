@@ -6,6 +6,9 @@
   this feature minimizes time between computing iterations by bringing more completion sooner.
   in an interactive computing session, the sys modules hold variable names not available to
   the author, but when available help continue flow between executions.
+
+3. IPython display objects are added to the user namespace
+4. top-level return statement become IPython.display expressions.
 """
 
 from sys import modules
@@ -24,6 +27,7 @@ def update_sys_modules():
 
 
 def ipython_display_objects(**data):
+    """extract the display object from IPython"""
     from IPython import display
     from IPython.display import DisplayObject, TextDisplayObject, IFrame
 
@@ -36,6 +40,8 @@ def ipython_display_objects(**data):
 
 
 class ReturnDisplay(NodeTransformer):
+    """transform a return node into an IPython display expression"""
+
     def visit_FunctionDef(self, node):
         return node
 
