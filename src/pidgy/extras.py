@@ -35,13 +35,37 @@ def ipython_display_objects(**data):
     return data
 
 
+class ReturnDisplay(NodeTransformer):
+    def visit_FunctionDef(self, node):
+        return node
+
+    visit_AsyncFunctionDef = visit_FunctionDef
+
+    def visit_Return(self, node):
+        return Expr(
+            Call(
+                func=parse('__import__("IPython").display.display', mode="eval").body,
+                args=node.value.elts if isinstance(node.value, Tuple) else [node.value],
+                keywords=[],
+            )
+        )
+
+
 def load_ipython_extension(shell: IPython.InteractiveShell):
     shell.user_ns.setdefault("shell", shell)
     shell.user_ns.update(
         (k, v) for k, v in ipython_display_objects().items() if k not in shell.user_ns
     )
     shell.events.register("pre_execute", update_sys_modules)
+    shell.ast_transformers.append(ReturnDisplay())
 
 
 def unload_ipython_extension(shell: IPython.InteractiveShell):
     shell.events.unregister("pre_execute", update_sys_modules)
+
+    pops = []
+    for i, x in enumerate(shell.ast_transformers):
+        isinstance(x, ReturnDisplay) and pops.append(i)
+
+    for pop in pops:
+        shell.ast_transformers.pop(pop)
