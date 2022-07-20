@@ -9,6 +9,7 @@
 """
 
 from sys import modules
+from ast import NodeTransformer, Call, Expr, parse, Tuple
 import IPython
 
 
@@ -22,8 +23,23 @@ def update_sys_modules():
     )
 
 
+def ipython_display_objects(**data):
+    from IPython import display
+    from IPython.display import DisplayObject, TextDisplayObject, IFrame
+
+    for k, v in vars(display).items():
+        if isinstance(v, type) and issubclass(v, (DisplayObject, IFrame)):
+            if v not in {DisplayObject, TextDisplayObject}:
+                if k[0].isupper():
+                    data[k] = v
+    return data
+
+
 def load_ipython_extension(shell: IPython.InteractiveShell):
     shell.user_ns.setdefault("shell", shell)
+    shell.user_ns.update(
+        (k, v) for k, v in ipython_display_objects().items() if k not in shell.user_ns
+    )
     shell.events.register("pre_execute", update_sys_modules)
 
 
