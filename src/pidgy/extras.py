@@ -9,6 +9,8 @@
 
 3. IPython display objects are added to the user namespace
 4. top-level return statement become IPython.display expressions.
+5. it should be easy to copy and paste json for beginners. 
+    we are `true, false and null` buultins.
 """
 
 from sys import modules
@@ -24,6 +26,10 @@ def update_sys_modules():
         for k, v in modules.items()
         if k and k[0] != "_" and "." not in k and k not in shell.user_ns
     )
+
+def json_positive():
+    import builtins
+    builtins.true, builtins.false, builtins.null = True, False, None
 
 
 def ipython_display_objects(**data):
@@ -64,7 +70,7 @@ def load_ipython_extension(shell: IPython.InteractiveShell):
     )
     shell.events.register("pre_execute", update_sys_modules)
     shell.ast_transformers.append(ReturnDisplay())
-
+    json_positive()
 
 def unload_ipython_extension(shell: IPython.InteractiveShell):
     shell.events.unregister("pre_execute", update_sys_modules)
