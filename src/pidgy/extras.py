@@ -13,6 +13,7 @@
     we are `true, false and null` buultins.
 """
 
+from pathlib import Path
 from sys import modules
 from ast import NodeTransformer, Call, Expr, parse, Tuple
 import IPython
@@ -27,8 +28,10 @@ def update_sys_modules():
         if k and k[0] != "_" and "." not in k and k not in shell.user_ns
     )
 
+
 def json_positive():
     import builtins
+
     builtins.true, builtins.false, builtins.null = True, False, None
 
 
@@ -43,6 +46,26 @@ def ipython_display_objects(**data):
                 if k[0].isupper():
                     data[k] = v
     return data
+
+
+def shebang_transformer(lines):
+    for i, line in enumerate(map(str.strip, lines)):
+        if line:
+            if line.startswith(("#!",)):
+                lines[i] = lines[0].replace("#!", "%%", 1)
+            break
+    return lines
+
+
+def format_subprocess(argv, body):
+    import tempfile, subprocess, shlex
+
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".py") as file:
+        file.write(body.encode())
+    try:
+        return subprocess.check_call(shlex.split(argv) + [file.name])
+    finally:
+        Path(file.name).unlink()
 
 
 class ReturnDisplay(NodeTransformer):
@@ -71,6 +94,9 @@ def load_ipython_extension(shell: IPython.InteractiveShell):
     shell.events.register("pre_execute", update_sys_modules)
     shell.ast_transformers.append(ReturnDisplay())
     json_positive()
+    shell.register_magic_function(format_subprocess, "cell", "/usr/bin/env")
+    shell.input_transformers_cleanup.insert(0, shebang_transformer)
+
 
 def unload_ipython_extension(shell: IPython.InteractiveShell):
     shell.events.unregister("pre_execute", update_sys_modules)
@@ -81,3 +107,10 @@ def unload_ipython_extension(shell: IPython.InteractiveShell):
 
     for pop in pops:
         shell.ast_transformers.pop(pop)
+
+    try:
+        shell.input_transformers_cleanup.pop(
+            shell.input_transformers_cleanup.index(shebang_transformer)
+        )
+    except ValueError:
+        pass
