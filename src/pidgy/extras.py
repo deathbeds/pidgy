@@ -37,6 +37,7 @@ class JsonPositive(Extension):
 
         builtins.true, builtins.false, builtins.null = True, False, None
 
+
 class IPythonDisplays(Extension):
     def load_ipython_extension(self):
         """extract the display object from IPython"""
@@ -48,7 +49,6 @@ class IPythonDisplays(Extension):
                 if v not in {DisplayObject, TextDisplayObject}:
                     if k[0].isupper():
                         self.shell.user_ns.setdefault(k, v)
-        
 
 
 class Shebang(Extension):
@@ -68,7 +68,7 @@ class Shebang(Extension):
         with tempfile.NamedTemporaryFile(delete=False, suffix=".py") as file:
             file.write(body.encode())
         try:
-            return subprocess.check_call(shlex.split(argv) + [file.name])
+            subprocess.check_call(shlex.split(argv) + [file.name])
         finally:
             Path(file.name).unlink()
 

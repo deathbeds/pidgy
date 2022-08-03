@@ -14,7 +14,7 @@ def get_ipython():
 
 
 MAGICS = {"line", "line_cell", "cell"}
-TRANSFORMS = {"clean_transforms"}
+TRANSFORMS = {"cleanup_transforms"}
 
 
 class Extension(HasTraits):
@@ -63,12 +63,17 @@ class Extension(HasTraits):
         for event in self.shell.events.callbacks:
             property = getattr(self, event, None)
             if property is not None:
-                self.shell.events.unregister(event, property)
+                try:
+                    self.shell.events.unregister(event, property)
+                except ValueError:
+                    pass
 
         vars = set(dir(self))
 
         if isinstance(self, NodeTransformer):
-            self.ast_transformers = [x for x in self.ast_transformers if x is not self]
+            self.shell.ast_transformers = [
+                x for x in self.shell.ast_transformers if x is not self
+            ]
 
         for transform in TRANSFORMS.intersection(vars):
             f = getattr(self, transform)
