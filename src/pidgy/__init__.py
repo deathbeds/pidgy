@@ -2,7 +2,13 @@
 
 """pidgy literate computing frame"""
 
-LOADED = False
+IS_IPY = bool(
+    getattr(
+        __import__("sys").modules.get("IPython", __import__("sys")),
+        "get_ipython",
+        lambda: None,
+    )()
+)
 
 
 def load_ipython_extension(shell):
