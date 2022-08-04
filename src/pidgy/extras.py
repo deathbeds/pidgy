@@ -14,6 +14,7 @@
 """
 
 from pathlib import Path
+from subprocess import CalledProcessError
 from sys import modules
 from ast import NodeTransformer, Call, Expr, parse, Tuple
 import IPython
@@ -64,11 +65,15 @@ class Shebang(Extension):
 
     def cell(self, argv, body):
         import tempfile, subprocess, shlex
+        from IPython.display import Pretty, display
 
         with tempfile.NamedTemporaryFile(delete=False, suffix=".py") as file:
             file.write(body.encode())
         try:
-            subprocess.check_call(shlex.split(argv) + [file.name])
+            output = subprocess.check_output(shlex.split(argv) + [file.name]).decode()
+            display(Pretty(output))
+        except CalledProcessError:
+            pass
         finally:
             Path(file.name).unlink()
 
