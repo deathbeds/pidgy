@@ -31,7 +31,8 @@ def test(session):
     session.install(CI and ".[test,kernel]" or "-e.[test,kernel]")
     session.run("python", "-m", "pidgy.kernel.install")
     session.run("jupyter", "kernelspec", "list")
-    session.run("pytest", "--nbval", *session.posargs)
+    session.run("pytest", "--current-env", "--nbval", *session.posargs)
+
 
 
 @session(reuse_venv=True)
