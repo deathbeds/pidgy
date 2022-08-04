@@ -101,7 +101,7 @@ class Weave(Weave):
 
         # we maintain sync and async environments separately
         if async_ in ENVS:
-            return ENVS[async_]
+            return ENVS[async_] 
 
         ENVS[async_] = ENVIRONMENT = Environment(
             enable_async=async_,
@@ -110,6 +110,12 @@ class Weave(Weave):
             undefined=Weave.Undefined,
             finalize=Weave.Finalize(),
         )
+
+        try:
+            from nbconvert.exporters.templateexporter import default_filters
+            ENVS[async_].filters.update(default_filters)
+        except ModuleNotFoundError:
+            pass
 
         return ENVIRONMENT
 
