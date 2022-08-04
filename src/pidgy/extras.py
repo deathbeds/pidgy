@@ -64,14 +64,14 @@ class Shebang(Extension):
         return lines
 
     def cell(self, argv, body):
-        import tempfile, subprocess, shlex
-        from IPython.display import Pretty, display
+        import tempfile
+        from IPython import get_ipython
 
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".py") as file:
+        shell = get_ipython()
+        with tempfile.NamedTemporaryFile(prefix=F"ipython-{shell.execution_count}", delete=False, suffix=".py") as file:
             file.write(body.encode())
         try:
-            output = subprocess.check_output(shlex.split(argv) + [file.name]).decode()
-            display(Pretty(output))
+            get_ipython().system(argv + " " + file.name)
         except CalledProcessError:
             pass
         finally:
