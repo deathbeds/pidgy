@@ -9,11 +9,42 @@ __all__ = ("tangle",)
 
 DOCTEST_CHAR, CONTINUATION_CHAR, COLON_CHAR, QUOTES_CHARS = 62, 92, 58, {39, 34}
 
+# an instance of this class is used to transform markdown to valid python
+# in the ipython extension. the python conversion is constrained by being
+# a line for line transformation using indent code blocks (not code fences)
+# as references for translating the markdown to valid python objects.
 
+# the choice of indented code over code fences allows for more implicit interleaving
+# of code and narrative.
 class Python(Markdown):
     """a line-for-line markdown to python renderer"""
 
+    markdown_is_block_string = True
+    docstring_block_string = True
+
+    def indent(self, input, i=0, prefix=""):
+        """indent an input"""
+        return indent(input, SPACE * i + prefix)
+
+    def quote(self, input, env, i=0):
+        """quote a string which requires the environment state"""
+        return self._get_quoted(input, i, env)
+
+    def comment(self, input, i=0):
+        """comment an input"""
+
+        return self.indent(input, i, "# ")
+
+    def get_noncode_indent(self, env):
+        return (
+            self._get_noncode_indent(env["indents"], env["chars"])
+            - env["indents"].reference
+        )
+
+    # this method is defined by the reusable markdown parent
     def generic(self, env, next=None):
+        """process a generic block of markdown text."""
+
         indents, chars = env["indents"], env["chars"]
         if next is None:
             env["terminal_character"] = ";"
@@ -23,19 +54,33 @@ class Python(Markdown):
                 indents.trailing = indents.reference = next.meta["leading"]
             indents.leading = next.meta["leading"]
 
-        noncode_indent = self._get_noncode_indent(indents, chars) - indents.reference
-        input = super().generic(env, next)
-        if chars.quotes:  # indent the code according
-            input = indent(input, SPACE * noncode_indent)
-        else:  # quote the markdown block
-            input = self._get_quoted(input, noncode_indent, env)
-        return indent(input, SPACE * indents.reference)
+        input, indent = super().generic(env, next), self.get_noncode_indent(env)
+        
+        if chars.quotes:
+            # when we find quotes in code around a markdown block we don't augment the string.
+            input = self.indent(input, indent)
+        elif self.markdown_is_block_string:
+            # augment a non-code markdown block as quoted string
+            input = self.quote(input, env, indent)
+        else:
+            input = self.comment(input, indent)
+
+        return self.indent(input, indents.reference)
 
     def code_block(self, token, options, env):
+        """update the state block when code is found."""
         indents, chars = env["indents"], env["chars"]
+
+        # update the trailing indent
         indents.trailing = token.meta["trailing"]
+
+        # measure if there is a preceding colon indicating a python block indent
         chars.colon = token.meta["colon"]
+
+        # measure if triple quotes exist around the surround code block
         chars.quotes = token.meta["quotes"]
+
+        # read the lines pertaining to the raw code.
         return self.readlines(token.map[1], env)
 
     def render(self, tokens, options, env):
@@ -64,8 +109,8 @@ class Python(Markdown):
             return input
         begin, end = input[: len(input) - len(l)], input[len(r) :]
         return (  # recombine all of the parts into quoted python
-            begin  # leading whitespace
-            + SPACE * indent  # computed indent
+            SPACE * indent  # computed indent            + quote  # enter block string
+            + begin  # leading whitespace1
             + quote  # enter block string
             + get_escaped_string(
                 input[len(input) - len(l) : len(r)], quote[0]
