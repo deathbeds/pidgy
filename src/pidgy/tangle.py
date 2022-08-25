@@ -55,7 +55,7 @@ class Python(Markdown):
             indents.leading = next.meta["leading"]
 
         input, indent = super().generic(env, next), self.get_noncode_indent(env)
-        
+
         if chars.quotes:
             # when we find quotes in code around a markdown block we don't augment the string.
             input = self.indent(input, indent)
@@ -109,8 +109,8 @@ class Python(Markdown):
             return input
         begin, end = input[: len(input) - len(l)], input[len(r) :]
         return (  # recombine all of the parts into quoted python
-            SPACE * indent  # computed indent            + quote  # enter block string
-            + begin  # leading whitespace1
+            begin  # leading whitespace1
+            + SPACE * indent  # computed indent
             + quote  # enter block string
             + get_escaped_string(
                 input[len(input) - len(l) : len(r)], quote[0]
