@@ -2,6 +2,8 @@
 
 """pidgy literate computing frame"""
 
+
+
 IS_IPY = bool(
     getattr(
         __import__("sys").modules.get("IPython", __import__("sys")),
@@ -12,7 +14,7 @@ IS_IPY = bool(
 
 
 def load_ipython_extension(shell):
-    from . import tangle, weave, extras
+    from . import tangle, extras, weave
 
     extras.load_ipython_extension(shell)
     tangle.load_ipython_extension(shell)
@@ -20,7 +22,7 @@ def load_ipython_extension(shell):
 
 
 def unload_ipython_extension(shell):
-    from . import tangle, weave, extras
+    from . import tangle, extras, weave
 
     extras.unload_ipython_extension(shell)
     tangle.unload_ipython_extension(shell)

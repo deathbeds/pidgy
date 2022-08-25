@@ -1,274 +1,294 @@
-"""weave.py provides the Markdown rendering models."""
-
-from typing import Any
-
-from .models import CELL_MAGIC, Weave, dataclass, field
-from .utils import get_ipython, is_widget
-
-__all__ = ("Weave",)
-
-
-@dataclass
-class Output:
-    parent: Any
-    display_cls: Any = None
-    input: str = ""
-    display_handle: Any = None
-    cell_id: str = None
-    vars: set = field(set)
-
-    def set_input(self, input):
-        from jinja2.meta import find_undeclared_variables
-
-        self.input = input
-        self.vars.clear()
-        vars = find_undeclared_variables(self.parent.environment.parse(input))
-        self.vars.update(vars)
-        primary_loader = self.parent.environment.loader.loaders[0]
-        primary_loader.mapping.update({self.cell_id: input})
-
-    def display_urls(self):
-        lines = self.input.splitlines()
-        from mimetypes import guess_type
-
-        from IPython.display import IFrame, Image
-
-        displays = []
-        for line in lines:
-            if line.strip():
-                type, _ = guess_type(line)
-                if type and type.startswith(("image/",)):
-                    displays.append(Image(url=line))
-                else:
-                    displays.append(
-                        IFrame(
-                            line,
-                            height=self.parent.iframe_height,
-                            width="100%",
-                        )
-                    )
-        return displays
-
-    def _ipython_display_(self):
-        from IPython.core.display import DisplayHandle, display
-
-        from .utils import is_list_of_url
-
-        if is_list_of_url(self.input):
-            return display(*self.display_urls())
-
-        if self.display_handle is None:
-            self.display_handle = DisplayHandle()
-        if self.parent.reactive:
-            self.display_handle.display(self.display_cls(""))
-            if self.parent.asynch:
-                from asyncio import ensure_future
-
-                ensure_future(self.aupdate())
-            else:
-                self.update()
-        else:
-            self.display()
-
-    @property
-    def template(self):
-        if self.cell_id:
-            return self.parent.environment.get_template(self.cell_id)
-        return self.parent.environment.from_string(self.input)
-
-    def update(self):
-        self.display_handle.update(
-            self.display_cls(self.template.render(**self.parent.get_ns()))
-        )
-
-    def display(self):
-        self.display_handle.display(
-            self.display_cls(self.template.render(**self.parent.get_ns()))
-        )
-
-    async def aupdate(self):
-        self.display_handle.update(
-            self.display_cls(await self.template.render_async(**self.parent.get_ns()))
-        )
+from collections import defaultdict
+from functools import partial
+from markdown_it import MarkdownIt
+from dataclasses import dataclass, field
+from operator import mod
+from typing import ChainMap, final
+from jinja2 import Environment, Template
+from traitlets import Dict, Instance, Type, Set
+from jinja2.meta import find_undeclared_variables
+from pidgy import markdown
+from pidgy.utils import get_ipython, is_widget
+from .pidgy import Extension
+from .models import CELL_MAGIC, _RE_BLANK_LINE as NO_SHOW
 
 
-@dataclass
-class Weave(Weave):
+class Finalizer:
+    def __new__(cls, object):
+        return object
+
+
+class IPythonFinalizer(Finalizer):
     @staticmethod
-    def get_environment(async_=False, ENVS={}):
-        """retrieve singleton jinja2 environment."""
-        from jinja2 import ChoiceLoader, DictLoader, Environment, FileSystemLoader
+    def normalize(type, object, metadata) -> str:
+        """normalize and object with (mime)type and return a string."""
+        from .utils import get_decoded, get_minified
 
-        # we maintain sync and async environments separately
-        if async_ in ENVS:
-            return ENVS[async_] 
+        if type == "text/html" or "svg" in type:
+            object = get_minified(object)
 
-        ENVS[async_] = ENVIRONMENT = Environment(
-            enable_async=async_,
-            loader=ChoiceLoader([DictLoader({}), FileSystemLoader(".")]),
-            cache_size=0,
-            undefined=Weave.Undefined,
-            finalize=Weave.Finalize(),
-        )
+        if type.startswith("image"):
+            md = metadata.get(type, {})
+            width, height = md.get("width"), md.get("height")
+            object = get_decoded(object)
+            *_, data = type.partition("/")
+            object = f"""<img src="data:image/{data};base64,{object}"/>"""
 
+        return object
+
+    def __new__(cls, object):
+        """convert an object into a markdown/html representation"""
+        from .utils import get_active_types
+        from IPython import get_ipython
+
+        shell = get_ipython()
+        datum = shell.display_formatter.format(object)
+        data, metadata = datum if isinstance(datum, tuple) else (datum, {})
+        key = next(filter(data.__contains__, get_active_types(shell)), str(object))
+        if key == "text/plain":
+            return str(object)
+        return cls.normalize(key, data[key], metadata)
+
+
+class IPythonEnvironment(Environment):
+    def init_filters(self):
         try:
             from nbconvert.exporters.templateexporter import default_filters
-            ENVS[async_].filters.update(default_filters)
+
+            self.filters.update(default_filters)
         except ModuleNotFoundError:
             pass
 
-        return ENVIRONMENT
+    def __init__(self, *args, **kwargs):
+        from jinja2 import ChoiceLoader, DictLoader, Environment, FileSystemLoader
 
-    vars: set = field(set)
-    prior: dict = field(dict)
-    widgets: set = field(set)
-    outputs: dict = field(dict)
-    shell: Any = field(get_ipython, "the current interactive shell")
-    environment: Any = field(get_environment, "a jinja templating environment")
-    iframe_height: int = field(600, "the height of an iframe when urls are found")
+        kwargs.setdefault(
+            "loader", ChoiceLoader([DictLoader({}), FileSystemLoader(".")])
+        )
+        kwargs.setdefault("finalize", Finalizer)
+        kwargs.setdefault("undefined", Undefined)
+        kwargs.setdefault("enable_async", False) # enable this later
+        super().__init__(*args, **kwargs)
+        self.init_filters()
 
-    def use_asynch(self, input=True):
-        self.asynch = input
-        self.environment = self.get_environment(input)
 
-    def __post_init__(self):
-        self.use_asynch(self.asynch)
+from jinja2 import Undefined
 
-    from jinja2 import Undefined
 
-    class Undefined(Undefined):
-        def _fail_with_undefined_error(self, *args, **kwargs):
-            # log that the template failed
-            return f"`{self._undefined_name} is undefined`"
+class IPythonTemplate(Template):
+    def ns(self, *args, **kwargs):
+        import builtins
 
-    class Finalize:
-        """a callable trait that uses the current ipython display formatter to update jinja2 templates."""
+        ns = get_ipython()
+        if ns:
+            return ChainMap(kwargs, ns.user_ns, vars(builtins))
+        return {}
 
-        def normalize(self, type, object, metadata) -> str:
-            """normalize and object with (mime)type and return a string."""
-            from .utils import get_decoded, get_minified
+    def render(self, *args, **kwargs):
+        return super().render(self.ns(*args, **kwargs))
 
-            if type == "text/html" or "svg" in type:
-                object = get_minified(object)
+    async def render_async(self, *args, **kwargs):
+        return await super().render_async(self.ns(*args, **kwargs))
 
-            if type.startswith("image"):
-                width, height = (
-                    metadata.get(type, {}).get("width"),
-                    metadata.get(type, {}).get("height"),
-                )
-                object = get_decoded(object)
-                object = f"""<img src="data:image/{type.partition('/')[2]};base64,{object}"/>"""
-            return object
 
-        def __call__(self, object):
-            """convert an object into a markdown/html representation"""
-            from .utils import get_active_types
+class Undefined(Undefined):
+    def _fail_with_undefined_error(self, *args, **kwargs):
+        # log that the template failed
+        return f"`{self._undefined_name} is undefined`"
 
-            datum = get_ipython().display_formatter.format(object)
-            data, metadata = datum if isinstance(datum, tuple) else (datum, {})
-            try:
-                key = next(filter(data.__contains__, get_active_types(get_ipython())))
-            except StopIteration:
-                return str(object)
-            if key == "text/plain":
-                return str(object)
-            return self.normalize(key, data[key], metadata)
+
+@dataclass
+class TemplateDisplay:
+    widget = False
+    from IPython.display import Markdown
+
+    template: object = None
+    display_cls: type = Markdown
+    display_handle: object = None
+    vars: set = None
+    # this is not used by the base class but may be used by other base classes that render html
+    markdown_renderer: object = field(default_factory=MarkdownIt)
+
+    del Markdown
+
+    def _ipython_display_(self):
+        self.display()
+
+    def render(self):
+        return self.template.render()
+
+    def update(self, change=None):
+        # it should be possible to do smarter updates
+        if self.display_handle:
+            if self.is_widget():
+                self.display_handle.value = self.render()
+            else:
+                self.display_handle.update(self.display_cls(self.render()))
+
+
+@dataclass
+class IPythonMarkdown(TemplateDisplay):
+    def display(self):
+        from IPython.display import display
+
+        if self.display_handle is None:
+            from IPython.display import DisplayHandle
+
+            self.display_handle = DisplayHandle()
+
+        object = self.display_cls(self.template.render())
+        self.display_handle.display(object)
+
+    def update(self, change=None):
+        if self.display_handle:
+            self.display_handle.update(self.display_cls(self.render()))
+
+
+class MarkdownItMixin:
+    def render(self):
+        return self.markdown_renderer.render(super().render())
+
+
+@dataclass
+class IPythonHtml(MarkdownItMixin, IPythonMarkdown):
+    from IPython.display import HTML
+
+    display_cls: type = HTML
+    del HTML
+
+
+@dataclass
+class IPyWidgetsHtml(MarkdownItMixin, TemplateDisplay):
+    widget = True
+    from ipywidgets import HTML
+
+    display_cls: object = HTML
+    del HTML
+
+    def display(self):
+        from IPython.display import display
+
+        if self.display_handle is None:
+            self.display_handle = self.display_cls(self.render())
+        display(self.display_handle)
+
+    def update(self, change=None):
+        if self.display_handle:
+            self.display_handle.value = self.render()
+
+
+class DisplaysManager(Extension):
+    displays = Dict()
+    prior = Dict()
+    template_cls = Type(IPyWidgetsHtml, TemplateDisplay)
+    markdown_renderer = Instance(MarkdownIt, args=())
+    widgets = Dict()
+
+    def weave_cell(self, body):
+        template = self.shell.environment.from_string(body, None, IPythonTemplate)
+        vars = find_undeclared_variables(self.shell.environment.parse(body))
+        return self.template_cls(
+            template=template, vars=vars, markdown_renderer=self.markdown_renderer
+        )
+
+    def get_value(self, key, raw=True):
+        """get a value in a namespace that is potentially a widgets."""
+        value = self.shell.user_ns.get(key)
+
+        if raw:
+            return value
+
+        if is_widget(value):
+            return value.value
+
+        return value
+
+    def get_id(self):
+        return self.shell.kernel.get_parent().get("metadata", {}).get("cellId")
+
+    def get_vars(self):
+        data = defaultdict(list)
+        for d in self.displays.values():
+            if d.widget:
+                for k in d.vars:
+                    data[k].append(d)
+
+        return data
+
+    def link_widgets(self):
+        displays = self.get_vars()
+        for k, disp in displays.items():
+            v = self.get_value(k)
+            if is_widget(v):
+                if v is not self.widgets.get(k):
+                    self.widgets[k] = v
+                    for d in disp:
+                        v.observe(d.update)
 
     def post_run_cell(self, result):
+        from IPython.display import display
+
+        id = self.get_id()
         if result.error_in_exec or result.error_before_exec:
             pass  # don't do anything when there are errors
-        elif self.no_show.match(result.info.raw_cell):
+        elif NO_SHOW.match(result.info.raw_cell):
             pass
         elif CELL_MAGIC.match(result.info.raw_cell):
             pass
         else:
-            from IPython.display import display
+            disp = self.displays[id] = self.weave_cell(result.info.raw_cell)
+            display(self.displays[id])
+            return
 
-            metadata = self.shell.kernel.get_parent().get("metadata", {})
-            id = metadata.get("cellId")
-            output = self.outputs.setdefault(
-                id, Output(parent=self, cell_id=id, display_cls=self.display_cls)
-            )
-            output.set_input(result.info.raw_cell)
-            display(output)
-            self.vars.update(output.vars)
+        self.displays.pop(id, None)
 
     def pre_execute(self):
-        from .utils import is_widget
-
-        self.vars.clear()
-        self.vars.update(*(x.vars for x in self.outputs.values()))
-
         metadata = self.shell.kernel.get_parent().get("metadata", {})
         for id in metadata.get("deletedCells", []):
-            self.outputs.pop(id, None)
+            if id in self.displays:
+                del self.displays[id]
 
-        self.widgets.clear()
-        for k in self.vars:
-            if k in self.shell.user_ns:
-                x = self.prior[k] = self.shell.user_ns.get(k)
-                if is_widget(x) and hasattr(x, "value"):
-                    self.prior[k] = self.prior[k].value
-                    self.widgets.add(x)
-            self.prior.setdefault(k, None)
+        vars = set()
+        for id, disp in self.displays.items():
+            if disp.vars:
+                vars.update(disp.vars)
+        self.prior.update(zip(vars, map(self.get_value, vars)))
 
     def post_execute(self):
-        if self.reactive:
-            metadata = self.shell.kernel.get_parent().get("metadata", {})
-            id, ns = metadata.get("cellId"), self.get_ns()
-            updated, outputs_to_update = set(), []
-            for k, v in self.prior.items():
-                if v is ns.get(k):
-                    continue
-                elif k in self.widgets and v is getattr(ns.get(k), "value"):
-                    continue
-                updated.add(k)
-            for output in self.outputs.values():
-                if output.cell_id == id:
-                    continue
-                output.vars.intersection(updated) and outputs_to_update.append(output)
-            if outputs_to_update:
-                if self.asynch:
-                    from asyncio import ensure_future, gather
+        changed = set()
+        self.link_widgets()
 
-                    ensure_future(gather(*(x.aupdate() for x in outputs_to_update)))
-                else:
-                    for x in outputs_to_update:
-                        x.update()
+        for k, v in self.prior.items():
+            y = self.get_value(k)
+            if y is not v:
+                changed.update({k})
 
-    def get_ns(self):
-        from collections import ChainMap
-        from sys import modules
+        for id, disp in self.displays.items():
+            changed.intersection(disp.vars) and disp.update()
 
-        public_ns = lambda k: k and k[0].isalpha() and "." not in k
-        modules = {k: v for k, v in modules.items() if public_ns(k)}
-        return dict(ChainMap(self.shell.user_ns, vars(__import__("builtins")), modules))
 
-    def load(self):
-        self.shell.events.register("pre_execute", self.pre_execute)
-        self.shell.events.register("post_run_cell", self.post_run_cell)
-        self.shell.events.register("post_execute", self.post_execute)
-
-    def unload(self):
-        self.shell.events.unregister("pre_execute", self.pre_execute)
-        self.shell.events.unregister("post_run_cell", self.post_run_cell)
-        self.shell.events.unregister("post_execute", self.post_execute)
+def get_environment(reuse=True, _cache={}, **kwargs):
+    # use this function to avoid repeat environment instantiation
+    shell = get_ipython()
+    if shell:
+        try:
+            return shell.environment
+        except AttributeError:
+            pass
+    if reuse:
+        if _cache:
+            return _cache[True]
+        _cache[True] = IPythonEnvironment(**kwargs)
+        return _cache[True]
+    return IPythonEnvironment(**kwargs)
 
 
 def load_ipython_extension(shell):
-    from IPython.display import Markdown
-    from traitlets import Instance
-
-    if not shell.has_trait("weave"):
-        shell.add_traits(weave=Instance(Weave, ()))
-    shell.weave = Weave(
-        shell=shell,
-        display_cls=Markdown,
-        environment=Weave.get_environment(True),
-        reactive=True,
-    )
-    shell.weave.load()
+    shell.add_traits(environment=Instance(IPythonEnvironment, default_value=get_environment()))
+    shell.add_traits(displays_manager=Instance(Extension, allow_none=True))
+    shell.displays_manager = DisplaysManager(shell=shell)
+    shell.displays_manager.load_ipython_extension()
 
 
 def unload_ipython_extension(shell):
-    shell.has_trait("weave") and shell.weave.unload()
+    DisplaysManager(shell=shell).unload_ipython_extension()
