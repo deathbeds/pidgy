@@ -1,10 +1,10 @@
-from collections import defaultdictfrom functools import partial
+from collections import defaultdict
 from io import StringIO
 from markdown_it import MarkdownIt
 from dataclasses import dataclass, field
 from typing import ChainMap
 from jinja2 import Environment, Template
-from traitlets import Dict, Instance, Type, Set
+from traitlets import Dict, Instance, Type, Bool
 from jinja2.meta import find_undeclared_variables
 from pidgy import markdown
 from pidgy.utils import get_ipython, is_widget
@@ -213,6 +213,7 @@ class DisplaysManager(Extension):
     prior = Dict()
     template_cls = Type(IPyWidgetsHtml, TemplateDisplay)
     markdown_renderer = Instance(MarkdownIt, args=())
+    reactive = Bool(False)
     widgets = Dict()
 
     def weave_cell(self, body):
@@ -287,7 +288,8 @@ class DisplaysManager(Extension):
 
     def post_execute(self):
         changed = set()
-        self.link_widgets()
+        if self.reactive:
+            self.link_widgets()
 
         for k, v in self.prior.items():
             y = self.get_value(k)
