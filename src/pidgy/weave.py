@@ -1,9 +1,8 @@
-from collections import defaultdict
-from functools import partial
+from collections import defaultdictfrom functools import partial
+from io import StringIO
 from markdown_it import MarkdownIt
 from dataclasses import dataclass, field
-from operator import mod
-from typing import ChainMap, final
+from typing import ChainMap
 from jinja2 import Environment, Template
 from traitlets import Dict, Instance, Type, Set
 from jinja2.meta import find_undeclared_variables
@@ -65,9 +64,9 @@ class IPythonEnvironment(Environment):
         kwargs.setdefault(
             "loader", ChoiceLoader([DictLoader({}), FileSystemLoader(".")])
         )
-        kwargs.setdefault("finalize", Finalizer)
+        kwargs.setdefault("finalize", IPythonFinalizer)
         kwargs.setdefault("undefined", Undefined)
-        kwargs.setdefault("enable_async", False) # enable this later
+        kwargs.setdefault("enable_async", False)  # enable this later
         super().__init__(*args, **kwargs)
         self.init_filters()
 
@@ -105,6 +104,8 @@ class TemplateDisplay:
     template: object = None
     display_cls: type = Markdown
     display_handle: object = None
+    iframe_attrs: dict = field(default_factory=dict(width="100%", height=600, loading="lazy").copy)
+    is_list_urls: bool = None
     vars: set = None
     # this is not used by the base class but may be used by other base classes that render html
     markdown_renderer: object = field(default_factory=MarkdownIt)
@@ -114,8 +115,22 @@ class TemplateDisplay:
     def _ipython_display_(self):
         self.display()
 
+    def _is_list_urls(self, x):
+        for line in filter(bool, map(str.strip, StringIO(x))):
+            if "://" in line:
+                continue
+            return False
+        return True
+
     def render(self):
-        return self.template.render()
+        render = self.template.render()
+        if self.is_list_urls is None:
+            self.is_list_urls = self._is_list_urls(render)
+
+        # if self.is_list_urls:
+        #     render = self.embed(render)
+
+        return render
 
     def update(self, change=None):
         # it should be possible to do smarter updates
@@ -124,6 +139,22 @@ class TemplateDisplay:
                 self.display_handle.value = self.render()
             else:
                 self.display_handle.update(self.display_cls(self.render()))
+
+    def embed(self, urls):
+        """we have a feature for showing iframes of urls. 
+        
+        we can add richer features later like domain rules and file extension dispatchers
+        maybe the could have been done with markdown it?"""
+        lines = []
+
+        # compose the default iframe attributes
+        args = " ".join(f'{k}="{v}"' for k, v in self.iframe_attrs.items())
+
+        # iterate through all the lines of the source and generate iframes 
+        # from them. 
+        for line in filter(bool, map(str.strip, StringIO(urls))):
+            lines.append(f'<iframe src="{line}" {args}/>')
+        return "\n".join(lines)
 
 
 @dataclass
@@ -284,7 +315,9 @@ def get_environment(reuse=True, _cache={}, **kwargs):
 
 
 def load_ipython_extension(shell):
-    shell.add_traits(environment=Instance(IPythonEnvironment, default_value=get_environment()))
+    shell.add_traits(
+        environment=Instance(IPythonEnvironment, default_value=get_environment())
+    )
     shell.add_traits(displays_manager=Instance(Extension, allow_none=True))
     shell.displays_manager = DisplaysManager(shell=shell)
     shell.displays_manager.load_ipython_extension()
