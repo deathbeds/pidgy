@@ -19,14 +19,14 @@ def doctest(state, startLine, end, silent=False):
     doctest are a literate programming convention in python that we
     include in the pidgy grammar. this avoids a mixing python and doctest
     code together."""
-    start = state.bMarks[startLine] + state.tShift[startLine]
+    start = state.sCount[startLine]
 
     if all(map(DOCTEST_CHAR.__eq__, state.srcCharCode[start : start + 3])):
-        indent, next = state.bMarks[startLine], startLine + 1
+        indent, next = state.sCount[startLine], startLine + 1
         while next < end:
             if state.isEmpty(next):
                 break
-            if state.bMarks[next] < indent:
+            if state.sCount[next] < indent:
                 break
             next += 1
         state.line = next
@@ -44,7 +44,7 @@ def code(state, start, end, silent=False):
             if state.isEmpty(next):
                 next += 1
                 continue
-            here = state.bMarks[next] + state.tShift[next]
+            here = state.sCount[next]
             if all(map(DOCTEST_CHAR.__eq__, state.srcCharCode[here : here + 3])):
                 break
             elif state.sCount[next] - state.blkIndent >= 4:
@@ -53,7 +53,7 @@ def code(state, start, end, silent=False):
                 trailing = state.sCount[next]
                 last_char = state.eMarks[next] - 1
                 continued = state.srcCharCode[last_char] == CONTINUATION_CHAR
-                length = state.eMarks[next] - (state.bMarks[next] + state.tShift[next])
+                length = state.eMarks[next] - (state.sCount[next])
                 if continued:
                     last_char -= 1
                 if continued and quoted and length == 1:
