@@ -19,6 +19,7 @@ TRANSFORMS = {"cleanup_transforms"}
 
 class Extension(HasTraits):
     from . import IS_IPY
+    IS_IPY = True
 
     alias = CUnicode(allow_none=True)
     shell = Instance("IPython.InteractiveShell")

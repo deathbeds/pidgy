@@ -213,7 +213,7 @@ class DisplaysManager(Extension):
     prior = Dict()
     template_cls = Type(IPyWidgetsHtml, TemplateDisplay)
     markdown_renderer = Instance(MarkdownIt, args=())
-    reactive = Bool(False)
+    reactive = Bool(True)
     widgets = Dict()
 
     def weave_cell(self, body):
