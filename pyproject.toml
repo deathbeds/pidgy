@@ -21,10 +21,10 @@ dynamic = ["version"] # uses hatch-vcs
 
 [project.optional-dependencies]
 interactive = ["IPython"]
-docs = ["mkdocs-material", "mkdocs-jupyter", "ruamel.yaml"]
+docs = ["mkdocs-material", "mkdocs-jupyter", "ruamel.yaml", "mkdocs-macros-plugin", "IPython"]
 
-[project.entry-points.pytest11]
-# importnb = "importnb.utils.pytest_importnb"
+[project.entry-points."mkdocs.plugins"]
+pidgy = "pidgy.ext.mkdocs:PidgyPlugin"
 
 [project.scripts]
 pidgy = "pidgy.__main__:main"
