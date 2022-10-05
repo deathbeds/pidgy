@@ -10,40 +10,40 @@
 3. IPython display objects are added to the user namespace
 4. top-level return statement become IPython.display expressions.
 5. it should be easy to copy and paste json for beginners. 
-    we are `true, false and null` buultins.
+     `true, false and null` are buultins.
 """
 
+import builtins
+from ast import Call, Expr, NodeTransformer, Tuple, parse
 from pathlib import Path
 from subprocess import CalledProcessError
 from sys import modules
-from ast import NodeTransformer, Call, Expr, parse, Tuple
+
 import IPython
 from traitlets import CUnicode
+
 from .pidgy import Extension
+
+builtins.true, builtins.false, builtins.null = True, False, None
 
 
 class SysModules(Extension):
     def pre_execute(self):
         """update the shell's user namespace to include imported modules"""
-        self.shell.user_ns.update(
-            (k, v)
-            for k, v in modules.items()
-            if k and k[0] != "_" and "." not in k and k not in self.shell.user_ns
-        )
-
-
-class JsonPositive(Extension):
-    def load_ipython_extension(self):
-        import builtins
-
-        builtins.true, builtins.false, builtins.null = True, False, None
+        for k in modules:
+            if k:
+                if k.startswith("_"):
+                    continue
+                if "." in k:
+                    continue
+                self.shell.user_ns.setdefault(k, modules[k])
 
 
 class IPythonDisplays(Extension):
     def load_ipython_extension(self):
         """extract the display object from IPython"""
         from IPython import display
-        from IPython.display import DisplayObject, TextDisplayObject, IFrame
+        from IPython.display import DisplayObject, IFrame, TextDisplayObject
 
         for k, v in vars(display).items():
             if isinstance(v, type) and issubclass(v, (DisplayObject, IFrame)):
@@ -65,10 +65,13 @@ class Shebang(Extension):
 
     def cell(self, argv, body):
         import tempfile
+
         from IPython import get_ipython
 
         shell = get_ipython()
-        with tempfile.NamedTemporaryFile(prefix=F"ipython-{shell.execution_count}", delete=False, suffix=".py") as file:
+        with tempfile.NamedTemporaryFile(
+            prefix=f"ipython-{shell.execution_count}", delete=False, suffix=".py"
+        ) as file:
             file.write(body.encode())
         try:
             get_ipython().system(argv + " " + file.name)
@@ -102,11 +105,9 @@ class ReturnDisplay(Extension, NodeTransformer):
 
 
 def load_ipython_extension(shell: IPython.InteractiveShell):
-    shell.user_ns.setdefault("shell", shell)
     SysModules(shell=shell).load_ipython_extension()
     IPythonDisplays(shell=shell).load_ipython_extension()
     ReturnDisplay(shell=shell).load_ipython_extension()
-    JsonPositive(shell=shell).load_ipython_extension()
     Shebang(shell=shell).load_ipython_extension()
 
 
@@ -114,5 +115,4 @@ def unload_ipython_extension(shell: IPython.InteractiveShell):
     SysModules(shell=shell).unload_ipython_extension()
     IPythonDisplays(shell=shell).unload_ipython_extension()
     ReturnDisplay(shell=shell).unload_ipython_extension()
-    JsonPositive(shell=shell).unload_ipython_extension()
     Shebang(shell=shell).unload_ipython_extension()

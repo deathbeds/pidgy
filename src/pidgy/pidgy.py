@@ -1,6 +1,7 @@
 from ast import NodeTransformer
 from importlib import import_module
-from traitlets import HasTraits, Dict, Instance, default, List, Bool, CUnicode
+
+from traitlets import Bool, CUnicode, Dict, HasTraits, Instance, List, default
 
 
 def get_ipython():
@@ -19,6 +20,7 @@ TRANSFORMS = {"cleanup_transforms"}
 
 class Extension(HasTraits):
     from . import IS_IPY
+
     IS_IPY = True
 
     alias = CUnicode(allow_none=True)
@@ -72,9 +74,7 @@ class Extension(HasTraits):
         vars = set(dir(self))
 
         if isinstance(self, NodeTransformer):
-            self.shell.ast_transformers = [
-                x for x in self.shell.ast_transformers if x is not self
-            ]
+            self.shell.ast_transformers = [x for x in self.shell.ast_transformers if x is not self]
 
         for transform in TRANSFORMS.intersection(vars):
             f = getattr(self, transform)

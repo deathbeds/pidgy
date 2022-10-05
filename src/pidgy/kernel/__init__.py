@@ -17,5 +17,7 @@ class Kernel(IPythonKernel):
         load_ipython_extension(self.shell)
         with suppress(BaseException):
             import ipywidgets
+
             from ..widgets import load_ipython_extension
+
             load_ipython_extension(self.shell)

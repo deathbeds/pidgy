@@ -1,15 +1,20 @@
 from collections import defaultdict
-from io import StringIO
-from markdown_it import MarkdownIt
 from dataclasses import dataclass, field
+from io import StringIO
+from re import compile
 from typing import ChainMap
+
 from jinja2 import Environment, Template
-from traitlets import Dict, Instance, Type, Bool
 from jinja2.meta import find_undeclared_variables
-from pidgy import markdown
-from pidgy.utils import get_ipython, is_widget
+from markdown_it import MarkdownIt
+from traitlets import Bool, Dict, Instance, Type
+
 from .pidgy import Extension
-from .models import CELL_MAGIC, _RE_BLANK_LINE as NO_SHOW
+
+CELL_MAGIC = compile("^\s*%{2}\S")
+NO_SHOW = compile(r"^\s*\r?\n")
+
+from IPython import get_ipython
 
 
 class Finalizer:
@@ -21,7 +26,6 @@ class IPythonFinalizer(Finalizer):
     @staticmethod
     def normalize(type, object, metadata) -> str:
         """normalize and object with (mime)type and return a string."""
-        from .utils import get_decoded, get_minified
 
         if type == "text/html" or "svg" in type:
             object = get_minified(object)
@@ -37,7 +41,6 @@ class IPythonFinalizer(Finalizer):
 
     def __new__(cls, object):
         """convert an object into a markdown/html representation"""
-        from .utils import get_active_types
         from IPython import get_ipython
 
         shell = get_ipython()
@@ -61,9 +64,7 @@ class IPythonEnvironment(Environment):
     def __init__(self, *args, **kwargs):
         from jinja2 import ChoiceLoader, DictLoader, Environment, FileSystemLoader
 
-        kwargs.setdefault(
-            "loader", ChoiceLoader([DictLoader({}), FileSystemLoader(".")])
-        )
+        kwargs.setdefault("loader", ChoiceLoader([DictLoader({}), FileSystemLoader(".")]))
         kwargs.setdefault("finalize", IPythonFinalizer)
         kwargs.setdefault("undefined", Undefined)
         kwargs.setdefault("enable_async", False)  # enable this later
@@ -141,8 +142,8 @@ class TemplateDisplay:
                 self.display_handle.update(self.display_cls(self.render()))
 
     def embed(self, urls):
-        """we have a feature for showing iframes of urls. 
-        
+        """we have a feature for showing iframes of urls.
+
         we can add richer features later like domain rules and file extension dispatchers
         maybe the could have been done with markdown it?"""
         lines = []
@@ -150,8 +151,8 @@ class TemplateDisplay:
         # compose the default iframe attributes
         args = " ".join(f'{k}="{v}"' for k, v in self.iframe_attrs.items())
 
-        # iterate through all the lines of the source and generate iframes 
-        # from them. 
+        # iterate through all the lines of the source and generate iframes
+        # from them.
         for line in filter(bool, map(str.strip, StringIO(urls))):
             lines.append(f'<iframe src="{line}" {args}/>')
         return "\n".join(lines)
@@ -300,6 +301,31 @@ class DisplaysManager(Extension):
             changed.intersection(disp.vars) and disp.update()
 
 
+def get_active_types(shell=None):
+    """get the active types in the current IPython shell.
+    we ignore latex, but i forget why."""
+    shell = shell or get_ipython()
+    if shell:
+        object = list(shell.display_formatter.active_types)
+        object.insert(object.index("text/html"), object.pop(object.index("text/latex")))
+        return reversed(object)
+    return []
+
+
+def get_minified(x):
+    from htmlmin import minify
+
+    return minify(x, False, True, True, True, True, True, True)
+
+
+def get_decoded(object):
+    if isinstance(object, bytes):
+        from base64 import b64encode
+
+        object = b64encode(object).decode("utf-8")
+    return object
+
+
 def get_environment(reuse=True, _cache={}, **kwargs):
     # use this function to avoid repeat environment instantiation
     shell = get_ipython()
@@ -316,10 +342,19 @@ def get_environment(reuse=True, _cache={}, **kwargs):
     return IPythonEnvironment(**kwargs)
 
 
+def is_widget(object):
+    """is an object a widget"""
+    from sys import modules
+
+    if "ipywidgets" in modules:
+        from ipywidgets import Widget
+
+        return isinstance(object, Widget)
+    return False
+
+
 def load_ipython_extension(shell):
-    shell.add_traits(
-        environment=Instance(IPythonEnvironment, default_value=get_environment())
-    )
+    shell.add_traits(environment=Instance(IPythonEnvironment, default_value=get_environment()))
     shell.add_traits(displays_manager=Instance(Extension, allow_none=True))
     shell.displays_manager = DisplaysManager(shell=shell)
     shell.displays_manager.load_ipython_extension()

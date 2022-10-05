@@ -1,8 +1,8 @@
 from importnb import Notebook
 
-from .tangle import Python
-from .markdown import Renderer
 from .extras import ReturnDisplay
+from .markdown import Renderer
+from .tangle import Python
 
 
 class Markdown(Notebook):

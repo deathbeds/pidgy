@@ -1,7 +1,4 @@
-"""__init__.py"""
-
 """pidgy literate computing frame"""
-
 
 
 IS_IPY = bool(
@@ -14,7 +11,9 @@ IS_IPY = bool(
 
 
 def load_ipython_extension(shell):
-    from . import tangle, extras, weave
+    from . import extras, tangle, weave
+
+    shell.user_ns.setdefault("shell", shell)
 
     extras.load_ipython_extension(shell)
     tangle.load_ipython_extension(shell)
@@ -22,7 +21,7 @@ def load_ipython_extension(shell):
 
 
 def unload_ipython_extension(shell):
-    from . import tangle, extras, weave
+    from . import extras, tangle, weave
 
     extras.unload_ipython_extension(shell)
     tangle.unload_ipython_extension(shell)

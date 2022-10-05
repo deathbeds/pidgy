@@ -17,9 +17,7 @@ def install_jupyter_hook():
     from sys import prefix
 
     if not HAVE_JUPYTER:
-        return print(
-            "Could not install Jupyter kernel spec, please install " "Jupyter/IPython."
-        )
+        return print("Could not install Jupyter kernel spec, please install " "Jupyter/IPython.")
 
     user = "--user" in argv
     print("Installing Jupyter kernel spec:")

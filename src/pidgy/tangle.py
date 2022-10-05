@@ -2,6 +2,7 @@
 """
 from io import StringIO
 from urllib.parse import urlparse
+
 from midgy.python import Python
 
 
@@ -45,10 +46,8 @@ def load_ipython_extension(shell):
     def parse(line, cell):
         print(shell.tangle.parse(cell))
 
-    shell.add_traits(tangle=Instance(Python, ()))
-    shell.input_transformer_manager.cleanup_transforms.insert(
-        0, shell.tangle.render_lines
-    )
+    shell.add_traits(tangle=Instance(IPython, ()))
+    shell.input_transformer_manager.cleanup_transforms.insert(0, shell.tangle.render_lines)
     shell.register_magic_function(tangle, "cell")
     shell.register_magic_function(parse, "cell")
 
