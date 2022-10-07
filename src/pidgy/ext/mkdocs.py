@@ -11,7 +11,7 @@ class PidgyPlugin(MacrosPlugin):
 
     def on_page_read_source(self, page, config):
         with Path(config["docs_dir"], page.file.src_path).open() as file:
-            first = next(file)
+            first = next(file, "")
             if first.startswith("#!/usr/bin/env"):
                 page.shebang = first
             return "".join(file)
@@ -22,7 +22,6 @@ def define_env(env):
 
 
 def on_pre_page_macros(self):
-    print("holler")
     if self.page.file.src_path.endswith((".md",)):
         from midgy.run import Markdown
 
