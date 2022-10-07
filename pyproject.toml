@@ -16,7 +16,7 @@ classifiers = [
   "Programming Language :: Python",
   "License :: OSI Approved :: BSD License",
 ]
-dependencies = ["midgy", "jinja2", "htmlmin"] # no dependencies!
+dependencies = ["midgy", "jinja2"]
 dynamic = ["version"] # uses hatch-vcs
 
 [project.optional-dependencies]

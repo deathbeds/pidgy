@@ -313,9 +313,7 @@ def get_active_types(shell=None):
 
 
 def get_minified(x):
-    from htmlmin import minify
-
-    return minify(x, False, True, True, True, True, True, True)
+    return x
 
 
 def get_decoded(object):
