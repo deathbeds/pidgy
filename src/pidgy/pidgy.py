@@ -63,13 +63,12 @@ class Extension(HasTraits):
         return self
 
     def unload_ipython_extension(self):
-        for event in self.shell.events.callbacks:
-            property = getattr(self, event, None)
-            if property is not None:
-                try:
-                    self.shell.events.unregister(event, property)
-                except ValueError:
-                    pass
+        for event, callers in self.shell.events.callbacks.items():
+            this = type(self)
+            if this:
+                for caller in callers:
+                    if type(caller.__self__) is this:
+                        self.shell.events.unregister(event, caller)
 
         vars = set(dir(self))
 
