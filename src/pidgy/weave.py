@@ -212,7 +212,7 @@ class IPyWidgetsHtml(MarkdownItMixin, TemplateDisplay):
 class DisplaysManager(Extension):
     displays = Dict()
     prior = Dict()
-    template_cls = Type(IPyWidgetsHtml, TemplateDisplay)
+    template_cls = Type(IPythonMarkdown, TemplateDisplay)
     markdown_renderer = Instance(MarkdownIt, args=())
     reactive = Bool(True)
     widgets = Dict()
