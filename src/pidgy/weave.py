@@ -107,7 +107,7 @@ class TemplateDisplay:
     display_handle: object = None
     iframe_attrs: dict = field(default_factory=dict(width="100%", height=600, loading="lazy").copy)
     is_list_urls: bool = None
-    vars: set = None
+    vars: set = field(default_factory=set)
     # this is not used by the base class but may be used by other base classes that render html
     markdown_renderer: object = field(default_factory=MarkdownIt)
 
@@ -168,7 +168,7 @@ class IPythonMarkdown(TemplateDisplay):
 
             self.display_handle = DisplayHandle()
 
-        object = self.display_cls(self.template.render())
+        object = self.display_cls(self.render())
         self.display_handle.display(object)
 
     def update(self, change=None):
@@ -220,6 +220,7 @@ class DisplaysManager(Extension):
     def weave_cell(self, body):
         template = self.shell.environment.from_string(body, None, IPythonTemplate)
         vars = find_undeclared_variables(self.shell.environment.parse(body))
+        # print(888, vars)
         return self.template_cls(
             template=template, vars=vars, markdown_renderer=self.markdown_renderer
         )
@@ -242,21 +243,30 @@ class DisplaysManager(Extension):
     def get_vars(self):
         data = defaultdict(list)
         for d in self.displays.values():
-            if d.widget:
-                for k in d.vars:
-                    data[k].append(d)
+            for k in d.vars:
+                data[k].append(d)
 
         return data
 
     def link_widgets(self):
-        displays = self.get_vars()
-        for k, disp in displays.items():
-            v = self.get_value(k)
-            if is_widget(v):
-                if v is not self.widgets.get(k):
-                    self.widgets[k] = v
-                    for d in disp:
-                        v.observe(d.update)
+        # collect all the widgets into a dict
+        # link widgets to a display
+        displays_by_key = self.get_vars()
+        olds = list()
+        # print(self.displays, displays_by_key)
+        for key, displays in displays_by_key.items():
+            value = self.get_value(key)
+    
+            if is_widget(value):
+                if self.widgets.setdefault(key, value) is not value:
+                    olds.append(self.widgets[key])
+                    self.widgets[key] = value
+
+                for display in displays:
+                    value.observe(display.update, "value")                
+
+        for old in olds:
+            old.close()
 
     def post_run_cell(self, result):
         from IPython.display import display
@@ -289,8 +299,6 @@ class DisplaysManager(Extension):
 
     def post_execute(self):
         changed = set()
-        if self.reactive:
-            self.link_widgets()
 
         for k, v in self.prior.items():
             y = self.get_value(k)
@@ -299,6 +307,9 @@ class DisplaysManager(Extension):
 
         for id, disp in self.displays.items():
             changed.intersection(disp.vars) and disp.update()
+
+        if self.reactive:
+            self.link_widgets()
 
 
 def get_active_types(shell=None):
@@ -354,7 +365,7 @@ def is_widget(object):
 def load_ipython_extension(shell):
     shell.add_traits(environment=Instance(IPythonEnvironment, default_value=get_environment()))
     shell.add_traits(displays_manager=Instance(Extension, allow_none=True))
-    shell.displays_manager = DisplaysManager(shell=shell)
+    shell.displays_manager = DisplaysManager(shell=shell, markdown_renderer=shell.tangle.parser)
     shell.displays_manager.load_ipython_extension()
 
 
