@@ -370,4 +370,5 @@ def load_ipython_extension(shell):
 
 
 def unload_ipython_extension(shell):
-    DisplaysManager(shell=shell).unload_ipython_extension()
+    if shell.has_trait("displays_manager"):
+        shell.displays_manager.unload_ipython_extension()

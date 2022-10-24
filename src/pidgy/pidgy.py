@@ -67,7 +67,7 @@ class Extension(HasTraits):
             this = type(self)
             if this:
                 for caller in callers:
-                    if type(caller.__self__) is this:
+                    if issubclass(type(caller.__self__), Extension):
                         self.shell.events.unregister(event, caller)
 
         vars = set(dir(self))
@@ -76,12 +76,16 @@ class Extension(HasTraits):
             self.shell.ast_transformers = [x for x in self.shell.ast_transformers if x is not self]
 
         for transform in TRANSFORMS.intersection(vars):
-            f = getattr(self, transform)
+            f = getattr(type(self), transform)
             ts = getattr(self.shell.input_transformer_manager, transform)
+
+            transforms = [
+                t for t in ts if getattr(type(t), transform, None) is not f 
+            ]
             setattr(
                 self.shell.input_transformer_manager,
                 transform,
-                list(filter(f.__ne__, ts)),
+                transforms
             )
 
         return self
