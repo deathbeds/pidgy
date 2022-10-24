@@ -10,8 +10,6 @@ from ipykernel.ipkernel import IPythonKernel
 class Kernel(IPythonKernel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        from . import load_ipython_extension
-
         self.shell.magics_manager.magics["line"]["reload_ext"]("pidgy")
 
 
