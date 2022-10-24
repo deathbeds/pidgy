@@ -13,10 +13,6 @@ class Kernel(IPythonKernel):
         from . import load_ipython_extension
 
         load_ipython_extension(self.shell)
-        with suppress(BaseException):
-            from .widgets import load_ipython_extension
-
-            load_ipython_extension(self.shell)
 
 
 if __name__ == "__main__":
