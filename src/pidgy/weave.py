@@ -16,6 +16,8 @@ NO_SHOW = compile(r"^\s*\r?\n")
 
 from IPython import get_ipython
 
+URL = compile("^(http[s]|file)://")
+
 
 class Finalizer:
     def __new__(cls, object):
@@ -118,8 +120,9 @@ class TemplateDisplay:
 
     def _is_list_urls(self, x):
         for line in filter(bool, map(str.strip, StringIO(x))):
-            if "://" in line:
+            if URL.match(line):
                 continue
+
             return False
         return True
 
@@ -128,18 +131,20 @@ class TemplateDisplay:
         if self.is_list_urls is None:
             self.is_list_urls = self._is_list_urls(render)
 
-        # if self.is_list_urls:
-        #     render = self.embed(render)
+        if self.is_list_urls:
+            return self.embed(render)
 
         return render
 
     def update(self, change=None):
         # it should be possible to do smarter updates
         if self.display_handle:
-            if self.is_widget():
-                self.display_handle.value = self.render()
+            render = self.render()
+
+            if is_widget(self.display_handle):
+                self.display_handle.value = render
             else:
-                self.display_handle.update(self.display_cls(self.render()))
+                self.display_handle.update(self.display_cls(render))
 
     def embed(self, urls):
         """we have a feature for showing iframes of urls.
@@ -147,7 +152,6 @@ class TemplateDisplay:
         we can add richer features later like domain rules and file extension dispatchers
         maybe the could have been done with markdown it?"""
         lines = []
-
         # compose the default iframe attributes
         args = " ".join(f'{k}="{v}"' for k, v in self.iframe_attrs.items())
 
@@ -161,19 +165,18 @@ class TemplateDisplay:
 @dataclass
 class IPythonMarkdown(TemplateDisplay):
     def display(self):
-        from IPython.display import display
+        from IPython.display import display, HTML
 
         if self.display_handle is None:
             from IPython.display import DisplayHandle
 
             self.display_handle = DisplayHandle()
 
-        object = self.display_cls(self.render())
-        self.display_handle.display(object)
+        object = self.render()
+        if self.is_list_urls:
+            self.display_cls = HTML
 
-    def update(self, change=None):
-        if self.display_handle:
-            self.display_handle.update(self.display_cls(self.render()))
+        self.display_handle.display(self.display_cls(object))
 
 
 class MarkdownItMixin:
@@ -203,10 +206,6 @@ class IPyWidgetsHtml(MarkdownItMixin, TemplateDisplay):
         if self.display_handle is None:
             self.display_handle = self.display_cls(self.render())
         display(self.display_handle)
-
-    def update(self, change=None):
-        if self.display_handle:
-            self.display_handle.value = self.render()
 
 
 class DisplaysManager(Extension):
@@ -256,14 +255,14 @@ class DisplaysManager(Extension):
         # print(self.displays, displays_by_key)
         for key, displays in displays_by_key.items():
             value = self.get_value(key)
-    
+
             if is_widget(value):
                 if self.widgets.setdefault(key, value) is not value:
                     olds.append(self.widgets[key])
                     self.widgets[key] = value
 
                 for display in displays:
-                    value.observe(display.update, "value")                
+                    value.observe(display.update, "value")
 
         for old in olds:
             old.close()
