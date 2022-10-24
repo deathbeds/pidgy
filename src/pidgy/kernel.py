@@ -12,7 +12,7 @@ class Kernel(IPythonKernel):
         super().__init__(*args, **kwargs)
         from . import load_ipython_extension
 
-        load_ipython_extension(self.shell)
+        self.shell.magics_manager.magics["line"]["reload_ext"]("pidgy")
 
 
 if __name__ == "__main__":
