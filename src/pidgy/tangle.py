@@ -5,6 +5,10 @@ from urllib.parse import urlparse
 
 from midgy.python import Python
 
+# an instance of this class is used to transform markdown to valid python
+# in the ipython extension. the python conversion is constrained by being
+# a line for line transformation using indent code blocks (not code fences)
+# as references for translating the markdown to valid python objects.
 
 class IPython(Python):
     URL_PROTOCOLS = "file", "http", "https"
