@@ -8,7 +8,6 @@ class Pidgy(Markdown):
     """an importnb extension for pidgy documents"""
 
     extensions = ".py.md", ".md", ".md.ipynb"
-    render_cls = IPython
 
     def visit(self, node):
         return super().visit(ReturnDisplay().visit(node))

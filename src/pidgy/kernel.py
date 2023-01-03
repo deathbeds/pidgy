@@ -8,6 +8,7 @@ from ipykernel.ipkernel import IPythonKernel
 
 
 class Kernel(IPythonKernel):
+    # help_links = List([]).tag(config=True)
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.shell.magics_manager.magics["line"]["reload_ext"]("pidgy")

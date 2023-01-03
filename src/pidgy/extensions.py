@@ -1,17 +1,5 @@
-import ast
-import dataclasses
-import dis
-import types
-from ast import NodeTransformer
-from importlib import import_module
-
-import IPython
-from traitlets import Any, Bool, CUnicode, Dict, HasTraits, Instance, List, default
-
-from . import get_ipython
-
-MAGICS = {"line", "line_cell", "cell"}
-TRANSFORMS = {"cleanup_transforms"}
+def register_ipython_extensions():
+    pass
 
 
 class Extension(HasTraits):
@@ -79,44 +67,3 @@ class Extension(HasTraits):
             setattr(self.shell.input_transformer_manager, transform, transforms)
 
         return self
-
-
-class PidgyCompiler:
-    def ast_parse(self, source, filename="<unknown>", symbol="exec"):
-        get_ipython().pidgy.current_execution.nodes = super().ast_parse(source, filename, symbol)
-        return get_ipython().pidgy.current_execution.nodes
-
-
-class Pidgy(HasTraits):
-    extensions = List()
-    current_execution = Any()
-
-
-def pidgy_record_py(lines):
-    get_ipython().pidgy.current_execution.py = "".join(lines)
-    return lines
-
-
-def set_compiler_class(shell):
-    name = PidgyCompiler.__name__.replace("Compiler", shell.compiler_class.__name__)
-    shell.compiler_class = type(name, (PidgyCompiler, shell.compiler_class), {})
-
-
-def load_ipython_extension(shell):
-    if not shell.has_trait("pidgy)"):
-        shell.add_traits(pidgy=Instance(Pidgy, ()))
-
-    shell.input_transformers_post.append(pidgy_record_py)
-    set_compiler_class(shell)
-    shell.compile = shell.compiler_class()
-
-
-def unload_ipython_extension(shell):
-    try:
-        shell.input_transformers_post.remove(pidgy_record_py)
-    except ValueError:
-        pass
-
-    if issubclass(shell.compiler_class, PidgyCompiler):
-        shell.compiler_class = shell.compiler_class.__mro__[2]
-        shell.compile = shell.compiler_class()
