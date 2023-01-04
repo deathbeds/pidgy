@@ -11,7 +11,7 @@ from traitlets import Bool, Dict, Instance, Type
 
 from .displays import IPythonMarkdown, TemplateDisplay, is_widget
 from .environment import IPythonTemplate
-from .pidgy import Extension
+from . import get_ipython
 
 CELL_MAGIC = compile("^\s*%{2}\S")
 NO_SHOW = compile(r"^\s*\r?\n")
@@ -19,13 +19,15 @@ NO_SHOW = compile(r"^\s*\r?\n")
 URL = compile("^(http[s]|file)://")
 
 
-class Weave(Extension):
-    displays = Dict()
-    prior = Dict()  # prior value to compare against when reacting to updates
-    template_cls = Type(IPythonMarkdown, TemplateDisplay)
-    markdown_renderer = Instance(MarkdownIt, args=())
-    reactive = Bool(True)
-    widgets = Dict()
+@dataclass
+class Weave:
+    shell: "InteractiveShell" = field(default_factory=get_ipython)
+    displays: dict = field(default_factory=dict)
+    prior: dict = field(default_factory=dict)  # prior value to compare against when reacting to updates
+    template_cls: type = IPythonMarkdown
+    markdown_renderer: MarkdownIt = field(default_factory=MarkdownIt)
+    reactive: bool = True
+    widgets: dict = dict
 
     def weave_cell(self, body):
         template = self.shell.environment.from_string(body, None, IPythonTemplate)
@@ -125,11 +127,20 @@ def load_ipython_extension(shell):
 
     load_ipython_extension(shell)
     if not shell.has_trait("weave"):
-        shell.add_traits(weave=Instance(Extension, allow_none=True))
-    shell.weave = Weave(shell=shell, markdown_renderer=shell.tangle.parser)
-    shell.weave.load_ipython_extension()
+        shell.add_traits(
+            weave=Instance(
+                Weave, kw=dict(shell=shell, markdown_renderer=shell.tangle.parser), allow_none=True
+            )
+        )
+    shell.events.register("pre_execute", shell.weave.pre_execute)
+    shell.events.register("post_run_cell", shell.weave.post_run_cell)
+    shell.events.register("post_execute", shell.weave.post_execute)
 
 
 def unload_ipython_extension(shell):
     if shell.has_trait("weave"):
-        shell.weave.unload_ipython_extension()
+        for e in ["pre_execute", "post_run_cell", "post_execute"]:
+            try:
+                shell.events.unregister(e, getattr(shell.weave, e))
+            except ValueError:
+                pass

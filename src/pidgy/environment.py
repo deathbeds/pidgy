@@ -65,7 +65,7 @@ class IPythonEnvironment(Environment):
         )
 
     def __init__(self, *args, **kwargs):
-        from jinja2 import ChoiceLoader, DictLoader, Environment, FileSystemLoader
+        from jinja2 import ChoiceLoader, DictLoader, FileSystemLoader
 
         kwargs.setdefault("loader", ChoiceLoader([DictLoader({}), FileSystemLoader(".")]))
         kwargs.setdefault("finalize", IPythonFinalizer)

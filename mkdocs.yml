@@ -11,7 +11,7 @@ theme:
 plugins:
   - search
   - mkdocs-jupyter
-  - pidgy
+  # - pidgy
   
 nav:
   - tests:

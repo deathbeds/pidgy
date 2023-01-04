@@ -1,3 +1,6 @@
+from dataclasses import dataclass, field
+from midgy import Python
+from . import get_ipython
 def wrap_magic(function, cell_key="cell"):
     import functools
     import shlex
@@ -60,3 +63,31 @@ def get_help(ctx):
     with typer.rich_utils._get_rich_console().capture() as console:
         ctx.get_help()
     return console.get()
+
+
+def parse(**kwargs):
+    cell = kwargs.pop("cell")
+    shell = get_ipython()
+    return type(shell.tangle)(**kwargs).parse(cell)
+
+def tangle(**kwargs):
+    cell = kwargs.pop("cell")
+    shell = get_ipython()
+    return type(shell.tangle)(**kwargs).parse(cell)
+
+
+def weave(**kwargs):
+    cell = kwargs.pop("cell")
+    shell = get_ipython()
+    return type(shell.tangle)(**kwargs).parse(cell)
+
+def pidgy(**kwargs):
+    return
+
+def set_signature():
+    pass
+
+
+def load_ipython_extension(shell):
+    shell.tangle
+    pass
