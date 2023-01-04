@@ -7,7 +7,7 @@ from typing import ChainMap
 from jinja2 import Environment, Template
 from jinja2.meta import find_undeclared_variables
 from markdown_it import MarkdownIt
-from traitlets import Bool, Dict, Instance, Type
+from traitlets import Bool, Dict, Instance, Type, HasTraits
 
 from .displays import IPythonMarkdown, TemplateDisplay, is_widget
 from .environment import IPythonTemplate
@@ -19,15 +19,14 @@ NO_SHOW = compile(r"^\s*\r?\n")
 URL = compile("^(http[s]|file)://")
 
 
-@dataclass
-class Weave:
-    shell: "InteractiveShell" = field(default_factory=get_ipython)
-    displays: dict = field(default_factory=dict)
-    prior: dict = field(default_factory=dict)  # prior value to compare against when reacting to updates
-    template_cls: type = IPythonMarkdown
-    markdown_renderer: MarkdownIt = field(default_factory=MarkdownIt)
-    reactive: bool = True
-    widgets: dict = dict
+class Weave(HasTraits):
+    displays = Dict()
+    shell = Instance("IPython.InteractiveShell", ())
+    prior = Dict()  # prior value to compare against when reacting to updates
+    template_cls = Type(IPythonMarkdown, TemplateDisplay)
+    markdown_renderer = Instance(MarkdownIt, args=())
+    reactive = Bool(True)
+    widgets = Dict()
 
     def weave_cell(self, body):
         template = self.shell.environment.from_string(body, None, IPythonTemplate)
