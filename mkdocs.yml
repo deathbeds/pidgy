@@ -1,0 +1,34 @@
+site_name: midgy literate programming
+site_description: midgy literate programming
+site_url: https://deathbeds.github.io/midgy
+repo_url: https://deathbeds.github.io/midgy
+repo_name: deathbeds/midgy
+site_dir: site
+
+theme:
+  name: material
+
+plugins:
+  - search
+  - mkdocs-jupyter
+  # - pidgy
+  
+nav:
+  - tests:
+    - importnb test notebook: test_extras.ipynb
+
+
+markdown_extensions:
+  - admonition
+  - pymdownx.emoji
+  - pymdownx.magiclink
+  - footnotes
+  - pymdownx.snippets:
+      check_paths: true
+  - pymdownx.superfences
+  - toc:
+      permalink: "¤"
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg

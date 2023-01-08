@@ -1,12 +1,12 @@
 """dodo.py"""
+import json
+import os
+import shutil
+import subprocess
+import sys
+from hashlib import sha256
 from pathlib import Path
 from re import sub
-import shutil
-from hashlib import sha256
-import sys
-import os
-import subprocess
-import json
 
 import doit.tools
 
@@ -59,9 +59,7 @@ ALL_JSON = [
     *[p for p in WHL_DEPS if p.suffix == "json"],
 ]
 SOURCE_DATE_EPOCH = (
-    subprocess.check_output(["git", "log", "-1", "--format=%ct"])
-    .decode("utf-8")
-    .strip()
+    subprocess.check_output(["git", "log", "-1", "--format=%ct"]).decode("utf-8").strip()
 )
 os.environ.update(SOURCE_DATE_EPOCH=SOURCE_DATE_EPOCH)
 
@@ -219,9 +217,7 @@ def task_lite():
         )
 
         if rc == 0:
-            build_hashfile(
-                LITE_PYPI_SHA256SUMS, lambda: [*LITE_PYPI.glob("*py3-none-any.whl")]
-            )
+            build_hashfile(LITE_PYPI_SHA256SUMS, lambda: [*LITE_PYPI.glob("*py3-none-any.whl")])
             return True
 
         return False
