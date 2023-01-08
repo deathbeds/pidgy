@@ -3,11 +3,12 @@ from dataclasses import dataclass, field
 from io import StringIO
 from re import compile
 from typing import ChainMap
+from asyncio import ensure_future, gather
 
 from jinja2 import Environment, Template
 from jinja2.meta import find_undeclared_variables
 from markdown_it import MarkdownIt
-from traitlets import Bool, Dict, Instance, Type, HasTraits
+from traitlets import Bool, Dict, Instance, Type, HasTraits, observe, Enum
 
 from .displays import IPythonMarkdown, TemplateDisplay, is_widget
 from .environment import IPythonTemplate
@@ -23,12 +24,47 @@ class Weave(HasTraits):
     displays = Dict()
     shell = Instance("IPython.InteractiveShell", ())
     prior = Dict()  # prior value to compare against when reacting to updates
+    template_type = Enum(["markdown", "html", "widget"]).tag(config=True)
     template_cls = Type(IPythonMarkdown, TemplateDisplay)
     markdown_renderer = Instance(MarkdownIt, args=())
-    reactive = Bool(True)
+    reactive = Bool(True).tag(config=True)
+    use_async = Bool(True).tag(config=True)
     widgets = Dict()
 
+    @observe("template_type")
+    def _set_template_cls(self, value):
+        from .displays import IPythonMarkdown, IPyWidgetsHtml, IPythonHtml
+
+        self.template_cls = dict(markdown=IPythonMarkdown, widget=IPyWidgetsHtml, html=IPythonHtml)[
+            self.template_type
+        ]
+
+    def get_template_vars(self, body):
+        return find_undeclared_variables(self.shell.environment.parse(body))
+
+    async def aweave_cell(self, body):
+        template = self.shell.environment.from_string(
+            body, None, IPythonTemplate, enable_async=True
+        )
+        return self.template_cls(
+            body=body,
+            template=template,
+            vars=self.get_template_vars(body),
+            markdown_renderer=self.markdown_renderer,
+            use_async=self.use_async,
+        )
+
+    def filter_meta_tokens(self, body):
+        if self.shell.pidgy.current_execution:
+            for token in self.shell.pidgy.current_execution.tokens:
+                if token.type in {"front_matter", "shebang"}:
+                    continue
+                break
+            return "".join(body.splitlines(1)[token.map[0] :])
+        return body
+
     def weave_cell(self, body):
+        body = self.filter_meta_tokens(body)
         template = self.shell.environment.from_string(body, None, IPythonTemplate)
         vars = find_undeclared_variables(self.shell.environment.parse(body))
         return self.template_cls(
@@ -72,23 +108,23 @@ class Weave(HasTraits):
                     self.widgets[key] = value
 
                 for display in displays:
-                    value.observe(display.update, "value")
+                    value.observe(display.observe, "value")
 
         for old in olds:
             old.close()
 
     def post_run_cell(self, result):
-        from IPython.display import display
+        from IPython.display import display, Markdown
 
         id = self.get_id()
         if result.error_in_exec or result.error_before_exec:
             pass  # don't do anything when there are errors
         elif NO_SHOW.match(result.info.raw_cell):
-            pass
+            display(Markdown(f"<div hidden>\n\n{result.info.raw_cell}\n\n</div>"))
         elif CELL_MAGIC.match(result.info.raw_cell):
             pass
         else:
-            disp = self.displays[id] = self.weave_cell(result.info.raw_cell)
+            self.displays[id] = self.weave_cell(result.info.raw_cell)
             display(self.displays[id])
             return
 
@@ -107,21 +143,27 @@ class Weave(HasTraits):
         self.prior.update(zip(vars, map(self.get_value, vars)))
 
     def post_execute(self):
-        changed = set()
-
-        for k, v in self.prior.items():
-            y = self.get_value(k)
-            if y is not v:
-                changed.update({k})
-
-        for id, disp in self.displays.items():
-            changed.intersection(disp.vars) and disp.update()
-
         if self.reactive:
-            self.link_widgets()
+            changed = set()
+
+            for k, v in self.prior.items():
+                y = self.get_value(k)
+                if y is not v:
+                    changed.add(k)
+
+            for disp in self.displays.values():
+                if changed.intersection(disp.vars):
+                    ensure_future(disp.aupdate())
+
+            if self.reactive:
+                self.link_widgets()
+
+    def update_displays(self):
+        self.post_execute()
 
 
 def load_ipython_extension(shell):
+    __import__("nest_asyncio").apply()
     from .environment import load_ipython_extension
 
     load_ipython_extension(shell)

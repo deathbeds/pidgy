@@ -7,8 +7,10 @@
 from dataclasses import dataclass, field
 from io import StringIO
 from re import compile
+from IPython.display import DisplayHandle, display, HTML, Markdown
 
 from markdown_it import MarkdownIt
+from asyncio import ensure_future
 
 URL = compile("^(http[s]|file)://")
 
@@ -16,9 +18,6 @@ URL = compile("^(http[s]|file)://")
 @dataclass
 class TemplateDisplay:
     """the TemplateDisplays base class that provides the api for displaying and updating templates."""
-
-    widget = False
-    from IPython.display import Markdown
 
     body: str = None
     template: object = None
@@ -28,13 +27,19 @@ class TemplateDisplay:
     is_list_urls: bool = None
     vars: set = field(default_factory=set)
     # this is not used by the base class but may be used by other base classes that render html
-    markdown_renderer: object = field(default_factory=MarkdownIt)
     tokens: object = None
-
-    del Markdown
+    markdown_renderer: object = None
+    use_async: bool = True
 
     def _ipython_display_(self):
-        self.display()
+        if self.display_handle is None:
+            self.display_handle = DisplayHandle()
+
+        if self.use_async:
+            self.display_handle.display(self.display_object(self.body))
+            ensure_future(self.aupdate())
+        else:
+            self.display_handle.display(self.display_object(self.render()))
 
     def _is_list_urls(self, x):
         for line in filter(bool, map(str.strip, StringIO(x))):
@@ -43,6 +48,14 @@ class TemplateDisplay:
 
             return False
         return True
+
+    async def arender(self):
+        render = await self.template.render_async()
+
+        if self._is_list_urls(render):
+            return self.embed(render)
+
+        return render
 
     def render(self):
         render = self.template.render()
@@ -60,15 +73,21 @@ class TemplateDisplay:
         #     kwargs.setdefault("metadata", {"@graph": metadata})
         return self.display_cls(object, **kwargs)
 
-    def update(self, change=None):
+    async def aupdate(self):
         # it should be possible to do smarter updates
         if self.display_handle:
-            render = self.render()
+            self.display_handle.update(self.display_object(await self.arender()))
 
-            if is_widget(self.display_handle):
-                self.display_handle.value = render
-            else:
-                self.display_handle.update(self.display_object(render))
+    def observe(self, _):
+        ensure_future(self.aupdate())
+
+    def is_widget(self):
+        return is_widget(self.display_handle)
+
+    def update(self):
+        # it should be possible to do smarter updates
+        if self.display_handle:
+            self.display_handle.update(self.display_object(self.render()))
 
     def embed(self, urls):
         """we have a feature for showing iframes of urls.
@@ -88,38 +107,25 @@ class TemplateDisplay:
 
 @dataclass
 class IPythonMarkdown(TemplateDisplay):
-    def display(self):
-        from IPython.display import HTML, display
-
-        if self.display_handle is None:
-            from IPython.display import DisplayHandle
-
-            self.display_handle = DisplayHandle()
-
-        object = self.render()
-        if self.is_list_urls:
-            self.display_cls = HTML
-
-        self.display_handle.display(self.display_object(object))
+    pass
 
 
+@dataclass
 class MarkdownItMixin:
-    def render(self):
-        return self.markdown_renderer.render(super().render())
+    markdown_renderer: object = field(default_factory=MarkdownIt)
+
+    async def arender(self):
+        return self.markdown_renderer.render(await super().arender())
 
 
 @dataclass
 class IPythonHtml(MarkdownItMixin, IPythonMarkdown):
-    from IPython.display import HTML
-
     display_cls: type = HTML
-    del HTML
 
 
 @dataclass
 class IPyWidgetsHtml(MarkdownItMixin, TemplateDisplay):
-    widget = True
-    display_cls: object = None
+    display_cls: "ipywidgets.Widget" = None
 
     def __post_init__(self):
         if self.display_cls is None:
@@ -127,24 +133,36 @@ class IPyWidgetsHtml(MarkdownItMixin, TemplateDisplay):
 
             self.display_cls = HTML
 
-    def display(self):
-        from IPython.display import DisplayHandle, display
+    async def aupdate(self):
+        if self.display_handle:
+            self.display_handle.value = await self.arender()
 
+    def _ipython_display_(self):
         if self.display_handle is None:
-            self.display_handle = DisplayHandle()
-        md = {}  # self.get_markdown_metadata()
-        self.display_handle.display(
-            self.display_cls(self.render()),
-            metadata=md,
-        )
+            self.display_handle = self.display_object("")
+
+        if self.use_async:
+            display(self.display_handle)
+            ensure_future(self.aupdate())
+        else:
+            display(self.display_object(self.render()))
 
 
 def is_widget(object):
-    """is an object a widget"""
     from sys import modules
 
     if "ipywidgets" in modules:
         from ipywidgets import Widget
 
         return isinstance(object, Widget)
+    return False
+
+
+def is_widget_type(object):
+    from sys import modules
+
+    if "ipywidgets" in modules:
+        from ipywidgets import Widget
+
+        return issubclass(object, Widget)
     return False

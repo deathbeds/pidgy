@@ -2,7 +2,7 @@ from re import compile
 from typing import ChainMap
 
 from IPython import get_ipython
-from jinja2 import Environment, Template
+from jinja2 import Environment, Template, Undefined
 from traitlets import Instance
 
 CELL_MAGIC = compile("^\s*%{2}\S")
@@ -70,12 +70,9 @@ class IPythonEnvironment(Environment):
         kwargs.setdefault("loader", ChoiceLoader([DictLoader({}), FileSystemLoader(".")]))
         kwargs.setdefault("finalize", IPythonFinalizer)
         kwargs.setdefault("undefined", Undefined)
-        kwargs.setdefault("enable_async", False)  # enable this later
+        kwargs.setdefault("enable_async", True)  # enable this later
         super().__init__(*args, **kwargs)
         self.init_filters()
-
-
-from jinja2 import Undefined
 
 
 class IPythonTemplate(Template):

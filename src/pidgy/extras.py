@@ -14,7 +14,7 @@
 """
 
 import builtins
-from ast import Call, Expr, NodeTransformer, Tuple, parse
+from ast import Call, Expr, NodeTransformer, Tuple, parse, copy_location, fix_missing_locations
 from pathlib import Path
 from subprocess import CalledProcessError
 
@@ -96,7 +96,7 @@ def shebang_cell_magic(line, body):
 class ReturnDisplay(NodeTransformer):
     """transform a return node into an IPython display expression"""
 
-    REPLACEMENT = parse('__import__("IPython").display.display')
+    REPLACEMENT = parse('__import__("IPython").display.display', mode="eval")
 
     def visit_FunctionDef(self, node):
         return node
@@ -104,12 +104,15 @@ class ReturnDisplay(NodeTransformer):
     visit_AsyncFunctionDef = visit_FunctionDef
 
     def visit_Return(self, node):
-        return Expr(
-            Call(
-                func=self.REPLACEMENT.body,
-                args=node.value.elts if isinstance(node.value, Tuple) else [node.value],
-                keywords=[],
-            )
+        return copy_location(
+            Expr(
+                Call(
+                    func=self.REPLACEMENT.body,
+                    args=node.value.elts if isinstance(node.value, Tuple) else [node.value],
+                    keywords=[],
+                )
+            ),
+            node,
         )
 
 
