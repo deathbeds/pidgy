@@ -163,7 +163,6 @@ class Weave(HasTraits):
 
 
 def load_ipython_extension(shell):
-    __import__("nest_asyncio").apply()
     from .environment import load_ipython_extension
 
     load_ipython_extension(shell)
