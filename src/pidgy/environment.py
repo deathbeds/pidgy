@@ -1,3 +1,5 @@
+"""jinja2 environment machinery for pidgy"""
+
 from re import compile
 from typing import ChainMap
 
@@ -70,7 +72,7 @@ class IPythonEnvironment(Environment):
         kwargs.setdefault("loader", ChoiceLoader([DictLoader({}), FileSystemLoader(".")]))
         kwargs.setdefault("finalize", IPythonFinalizer)
         kwargs.setdefault("undefined", Undefined)
-        kwargs.setdefault("enable_async", True)  # enable this later
+        kwargs.setdefault("enable_async", True)
         super().__init__(*args, **kwargs)
         self.init_filters()
 

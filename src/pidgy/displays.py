@@ -32,6 +32,7 @@ class TemplateDisplay:
     use_async: bool = True
 
     def _ipython_display_(self):
+        """display the template contents"""
         if self.display_handle is None:
             self.display_handle = DisplayHandle()
 
@@ -50,6 +51,7 @@ class TemplateDisplay:
         return True
 
     async def arender(self):
+        """async template rendering"""
         render = await self.template.render_async()
 
         if self._is_list_urls(render):
@@ -58,6 +60,7 @@ class TemplateDisplay:
         return render
 
     def render(self):
+        """sync template rendering"""
         render = self.template.render()
         if self.is_list_urls is None:
             self.is_list_urls = self._is_list_urls(render)
