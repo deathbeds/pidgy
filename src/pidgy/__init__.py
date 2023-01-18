@@ -25,20 +25,20 @@ def get_cell_id(shell=None):
 
 
 def load_ipython_extension(shell):
-    from . import extras, pidgy, tangle, weave
+    from . import extras, tangle, weave
+
+    shell.enable_html_pager = True
 
     shell.user_ns.setdefault("shell", shell)
 
     tangle.load_ipython_extension(shell)
     weave.load_ipython_extension(shell)
-    pidgy.load_ipython_extension(shell)
     extras.load_ipython_extension(shell)
 
 
 def unload_ipython_extension(shell):
-    from . import extras, pidgy, tangle, weave
+    from . import extras, tangle, weave
 
     extras.unload_ipython_extension(shell)
     tangle.unload_ipython_extension(shell)
-    pidgy.unload_ipython_extension(shell)
     weave.unload_ipython_extension(shell)

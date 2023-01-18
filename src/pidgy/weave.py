@@ -55,8 +55,8 @@ class Weave(HasTraits):
         )
 
     def filter_meta_tokens(self, body):
-        if self.shell.pidgy.current_execution:
-            for token in self.shell.pidgy.current_execution.tokens:
+        if self.shell.has_trait("current_execution") and self.shell.current_execution.tokens:
+            for token in self.shell.current_execution.tokens:
                 if token.type in {"front_matter", "shebang"}:
                     continue
                 break
@@ -133,6 +133,7 @@ class Weave(HasTraits):
     def pre_execute(self):
         metadata = self.shell.kernel.get_parent().get("metadata", {})
         for id in metadata.get("deletedCells", []):
+            # clear and deleted displays
             if id in self.displays:
                 del self.displays[id]
 
@@ -140,6 +141,7 @@ class Weave(HasTraits):
         for id, disp in self.displays.items():
             if disp.vars:
                 vars.update(disp.vars)
+        # collect the state of any reactive or tracked variables before execution
         self.prior.update(zip(vars, map(self.get_value, vars)))
 
     def post_execute(self):
@@ -160,7 +162,6 @@ class Weave(HasTraits):
 
     def update_displays(self):
         self.post_execute()
-
 
 def load_ipython_extension(shell):
     from .environment import load_ipython_extension

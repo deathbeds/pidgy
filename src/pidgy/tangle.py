@@ -38,9 +38,11 @@ def pidgy_render_lines(lines):
         return lines.splitlines(True)
 
     tokens = shell.tangle.parse(lines)
-    if hasattr(shell, "pidgy") and shell.pidgy.current_execution:
-        shell.pidgy.current_execution.tokens = tokens
-    return shell.tangle.render_tokens(tokens, src=lines).splitlines(True)
+    if hasattr(shell, "current_execution"):
+        shell.current_execution.tokens = tokens
+        
+    shell.current_execution.py = shell.tangle.render_tokens(tokens, src=lines)
+    return shell.current_execution.py.splitlines(True)
 
 
 @dataclass
@@ -91,6 +93,7 @@ class IPython(Python):
 
 
 def load_ipython_extension(shell):
+    from . import current
     from traitlets import Instance
 
     def tangle(line, cell):
@@ -103,10 +106,13 @@ def load_ipython_extension(shell):
     shell.input_transformer_manager.cleanup_transforms.insert(0, pidgy_render_lines)
     shell.register_magic_function(tangle, "cell")
     shell.register_magic_function(parse, "cell")
+    current.load_ipython_extension(shell)
 
 
 def unload_ipython_extension(shell):
+    from . import current
     try:
         shell.input_transformer_manager.cleanup_transforms.remove(pidgy_render_lines)
     except ValueError:
         pass
+    current.load_ipython_extension(shell)
