@@ -1,18 +1,13 @@
 from collections import defaultdict
-from dataclasses import dataclass, field
-from io import StringIO
 from re import compile
-from typing import ChainMap
-from asyncio import ensure_future, gather
+from asyncio import ensure_future
 
-from jinja2 import Environment, Template
 from jinja2.meta import find_undeclared_variables
 from markdown_it import MarkdownIt
 from traitlets import Bool, Dict, Instance, Type, HasTraits, observe, Enum
 
 from .displays import IPythonMarkdown, TemplateDisplay, is_widget
 from .environment import IPythonTemplate
-from . import get_ipython
 
 CELL_MAGIC = compile("^\s*%{2}\S")
 NO_SHOW = compile(r"^\s*\r?\n")
@@ -163,6 +158,7 @@ class Weave(HasTraits):
     def update_displays(self):
         self.post_execute()
 
+
 def load_ipython_extension(shell):
     from .environment import load_ipython_extension
 
@@ -177,6 +173,12 @@ def load_ipython_extension(shell):
     shell.events.register("post_run_cell", shell.weave.post_run_cell)
     shell.events.register("post_execute", shell.weave.post_execute)
 
+    if is_voila():
+        from .displays import IPyWidgetsHtml
+
+        # when voila runs a pidgy application we use the ipywidgets template
+        shell.weave.template_cls = IPyWidgetsHtml
+
 
 def unload_ipython_extension(shell):
     if shell.has_trait("weave"):
@@ -185,3 +187,10 @@ def unload_ipython_extension(shell):
                 shell.events.unregister(e, getattr(shell.weave, e))
             except ValueError:
                 pass
+
+
+def is_voila():
+    """determine if voila is running from the environment variables."""
+    from os import environ
+
+    return any(x for x in environ if "voila" in x.lower())
