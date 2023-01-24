@@ -16,6 +16,7 @@ URL = compile("^(http[s]|file)://")
 
 
 class Weave(HasTraits):
+    enabled = Bool(True).tag(config=True)
     displays = Dict()
     shell = Instance("IPython.InteractiveShell", ())
     prior = Dict()  # prior value to compare against when reacting to updates
@@ -111,6 +112,9 @@ class Weave(HasTraits):
     def post_run_cell(self, result):
         from IPython.display import display, Markdown
 
+        if not self.enabled:
+            return
+
         id = self.get_id()
         if result.error_in_exec or result.error_before_exec:
             pass  # don't do anything when there are errors
@@ -125,12 +129,18 @@ class Weave(HasTraits):
 
         self.displays.pop(id, None)
 
-    def pre_execute(self):
-        metadata = self.shell.kernel.get_parent().get("metadata", {})
+    def del_displays(self, metadata):
         for id in metadata.get("deletedCells", []):
             # clear and deleted displays
             if id in self.displays:
                 del self.displays[id]
+
+    def pre_execute(self):
+        if not self.enabled:
+            return
+
+        metadata = self.shell.kernel.get_parent().get("metadata", {})
+        self.del_displays(metadata)
 
         vars = set()
         for id, disp in self.displays.items():
@@ -139,8 +149,8 @@ class Weave(HasTraits):
         # collect the state of any reactive or tracked variables before execution
         self.prior.update(zip(vars, map(self.get_value, vars)))
 
-    def post_execute(self):
-        if self.reactive:
+    def post_execute(self, force=False):
+        if force or (self.enabled and self.reactive):
             changed = set()
 
             for k, v in self.prior.items():
@@ -155,8 +165,8 @@ class Weave(HasTraits):
             if self.reactive:
                 self.link_widgets()
 
-    def update_displays(self):
-        self.post_execute()
+    def update(self):
+        self.post_execute(True)
 
 
 def load_ipython_extension(shell):
