@@ -92,10 +92,15 @@ class IPythonTemplate(Template):
     async def render_async(self, *args, **kwargs):
         return await super().render_async(self.ns(*args, **kwargs))
 
+    async def generate_async(self, *args, **kwargs):
+        async for x in super().generate_async(self.ns(*args, **kwargs)):
+            yield x
 
 class Undefined(Undefined):
-    def _fail_with_undefined_error(self, *args, **kwargs):
+    def __str__(self, *args, **kwargs):
         # log that the template failed
+        if self._undefined_obj:
+            return f"`{self._undefined_name} of {self._undefined_obj} is undefined`"
         return f"`{self._undefined_name} is undefined`"
 
 

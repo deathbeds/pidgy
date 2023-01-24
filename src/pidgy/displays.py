@@ -52,10 +52,14 @@ class TemplateDisplay:
 
     async def arender(self):
         """async template rendering"""
-        render = await self.template.render_async()
+        output = StringIO()
 
-        if self._is_list_urls(render):
-            return self.embed(render)
+        async for part in self.template.generate_async():
+            output.write(part)
+        return output.getvalue()
+
+        # if self._is_list_urls(render):
+        #     return self.embed(render)
 
         return render
 
