@@ -25,7 +25,7 @@ def get_cell_id(shell=None):
 
 
 def load_ipython_extension(shell):
-    from . import extras, tangle, weave
+    from . import extras, tangle, weave, inspect
 
     shell.enable_html_pager = True
 
@@ -34,11 +34,13 @@ def load_ipython_extension(shell):
     tangle.load_ipython_extension(shell)
     weave.load_ipython_extension(shell)
     extras.load_ipython_extension(shell)
+    inspect.load_ipython_extension(shell)
 
 
 def unload_ipython_extension(shell):
-    from . import extras, tangle, weave
+    from . import extras, tangle, weave, inspect
 
     extras.unload_ipython_extension(shell)
     tangle.unload_ipython_extension(shell)
     weave.unload_ipython_extension(shell)
+    inspect.unload_ipython_extension(shell)
