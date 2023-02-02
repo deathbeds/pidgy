@@ -1,4 +1,4 @@
-"""jinja2 environment machinery for pidgy"""
+"""pidgy weaves commonmark markdown into rich, reactive displays."""
 
 from re import compile
 from typing import ChainMap
@@ -53,13 +53,6 @@ class IPythonFinalizer(Finalizer):
 
 class IPythonEnvironment(Environment):
     def init_filters(self):
-        try:
-            from nbconvert.exporters.templateexporter import default_filters
-
-            self.filters.update(default_filters)
-        except ModuleNotFoundError:
-            pass
-
         from . import filters
 
         self.filters.update(
@@ -87,7 +80,13 @@ class IPythonTemplate(Template):
         return {}
 
     def render(self, *args, **kwargs):
-        return super().render(self.ns(*args, **kwargs))
+        try:
+            return super().render(self.ns(*args, **kwargs))
+        except RuntimeError:
+            import nest_asyncio
+
+            nest_asyncio.apply()
+            return super().render(self.ns(*args, **kwargs))
 
     async def render_async(self, *args, **kwargs):
         return await super().render_async(self.ns(*args, **kwargs))
@@ -95,6 +94,7 @@ class IPythonTemplate(Template):
     async def generate_async(self, *args, **kwargs):
         async for x in super().generate_async(self.ns(*args, **kwargs)):
             yield x
+
 
 class Undefined(Undefined):
     def __str__(self, *args, **kwargs):
