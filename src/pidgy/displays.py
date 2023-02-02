@@ -11,6 +11,7 @@ from IPython.display import DisplayHandle, display, HTML, Markdown
 
 from markdown_it import MarkdownIt
 from asyncio import ensure_future
+from . import get_ipython
 
 URL = compile("^(http[s]|file)://")
 
@@ -36,7 +37,7 @@ class TemplateDisplay:
         if self.display_handle is None:
             self.display_handle = DisplayHandle()
 
-        if self.use_async:
+        if self.use_async and get_ipython().weave.reactive:
             self.display_handle.display(self.display_object(self.body))
             ensure_future(self.aupdate())
         else:
@@ -58,21 +59,9 @@ class TemplateDisplay:
             output.write(part)
         return output.getvalue()
 
-        # if self._is_list_urls(render):
-        #     return self.embed(render)
-
-        return render
-
     def render(self):
         """sync template rendering"""
-        render = self.template.render()
-        if self.is_list_urls is None:
-            self.is_list_urls = self._is_list_urls(render)
-
-        if self.is_list_urls:
-            return self.embed(render)
-
-        return render
+        return self.template.render()
 
     def display_object(self, object, **kwargs):
         # metadata = self.get_markdown_metadata()
