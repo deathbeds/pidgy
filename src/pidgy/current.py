@@ -12,6 +12,7 @@ class Execution:
     nodes: ast.AST = None
     bytecode: types.CodeType = None
     instructions: list[dis.Instruction] = None
+    md_env: dict = None
 
 
 class PidgyCompiler:
