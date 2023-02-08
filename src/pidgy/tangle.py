@@ -45,15 +45,6 @@ def pidgy_render_lines(lines):
     return shell.current_execution.py.splitlines(True)
 
 
-@dataclass
-class Execution:
-    id: str
-    tokens: list = None
-    py: str = None
-    nodes: ast.AST = None
-    bytecode: types.CodeType = None
-    instructions: list[dis.Instruction] = None
-
 
 @dataclass
 class IPython(Python):
@@ -61,6 +52,7 @@ class IPython(Python):
 
     parent: object = field(default_factory=get_ipython)
     last_tokens: list = None
+    env: dict = field(default_factory=dict)
     URL_PROTOCOLS = "file", "http", "https"
     VALID_URL_LIST_TOKENS = {
         "paragraph_open",
@@ -90,6 +82,17 @@ class IPython(Python):
             break
         else:
             return urls
+
+    def parse(self, src):
+        get_ipython().current_execution.md_env = env = dict()
+        tokens = super().parse(src, env)
+        refs, dups = env.get("references"), env.get("duplicates_refs")
+        if refs:
+            self.env.setdefault("references", refs).update(refs)
+        if dups:
+            self.env.setdefault("duplicates_refs", [])
+            self.extend(dups)
+        return tokens
 
 
 def load_ipython_extension(shell):
