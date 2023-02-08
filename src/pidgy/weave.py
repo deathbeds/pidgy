@@ -13,7 +13,7 @@ CELL_MAGIC = compile("^\s*%{2}\S")
 NO_SHOW = compile(r"^\s*\r?\n")
 
 URL = compile("^(http[s]|file)://")
-
+REFS = compile("\!?(\[.*\])?(\[(?P<a>[^\[]+)\])")
 
 class Weave(HasTraits):
     enabled = Bool(True).tag(config=True)
@@ -59,8 +59,38 @@ class Weave(HasTraits):
             return "".join(body.splitlines(1)[token.map[0] :])
         return body
 
+    def _append_references(self, body):
+        # we can't reuse markdown references across cells without
+        # intervention. this function builds a body of references
+        # that might be undefined in the markdown block, but 
+        # defined in a prior cell.
+
+        from markdown_it.common.utils import normalizeReference
+        extras = {}
+        
+        all = self.shell.tangle.env.get("references", {})
+        this = self.shell.current_execution.md_env.get("references", {})
+        for m in REFS.finditer(body):
+            r = normalizeReference(m.group("a"))
+            if r in extras:
+                continue
+            if r in this:
+                continue
+            if r in all:
+                ref = all[r]
+                extra =  F"[{r}]: " + ref["href"]
+                if ref.get("title"):
+                    extra += F' "{ref["title"]}"'
+                extra += "\n"
+                extras[r] = extra
+        if extras:
+            return "\n"*3 + "\n".join(extras.values())
+        return ""
+
     def weave_cell(self, body):
         body = self.filter_meta_tokens(body)
+        if self.shell.tangle.env.get("references"):
+            body += self._append_references(body)
         template = self.shell.environment.from_string(body, None, IPythonTemplate)
         vars = find_undeclared_variables(self.shell.environment.parse(body))
         return self.template_cls(
