@@ -1,19 +1,20 @@
 from . import get_ipython
 from traceback import format_exception
 from .environment import IPythonTemplate
-
+from functools import lru_cache, partial
 from io import StringIO
 import sys, types
 from asyncio import ensure_future
 from traitlets import Any
-
+from pathlib import Path
 INSPECT_METHOD = ["do_inspect", "inspect"][sys.platform == "emscripten"]
 from itertools import chain
 from contextlib import suppress
-
+DIR = Path(__file__).parent
+HELP = DIR / "help"
 
 def lineno_at_cursor(cell, cursor_pos=0):
-    offset = 0
+    i = offset = 0
     for i, line in enumerate(cell.splitlines(True)):
         next_offset = offset + len(line)
         if not line.endswith("\n"):
@@ -38,12 +39,8 @@ def get_md_token(tokens, line, offset):
     return where
 
 
-# find out what token we are in
-# if it is a code block or code fence then use the normal approach
 def do_inspect(self, cell, cursor_pos, detail_level=1, omit_sections=(), *, cache={}):
     return self.shell.markdown_inspector.inspect(cell, cursor_pos)
-
-    return data
 
 
 def load_ipython_extension(shell):
@@ -79,16 +76,23 @@ class MarkdownInspector:
         if where:
             explicit = self.visit(where[-1], code, line, offset, cursor_pos)
             if explicit:
-                get_ipython().kernel.log.error(explicit)
                 if isinstance(explicit, dict):
+                    shell = get_ipython()
                     if "text/html" in explicit.get("data", {}):
                         explicit["data"]["text/html"] = (
-                            get_ipython().weave.markdown_renderer.render(location)
+                            shell.weave.markdown_renderer.render(location)
                             + explicit["data"]["text/html"]
                         )
                     return explicit
                 return self.prepare(location + explicit)
-        return self.prepare(location + code)
+        if code.strip():
+            shell = get_ipython()
+            out = location + code 
+            if shell.tangle.env.get("references"):
+                # append any prior markdown references
+                out += shell.weave._append_references(code)
+            return self.prepare(out)
+        return self.prepare(get_pidgy_help())
 
     def visit(self, node, code, line, offset, cursor_pos):
         with suppress(AttributeError):
@@ -103,11 +107,16 @@ class MarkdownInspector:
 
     def fence_mermaid(self, node, code, line, offset, cursor_pos):
         if line == node.map[0]:
-            return MERMAID_HELP
+            return get_mermaid_help()
         return self.get_sliced_code(node, code)
 
     def visit_code_block(self, node, code, line, offset, cursor_pos):
-        return get_ipython().kernel.original_inspector(code, cursor_pos)
+        detail = 0
+        if code[cursor_pos - 1] == "?":
+            detail += 1
+        data = get_ipython().kernel.original_inspector(code, cursor_pos, detail_level=detail)
+        if data["found"]:
+            return data
 
     def get_sliced_code(self, node, code):
         body = StringIO()
@@ -119,20 +128,9 @@ class MarkdownInspector:
         return body.getvalue()
 
 
-MERMAID_HELP = """# mermaid help
+@lru_cache
+def get_help(name):
+    return (DIR / "help" / F"{name}.md").read_text()
 
-* [Flowchart](https://mermaid.js.org/syntax/flowchart.html)
-* [Sequence Diagram](https://mermaid.js.org/syntax/sequenceDiagram.html)
-* [Class Diagram](https://mermaid.js.org/syntax/classDiagram.html)
-* [State Diagram](https://mermaid.js.org/syntax/stateDiagram.html)
-* [Entity Relationship Diagram](https://mermaid.js.org/syntax/entityRelationshipDiagram.html)
-* [User Journey](https://mermaid.js.org/syntax/userJourney.html)
-* [Gantt](https://mermaid.js.org/syntax/gantt.html)
-* [Pie Chart](https://mermaid.js.org/syntax/pie.html)
-* [Requirement Diagram](https://mermaid.js.org/syntax/requirementDiagram.html)
-* [Gitgraph (Git) Diagram 🔥](https://mermaid.js.org/syntax/gitgraph.html)
-* [C4C Diagram (Context) Diagram 🦺⚠️](https://mermaid.js.org/syntax/c4c.html)
-* [Mindmaps 🔥](https://mermaid.js.org/syntax/mindmap.html)
-* [Other Examples](https://mermaid.js.org/syntax/examples.html)
-"""
-# cant put iframes in the inspector
+get_mermaid_help = partial(get_help, "mermaid")
+get_pidgy_help = partial(get_help, "pidgy")
