@@ -1,34 +1,62 @@
-site_name: midgy literate programming
-site_description: midgy literate programming
-site_url: https://deathbeds.github.io/midgy
-repo_url: https://deathbeds.github.io/midgy
-repo_name: deathbeds/midgy
+site_name: pidgy literate computing
+site_description: pidgy literate computing
+site_url: https://deathbeds.github.io/pidgy
+repo_url: https://deathbeds.github.io/pidgy
+repo_name: deathbeds/pidgy
 site_dir: site
 
 theme:
   name: material
+  features:
+  - navigation.tracking
+  - navigation.top
+
+  palette: 
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+      primary: black
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7 
+        name: Switch to dark mode
+      primary: black
+
+
 
 plugins:
   - search
-  - mkdocs-jupyter
-  # - pidgy
+  - pidgy
   
 nav:
-  - tests:
-    - importnb test notebook: test_extras.ipynb
+  - index.md
+  - basics.ipynb
 
+hooks:
+  - docs/hooks.py
 
 markdown_extensions:
   - admonition
   - pymdownx.emoji
   - pymdownx.magiclink
   - footnotes
+  - md_in_html
   - pymdownx.snippets:
       check_paths: true
-  - pymdownx.superfences
   - toc:
       permalink: "¤"
   - attr_list
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.superfences:
+      custom_fences:
+      - name: mermaid
+        class: mermaid
+        format: !!python/name:pymdownx.superfences.fence_code_format ''

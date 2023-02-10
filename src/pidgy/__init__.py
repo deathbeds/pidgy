@@ -1,5 +1,5 @@
 """pidgy literate computing frame"""
-
+from ._version import __version__
 
 IS_IPY = bool(
     getattr(
@@ -31,16 +31,14 @@ def load_ipython_extension(shell):
 
     shell.user_ns.setdefault("shell", shell)
 
-    tangle.load_ipython_extension(shell)
-    weave.load_ipython_extension(shell)
-    extras.load_ipython_extension(shell)
-    inspect.load_ipython_extension(shell)
+    shell.run_line_magic("load_ext", "pidgy.tangle")
+    shell.run_line_magic("load_ext", "pidgy.weave")
+    shell.run_line_magic("load_ext", "pidgy.extras")
+    shell.run_line_magic("load_ext", "pidgy.inspect")
 
 
 def unload_ipython_extension(shell):
-    from . import extras, tangle, weave, inspect
-
-    extras.unload_ipython_extension(shell)
-    tangle.unload_ipython_extension(shell)
-    weave.unload_ipython_extension(shell)
-    inspect.unload_ipython_extension(shell)
+    shell.run_line_magic("unload_ext", "pidgy.tangle")
+    shell.run_line_magic("unload_ext", "pidgy.weave")
+    shell.run_line_magic("unload_ext", "pidgy.extras")
+    shell.run_line_magic("unload_ext", "pidgy.inspect")
