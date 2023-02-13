@@ -94,6 +94,8 @@ class IPython(Python):
             self.extend(dups)
         return tokens
 
+def get_renderer():
+    return Renderer(renderer_cls=Python )
 
 def load_ipython_extension(shell):
     from . import current

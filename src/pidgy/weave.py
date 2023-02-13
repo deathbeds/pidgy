@@ -198,6 +198,12 @@ class Weave(HasTraits):
     def update(self):
         self.post_execute(True)
 
+def emoji_markdown(str):
+    from .emoji import emojize
+    from IPython.display import Markdown
+
+    return Markdown(emojize(str))
+
 
 def load_ipython_extension(shell):
     from .environment import load_ipython_extension
