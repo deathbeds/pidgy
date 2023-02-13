@@ -65,7 +65,6 @@ omit = ["docs/*"]
 [tool.coverage.html]
 directory = "docs/coverage"
 
-
 # documentation
 [tool.hatch.envs.docs]
 features = ["docs"]
@@ -73,17 +72,6 @@ features = ["docs"]
 [tool.hatch.envs.docs.scripts]
 build = "mkdocs build"
 serve = "mkdocs serve"
-
-# formatting cause linting sucks
-[tool.isort]
-profile = "black"
-
-[tool.black]
-line_length = 100
-
-[tool.hatch.envs.format]
-skip-install = true
-dependencies = ["black", "isort"]
 
 [tool.hatch.envs.format.scripts]
 code = """
@@ -113,6 +101,16 @@ dependencies = [
 [tool.hatch.envs.lite.scripts]
 build = """
 hatch build -t wheel pypi
-jupyter lite build --contents docs
+jupyter lite build --contents docs --output-dir site/lite
 """
-serve = "python -m http.server --dir _output 8000"
+
+# formatting cause linting sucks
+[tool.isort]
+profile = "black"
+
+[tool.black]
+line_length = 100
+
+[tool.hatch.envs.format]
+skip-install = true
+dependencies = ["black", "isort"]

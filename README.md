@@ -2,7 +2,7 @@
 
 ![pidgy logo](pidgy.png "PIDGY written in large lower case sans serif text with the word WEAVE written in capital letters underneath the letters PID")
 
-`pidgy` is fun, literate and interactive style of programming in markdown & python. together, these languages offer an exciting new experience to rapidly co-develop of code and narrative in Jupyter computational notebooks.
+`pidgy` is a fun, literate and interactive style of programming in markdown & python. together, these languages offer an exciting new experience to rapidly co-develop of code and narrative in Jupyter computational notebooks.
 
 ## writing with `pidgy`
 
