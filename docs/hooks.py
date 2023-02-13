@@ -3,9 +3,7 @@ import logging
 from os import environ
 from shutil import move
 
-ROOT = Path.cwd()
-if environ.get("CI"):
-    ROOT = (Path.cwd() / "..").expanduser()
+ROOT = Path(__file__).parent.parent
 LOGO = ROOT / "pidgy.png"
 DOCS = ROOT / "docs"
 
