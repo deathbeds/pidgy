@@ -55,7 +55,7 @@ class Notebooks(mkdocs.plugins.BasePlugin):
         import json
 
         if page.file.is_modified():
-            if page.file.src_uri.endswith((".ipynb",)):
+            if page.file.src_path.endswith((".ipynb",)):
                 body = Path(page.file.abs_src_path).read_text()
                 nb = nbformat.v4.reads(body)
                 exporter = self.get_exporter()
