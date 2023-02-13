@@ -1,8 +1,0 @@
-{
-  "LiteBuildConfig": {
-    "output_dir": "./_/_",
-    "contents": [
-      "../docs"
-    ]
-  }
-}
