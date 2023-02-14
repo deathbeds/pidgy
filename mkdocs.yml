@@ -34,7 +34,11 @@ plugins:
   
 nav:
   - index.md
-  - basics.ipynb
+  - usage:
+    - basics.ipynb
+  - features:
+    - reactivity.ipynb
+    - mkdocs.ipynb
 
 hooks:
   - docs/hooks.py

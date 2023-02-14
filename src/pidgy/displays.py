@@ -55,8 +55,13 @@ class TemplateDisplay:
         """async template rendering"""
         output = StringIO()
 
-        async for part in self.template.generate_async():
-            output.write(part)
+        try:
+            async for part in self.template.generate_async():
+                output.write(part)
+        except BaseException as e:
+            import traceback
+            msg = "".join(traceback.format_exception(type(e), e, e.__traceback__))
+            return F"""`````````pytb\n{msg}\n`````````"""
         return output.getvalue()
 
     def render(self):
