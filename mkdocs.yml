@@ -31,14 +31,18 @@ theme:
 plugins:
   - search
   - pidgy
+  - mkdocstrings:
+      handlers:
+        python:
+          import: []
+      enable_inventory: true
   
 nav:
   - index.md
   - usage:
     - basics.ipynb
-  - features:
-    - reactivity.ipynb
-    - mkdocs.ipynb
+  - mkdocs.ipynb
+  - widgets.ipynb
 
 hooks:
   - docs/hooks.py
@@ -49,6 +53,8 @@ markdown_extensions:
   - pymdownx.magiclink
   - footnotes
   - md_in_html
+  - pymdownx.tabbed:
+      alternate_style: true
   - pymdownx.snippets:
       check_paths: true
   - toc:
