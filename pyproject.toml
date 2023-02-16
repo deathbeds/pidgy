@@ -20,7 +20,7 @@ dependencies = ["midgy", "jinja2", "IPython", "importnb"]
 dynamic = ["version"] # uses hatch-vcs
 
 [project.optional-dependencies]
-docs = ["mkdocs-material", "ruamel.yaml", "nbconvert"]
+docs = ["mkdocs-material", "ruamel.yaml", "nbconvert", "mkdocstrings[python]"]
 
 [project.entry-points."mkdocs.plugins"]
 pidgy = "pidgy.ext.mkdocs:Notebooks"
