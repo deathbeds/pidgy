@@ -33,20 +33,19 @@ EXT_WHL_NAME = f"""jupyterlite_pidgy-{EXT_SRC_PKG_DATA["version"]}-py3-none-any.
 EXT_WHL = EXT_DIST / EXT_WHL_NAME
 EXT_ICON = EXT / "style/pidgy.png"
 SHA256SUMS = DIST / "SHA256SUMS"
-KERNEL_DATA = HERE / "src/pidgy/kernel/pidgy"
+KERNEL_DATA = HERE / "src/kernelspec"
 KERNEL_ICON = KERNEL_DATA / "logo-64x64.png"
 WHL_PY = [
     p
     for p in [
-        HERE / "setup.py",
+        HERE / "pyproject.toml",
         *Path("src").rglob("*.py"),
     ]
     if p.name != "_version.py"
 ]
-WHL_MD = [HERE / "readme.md", Path("src/pidgy/readme.md")]
+WHL_MD = [HERE / "README.md", Path("src/pidgy/README.md")]
 WHL_DEPS = [
     HERE / "pyproject.toml",
-    HERE / "setup.cfg",
     *KERNEL_DATA.rglob("*"),
     *WHL_MD,
     *WHL_PY,
@@ -110,7 +109,7 @@ def task_dist():
         file_dep=WHL_DEPS,
         actions=[
             lambda: [shutil.rmtree(DIST) if DIST.is_dir() else None, None][-1],
-            [PY, "setup.py", "sdist"],
+            [PY, "-m", "hatch", "build", "-t", "sdist"],
             [PY, "-m", "pip", "wheel", "-w", DIST, "--no-deps", "."],
             (
                 build_hashfile,

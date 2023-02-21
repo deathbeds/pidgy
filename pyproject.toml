@@ -79,10 +79,10 @@ isort .
 black .
 """
 
-
 [tool.hatch.envs.lite]
 description = "build jupyterlite"
 dependencies = [
+  "doit",
   "jupyterlite",
   "jupyterlab-webrtc-docprovider",
   "jupyterlab-deck",
@@ -99,10 +99,7 @@ dependencies = [
 ]
 
 [tool.hatch.envs.lite.scripts]
-build = """
-hatch build -t wheel pypi
-jupyter lite build --contents docs --output-dir site/lite
-"""
+build = """doit lite"""
 
 # formatting cause linting sucks
 [tool.isort]
