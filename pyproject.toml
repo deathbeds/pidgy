@@ -21,6 +21,22 @@ dynamic = ["version"] # uses hatch-vcs
 
 [project.optional-dependencies]
 docs = ["mkdocs-material", "ruamel.yaml", "nbconvert", "mkdocstrings[python]"]
+lite = [
+  "doit",
+  "jupyterlite",
+  "jupyterlab-webrtc-docprovider",
+  "jupyterlab-deck",
+  "jupyter-videochat",
+  "jupyterlab-fonts",
+  "jupyterlab_execute_time",
+  "retrolab",
+  "pyyaml",
+  "depfinder",
+  "requests_cache",
+  "ipywidgets",
+  "hatch",
+  "pkginfo"
+]
 
 [project.entry-points."mkdocs.plugins"]
 pidgy = "pidgy.ext.mkdocs:Notebooks"
@@ -81,22 +97,7 @@ black .
 
 [tool.hatch.envs.lite]
 description = "build jupyterlite"
-dependencies = [
-  "doit",
-  "jupyterlite",
-  "jupyterlab-webrtc-docprovider",
-  "jupyterlab-deck",
-  "jupyter-videochat",
-  "jupyterlab-fonts",
-  "jupyterlab_execute_time",
-  "retrolab",
-  "pyyaml",
-  "depfinder",
-  "requests_cache",
-  "ipywidgets",
-  "hatch",
-  "pkginfo"
-]
+features = ["lite"]
 
 [tool.hatch.envs.lite.scripts]
 build = """doit lite"""

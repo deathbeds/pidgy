@@ -8,5 +8,16 @@ build:
 conda:
   environment: docs/environment.yml
 
-sphinx:
-  configuration: conf.py
+
+mkdocs:
+  configuration: mkdocs.yml
+  fail_on_warning: false
+
+
+python:
+  install:
+    - method: pip
+      path: .
+      extra_requirements:
+        - docs
+        - lite
