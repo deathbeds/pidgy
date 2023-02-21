@@ -20,7 +20,7 @@ def on_pre_build(config):
 def on_post_build(config):
     if "READTHEDOCS" in environ:
         log.info("building lite")
-        log.info(check_output(["doit", "lite"], cwd=ROOT)        )
+        check_output(["doit", "lite"], cwd=ROOT)
 
 
 # https://www.mkdocs.org/user-guide/configuration/#hooks
