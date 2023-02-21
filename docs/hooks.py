@@ -1,6 +1,7 @@
 from pathlib import Path
 import logging
 from os import environ, system
+from sys import executable
 from subprocess import check_output
 from shutil import copy
 
@@ -20,7 +21,7 @@ def on_pre_build(config):
 def on_post_build(config):
     if "READTHEDOCS" in environ:
         log.info("building lite")
-        check_output(["doit", "lite"], cwd=ROOT)
+        check_output([executable, "-m", "doit", "lite"], cwd=ROOT)
 
 
 # https://www.mkdocs.org/user-guide/configuration/#hooks
