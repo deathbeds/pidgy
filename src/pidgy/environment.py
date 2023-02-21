@@ -80,14 +80,7 @@ class IPythonTemplate(Template):
         return {}
 
     def render(self, *args, **kwargs):
-        try:
             return super().render(self.ns(*args, **kwargs))
-        except RuntimeError:
-            import nest_asyncio
-
-            nest_asyncio.apply()
-            return super().render(self.ns(*args, **kwargs))
-
     async def render_async(self, *args, **kwargs):
         return await super().render_async(self.ns(*args, **kwargs))
 

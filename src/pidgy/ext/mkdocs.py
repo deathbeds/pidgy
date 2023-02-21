@@ -11,7 +11,7 @@ import functools, re
 import mkdocs
 from pathlib import Path
 
-PIDGY = re.compile(r"\s*%(re)?load_ext pidgy")
+PIDGY = re.compile(r"\s*%(re)?load_ext pidgy[^\.]?")
 # https://tonyfast.github.io/tonyfast/xxii/2022-12-31-markdownish-notebook.html#generating-the-template
 
 HEAD = """{% from 'base/jupyter_widgets.html.j2' import jupyter_widgets %}
@@ -52,24 +52,26 @@ class Notebooks(mkdocs.plugins.BasePlugin):
 
     def on_page_read_source(self, page, config):
         import nbformat.v4
-        import json
+        from yaml import safe_dump
 
         if page.file.is_modified():
             if page.file.src_path.endswith((".ipynb",)):
                 body = Path(page.file.abs_src_path).read_text()
                 nb = nbformat.v4.reads(body)
                 exporter = self.get_exporter()
-                return "\n".join(
+                    
+                return "\n\n".join(
                     (
                         "---",
-                        json.dumps(nb.metadata),
+                        safe_dump(_node_to_py(nb.metadata), default_flow_style=True),
                         "---",  # add metadata as front matter
-                        exporter.from_notebook_node(nb)[0],
+                        "", exporter.from_notebook_node(nb)[0],
                     )
-                )
+                ).lstrip()
 
     def on_post_page(self, output, page, config):
-        if '<script type="application/vnd.jupyter.widget-view+json">' in output:
+        if '<script type="application/vnd.jupyter.widget-state+json">' in output:
+
             left, sep, right = output.partition("</head")
             exporter = self.get_exporter()
             return (
@@ -87,6 +89,7 @@ class Notebooks(mkdocs.plugins.BasePlugin):
                 + sep
                 + right
             )
+
 
     def on_page_markdown(self, markdown, page, config, files):
         import markdown
@@ -110,3 +113,12 @@ def replace_attachments(cell):
             for t, v in v.items():
                 source = source.replace("attachment:" + k, "data:" + t + ";base64," + v)
     return source
+
+def _node_to_py(object):
+    """convert notebook node to python objects"""
+    from nbformat import NotebookNode
+    if isinstance(object, NotebookNode):
+        return {k: _node_to_py(v) for k, v in object.items()} 
+    return object
+
+            

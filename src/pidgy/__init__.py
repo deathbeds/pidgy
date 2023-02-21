@@ -25,8 +25,6 @@ def get_cell_id(shell=None):
 
 
 def load_ipython_extension(shell):
-    from . import extras, tangle, weave, inspect
-
     shell.enable_html_pager = True
 
     shell.user_ns.setdefault("shell", shell)

@@ -41,8 +41,10 @@ nav:
   - index.md
   - usage:
     - basics.ipynb
-  - mkdocs.ipynb
-  - widgets.ipynb
+  - features:
+    - reactivity.ipynb
+    - magics.ipynb
+    - mkdocs.ipynb
 
 hooks:
   - docs/hooks.py
@@ -53,6 +55,8 @@ markdown_extensions:
   - pymdownx.magiclink
   - footnotes
   - md_in_html
+  - def_list
+
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.snippets:

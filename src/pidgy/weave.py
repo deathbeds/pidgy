@@ -8,12 +8,14 @@ from traitlets import Bool, Dict, Instance, Type, HasTraits, observe, Enum
 
 from .displays import IPythonMarkdown, TemplateDisplay, is_widget
 from .environment import IPythonTemplate
+from . import get_ipython
 
 CELL_MAGIC = compile("^\s*%{2}\S")
 NO_SHOW = compile(r"^\s*\r?\n")
 
 URL = compile("^(http[s]|file)://")
 REFS = compile("\!?(\[.*\])?(\[(?P<a>[^\[]+)\])")
+
 
 class Weave(HasTraits):
     enabled = Bool(True).tag(config=True)
@@ -62,12 +64,22 @@ class Weave(HasTraits):
     def _append_references(self, body):
         # we can't reuse markdown references across cells without
         # intervention. this function builds a body of references
-        # that might be undefined in the markdown block, but 
+        # that might be undefined in the markdown block, but
         # defined in a prior cell.
 
         from markdown_it.common.utils import normalizeReference
+
+        defs = ""
+        for t in self.shell.current_execution.tokens:
+            if t.type == "definition":
+                defs += f"* [{t.meta['label']}]\n"
+                continue
+            break
+        else:
+            return "\n" * 3 + defs
+
         extras = {}
-        
+
         all = self.shell.tangle.env.get("references", {})
         this = self.shell.current_execution.md_env.get("references", {})
         for m in REFS.finditer(body):
@@ -78,13 +90,14 @@ class Weave(HasTraits):
                 continue
             if r in all:
                 ref = all[r]
-                extra =  F"[{r}]: " + ref["href"]
+                extra = f"[{r}]: " + ref["href"]
                 if ref.get("title"):
-                    extra += F' "{ref["title"]}"'
+                    extra += f' "{ref["title"]}"'
                 extra += "\n"
                 extras[r] = extra
+
         if extras:
-            return "\n"*3 + "\n".join(extras.values())
+            return "\n" * 3 + "\n".join(extras.values())
         return ""
 
     def weave_cell(self, body):
@@ -139,6 +152,11 @@ class Weave(HasTraits):
         for old in olds:
             old.close()
 
+    def weave(self, body):
+        id = self.get_id()
+        self.displays[id] = self.weave_cell(body)
+        return self.displays[id]
+
     def post_run_cell(self, result):
         from IPython.display import display, Markdown
 
@@ -148,14 +166,12 @@ class Weave(HasTraits):
         id = self.get_id()
         if result.error_in_exec or result.error_before_exec:
             pass  # don't do anything when there are errors
-        elif NO_SHOW.match(result.info.raw_cell):
-            display(Markdown(f"<div hidden>\n\n{result.info.raw_cell}\n\n</div>"))
         elif CELL_MAGIC.match(result.info.raw_cell):
             pass
+        elif NO_SHOW.match(result.info.raw_cell):
+            display(Markdown(f"<div hidden>\n\n{result.info.raw_cell}\n\n</div>"))
         else:
-            self.displays[id] = self.weave_cell(result.info.raw_cell)
-            display(self.displays[id])
-            return
+            return display(self.weave(result.info.raw_cell))
 
         self.displays.pop(id, None)
 
@@ -188,15 +204,16 @@ class Weave(HasTraits):
                 if y is not v:
                     changed.add(k)
 
-            for disp in self.displays.values():
-                if changed.intersection(disp.vars):
-                    ensure_future(disp.aupdate())
-
             if self.reactive:
-                self.link_widgets()
+                for disp in self.displays.values():
+                    if changed.intersection(disp.vars):
+                        ensure_future(disp.aupdate())
+            
+            self.link_widgets()
 
     def update(self):
         self.post_execute(True)
+
 
 def emoji_markdown(str):
     from .emoji import emojize
@@ -205,19 +222,36 @@ def emoji_markdown(str):
     return Markdown(emojize(str))
 
 
-def load_ipython_extension(shell):
-    from .environment import load_ipython_extension
+def _add_weave_trait(shell):
+    from . import environment
 
-    load_ipython_extension(shell)
+    environment.load_ipython_extension(shell)
+
     if not shell.has_trait("weave"):
         shell.add_traits(
             weave=Instance(
                 Weave, kw=dict(shell=shell, markdown_renderer=shell.tangle.parser), allow_none=True
-            )
+            ).tag(config=True)
         )
+
+
+def _add_interactivity(shell):
     shell.events.register("pre_execute", shell.weave.pre_execute)
-    shell.events.register("post_run_cell", shell.weave.post_run_cell)
     shell.events.register("post_execute", shell.weave.post_execute)
+
+
+def _rm_interactivity(shell):
+    for e in ["pre_execute", "post_run_cell", "post_execute"]:
+        try:
+            shell.events.unregister(e, getattr(shell.weave, e))
+        except ValueError:
+            pass
+
+
+def load_ipython_extension(shell):
+    _add_weave_trait(shell)
+    _add_interactivity(shell)
+    shell.events.register("post_run_cell", shell.weave.post_run_cell)
 
     if is_voila():
         from .displays import IPyWidgetsHtml
@@ -228,11 +262,7 @@ def load_ipython_extension(shell):
 
 def unload_ipython_extension(shell):
     if shell.has_trait("weave"):
-        for e in ["pre_execute", "post_run_cell", "post_execute"]:
-            try:
-                shell.events.unregister(e, getattr(shell.weave, e))
-            except ValueError:
-                pass
+        _rm_interactivity(shell)
 
 
 def is_voila():
