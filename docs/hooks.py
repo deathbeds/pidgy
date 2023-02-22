@@ -23,7 +23,7 @@ def on_post_build(config):
     if "READTHEDOCS" in environ:
         C = ROOT / "lite" / "jupyter_lite_config.json"
         data = json.loads(C.read_text())
-        data["LiteBuildConfig"]["output_dir"] = config.site_dir
+        data["LiteBuildConfig"]["output_dir"] = Path(config.site_dir) / "run"
         C.write_text(json.dumps(data))
         log.info("building lite")
         check_output([executable, "-m", "doit", "lite"], cwd=ROOT)
