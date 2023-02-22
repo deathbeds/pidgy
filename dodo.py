@@ -221,10 +221,16 @@ def task_lite():
 
         return False
 
+    def _clean():
+        """remove conflicting packages that get patched"""
+        for x in ["tornado", "ipython", "ipykernel", "psutil", "pyzmq"]:
+            for file in LITE_PYPI.glob(F"{x}*.whl"):
+                file.unlink()
+
     yield dict(
         name="wheels",
         file_dep=[SHA256SUMS, LITE_REQS, EXT_WHL],
-        actions=[(doit.tools.create_folder, [LITE / "pypi"]), _wheels],
+        actions=[(doit.tools.create_folder, [LITE / "pypi"]), _wheels, _clean],
     )
 
     def _lite(args, extra_args=None):
