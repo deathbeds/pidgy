@@ -105,6 +105,7 @@ black .
 [tool.hatch.envs.lite]
 description = "build jupyterlite"
 features = ["lite"]
+python = "3.10"
 
 [tool.hatch.envs.lite.scripts]
 build = """doit lite"""
