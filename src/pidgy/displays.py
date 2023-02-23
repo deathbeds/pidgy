@@ -41,10 +41,16 @@ class TemplateDisplay:
         if self.display_handle is None:
             self.display_handle = DisplayHandle()
 
-        if self.use_async:
+        if self.use_async and get_ipython().weave.reactive:
             self.display_handle.display(self.display_object(self.body))
             ensure_future(self.aupdate())
         else:
+            try:
+                import nest_asyncio
+
+                nest_asyncio.apply()
+            except ModuleNotFoundError:
+                raise ImportError("nest_asyncio is needed to use synchronous rendering.")
             self.display_handle.display(self.display_object(self.render()))
 
     def _is_list_urls(self, x):

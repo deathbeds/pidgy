@@ -28,10 +28,10 @@ def load_ipython_extension(shell):
     shell.enable_html_pager = True
 
     shell.user_ns.setdefault("shell", shell)
-    for e in ("tangle", "weave", "extras", "inspect"):
+    for e in ("tangle", "weave", "extras", "inspect", "magics"):
         shell.run_line_magic("load_ext", F"pidgy.{e}")
 
 
 def unload_ipython_extension(shell):
-    for e in ("tangle", "weave", "extras", "inspect"):
+    for e in ("tangle", "weave", "extras", "inspect", "magics"):
         shell.run_line_magic("unload_ext", F"pidgy.{e}")
