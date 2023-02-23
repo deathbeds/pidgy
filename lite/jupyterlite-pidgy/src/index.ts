@@ -17,6 +17,7 @@ import { PLUGIN_ID, UPSTREAM_PLUGIN_ID, PYODIDE_CDN_URL } from './tokens';
 const kernel: JupyterLiteServerPlugin<void> = {
   id: PLUGIN_ID,
   autoStart: true,
+  // @ts-ignore: Types have separate declarations of a private property
   optional: [IKernelSpecs],
   activate: (app: JupyterLiteServer, kernelspecs: IKernelSpecs) => {
     console.log(UPSTREAM_PLUGIN_ID, PYODIDE_CDN_URL, PageConfig, URLExt, kernelspecs);

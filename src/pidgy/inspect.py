@@ -1,10 +1,7 @@
 from . import get_ipython
-from traceback import format_exception
-from .environment import IPythonTemplate
 from functools import lru_cache, partial
 from io import StringIO
 import sys, types
-from asyncio import ensure_future
 from traitlets import Any
 from pathlib import Path
 INSPECT_METHOD = ["do_inspect", "inspect"][sys.platform == "emscripten"]
@@ -40,7 +37,7 @@ def get_md_token(tokens, line, offset):
 
 
 def do_inspect(self, cell, cursor_pos, detail_level=1, omit_sections=(), *, cache={}):
-    return self.shell.markdown_inspector.inspect(cell, cursor_pos)
+    return get_ipython().markdown_inspector.inspect(cell, cursor_pos)
 
 
 def load_ipython_extension(shell):

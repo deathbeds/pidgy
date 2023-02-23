@@ -7,16 +7,14 @@
 {{ nb.metadata.widgets[mimetype] | json_dumps  }}
 </script>
 {% endif %}
-</script>
-
 {% endblock %}
 
 {% block input %}
-{% if resources.is_pidgy %}<div class="cell source" hidden>
+{% if resources.is_pidgy %}<div class="cell source" hidden markdown>
 {% endif %}
-````````````````````````python
+````````````````````````````````````````````````python
 {{cell.source}}
-````````````````````````
+````````````````````````````````````````````````
 {% if resources.is_pidgy %}</div>
 {% endif %}
 {% endblock input %}
@@ -225,3 +223,26 @@ var element = $('#{{ div_id }}');
 </script>
 </div>
 {%- endblock data_widget_view -%}
+
+
+{%- block data_text scoped %}
+<div class="output_text output_subarea {{ extra_class }}">
+<pre>
+{{- output.data['text/plain'] | ansi2html -}}
+</pre>
+</div>
+{%- endblock -%}
+
+
+{%- block data_javascript scoped %}
+{% set div_id = uuid4() %}
+<div id="{{ div_id }}" class="output_subarea output_javascript {{ extra_class }}">
+{%- if not resources.should_sanitize_html %}
+<script type="text/javascript">
+var element = $('#{{ div_id }}');
+{{ output.data['application/javascript'] }}
+</script>
+{%- endif %}
+</div>
+{%- endblock -%}
+

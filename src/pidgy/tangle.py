@@ -40,10 +40,9 @@ def pidgy_render_lines(lines):
     tokens = shell.tangle.parse(lines)
     if hasattr(shell, "current_execution"):
         shell.current_execution.tokens = tokens
-        
+
     shell.current_execution.py = shell.tangle.render_tokens(tokens, src=lines)
     return shell.current_execution.py.splitlines(True)
-
 
 
 @dataclass
@@ -95,27 +94,25 @@ class IPython(Python):
         return tokens
 
 
-def load_ipython_extension(shell):
+def _add_tangle_trait(shell):
+    if not shell.has_trait("tangle"):
+        from traitlets import Instance
+
+        shell.add_traits(tangle=Instance(IPython, ()))
     from . import current
-    from traitlets import Instance
 
-    def tangle(line, cell):
-        print(shell.tangle.render(cell))
-
-    def parse(line, cell):
-        print(shell.tangle.parse(cell))
-
-    shell.add_traits(tangle=Instance(IPython, ()))
-    shell.input_transformer_manager.cleanup_transforms.insert(0, pidgy_render_lines)
-    shell.register_magic_function(tangle, "cell")
-    shell.register_magic_function(parse, "cell")
     current.load_ipython_extension(shell)
+
+def load_ipython_extension(shell):
+
+    _add_tangle_trait(shell)
+    shell.input_transformer_manager.cleanup_transforms.insert(0, pidgy_render_lines)
 
 
 def unload_ipython_extension(shell):
     from . import current
+
     try:
         shell.input_transformer_manager.cleanup_transforms.remove(pidgy_render_lines)
     except ValueError:
         pass
-    current.load_ipython_extension(shell)

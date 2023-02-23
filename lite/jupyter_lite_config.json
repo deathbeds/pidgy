@@ -1,6 +1,6 @@
 {
   "LiteBuildConfig": {
-    "output_dir": "./_/_",
+    "output_dir": "../site/run",
     "contents": [
       "../docs"
     ]

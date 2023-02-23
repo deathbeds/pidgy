@@ -59,7 +59,7 @@ a <kbd>Tab</kbd> separates markdown code and narrative, `pidgy` uses this nearne
 [pip]: https://pypi.org/ "python package index"
 [improving accessibility of markdown]: https://www.smashingmagazine.com/2021/09/improving-accessibility-of-markdown/
 [With Markdown, Even the Blind Can Write]: https://tidbits.com/2013/06/18/with-markdown-even-the-blind-can-write/
-[pidgy lite]: #
+[pidgy lite]: https://deathbeds.github.io/pidgy/run/
 [jupyterlite]: https://github.com/jupyterlite/jupyterlite
 [contributing and development]: #
 
