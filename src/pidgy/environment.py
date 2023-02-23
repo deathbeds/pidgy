@@ -9,24 +9,17 @@ from traitlets import Instance
 
 CELL_MAGIC = compile("^\s*%{2}\S")
 NO_SHOW = compile(r"^\s*\r?\n")
-
-from IPython import get_ipython
-
 URL = compile("^(http[s]|file)://")
 
 
-class Finalizer:
-    def __new__(cls, object):
-        return object
-
-
-class IPythonFinalizer(Finalizer):
-    """a finalizer that extracts content from IPython displays"""
+class IPythonFinalizer:
+    """a finalizer that extracts mimetype data from IPython displays"""
 
     @staticmethod
     def normalize(type, object, metadata) -> str:
         """normalize and object with (mime)type and return a string."""
-
+        # indents can affect the display when mimetypes are
+        # converted to markdown dislays 
         if type == "text/html" or "svg" in type:
             object = get_minified(object)
 
@@ -52,6 +45,8 @@ class IPythonFinalizer(Finalizer):
 
 
 class IPythonEnvironment(Environment):
+    """a jinja2 environment available in the ipython shell"""
+
     def init_filters(self):
         from . import filters
 
@@ -71,6 +66,7 @@ class IPythonEnvironment(Environment):
 
 
 class IPythonTemplate(Template):
+    """an ipython shell and namespace aware jinja template"""
     def ns(self, *args, **kwargs):
         import builtins
 
@@ -80,7 +76,8 @@ class IPythonTemplate(Template):
         return {}
 
     def render(self, *args, **kwargs):
-            return super().render(self.ns(*args, **kwargs))
+        return super().render(self.ns(*args, **kwargs))
+
     async def render_async(self, *args, **kwargs):
         return await super().render_async(self.ns(*args, **kwargs))
 

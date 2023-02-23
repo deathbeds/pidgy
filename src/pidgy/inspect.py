@@ -1,41 +1,21 @@
+"""a modified ipython inspector that gives keystroke resolution rendering."""
+
 from . import get_ipython
 from functools import lru_cache, partial
 from io import StringIO
 import sys, types
 from traitlets import Any
 from pathlib import Path
+
 INSPECT_METHOD = ["do_inspect", "inspect"][sys.platform == "emscripten"]
 from itertools import chain
 from contextlib import suppress
+
 DIR = Path(__file__).parent
 HELP = DIR / "help"
 
-def lineno_at_cursor(cell, cursor_pos=0):
-    i = offset = 0
-    for i, line in enumerate(cell.splitlines(True)):
-        next_offset = offset + len(line)
-        if not line.endswith("\n"):
-            next_offset += 1
-        if next_offset > cursor_pos:
-            break
-        offset = next_offset
-    col = cursor_pos - offset
-    return i, col
 
-
-def get_md_token(tokens, line, offset):
-    where = []
-    for node in tokens:
-        if node.type == "root":
-            continue
-        if node.map:
-            if line < node.map[0]:
-                break
-            elif node.map[0] <= line < node.map[1]:
-                where.append(node)
-    return where
-
-
+# the do_inspect method overrides kernel inspection in lab and lite.
 def do_inspect(self, cell, cursor_pos, detail_level=1, omit_sections=(), *, cache={}):
     return get_ipython().markdown_inspector.inspect(cell, cursor_pos)
 
@@ -84,7 +64,7 @@ class MarkdownInspector:
                 return self.prepare(location + explicit)
         if code.strip():
             shell = get_ipython()
-            out = location + code 
+            out = location + code
             if shell.tangle.env.get("references"):
                 # append any prior markdown references
                 out += shell.weave._append_references(code)
@@ -127,7 +107,35 @@ class MarkdownInspector:
 
 @lru_cache
 def get_help(name):
-    return (DIR / "help" / F"{name}.md").read_text()
+    return (DIR / "help" / f"{name}.md").read_text()
+
 
 get_mermaid_help = partial(get_help, "mermaid")
 get_pidgy_help = partial(get_help, "pidgy")
+
+
+def lineno_at_cursor(cell, cursor_pos=0):
+    i = offset = 0
+    for i, line in enumerate(cell.splitlines(True)):
+        next_offset = offset + len(line)
+        if not line.endswith("\n"):
+            next_offset += 1
+        if next_offset > cursor_pos:
+            break
+        offset = next_offset
+    col = cursor_pos - offset
+    return i, col
+
+
+def get_md_token(tokens, line, offset):
+    """return the md token stack corresponding to the cursor position."""
+    where = []
+    for node in tokens:
+        if node.type == "root":
+            continue
+        if node.map:
+            if line < node.map[0]:
+                break
+            elif node.map[0] <= line < node.map[1]:
+                where.append(node)
+    return where

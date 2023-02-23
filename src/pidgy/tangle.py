@@ -1,8 +1,5 @@
 """tangle.py provides the Markdown to Python translation model.
 """
-import ast
-import dis
-import types
 from dataclasses import dataclass, field
 from io import StringIO
 from re import MULTILINE, compile
@@ -10,6 +7,7 @@ from urllib.parse import urlparse
 
 from midgy.python import Python
 
+from .current import Execution
 from . import get_cell_id, get_ipython
 
 # an instance of this class is used to transform markdown to valid python
@@ -83,6 +81,7 @@ class IPython(Python):
             return urls
 
     def parse(self, src):
+        """parse a cell and add information to the current execution."""
         get_ipython().current_execution.md_env = env = dict()
         tokens = super().parse(src, env)
         refs, dups = env.get("references"), env.get("duplicates_refs")
@@ -102,6 +101,7 @@ def _add_tangle_trait(shell):
     from . import current
 
     current.load_ipython_extension(shell)
+
 
 def load_ipython_extension(shell):
 

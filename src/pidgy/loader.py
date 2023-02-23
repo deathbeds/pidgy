@@ -1,8 +1,6 @@
 from midgy.loader import Markdown
 
 from .extras import ReturnDisplay
-from .tangle import IPython
-
 
 class Pidgy(Markdown):
     """an importnb extension for pidgy documents"""

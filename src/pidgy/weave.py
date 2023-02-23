@@ -208,18 +208,11 @@ class Weave(HasTraits):
                 for disp in self.displays.values():
                     if changed.intersection(disp.vars):
                         ensure_future(disp.aupdate())
-            
+
             self.link_widgets()
 
     def update(self):
         self.post_execute(True)
-
-
-def emoji_markdown(str):
-    from .emoji import emojize
-    from IPython.display import Markdown
-
-    return Markdown(emojize(str))
 
 
 def _add_weave_trait(shell):

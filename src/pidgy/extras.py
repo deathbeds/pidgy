@@ -14,19 +14,14 @@
 """
 
 import builtins
-from ast import Call, Expr, NodeTransformer, Tuple, parse, copy_location, fix_missing_locations
+from ast import Call, Expr, NodeTransformer, Tuple, parse, copy_location
 from pathlib import Path
 from subprocess import CalledProcessError
 
 import IPython
-from traitlets import CUnicode
-
 from . import get_ipython
 
-builtins.true, builtins.false, builtins.null = True, False, None
 
-
-# happens each execution
 def sys_modules_are_part_of_ns():
     from sys import modules
 
@@ -117,6 +112,7 @@ class ReturnDisplay(NodeTransformer):
 
 
 def load_ipython_extension(shell: IPython.InteractiveShell):
+    builtins.true, builtins.false, builtins.null = True, False, None
     shell.events.register("pre_execute", sys_modules_are_part_of_ns)
     ipython_displays_are_part_of_ns(shell)
     shell.ast_transformers.append(ReturnDisplay())
