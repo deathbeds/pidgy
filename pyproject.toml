@@ -80,7 +80,7 @@ dependencies = ["pytest", "pytest-cov", "nbval", "pandas", "ipywidgets", "matplo
 cov = "pytest"
 
 [tool.pytest.ini_options]
-addopts = "-pno:warnings -p no:importnb --ignore lite --cov pidgy --cov-report term --cov-report html --current-env --nbval --sanitize-with sanitize.cfg "
+addopts = "-pno:warnings -p no:importnb --ignore lite --cov pidgy --cov-report term --cov-report html --nbval-current-env --nbval --nbval-sanitize-with sanitize.cfg"
 
 [tool.coverage.report]
 omit = ["docs/*"]
