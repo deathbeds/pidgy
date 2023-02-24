@@ -26,17 +26,17 @@ def weave(line, cell):
     shell = get_ipython()
 
     from IPython.core.interactiveshell import ExecutionInfo, ExecutionResult
-
-    return shell.weave.post_run_cell(
-        ExecutionResult(ExecutionInfo(cell, True, False, True, get_cell_id()))
-    )
+    try:
+        return shell.weave.weave(cell)
+    finally:
+        shell.weave.post_execute()
 
 
 def pidgy(line, cell):
     """weave the cell input into a display"""
     shell = get_ipython()
-    shell.run_cell(shell.tangle.render(cell), silent=True)
-    return weave("", cell)
+    shell.run_cell(cell, silent=True)
+    return weave("",cell)
 
 
 def load_ipython_extension(shell):
