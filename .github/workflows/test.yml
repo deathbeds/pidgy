@@ -1,4 +1,4 @@
-name: build documentation
+name: test pidgy
 
 on: [push]
 
