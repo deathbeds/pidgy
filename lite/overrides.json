@@ -2,6 +2,9 @@
   "jupyterlab-videochat:plugin": {
     "disablePublicRooms": false
   },
+  "@jupyterlab/apputils-extension:themes": {
+    "theme": "JupyterLab Dark"
+  },
   "@deathbeds/jupyterlab-fonts:fonts": {
     "styles": {
       "@import": [
