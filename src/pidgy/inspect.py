@@ -37,11 +37,26 @@ def unload_ipython_extension(shell):
 
 
 class MarkdownInspector:
-    def prepare(self, body):
-        return dict(found=True, status="ok", data={"text/markdown": body}, metadata={})
+    def prepare(self, data):
+        if isinstance(data, str):
+            data = {"text/markdown": data}
+        return dict(found=True, status="ok", data=data, metadata={})
+    
+    def inspect_cell_magic(self, code):
+        shell = get_ipython()
+        code = shell.transform_cell(code)
+        try:
+            object = eval(code)
+        except BaseException as e:
+            object = e
+        return shell.display_formatter.format(object)[0]
 
     def inspect(self, code, cursor_pos=0, cache={}):
         tokens = cache.get(code)
+        get_ipython().log.error(code.startswith(("%%",)))
+        if code.startswith(("%%tangle", "%%parse")):
+            return self.prepare(self.inspect_cell_magic(code))
+
         line, offset = lineno_at_cursor(code, cursor_pos)
 
         if tokens is None:
