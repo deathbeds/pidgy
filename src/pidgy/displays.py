@@ -45,12 +45,6 @@ class TemplateDisplay:
             self.display_handle.display(self.display_object(self.body))
             ensure_future(self.aupdate())
         else:
-            try:
-                import nest_asyncio
-
-                nest_asyncio.apply()
-            except ModuleNotFoundError:
-                raise ImportError("nest_asyncio is needed to use synchronous rendering.")
             self.display_handle.display(self.display_object(self.render()))
 
     def _is_list_urls(self, x):

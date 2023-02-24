@@ -22,6 +22,7 @@ class Weave(HasTraits):
     displays = Dict()
     shell = Instance("IPython.InteractiveShell", ())
     prior = Dict()  # prior value to compare against when reacting to updates
+    template = Bool(True).tag(config=True)
     template_type = Enum(["markdown", "html", "widget"]).tag(config=True)
     template_cls = Type(IPythonMarkdown, TemplateDisplay)
     markdown_renderer = Instance(MarkdownIt, args=())
@@ -29,28 +30,45 @@ class Weave(HasTraits):
     use_async = Bool(True).tag(config=True)
     widgets = Dict()
 
+    # the reactive trait with kill the kernel if its value is changed while updates are pending
+
+    @observe("reactive")
+    def _set_reactive(self, value):
+        if not value["new"]:
+
+            import nest_asyncio
+
+            nest_asyncio.apply()
+
     @observe("template_type")
     def _set_template_cls(self, value):
         from .displays import IPythonMarkdown, IPyWidgetsHtml, IPythonHtml
 
-        self.template_cls = dict(markdown=IPythonMarkdown, widget=IPyWidgetsHtml, html=IPythonHtml)[
-            self.template_type
-        ]
+        self.template_cls = dict(
+            markdown=IPythonMarkdown, widget=IPyWidgetsHtml, html=IPythonHtml
+        ).get[self.template_type]
 
     def get_template_vars(self, body):
         return find_undeclared_variables(self.shell.environment.parse(body))
 
     async def aweave_cell(self, body):
-        template = self.shell.environment.from_string(
-            body, None, IPythonTemplate, enable_async=True
-        )
-        return self.template_cls(
-            body=body,
-            template=template,
-            vars=self.get_template_vars(body),
-            markdown_renderer=self.markdown_renderer,
-            use_async=self.use_async,
-        )
+        if self.template:
+            template = self.shell.environment.from_string(
+                body, None, IPythonTemplate, enable_async=True
+            )
+            return self.template_cls(
+                body=body,
+                template=template,
+                vars=self.get_template_vars(body),
+                markdown_renderer=self.markdown_renderer,
+                use_async=self.use_async,
+            )
+        
+        return self.display_no_template(body)
+    
+    def display_no_template(self, body):
+        return self.template_cls.display_cls(body)
+
 
     def filter_meta_tokens(self, body):
         if self.shell.has_trait("current_execution") and self.shell.current_execution.tokens:
@@ -101,14 +119,16 @@ class Weave(HasTraits):
         return ""
 
     def weave_cell(self, body):
-        body = self.filter_meta_tokens(body)
-        if self.shell.tangle.env.get("references"):
-            body += self._append_references(body)
-        template = self.shell.environment.from_string(body, None, IPythonTemplate)
-        vars = find_undeclared_variables(self.shell.environment.parse(body))
-        return self.template_cls(
-            body=body, template=template, vars=vars, markdown_renderer=self.markdown_renderer
-        )
+        if self.template:
+            body = self.filter_meta_tokens(body)
+            if self.shell.tangle.env.get("references"):
+                body += self._append_references(body)
+            template = self.shell.environment.from_string(body, None, IPythonTemplate)
+            vars = find_undeclared_variables(self.shell.environment.parse(body))
+            return self.template_cls(
+                body=body, template=template, vars=vars, markdown_renderer=self.markdown_renderer
+            )
+        return self.display_no_template(body)
 
     def get_value(self, key, raw=True):
         """get a value in a namespace that is potentially a widgets."""
@@ -153,9 +173,11 @@ class Weave(HasTraits):
             old.close()
 
     def weave(self, body):
-        id = self.get_id()
-        self.displays[id] = self.weave_cell(body)
-        return self.displays[id]
+        display = self.weave_cell(body)
+        if self.template:
+            id = self.get_id()
+            self.displays[id] = display 
+        return display
 
     def post_run_cell(self, result):
         from IPython.display import display, Markdown
@@ -199,15 +221,15 @@ class Weave(HasTraits):
         if force or (self.enabled and self.reactive):
             changed = set()
 
-            for k, v in self.prior.items():
-                y = self.get_value(k)
-                if y is not v:
-                    changed.add(k)
-
             if self.reactive:
-                for disp in self.displays.values():
-                    if changed.intersection(disp.vars):
-                        ensure_future(disp.aupdate())
+                for k, v in self.prior.items():
+                    y = self.get_value(k)
+                    if y is not v:
+                        changed.add(k)
+
+                    for disp in self.displays.values():
+                        if changed.intersection(disp.vars):
+                            ensure_future(disp.aupdate())
 
             self.link_widgets()
 
