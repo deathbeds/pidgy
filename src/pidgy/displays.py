@@ -71,7 +71,11 @@ class TemplateDisplay:
 
     def render(self):
         """sync template rendering"""
-        return self.template.render()
+        try:
+            return self.template.render()
+        except RuntimeError:
+            import nest_asyncio
+            nest_asyncio.apply()
 
     def display_object(self, object, **kwargs):
         return self.display_cls(object, **kwargs)
