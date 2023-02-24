@@ -53,12 +53,15 @@ def ipython_displays_are_part_of_ns(shell):
 
 def ipywidgets_displays_are_part_of_ns(shell):
     import ipywidgets
-    from ipywidgets import Widget
+    from ipywidgets import Widget, interact, interact_manual
 
     for k, v in vars(ipywidgets).items():
         if isinstance(v, type) and issubclass(v, Widget):
             if k[0].isupper():
                 shell.user_ns.setdefault(k, v)
+    shell.user_ns.setdefault("interact", interact)
+    shell.user_ns.setdefault("interact_manual", interact_manual)
+    
 
 
 def shebang_transform(lines):
