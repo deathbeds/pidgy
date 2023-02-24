@@ -88,7 +88,7 @@ class Weave(HasTraits):
         from markdown_it.common.utils import normalizeReference
 
         defs = ""
-        for t in self.shell.current_execution.tokens:
+        for t in self.shell.current_execution.tokens or ():
             if t.type == "definition":
                 defs += f"* [{t.meta['label']}]\n"
                 continue
