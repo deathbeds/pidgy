@@ -63,12 +63,11 @@ class Weave(HasTraits):
                 markdown_renderer=self.markdown_renderer,
                 use_async=self.use_async,
             )
-        
+
         return self.display_no_template(body)
-    
+
     def display_no_template(self, body):
         return self.template_cls.display_cls(body)
-
 
     def filter_meta_tokens(self, body):
         if self.shell.has_trait("current_execution") and self.shell.current_execution.tokens:
@@ -159,8 +158,9 @@ class Weave(HasTraits):
         displays_by_key = self.get_vars()
         olds = list()
         for key, displays in displays_by_key.items():
+            if key.startswith("_"):
+                continue
             value = self.get_value(key)
-
             if is_widget(value):
                 if self.widgets.setdefault(key, value) is not value:
                     olds.append(self.widgets[key])
@@ -176,7 +176,7 @@ class Weave(HasTraits):
         display = self.weave_cell(body)
         if self.template:
             id = self.get_id()
-            self.displays[id] = display 
+            self.displays[id] = display
         return display
 
     def post_run_cell(self, result):
@@ -211,30 +211,50 @@ class Weave(HasTraits):
         self.del_displays(metadata)
 
         vars = set()
-        for id, disp in self.displays.items():
+        for disp in self.displays.values():
             if disp.vars:
                 vars.update(disp.vars)
         # collect the state of any reactive or tracked variables before execution
         self.prior.update(zip(vars, map(self.get_value, vars)))
 
-    def post_execute(self, force=False):
-        if force or (self.enabled and self.reactive):
-            changed = set()
+    def get_changed_vars(self):
+        changed = set()
 
-            if self.reactive:
-                for k, v in self.prior.items():
-                    y = self.get_value(k)
-                    if y is not v:
-                        changed.add(k)
+        for k, v in self.prior.items():
+            y = self.get_value(k)
+            if y is not v:
+                changed.add(k)
+        return changed
 
-                    for disp in self.displays.values():
-                        if changed.intersection(disp.vars):
-                            ensure_future(disp.aupdate())
-
+    def post_execute(self):
+        if self.enabled and self.reactive:
+            self.update()
             self.link_widgets()
 
-    def update(self):
-        self.post_execute(True)
+    def update(self, *id, force=False, changed: set = None):
+        """update the displays
+
+        id:
+            specific display ids to update
+        force:
+            force all the display to be updated
+        changed:
+            a set of variables changed since the last rendering."""
+        if id:
+            get_ipython().log.error(id)
+            for i in id:
+                ensure_future(self.displays[i].aupdate())
+        else:
+            if force:
+                changed = set(self.prior)
+            if changed is None:
+                changed = self.get_changed_vars()
+            if changed:
+                for i, disp in self.displays.items():
+                    if not force and id and i not in id:
+                        continue
+                    if changed is not None and changed.intersection(disp.vars):
+                        ensure_future(disp.aupdate())
 
 
 def _add_weave_trait(shell):

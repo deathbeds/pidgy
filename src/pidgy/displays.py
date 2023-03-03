@@ -144,6 +144,10 @@ class IPyWidgetsHtml(MarkdownItMixin, TemplateDisplay):
         if self.display_handle:
             self.display_handle.value = await self.arender()
 
+    def update(self):
+        if self.display_handle:
+            self.display_handle.value = self.render()
+
     def _ipython_display_(self):
         if self.display_handle is None:
             self.display_handle = self.display_object("")
