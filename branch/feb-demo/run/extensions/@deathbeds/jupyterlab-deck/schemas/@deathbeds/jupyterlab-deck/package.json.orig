@@ -1,0 +1,51 @@
+{
+  "name": "@deathbeds/jupyterlab-deck",
+  "version": "0.1.3",
+  "description": "Lightweight presentations for JupyterLab",
+  "license": "BSD-3-Clause",
+  "author": "jupyterlab-deck contributors",
+  "homepage": "https://github.com/deathbeds/jupyterlab-deck",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/deathbeds/jupyterlab-deck.git"
+  },
+  "bugs": {
+    "url": "https://github.com/deathbeds/jupyterlab-deck/issues"
+  },
+  "main": "lib/index.js",
+  "scripts": {
+    "labextension:build": "jupyter labextension build .",
+    "labextension:build:cov": "tsc -b src/tsconfig.cov.json && jupyter labextension build .",
+    "watch": "jupyter labextension watch ."
+  },
+  "types": "lib/index.d.ts",
+  "dependencies": {
+    "@jupyterlab/application": "3",
+    "@jupyterlab/apputils": "3",
+    "@jupyterlab/markdownviewer": "3",
+    "@jupyterlab/notebook": "3",
+    "@jupyterlab/statusbar": "3",
+    "@jupyterlab/ui-components": "3",
+    "d3-drag": "3"
+  },
+  "devDependencies": {
+    "@deathbeds/jupyterlab-fonts": "^2.1.1",
+    "@jupyterlab/builder": "^3.4.8",
+    "@types/d3-drag": "3"
+  },
+  "jupyterlab": {
+    "extension": "lib/plugin.js",
+    "outputDir": "../../src/jupyterlab_deck/_d/share/jupyter/labextensions/@deathbeds/jupyterlab-deck",
+    "schemaDir": "schema",
+    "webpackConfig": "./webpack.config.js",
+    "sharedPackages": {
+      "@deathbeds/jupyterlab-fonts": {
+        "bundled": false,
+        "singleton": true
+      },
+      "d3-drag": {
+        "bundled": true
+      }
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "title": "Execute Time",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "enabled": {
+      "type": "boolean",
+      "title": "Enabled",
+      "description": "Enable ExecuteTime cell extension",
+      "default": true
+    },
+    "highlight": {
+      "type": "boolean",
+      "title": "Highlight",
+      "description": "Highlight the execution time on completion",
+      "default": true
+    },
+    "positioning": {
+      "type": "string",
+      "title": "Positioning",
+      "description": "How to position the execution time. Possible values are: \"left\", \"right\" or \"hover\".",
+      "default": "left",
+      "enum": ["left", "right", "hover"]
+    },
+    "minTime": {
+      "type": "number",
+      "title": "Minimum time to display (s)",
+      "description": "Minimum cell execution time in seconds to show timing info (0 means always)",
+      "default": 0
+    },
+    "textContrast": {
+      "type": "string",
+      "title": "Text Contrast",
+      "description": "Text color contrast. Possible values are: \"high\", \"low\".",
+      "default": "high",
+      "enum": ["high", "low"]
+    },
+    "showLiveExecutionTime": {
+      "type": "boolean",
+      "title": "Show Live Execution Time",
+      "description": "Show the current execution time (last execution time) as a cell executes.",
+      "default": true
+    },
+    "historyCount": {
+      "type": "number",
+      "title": "History of Cell Execution Time",
+      "description": "Show the historical N previous execution times since the notebook was opened as a tooltip (0 to disabled)",
+      "default": 5
+    }
+  }
+}

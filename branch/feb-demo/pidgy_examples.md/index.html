@@ -1,0 +1,774 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="pidgy literate computing">
+      
+      
+      
+        <link rel="canonical" href="https://deathbeds.github.io/pidgy/pidgy_examples.md/">
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.0">
+    
+    
+      
+        <title>pidgy examples - pidgy literate computing</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.402914a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a0c5b2b5.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<script>
+(function() {
+  function addWidgetsRenderer() {
+    var mimeElement = document.querySelector('script[type="application/vnd.jupyter.widget-view+json"]');
+    var scriptElement = document.createElement('script');
+    
+    var widgetRendererSrc = 'https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js';
+    
+    var widgetState;
+
+    // Fallback for older version:
+    try {
+      widgetState = mimeElement && JSON.parse(mimeElement.innerHTML);
+
+      if (widgetState && (widgetState.version_major < 2 || !widgetState.version_major)) {
+        
+        var widgetRendererSrc = 'https://unpkg.com/@jupyter-js-widgets@*/dist/embed.js';
+        
+      }
+    } catch(e) {}
+
+    scriptElement.src = widgetRendererSrc;
+    document.body.appendChild(scriptElement);
+  }
+
+  document.addEventListener('DOMContentLoaded', addWidgetsRenderer);
+}());
+</script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#pidgy-examples" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="pidgy literate computing" class="md-header__button md-logo" aria-label="pidgy literate computing" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            pidgy literate computing
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              <code>pidgy</code> examples
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent=""  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://deathbeds.github.io/pidgy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    deathbeds/pidgy
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="pidgy literate computing" class="md-nav__button md-logo" aria-label="pidgy literate computing" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    pidgy literate computing
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://deathbeds.github.io/pidgy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    deathbeds/pidgy
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          usage
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          usage
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../basics/" class="md-nav__link">
+        <code>pidgy</code> basics
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          features
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          features
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reactivity/" class="md-nav__link">
+        reactivity in pidgy
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../magics/" class="md-nav__link">
+        <code>pidgy</code> magics
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mkdocs/" class="md-nav__link">
+        <code>pidgy</code> mkdocs extension
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#an-indent-can-make-a-big-different" class="md-nav__link">
+    an indent can make a big different
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#suppressing-the-woven-display" class="md-nav__link">
+    suppressing the woven display
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#all-markdown-is-a-string" class="md-nav__link">
+    all markdown is a string
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connecting-markdown-and-indented-python-code" class="md-nav__link">
+    connecting markdown and indented python code
+  </a>
+  
+    <nav class="md-nav" aria-label="connecting markdown and indented python code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#docstrings" class="md-nav__link">
+    docstrings
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#line-continuations" class="md-nav__link">
+    line continuations
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parenthesis" class="md-nav__link">
+    parenthesis
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#templating-markdown" class="md-nav__link">
+    templating markdown
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iframes-and-images" class="md-nav__link">
+    iframes and images
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="pidgy-examples"><code>pidgy</code> examples<a class="headerlink" href="#pidgy-examples" title="Permanent link">¤</a></h1>
+<p>this notebook demonstrates pidgy syntax. we begin by initializing the <code>pidgy</code> extension. 
+<em>it is possible to use a <code>pidgy</code> kernel instead of the extension, but for testing purposes we use the extension.</em></p>
+<div class="cell source" hidden="hidden">
+<div class="highlight"><pre><span></span><code>    <span class="o">%</span><span class="n">reload_ext</span> <span class="n">pidgy</span>
+</code></pre></div>
+</div>
+<div hidden>
+
+
+
+    %reload_ext pidgy
+
+</div>
+
+<div class="cell source" hidden="hidden">
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="n">details</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">summary</span><span class="o">&gt;</span><span class="n">hidden</span> <span class="n">settings</span> <span class="k">for</span> <span class="n">testing</span> <span class="n">this</span> <span class="n">notebook</span><span class="o">&lt;/</span><span class="n">summary</span><span class="o">&gt;</span>    
+
+<span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">out</span> <span class="n">of</span> <span class="n">the</span> <span class="n">box</span><span class="p">,</span> <span class="err">`</span><span class="n">pidgy</span><span class="err">`</span> <span class="ow">is</span> <span class="n">asynchrous</span> <span class="ow">and</span> <span class="n">reactive</span><span class="p">,</span> <span class="n">but</span> <span class="n">to</span> <span class="n">use</span> <span class="n">this</span> <span class="n">document</span> <span class="k">for</span> <span class="n">testing</span> <span class="n">we</span> <span class="n">have</span> <span class="n">to</span> <span class="n">constrain</span> <span class="n">the</span> <span class="n">execution</span> <span class="n">to</span> <span class="n">synchronous</span> <span class="ow">and</span> <span class="n">blocking</span><span class="o">.</span> <span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+
+
+    <span class="o">%</span><span class="n">matplotlib</span> <span class="n">agg</span>
+    <span class="n">shell</span><span class="o">.</span><span class="n">weave</span><span class="o">.</span><span class="n">reactive</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="kn">from</span> <span class="nn">pidgy</span> <span class="kn">import</span> <span class="n">get_ipython</span>
+
+<span class="o">&lt;/</span><span class="n">details</span><span class="o">&gt;</span>
+</code></pre></div>
+</div>
+<details>
+    <summary>hidden settings for testing this notebook</summary>    
+
+<p>out of the box, `pidgy` is asynchrous and reactive, but to use this document for testing we have to constrain the execution to synchronous and blocking. </p>
+
+
+    %matplotlib agg
+    shell.weave.reactive = False
+    from pidgy import get_ipython
+
+</details>
+
+<h2 id="an-indent-can-make-a-big-different">an indent can make a big different<a class="headerlink" href="#an-indent-can-make-a-big-different" title="Permanent link">¤</a></h2>
+<p>under normal cirumstances, the following line of code is valid python, but in <code>pidgy</code> it is valid markdown and we observe this visually. </p>
+<div class="cell source" hidden="hidden">
+<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;this is a markdown paragraph&quot;</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<p>print("this is a markdown paragraph")</p>
+<p>compare the previous woven display with the following that indents the code. we notice the output in typeset as a monospace font rather than the prior rich typeface.</p>
+<div class="cell source" hidden="hidden">
+<div class="highlight"><pre><span></span><code>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;this is an indented code block&quot;</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>this is an indented code block
+</pre>
+</div>
+
+<pre><code>print("this is an indented code block")
+</code></pre>
+<p>that is really all there is to <code>pidgy</code>. we must indent the code, as follows, to make sure execution is engaged. indent your code, and tell good stories.</p>
+<p>indenting code in notebooks is a useful practice, unindented code rendered as markdown appears as rich text and is not canonical. </p>
+<h2 id="suppressing-the-woven-display">suppressing the woven display<a class="headerlink" href="#suppressing-the-woven-display" title="Permanent link">¤</a></h2>
+<p>begin a cell with a single empty line to suppress a display. the following code is execute but</p>
+<div class="cell source" hidden="hidden">
+<div class="highlight"><pre><span></span><code>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;the input source is not shown because the code block begins with a blank line&quot;</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>the input source is not shown because the code block begins with a blank line
+</pre>
+</div>
+
+<div hidden>
+
+
+    print("the input source is not shown because the code block begins with a blank line")
+
+</div>
+
+<div class="cell source" hidden="hidden">
+<div class="highlight"><pre><span></span><code><span class="c1">## all markdown is a string</span>
+
+<span class="ow">in</span> <span class="err">`</span><span class="n">pidgy</span><span class="err">`</span><span class="p">,</span> <span class="n">markdown</span> <span class="ow">and</span> <span class="n">python</span> <span class="n">can</span> <span class="n">cooperate</span><span class="o">.</span>
+<span class="n">the</span> <span class="n">primary</span> <span class="n">way</span> <span class="n">this</span> <span class="ow">is</span> <span class="n">acheived</span> <span class="ow">is</span> <span class="n">by</span> <span class="n">representing</span> <span class="n">markdown</span> <span class="n">blocks</span> <span class="k">as</span> <span class="n">block</span> <span class="n">quotes</span> <span class="n">rather</span> <span class="n">than</span> <span class="n">comments</span><span class="o">.</span>
+<span class="k">as</span> <span class="n">strings</span><span class="p">,</span> <span class="n">markdown</span> <span class="n">can</span> <span class="n">join</span> <span class="n">the</span> <span class="n">party</span><span class="o">.</span>
+
+
+<span class="n">we</span> <span class="n">start</span> <span class="n">slow</span> <span class="n">by</span> <span class="n">defining</span> <span class="n">a</span> <span class="n">markdown</span> <span class="n">paragraph</span> <span class="n">to</span> <span class="n">a</span> <span class="n">variable</span> <span class="n">name</span> <span class="err">`</span><span class="n">paragraph</span><span class="err">`</span>
+
+
+    <span class="n">paragraph</span> <span class="o">=</span>\
+<span class="n">imagine</span> <span class="n">you</span> <span class="n">wrote</span> <span class="n">a</span> <span class="n">really</span> <span class="n">cool</span> <span class="n">paragraph</span><span class="o">.</span>
+<span class="n">it</span> <span class="n">has</span> <span class="n">words</span><span class="p">,</span> <span class="n">sentences</span><span class="p">,</span> <span class="ow">and</span> <span class="n">drama</span><span class="o">.</span>
+<span class="n">you</span> <span class="n">have</span> <span class="n">a</span> <span class="n">word</span> <span class="n">limit</span> <span class="ow">and</span> <span class="n">you</span> <span class="n">need</span> <span class="n">to</span> <span class="n">count</span> <span class="n">the</span> <span class="n">words</span><span class="o">.</span>
+
+
+<span class="k">with</span> <span class="err">`</span><span class="n">paragraph</span><span class="err">`</span> <span class="n">saved</span> <span class="k">as</span> <span class="n">a</span> <span class="n">variable</span> <span class="n">it</span> <span class="n">becomes</span> <span class="n">easy</span> <span class="n">to</span> <span class="n">count</span> <span class="n">our</span> <span class="n">words</span><span class="o">.</span>
+
+    <span class="n">Markdown</span><span class="p">(</span><span class="sa">F</span><span class="s2">&quot;the `paragraph` has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">paragraph</span><span class="o">.</span><span class="n">split</span><span class="p">())</span><span class="si">}</span><span class="s2"> words&quot;</span><span class="p">)</span> <span class="c1"># pidgy exposes IPython display in the primary namespace</span>
+</code></pre></div>
+</div>
+<p>the <code>paragraph</code> has 38 words</p>
+<h2 id="all-markdown-is-a-string">all markdown is a string<a class="headerlink" href="#all-markdown-is-a-string" title="Permanent link">¤</a></h2>
+<p>in <code>pidgy</code>, markdown and python can cooperate.
+the primary way this is acheived is by representing markdown blocks as block quotes rather than comments.
+as strings, markdown can join the party.</p>
+<p>we start slow by defining a markdown paragraph to a variable name <code>paragraph</code></p>
+<pre><code>paragraph =\
+</code></pre>
+<p>imagine you wrote a really cool paragraph.
+it has words, sentences, and drama.
+you have a word limit and you need to count the words.</p>
+<p>with <code>paragraph</code> saved as a variable it becomes easy to count our words.</p>
+<pre><code>Markdown(F"the `paragraph` has {len(paragraph.split())} words") # pidgy exposes IPython display in the primary namespace
+</code></pre>
+<h2 id="connecting-markdown-and-indented-python-code">connecting markdown and indented python code<a class="headerlink" href="#connecting-markdown-and-indented-python-code" title="Permanent link">¤</a></h2>
+<div class="cell source" hidden="hidden">
+<div class="highlight"><pre><span></span><code><span class="c1">### docstrings</span>
+</code></pre></div>
+</div>
+<h3 id="docstrings">docstrings<a class="headerlink" href="#docstrings" title="Permanent link">¤</a></h3>
+<h3 id="line-continuations">line continuations<a class="headerlink" href="#line-continuations" title="Permanent link">¤</a></h3>
+<h3 id="parenthesis">parenthesis<a class="headerlink" href="#parenthesis" title="Permanent link">¤</a></h3>
+<h2 id="templating-markdown">templating markdown<a class="headerlink" href="#templating-markdown" title="Permanent link">¤</a></h2>
+<p>so far we have discussed two cooperative syntaxes: markdown and python. 
+the last major piece to <code>pidgy</code> are <code>jinja2</code> templates that allow python variables to be
+woven into rich, interactive displays.</p>
+<p><code>pidgy</code> extends markdown by being aware of <code>jinja2</code> templates that can include live data into woven displays</p>
+<div class="cell source" hidden="hidden">
+<div class="highlight"><pre><span></span><code><span class="p">{{</span><span class="n">df</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">}}</span>
+
+    <span class="kn">import</span> <span class="nn">pandas</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</code></pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>count</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>min</th>
+      <th>25%</th>
+      <th>50%</th>
+      <th>75%</th>
+      <th>max</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>10.0</td>
+      <td>4.5</td>
+      <td>3.02765</td>
+      <td>0.0</td>
+      <td>2.25</td>
+      <td>4.5</td>
+      <td>6.75</td>
+      <td>9.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>10.0</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>10.0</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code>import pandas
+
+df = pandas.DataFrame([x, 0, 0 ] for x in range(10))
+</code></pre>
+<h2 id="iframes-and-images">iframes and images<a class="headerlink" href="#iframes-and-images" title="Permanent link">¤</a></h2>
+<p><a href="https://nbviewer.org/github/deathbeds/pidgy/blob/master/docs/tangle_examples.ipynb">https://nbviewer.org/github/deathbeds/pidgy/blob/master/docs/tangle_examples.ipynb</a></p>
+<script type="application/vnd.jupyter.widget-state+json">
+{"state": {}, "version_major": 2, "version_minor": 0}
+</script>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+          <a href="#" class="md-top md-icon" data-md-component="top" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Back to top
+          </a>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tracking", "navigation.top"], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.ce72ebac.min.js"></script>
+      
+    
+  </body>
+</html>

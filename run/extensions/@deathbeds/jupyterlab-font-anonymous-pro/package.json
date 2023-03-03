@@ -1,0 +1,56 @@
+{
+  "name": "@deathbeds/jupyterlab-font-anonymous-pro",
+  "version": "2.1.1",
+  "description": "Anonymous Pro Fonts for JupyterLab",
+  "keywords": [
+    "fonts",
+    "jss",
+    "jupyter",
+    "jupyterlab-extension",
+    "jupyterlab"
+  ],
+  "bugs": {
+    "url": "https://github.com/deathbeds/jupyterlab-fonts/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/deathbeds/jupyterlab-fonts"
+  },
+  "license": "BSD-3-Clause",
+  "author": "Dead Pixels Collective",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "{lib,style,src}/**/*.{d.ts,js,css,ts,tsx,js.map}",
+    "{README.md,LICENSE}",
+    "vendor/anonymous-pro/LICENSE"
+  ],
+  "scripts": {
+    "labextension:build": "jupyter labextension build .",
+    "labextension:build:cov": "tsc -b tsconfig.cov.json && jupyter labextension build .",
+    "watch": "jupyter labextension watch --debug ."
+  },
+  "dependencies": {
+    "@deathbeds/jupyterlab-fonts": "~2.1.1",
+    "@jupyterlab/application": "3",
+    "typeface-anonymous-pro": "^1.1.13"
+  },
+  "devDependencies": {
+    "@jupyterlab/builder": "^3.4"
+  },
+  "jupyterlab": {
+    "extension": true,
+    "outputDir": "../../src/jupyterlab_fonts/labextensions/@deathbeds/jupyterlab-font-anonymous-pro",
+    "webpackConfig": "./webpack.config.js",
+    "sharedPackages": {
+      "@deathbeds/jupyterlab-fonts": {
+        "bundled": false,
+        "singleton": true
+      }
+    },
+    "_build": {
+      "load": "static/remoteEntry.7dafa2779237f8a139cd.js",
+      "extension": "./extension"
+    }
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "name": "jupyterlab-videochat",
+  "version": "0.6.0",
+  "description": "Video Chat with peers inside JupyterLab and RetroLab",
+  "keywords": [
+    "jupyter",
+    "jupyterlab",
+    "jupyterlab-extension"
+  ],
+  "homepage": "https://github.com/jupyterlab-contrib/jupyter-videochat",
+  "bugs": {
+    "url": "https://github.com/jupyterlab-contrib/jupyter-videochat/issues"
+  },
+  "license": "BSD-3-Clause",
+  "author": "Yuvi Panda",
+  "files": [
+    "{lib,style,schema}/**/*.{css,ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
+    "LICENSE"
+  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "style": "style/index.css",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jupyterlab-contrib/jupyter-videochat.git"
+  },
+  "scripts": {
+    "bootstrap": "jlpm --ignore-optional && jlpm clean && jlpm lint && jlpm build",
+    "build": "jlpm build:lib && jlpm build:ext",
+    "build:lib": "tsc -b",
+    "build:ext": "jupyter labextension build .",
+    "clean": "jlpm clean:lib && jlpm clean:ext",
+    "clean:lib": "rimraf lib",
+    "clean:ext": "rimraf ./jupyter_videochat/labextension",
+    "deduplicate": "yarn-deduplicate -s fewer --fail",
+    "dev:ext": "jupyter labextension develop --overwrite .",
+    "lint": "jlpm prettier && jlpm eslint",
+    "lint:check": "jlpm prettier:check && jlpm eslint:check",
+    "prettier": "jlpm prettier:base --list-different --write",
+    "prettier:base": "prettier \"*.{json,md,js,yml}\" \"{.github,jupyter-config,src,style,schema,docs,binder}/**/*.{yml,json,ts,tsx,css,md,yaml}\"",
+    "prettier:check": "jlpm prettier:base --check",
+    "eslint": "eslint . --cache --ext .ts,.tsx --fix",
+    "eslint:check": "eslint . --cache --ext .ts,.tsx",
+    "watch": "run-p watch:lib watch:ext",
+    "watch:lib": "jlpm build:lib --watch --preserveWatchOutput",
+    "watch:ext": "jupyter labextension watch ."
+  },
+  "dependencies": {
+    "@jupyterlab/application": "^3.0.0",
+    "@jupyterlab/filebrowser": "^3.0.0",
+    "@jupyterlab/mainmenu": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/jitsi-meet": "^2.0.2",
+    "@jupyterlab/builder": "^3.3.0",
+    "@jupyterlab/launcher": "^3.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.8.1",
+    "@typescript-eslint/parser": "^4.8.1",
+    "eslint": "^7.14.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "^7.21.5",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.6.1",
+    "rimraf": "^2.6.1",
+    "typescript": "~4.6.3",
+    "yarn-deduplicate": "^3.1.0"
+  },
+  "sideEffects": [
+    "style/*.css"
+  ],
+  "jupyterlab": {
+    "discovery": {
+      "server": {
+        "managers": [
+          "conda",
+          "pip"
+        ],
+        "base": {
+          "name": "jupyter-videochat"
+        }
+      }
+    },
+    "extension": "lib/plugin.js",
+    "schemaDir": "schema",
+    "outputDir": "jupyter_videochat/labextension"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "proseWrap": "always",
+    "printWidth": 88
+  }
+}

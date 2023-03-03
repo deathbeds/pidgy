@@ -1,0 +1,57 @@
+{
+  "name": "@deathbeds/jupyterlab-font-dejavu-sans-mono",
+  "version": "2.1.1",
+  "description": "Dejavu Sans Mono Fonts for JupyterLab",
+  "keywords": [
+    "fonts",
+    "jss",
+    "jupyter",
+    "jupyterlab-extension",
+    "jupyterlab"
+  ],
+  "bugs": {
+    "url": "https://github.com/deathbeds/jupyterlab-fonts/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/deathbeds/jupyterlab-fonts"
+  },
+  "license": "BSD-3-Clause",
+  "author": "Dead Pixels Collective",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "{lib,style,src}/**/*.{d.ts,js,css,woff2,ts,tsx,js.map}",
+    "{README.md,LICENSE}",
+    "vendor/dejavu-fonts-ttf/LICENSE"
+  ],
+  "scripts": {
+    "labextension:build": "jupyter labextension build .",
+    "labextension:build:cov": "tsc -b tsconfig.cov.json && jupyter labextension build .",
+    "prebuild": "python scripts/convert.py",
+    "watch": "jupyter labextension watch --debug ."
+  },
+  "dependencies": {
+    "@deathbeds/jupyterlab-fonts": "~2.1.1",
+    "@jupyterlab/application": "3"
+  },
+  "devDependencies": {
+    "@jupyterlab/builder": "^3.4",
+    "dejavu-fonts-ttf": "^2.37.3"
+  },
+  "jupyterlab": {
+    "extension": true,
+    "outputDir": "../../src/jupyterlab_fonts/labextensions/@deathbeds/jupyterlab-font-dejavu-sans-mono",
+    "webpackConfig": "./webpack.config.js",
+    "sharedPackages": {
+      "@deathbeds/jupyterlab-fonts": {
+        "bundled": false,
+        "singleton": true
+      }
+    },
+    "_build": {
+      "load": "static/remoteEntry.72ec8004b3300a2556a1.js",
+      "extension": "./extension"
+    }
+  }
+}

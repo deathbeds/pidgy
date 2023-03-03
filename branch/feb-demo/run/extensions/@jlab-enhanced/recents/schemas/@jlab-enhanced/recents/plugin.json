@@ -1,0 +1,22 @@
+{
+    "title": "Recent Files",
+    "description": "JupyterLab Recents settings.",
+    "type": "object",
+    "properties": {
+        "length": {
+            "title": "Recent item list length",
+            "description": "Number of items to store in the recent list.",
+            "type": "integer",
+            "default": 10,
+            "minimum": 1
+        },
+        "pollFrequency": {
+            "title": "Poll frequency to check the recent item list",
+            "description": "Poll frequency in seconds to check the recent item list. Set to 0 to deactivate; in that case it will refresh the list when the menu is displayed.",
+            "type": "number",
+            "default": 12,
+            "minimum": 0
+        }
+    },
+    "additionalProperties": false
+  }

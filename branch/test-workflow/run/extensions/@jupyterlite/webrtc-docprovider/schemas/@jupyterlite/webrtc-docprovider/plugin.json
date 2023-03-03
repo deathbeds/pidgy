@@ -1,0 +1,108 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "additionalProperties": false,
+  "description": "Settings for WebRTC-based collaborative editing",
+  "jupyter.lab.setting-icon": "webrtc-docprovider:webrtc",
+  "jupyter.lab.setting-icon-label": "WebRTC Sharing",
+  "properties": {
+    "disabled": {
+      "default": false,
+      "description": "If disabled, details about your open files will not be shared with other viewers of your room.",
+      "title": "Disable WebRTC Sharing",
+      "type": "boolean"
+    },
+    "room": {
+      "default": null,
+      "description": "The room to use for new shared document editing sessions. This may be overridden with the ?room URL parameter",
+      "oneOf": [
+        {
+          "description": "Generate a random room name.",
+          "title": "private room",
+          "type": "null"
+        },
+        {
+          "description": "Use a custom room name.",
+          "title": "custom room",
+          "type": "string"
+        }
+      ],
+      "title": "Room Name"
+    },
+    "roomPrefix": {
+      "default": null,
+      "description": "A string to decrease room collisions on signaling servers. Where possible, this is coupled with a strong hash to generate less-guessable rooms",
+      "oneOf": [
+        {
+          "description": "Use the host name of the server and base URL.",
+          "title": "prepend base URL",
+          "type": "null"
+        },
+        {
+          "description": "A custom prefix: longer is better.",
+          "minLength": 10,
+          "title": "custom prefix",
+          "type": "string"
+        }
+      ],
+      "title": "Room Prefix"
+    },
+    "signalingUrls": {
+      "default": null,
+      "description": "WebRTC Signaling Servers on which to announce your presence. Production usage should definitely set this value.",
+      "oneOf": [
+        {
+          "description": "Provide one (or preferrably more) custom WebSocket signaling servers: must start with ws:// or wss://.",
+          "items": {
+            "pattern": "wss?://.*",
+            "type": "string"
+          },
+          "title": "custom signaling servers",
+          "type": "array"
+        },
+        {
+          "description": "Use the public signaling servers provided for the yjs community.",
+          "title": "default public signaling servers",
+          "type": "null"
+        }
+      ],
+      "title": "Signaling URLs"
+    },
+    "usercolor": {
+      "default": null,
+      "description": "The color of your shared editing cursor. Can be overriden with the ?usercolor URL parameter.",
+      "oneOf": [
+        {
+          "description": "A random color will be chosen.",
+          "title": "random user color",
+          "type": "null"
+        },
+        {
+          "description": "Provide a user color as an RGB hex string.",
+          "pattern": "[0-9a-f]{3}|[0-9a-f]{6}",
+          "title": "given user color",
+          "type": "string"
+        }
+      ],
+      "title": "User Color"
+    },
+    "username": {
+      "default": null,
+      "description": "The username displayed to others with your shared cursor. Can be overriden with the ?username URL parameter.",
+      "oneOf": [
+        {
+          "description": "A random name will be chosen.",
+          "title": "random user name",
+          "type": "null"
+        },
+        {
+          "description": "Provide a user name.",
+          "title": "given user name",
+          "type": "string"
+        }
+      ],
+      "title": "User Name"
+    }
+  },
+  "title": "WebRTC Sharing",
+  "type": "object"
+}

@@ -1,0 +1,28 @@
+{
+  "pidgy": {
+    "releases": {
+      "2023.2.14.dev17+g139a296": [
+        {
+          "comment_text": "",
+          "digests": {
+            "md5": "1e56ccaac8a11a85aaddcfe2445c8e47",
+            "sha256": "0e60c13c40429a20ef6b84edd9200a06cc4763c656cbaeaf882a9c12c59d85bc"
+          },
+          "downloads": -1,
+          "filename": "pidgy-2023.2.14.dev17+g139a296-py3-none-any.whl",
+          "has_sig": false,
+          "md5_digest": "1e56ccaac8a11a85aaddcfe2445c8e47",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "requires_python": ">=3.7",
+          "size": 30712,
+          "upload_time": "2023-02-24T19:47:02.108315Z",
+          "upload_time_iso_8601": "2023-02-24T19:47:02.108315Z",
+          "url": "./pidgy-2023.2.14.dev17+g139a296-py3-none-any.whl",
+          "yanked": false,
+          "yanked_reason": null
+        }
+      ]
+    }
+  }
+}

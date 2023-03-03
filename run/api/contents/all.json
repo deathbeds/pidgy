@@ -1,0 +1,133 @@
+{
+  "content": [
+    {
+      "content": null,
+      "created": "2023-02-23T20:39:47",
+      "format": null,
+      "last_modified": "2023-02-23T20:39:47",
+      "mimetype": null,
+      "name": "basics.ipynb",
+      "path": "basics.ipynb",
+      "size": 15097,
+      "type": "notebook",
+      "writable": true
+    },
+    {
+      "content": null,
+      "created": "2023-02-23T20:39:47",
+      "format": null,
+      "last_modified": "2023-02-23T20:39:47",
+      "mimetype": null,
+      "name": "pidgy_examples.md.ipynb",
+      "path": "pidgy_examples.md.ipynb",
+      "size": 12141,
+      "type": "notebook",
+      "writable": true
+    },
+    {
+      "content": null,
+      "created": "2023-02-23T20:39:47",
+      "format": null,
+      "last_modified": "2023-02-23T20:39:47",
+      "mimetype": "text/x-python",
+      "name": "hooks.py",
+      "path": "hooks.py",
+      "size": 864,
+      "type": "file",
+      "writable": true
+    },
+    {
+      "content": null,
+      "created": "2023-02-23T20:39:47",
+      "format": null,
+      "last_modified": "2023-02-23T20:39:47",
+      "mimetype": "image/png",
+      "name": "pidgy.png",
+      "path": "pidgy.png",
+      "size": 51934,
+      "type": "file",
+      "writable": true
+    },
+    {
+      "content": null,
+      "created": "2023-02-23T20:39:47",
+      "format": null,
+      "last_modified": "2023-02-23T20:39:47",
+      "mimetype": null,
+      "name": "reactivity.ipynb",
+      "path": "reactivity.ipynb",
+      "size": 11569,
+      "type": "notebook",
+      "writable": true
+    },
+    {
+      "content": null,
+      "created": "2023-02-23T20:39:47",
+      "format": null,
+      "last_modified": "2023-02-23T20:39:47",
+      "mimetype": "text/markdown",
+      "name": "index.md",
+      "path": "index.md",
+      "size": 18,
+      "type": "file",
+      "writable": true
+    },
+    {
+      "content": null,
+      "created": "2023-02-23T20:39:47",
+      "format": null,
+      "last_modified": "2023-02-23T20:39:47",
+      "mimetype": null,
+      "name": "tangle_examples.ipynb",
+      "path": "tangle_examples.ipynb",
+      "size": 11026,
+      "type": "notebook",
+      "writable": true
+    },
+    {
+      "content": null,
+      "created": "2023-02-23T20:39:47",
+      "format": null,
+      "last_modified": "2023-02-23T20:39:47",
+      "mimetype": null,
+      "name": "magics.ipynb",
+      "path": "magics.ipynb",
+      "size": 16599,
+      "type": "notebook",
+      "writable": true
+    },
+    {
+      "content": null,
+      "created": "2023-02-23T20:39:47",
+      "format": null,
+      "last_modified": "2023-02-23T20:39:47",
+      "mimetype": null,
+      "name": "mkdocs.ipynb",
+      "path": "mkdocs.ipynb",
+      "size": 8026,
+      "type": "notebook",
+      "writable": true
+    },
+    {
+      "content": null,
+      "created": "2023-02-23T20:39:47",
+      "format": null,
+      "last_modified": "2023-02-23T20:39:47",
+      "mimetype": null,
+      "name": "test_extras.ipynb",
+      "path": "test_extras.ipynb",
+      "size": 6934,
+      "type": "notebook",
+      "writable": true
+    }
+  ],
+  "created": "2023-02-23T20:39:47",
+  "format": "json",
+  "last_modified": "2023-02-23T20:39:47",
+  "mimetype": null,
+  "name": "",
+  "path": "",
+  "size": null,
+  "type": "directory",
+  "writable": true
+}

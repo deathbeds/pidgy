@@ -1,0 +1,1363 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="pidgy literate computing">
+      
+      
+      
+        <link rel="canonical" href="https://deathbeds.github.io/pidgy/demos/2023-02-28-community-demo/">
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.0">
+    
+    
+      
+        <title>pidgy literate computing - pidgy literate computing</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.402914a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.a0c5b2b5.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<script>
+(function() {
+  function addWidgetsRenderer() {
+    var mimeElement = document.querySelector('script[type="application/vnd.jupyter.widget-view+json"]');
+    var scriptElement = document.createElement('script');
+    
+    var widgetRendererSrc = 'https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js';
+    
+    var widgetState;
+
+    // Fallback for older version:
+    try {
+      widgetState = mimeElement && JSON.parse(mimeElement.innerHTML);
+
+      if (widgetState && (widgetState.version_major < 2 || !widgetState.version_major)) {
+        
+        var widgetRendererSrc = 'https://unpkg.com/@jupyter-js-widgets@*/dist/embed.js';
+        
+      }
+    } catch(e) {}
+
+    scriptElement.src = widgetRendererSrc;
+    document.body.appendChild(scriptElement);
+  }
+
+  document.addEventListener('DOMContentLoaded', addWidgetsRenderer);
+}());
+</script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#pidgy-literate-computing" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="pidgy literate computing" class="md-header__button md-logo" aria-label="pidgy literate computing" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            pidgy literate computing
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              <code>pidgy</code> literate computing
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent=""  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://deathbeds.github.io/pidgy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    deathbeds/pidgy
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="pidgy literate computing" class="md-nav__button md-logo" aria-label="pidgy literate computing" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    pidgy literate computing
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://deathbeds.github.io/pidgy" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    deathbeds/pidgy
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          usage
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          usage
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../basics/" class="md-nav__link">
+        <code>pidgy</code> basics
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          features
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          features
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reactivity/" class="md-nav__link">
+        reactivity in pidgy
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../magics/" class="md-nav__link">
+        <code>pidgy</code> magics
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mkdocs/" class="md-nav__link">
+        <code>pidgy</code> mkdocs extension
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-pidgy-polyglot-metalanguage" class="md-nav__link">
+    the pidgy polyglot metalanguage
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inspecting-and-doing-more-with-a-keypress" class="md-nav__link">
+    inspecting and doing more with a keypress
+  </a>
+  
+    <nav class="md-nav" aria-label="inspecting and doing more with a keypress">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#translating-markdown-to-python" class="md-nav__link">
+    translating markdown to python
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#an-homage-knuths-literate-programming-language" class="md-nav__link">
+    an homage knuth's literate programming language
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reactive-jinja2-templates" class="md-nav__link">
+    reactive jinja2 templates
+  </a>
+  
+    <nav class="md-nav" aria-label="reactive jinja2 templates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#worrydreams-cookies-demo3" class="md-nav__link">
+    worrydream's cookies demo3
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#live-data-in-your-document" class="md-nav__link">
+    live data in your document
+  </a>
+  
+    <nav class="md-nav" aria-label="live data in your document">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#an-application-in-a-cell" class="md-nav__link">
+    an application in a cell.
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#et-voila" class="md-nav__link">
+    et voila
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wrap-up" class="md-nav__link">
+    wrap up
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="pidgy-literate-computing"><code>pidgy</code> literate computing<a class="headerlink" href="#pidgy-literate-computing" title="Permanent link">¤</a></h1>
+<p>you've heard of interactive computing, we'll call <code>pidgy</code> hyperactive computing. </p>
+<!--
+<pre class="mermaid"><code>flowchart LR
+    subgraph document language
+        markdown
+    end
+    subgraph programming language
+        IPython
+    end
+    subgraph templating language
+        jinja2
+    end
+</code></pre>
+-->
+
+<form id="controls">    
+    <label for="run">🏃</label><button id="run" data-commandlinker-command="notebook:run-all-cells">run all</button>
+    <label for="doc">🖹</label><button id="doc" data-commandlinker-command="application:toggle-mode">document mode</button>
+    <label for="prez">📽</label><button id="prez" data-commandlinker-command="application:toggle-presentation-mode">presentation mode</button>
+    <label for="collapse">⊟</label><button id="collapse" data-commandlinker-command="notebook:hide-all-cell-code">collapse all the code</button>
+    <br/>
+    <label for="expand">⊞</label><button id="expand" data-commandlinker-command="notebook:show-all-cell-code">expand all the code</button>
+    <button data-commandlinker-command="deck:toggle"><code>jupyterlab-deck</code></button>
+    <button data-commandlinker-command="notebook:render-with-voila"><code>voila</code></button>
+    <label for="inspectoropen">🔍</label><button id="inspectoropen" data-commandlinker-command="inspector:open">inspector</button>
+    <label title="open side by side view" for="right">👯</label><button id="right" data-commandlinker-command="notebook:toggle-render-side-by-side-current">side-by-side</button>
+</form>
+
+<blockquote>
+<p>this presentation is written for the <a href="https://hackmd.io/dcbps9AESEuP0N3j4mMOqw" title="hackmd for the jupyter community call">february 2023 jupyter community call</a>.<sup id="fnref:calls"><a class="footnote-ref" href="#fn:calls">2</a></sup></p>
+</blockquote>
+<p><button id="rara" data-commandlinker-command="runmenu:restart-and-run-all">restart and run all</button><label for="rara">or it didn't happen</label></p>
+<p><a href="https://monoskop.org/images/b/be/Nelson_Ted_Literary_Machines_c1987_chs_0-1.pdf">https://monoskop.org/images/b/be/Nelson_Ted_Literary_Machines_c1987_chs_0-1.pdf</a>
+<a href="https://pure.au.dk/ws/files/173226224/PPIG_2019_camera_ready.pdf">https://pure.au.dk/ws/files/173226224/PPIG_2019_camera_ready.pdf</a></p>
+<div class="highlight"><pre><span></span><code>    <span class="c1"># my pidgy practices always have me indenting cells.</span>
+    <span class="c1"># this habit means code will be rendered as code in markdown.</span>
+    <span class="c1"># https://nbviewer.org/github/deathbeds/deathbeds.github.io/blob/master/deathbeds/2018-08-03-A-case-for-indented-code.ipynb</span>
+
+    <span class="c1"># this is a presentation about pidgy so we start by loading the extension.</span>
+    <span class="c1"># there is a pidgy kernel for the hardcore. </span>
+    <span class="c1"># in that case we recommend the hybrid `.md.ipynb` extension.</span>
+
+    <span class="k">if</span> <span class="n">LITE</span> <span class="o">:=</span> <span class="p">(</span><span class="nb">__import__</span><span class="p">(</span><span class="s2">&quot;sys&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;emscripten&quot;</span><span class="p">):</span> <span class="c1"># compatability for jupyterlite</span>
+        <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pandas</span> <span class="n">pidgy</span> <span class="n">matplotlib</span> <span class="n">ipywidgets</span> <span class="n">toolz</span>
+
+    <span class="c1"># activate pidgy</span>
+    <span class="o">%</span><span class="n">reload_ext</span> <span class="n">pidgy</span>
+    <span class="kn">from</span> <span class="nn">toolz.curried</span> <span class="kn">import</span> <span class="o">*</span>
+</code></pre></div>
+<pre><code># my pidgy practices always have me indenting cells.
+# this habit means code will be rendered as code in markdown.
+# https://nbviewer.org/github/deathbeds/deathbeds.github.io/blob/master/deathbeds/2018-08-03-A-case-for-indented-code.ipynb
+
+# this is a presentation about pidgy so we start by loading the extension.
+# there is a pidgy kernel for the hardcore. 
+# in that case we recommend the hybrid `.md.ipynb` extension.
+
+if LITE := (__import__("sys").platform == "emscripten"): # compatability for jupyterlite
+    %pip install pandas pidgy matplotlib ipywidgets toolz
+
+# activate pidgy
+%reload_ext pidgy
+from toolz.curried import *
+</code></pre>
+<h2 id="the-pidgy-polyglot-metalanguage">the <code>pidgy</code> polyglot metalanguage<a class="headerlink" href="#the-pidgy-polyglot-metalanguage" title="Permanent link">¤</a></h2>
+<p><code>pidgy</code> is a <a href="https://en.wikipedia.org/wiki/Metalanguage">pidgin</a> of python programming and jinja templates embedded inside markdown.
+literate programming is that aim to craft documentation and code at the same time.
+literate computing is when we do this interactively, and weave live computing into the narrative.</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="n">figure</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">figcaption</span><span class="o">&gt;</span>
+
+<span class="n">the</span> <span class="n">REPL</span> <span class="n">overlayed</span> <span class="k">with</span> <span class="n">a</span> <span class="p">[</span><span class="n">literate</span> <span class="n">computing</span><span class="p">]</span> <span class="n">workflow</span> <span class="n">of</span> <span class="n">tangle</span> <span class="ow">and</span> <span class="n">weave</span><span class="o">.</span>
+
+<span class="o">&lt;/</span><span class="n">figcaption</span><span class="o">&gt;</span>
+
+<span class="p">{</span><span class="o">%</span> <span class="nb">set</span> <span class="n">repl</span> <span class="o">%</span><span class="p">}</span>
+    <span class="nb">input</span><span class="p">[</span><span class="n">markdown</span><span class="p">]</span><span class="o">--</span><span class="n">tangle</span>\<span class="n">nread</span><span class="o">--&gt;</span><span class="n">IPython</span>
+    <span class="n">IPython</span><span class="o">--</span><span class="nb">eval</span><span class="o">/</span><span class="n">template</span><span class="o">--&gt;</span><span class="n">jinja</span>
+    <span class="n">jinja</span><span class="o">--</span><span class="n">weave</span>\<span class="n">nprint</span><span class="o">--&gt;</span><span class="n">output</span><span class="p">[</span><span class="n">markdown</span><span class="p">]</span>
+    <span class="n">output</span><span class="p">[</span><span class="n">markdown</span><span class="p">]</span><span class="o">-.</span><span class="n">loop</span><span class="o">-.-&gt;</span><span class="nb">input</span>
+    <span class="n">html</span> <span class="o">---&gt;</span> <span class="nb">input</span><span class="p">;</span> <span class="n">css</span> <span class="o">---&gt;</span> <span class="nb">input</span><span class="p">;</span> <span class="n">javascript</span> <span class="o">---&gt;</span> <span class="nb">input</span>
+    <span class="n">julia</span> <span class="o">---&gt;</span> <span class="n">magics</span><span class="p">;</span> <span class="n">r</span><span class="o">---&gt;</span> <span class="n">magics</span><span class="p">;</span> <span class="n">fortran</span> <span class="o">---&gt;</span> <span class="n">magics</span><span class="p">;</span> <span class="n">magics</span> <span class="o">---&gt;</span> <span class="n">IPython</span>
+<span class="p">{</span><span class="o">%</span> <span class="n">endset</span> <span class="o">%</span><span class="p">}</span>
+<span class="err">```</span><span class="n">mermaid</span>
+<span class="n">flowchart</span> <span class="n">LR</span>
+<span class="p">{</span><span class="o">%</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">repl</span><span class="o">.</span><span class="n">splitlines</span><span class="p">())</span> <span class="o">%</span><span class="p">}</span>
+<span class="p">{</span><span class="o">%</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">extra</span><span class="o">.</span><span class="n">value</span> <span class="o">%</span><span class="p">}</span><span class="o">%%</span><span class="p">{</span><span class="o">%</span> <span class="n">endif</span> <span class="o">%</span><span class="p">}{{</span><span class="n">line</span><span class="p">}}</span>
+<span class="p">{</span><span class="o">%</span> <span class="n">endfor</span> <span class="o">%</span><span class="p">}</span>
+<span class="err">```</span>
+<span class="o">&lt;</span><span class="n">figcaption</span><span class="o">&gt;</span><span class="n">mermaid</span> <span class="n">graph</span> <span class="n">syntax</span> <span class="n">uses</span> <span class="n">extended</span> <span class="n">markdown</span> <span class="n">syntax</span> <span class="n">provided</span> <span class="n">by</span> <span class="o">&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">jupyterlab</span><span class="o">-</span><span class="n">markup</span><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">figcaption</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">figure</span><span class="o">&gt;</span>
+
+        <span class="n">display</span><span class="p">(</span><span class="n">extra</span> <span class="o">:=</span> <span class="n">IntSlider</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;show more languages&quot;</span><span class="p">))</span> <span class="c1"># 6 lines in the graph</span>
+
+<span class="err">`</span><span class="n">pidgy</span><span class="err">`</span> <span class="ow">is</span> <span class="n">interested</span> <span class="ow">in</span> <span class="n">exploring</span> <span class="n">the</span> <span class="n">interfaces</span> <span class="n">of</span> <span class="n">languages</span> <span class="ow">in</span> <span class="n">computational</span> <span class="n">essays</span><span class="o">.</span> <span class="n">each</span> <span class="n">language</span> <span class="n">provides</span> <span class="n">extra</span> <span class="n">syntax</span> <span class="k">for</span> <span class="n">telling</span> <span class="n">your</span> <span class="n">story</span><span class="o">.</span> <span class="k">with</span> <span class="n">markdown</span> <span class="n">we</span> <span class="n">can</span> <span class="n">include</span> <span class="n">html</span><span class="p">,</span> <span class="n">css</span><span class="p">,</span> <span class="ow">and</span> <span class="n">javascript</span><span class="p">;</span> <span class="n">code</span> <span class="n">blocks</span> <span class="n">can</span> <span class="n">include</span> <span class="n">more</span> <span class="n">languages</span> <span class="n">like</span> <span class="n">mermaid</span><span class="o">.</span> <span class="p">[</span><span class="n">IPython</span> <span class="ow">is</span> <span class="n">our</span> <span class="n">polyglot</span> <span class="n">glue</span> <span class="n">language</span><span class="p">][</span><span class="n">polyglot</span> <span class="n">notebook</span><span class="p">]</span><span class="o">.</span> 
+
+<span class="p">[</span><span class="n">literate</span> <span class="n">computing</span><span class="p">]:</span> <span class="c1">#</span>
+<span class="p">[</span><span class="n">polyglot</span> <span class="n">notebook</span><span class="p">]:</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">gist</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">fperez</span><span class="o">/</span><span class="mi">5</span><span class="n">b49246af4e340c37549265a90894ce6</span> <span class="s2">&quot;fperez&#39;s polyglot juypyter demo&quot;</span>
+
+<span class="p">[</span><span class="n">fperez</span> <span class="n">lc</span><span class="p">]:</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">web</span><span class="o">.</span><span class="n">archive</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">web</span><span class="o">/</span><span class="mi">20220510083647</span><span class="o">/</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">blog</span><span class="o">.</span><span class="n">fperez</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="mi">2013</span><span class="o">/</span><span class="mi">04</span><span class="o">/</span><span class="n">literate</span><span class="o">-</span><span class="n">computing</span><span class="o">-</span><span class="ow">and</span><span class="o">-</span><span class="n">computational</span><span class="o">.</span><span class="n">html</span>
+</code></pre></div>
+<div id="7cd6c7f2-aa43-4cd0-9286-012eb85ab7e7" class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#7cd6c7f2-aa43-4cd0-9286-012eb85ab7e7');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "a59df83a6d58485bb5d8618256e25abc", "version_major": 2, "version_minor": 0}
+</script>
+</div>
+
+<figure>
+<figcaption>
+
+the REPL overlayed with a [literate computing] workflow of tangle and weave.
+
+</figcaption>
+
+
+<pre class="mermaid"><code>flowchart LR
+
+
+
+    input[markdown]--tangle\nread--&gt;IPython
+
+    IPython--eval/template--&gt;jinja
+
+    jinja--weave\nprint--&gt;output[markdown]
+
+    output[markdown]-.loop-.-&gt;input
+
+    html ---&gt; input; css ---&gt; input; javascript ---&gt; input
+
+    julia ---&gt; magics; r---&gt; magics; fortran ---&gt; magics; magics ---&gt; IPython
+</code></pre>
+<figcaption>mermaid graph syntax uses extended markdown syntax provided by <code>jupyterlab-markup</code></figcaption>
+</figure>
+
+<pre><code>    display(extra := IntSlider(6, min=1, max=6, description="show more languages")) # 6 lines in the graph
+</code></pre>
+<p><code>pidgy</code> is interested in exploring the interfaces of languages in computational essays. each language provides extra syntax for telling your story. with markdown we can include html, css, and javascript; code blocks can include more languages like mermaid. <a href="https://gist.github.com/fperez/5b49246af4e340c37549265a90894ce6" title="fperez's polyglot juypyter demo">IPython is our polyglot glue language</a>. </p>
+<h2 id="inspecting-and-doing-more-with-a-keypress">inspecting and doing more with a keypress<a class="headerlink" href="#inspecting-and-doing-more-with-a-keypress" title="Permanent link">¤</a></h2>
+<p><label for="butt-inspector"><kbd>Ctrl + I</kbd></label>
+<button id="butt-inspector" data-commandlinker-command="inspector:open">open inspector</button>
+<label for="deck">⛔</label><button id="deck" data-commandlinker-command="deck:toggle"><code>jupyterlab-deck</code></button></p>
+<h3 id="translating-markdown-to-python">translating markdown to python<a class="headerlink" href="#translating-markdown-to-python" title="Permanent link">¤</a></h3>
+<p>the <code>%%tangle</code> magic tangles markdown to python code for previewing and debugging. this magic will help you learn <code>pidgy</code>s indenting <a href="https://deathbeds.github.io/midgy/language/basics/">heuristics and language features provided by <code>midgy</code></a>.</p>
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">tangle</span>
+<span class="n">we</span> <span class="n">use</span> <span class="n">the</span> <span class="err">`</span><span class="o">%%</span><span class="n">tangle</span><span class="err">`</span> <span class="n">magic</span> <span class="n">interactively</span> <span class="n">translate</span> <span class="n">the</span> <span class="n">document</span> <span class="n">into</span> <span class="n">code</span><span class="o">.</span>
+
+<span class="n">some</span> <span class="err">`</span><span class="n">pidgy</span><span class="err">`</span> <span class="n">features</span> <span class="n">are</span> <span class="n">shown</span> <span class="n">below</span> <span class="n">like</span><span class="p">:</span>
+
+<span class="o">*</span> <span class="n">markdown</span> <span class="n">docstrings</span>
+
+        <span class="k">def</span> <span class="nf">my_function</span><span class="p">():</span>
+<span class="n">functions</span> <span class="k">with</span> <span class="n">markdown</span> <span class="n">docstrings</span>
+
+            <span class="o">...</span>
+        <span class="o">...</span>
+
+<span class="o">*</span> <span class="n">defining</span> <span class="n">blocks</span> <span class="n">of</span> <span class="n">markdown</span> <span class="k">as</span> <span class="n">variables</span>
+
+        <span class="n">my_url</span> <span class="o">=</span>\
+<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">api</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">com</span>
+</code></pre></div>
+<div class="output_html rendered_html output_subarea output_execute_result"><style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.output_html .hll { background-color: #ffffcc }
+.output_html { background: #f8f8f8; }
+.output_html .c { color: #3D7B7B; font-style: italic } /* Comment */
+.output_html .err { border: 1px solid #FF0000 } /* Error */
+.output_html .k { color: #008000; font-weight: bold } /* Keyword */
+.output_html .o { color: #666666 } /* Operator */
+.output_html .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.output_html .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.output_html .cp { color: #9C6500 } /* Comment.Preproc */
+.output_html .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.output_html .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.output_html .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.output_html .gd { color: #A00000 } /* Generic.Deleted */
+.output_html .ge { font-style: italic } /* Generic.Emph */
+.output_html .gr { color: #E40000 } /* Generic.Error */
+.output_html .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.output_html .gi { color: #008400 } /* Generic.Inserted */
+.output_html .go { color: #717171 } /* Generic.Output */
+.output_html .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.output_html .gs { font-weight: bold } /* Generic.Strong */
+.output_html .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.output_html .gt { color: #0044DD } /* Generic.Traceback */
+.output_html .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.output_html .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.output_html .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.output_html .kp { color: #008000 } /* Keyword.Pseudo */
+.output_html .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.output_html .kt { color: #B00040 } /* Keyword.Type */
+.output_html .m { color: #666666 } /* Literal.Number */
+.output_html .s { color: #BA2121 } /* Literal.String */
+.output_html .na { color: #687822 } /* Name.Attribute */
+.output_html .nb { color: #008000 } /* Name.Builtin */
+.output_html .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.output_html .no { color: #880000 } /* Name.Constant */
+.output_html .nd { color: #AA22FF } /* Name.Decorator */
+.output_html .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.output_html .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.output_html .nf { color: #0000FF } /* Name.Function */
+.output_html .nl { color: #767600 } /* Name.Label */
+.output_html .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.output_html .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.output_html .nv { color: #19177C } /* Name.Variable */
+.output_html .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.output_html .w { color: #bbbbbb } /* Text.Whitespace */
+.output_html .mb { color: #666666 } /* Literal.Number.Bin */
+.output_html .mf { color: #666666 } /* Literal.Number.Float */
+.output_html .mh { color: #666666 } /* Literal.Number.Hex */
+.output_html .mi { color: #666666 } /* Literal.Number.Integer */
+.output_html .mo { color: #666666 } /* Literal.Number.Oct */
+.output_html .sa { color: #BA2121 } /* Literal.String.Affix */
+.output_html .sb { color: #BA2121 } /* Literal.String.Backtick */
+.output_html .sc { color: #BA2121 } /* Literal.String.Char */
+.output_html .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.output_html .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.output_html .s2 { color: #BA2121 } /* Literal.String.Double */
+.output_html .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.output_html .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.output_html .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.output_html .sx { color: #008000 } /* Literal.String.Other */
+.output_html .sr { color: #A45A77 } /* Literal.String.Regex */
+.output_html .s1 { color: #BA2121 } /* Literal.String.Single */
+.output_html .ss { color: #19177C } /* Literal.String.Symbol */
+.output_html .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.output_html .fm { color: #0000FF } /* Name.Function.Magic */
+.output_html .vc { color: #19177C } /* Name.Variable.Class */
+.output_html .vg { color: #19177C } /* Name.Variable.Global */
+.output_html .vi { color: #19177C } /* Name.Variable.Instance */
+.output_html .vm { color: #19177C } /* Name.Variable.Magic */
+.output_html .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;we use the `%%tangle` magic interactively translate the document into code.</span>
+
+<span class="sd">some `pidgy` features are shown below like:</span>
+<span class="sd">    </span>
+<span class="sd">* markdown docstrings&quot;&quot;&quot;</span>
+
+<span class="k">def</span> <span class="nf">my_function</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;functions with markdown docstrings&quot;&quot;&quot;</span>
+
+    <span class="o">...</span>
+<span class="o">...</span>
+<span class="w">        </span>
+<span class="sd">&quot;&quot;&quot;* defining blocks of markdown as variables&quot;&quot;&quot;</span>
+
+<span class="n">my_url</span> <span class="o">=</span>\
+<span class="sd">&quot;&quot;&quot;https://api.github.com&quot;&quot;&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+
+<h3 id="an-homage-knuths-literate-programming-language">an homage knuth's literate programming language<a class="headerlink" href="#an-homage-knuths-literate-programming-language" title="Permanent link">¤</a></h3>
+<p><img alt="image.png" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAtUAAAGcCAYAAAAWDFxSAAAABHNCSVQICAgIfAhkiAAAABl0RVh0U29mdHdhcmUAZ25vbWUtc2NyZWVuc2hvdO8Dvz4AAAAtdEVYdENyZWF0aW9uIFRpbWUAVGh1IDIzIEZlYiAyMDIzIDEwOjM2OjIzIFBNIFBTVGnpw3AAACAASURBVHic7N19eFT1nffxd0yA4ckMomao1gwrmFlt5YitGcPlMu1aGauWqZYy6vYmLnUN2i1xdW3cvbZ3tu2W2NYavFcbW28Je9sliA/BQhlcq4NbwwRRBiswMSiTVt2JCkyAwgQC5/5jkpBAnmYScvLweV1XrsaZ8/CdU36Z73zne36/DNM0TUREREREJG1nWR2AiIiIiMhwp6RaRERERKSflFSLiIiIiPSTkmoRERERkX5SUi0iIiIi0k9KqkVERERE+klJtYiIiIhIPympFhERERHpJyXVIiIiIiL9pKRaRERERKSflFSLiIiIiPSTkmoRERERkX5SUi0iIiIi0k9KqkVERERE+klJtYiIiIhIPympFhERERHpJyXVIiIiIiL9pKRaRERERKSflFSLiIiIiPSTkmoRERERkX5SUi0iIiIi0k9KqkVERERE+klJtYiIiIhIPympFhERERHpJyXVIiIiIiL9pKRaRERERKSflFSLiIiIiPSTkmoRERERkX5SUi0iIiIi0k9KqkVERERE+klJtYiIiIhIPympFhERERHpJyXVIiIiIiL9pKRaRERERKSflFSLiIiIiPSTkmoRERERkX7KsjoAERGR4aBp+2oqg7GBO6DdwL9oLjnp7r99JXeUBcBmA5sN2ylPJxIJsHspfWQhue2PNrPpoUIqIjZsnfZJkEgkSCQc+MoeYWEuIpIiJdUiIiJ9EK0qpbgsAoDN4cJtGDgddmytmWkiFiZQHaIt7bYbPnxuR3vimojHiEZChMIxEgD2Qoz+JNUOFz6fjXg8Sqi6gspANHnc5Nkx/IUUup3YT93NcGMPlnfa3u7y4vN68BguXKfuICJ9kmGapml1ECIiIkPdpjum4Km04a2opuqufLJP26KB5Vc7KQ4BOCkO7eGR/NOP01y3miJfIZVRL1XxF1g4biCia2LjEgNvRTT5n64SwruWMavb7RtYfoWT4ogTf0WAykV5DEgYIqOYKtUiIkNIS0sLDQ0N1NfX09jYyMGDBzl06BAHDx7s9PuhQ4cYM2YMkydPbv+ZNGlS++9nn30206dPZ+bMmUyZMsXqlzUCNBOLJ3D4q7pJqAE6tlPY2ivYpxqXt5CKyhAhT4h4DBiQVots5pVXUhTwUBEFIhWUrCxmw6Ju6uDNMaIJO57yIKsWqdfjTDl8+DDvvfceu3fvZv/+/d2O58OHDzNhwoROY7jj71OmTGHGjBnMmDGD8ePHW/2ypBtKqkVELHLs2DG2bdtGTU0NNTU1hMNh9uzZQ0tLy4CeZ+rUqbhcLtxuNwUFBVx99dVMmzZtQM8x8sWJx+x4yzzdJNSpGZdfiM8ZIBpngJJqYNxcyiuLCHgqiBInUFzISs8GTs+Zm6ktKaTKWU7oLiXUA+XAgQNs2bKlfTzv2LGDDz/8kIFsCMjIyOCCCy7gc5/7HFdffTUFBQXk5+czefLkATuHpE/tHyIig+jgwYP85je/Yc2aNWzcuJEjR450u+0555zTbSV60qRJHDt2rL3idWoFLB6P93jsvLw8FixYwIIFC7j88svPxEsdYbbz4BUluIIbWNRtVt3IE1c7KAoBuCgJ72JZt/0Xzay91UV10R5WzB3IOJvYtMTA09oGYvdWEt6wqFPe3lx7L4YvQkl4A90VsqVvPvjgA5577jnWrFnD5s2bOXHiRJfbZWVlcc4553Qawx3H9IQJEzhy5Ei343nfvn3dftg+66yzKCgoYMGCBdxyyy1ccMEFZ/IlSw+UVIuIDIJQKMTDDz/Mb37zG5qbmzs9d/7553P11Vdz1VVXkZeXx8yZM5kxYwYTJkxI+3ymafI///M/1NfXU19fz9tvv83mzZsJh8OnvTnPnDmTJUuWcOeddzJp0qS0zzmybeKOK6oo3PYLus+BU0mqoe6hKyhxhnhhYJqqT2raxBKjtQ0EO97KMBvaytXNtdxr+IiWhnlhoTLqdJw4cYLnnnuO5cuXU1NTc1olesaMGRQUFHDllVe2j+Xp06eTlZV+c0BLSwvRaJTdu3dTX1/Pm2++SU1NDfX19Z22y8jIYM6cOSxdupSbb76Zs87SzMmDSUm1iMgZ9Nvf/paHHnqI1157rf2xzMxMPB4PCxYs4Nprr+Xiiy8etHgOHz7Mli1bWLt2Lc8++ywffPBB+3N2u527776b7373u+TkKOHqpHk1X/dEKdv8PfK63ahvSXXdynspDyU4WreewNG/4mufT/Ore5tBYdld5HeRkzdtWoLhqSAKYPdSGd7Aotxmau818EVLCb+wMP1ZR0apRCJBZWUlP/vZz3jvvffaH588eTI33ngjN998M3PnzuW8884btJg+/fRTXnvtNZ5//nl+85vfcODAgfbnZsyYwf3338+iRYuwddfgLwNKSbWIyBnw/vvvc9ddd/Hyyy+3P+ZyuVi6dCnf+MY3OPfccy2MLsk0TUKhEE899RT/7//9v/YK+tlnn82yZcsoKipSpSslfUuqGzY+QXUkTiIWIVhVRSDaOrGdzYWvuBCPo4sEKBEjGo0RCQcJhtqmwnNRFtnF97rM8pvYeIeBtzIKgN1TQbA0gr8wRlloFfOVUafklVde4a677mL37t3tj1177bXcc889eL3eIZG0Njc3s3HjRh577DFeeuml9sdnzJhBRUUFf/3Xf21hdKOEKSIiA+bYsWPmT37yE3P8+PEmYAJmQUGBuXbtWvPEiRNWh9etjz76yPze975nnn322e1xu91u8+2337Y6tGEkZla4ab1+LrMk3IddAoWmvfV646k0433YJR6pMgtdNhPsZmGgpw0DZqGzLR6babM5TH91X84gbfbu3Wvecccd7WMiMzPT9Pv95ltvvWV1aD3atm2bedttt5mZmZntsS9atMj89NNPrQ5tRFMJQkRkgMTjcebNm8cDDzzAkSNHyMnJYdWqVbz++ut87WtfIyMjw+oQuzVt2jTKysp49913WbhwIZDsA//iF7/If/7nf1oc3Qhm7zANXx+Lndl5C1kRrMBrTxCNNvaw4TzKKwpxApAggQuPMRBzl4wO77zzDldccQUrVqwAYPbs2dTW1rJq1SquuOIKi6PrmWEY/PrXv2bLli3Mnj0bgJUrV2IYBuFw2OLoRi4l1SIiA2DPnj0UFBTwyiuvALB48WJ27dqF3++3OLLU5OTkUFVVxfr16/nsZz9Lc3Mzt99+O//6r/9qdWjSUY6fUr+DWKTnZdOz55VT7m9dIjERpKRoJT2k4dLqpZdeYs6cOfzxj39k/Pjx/OxnP2PLli1ceeWVVoeWktmzZ7NlyxYefvhhxo8fzwcffMA111zDunXrrA5tRFJSLSLST+FwGLfbza5duxgzZgz/9//+X5588slhvejKV7/6VbZu3Up+fnJJwNLSUr71rW91O2WYDLZxGD4PiWiU5p42awpRHQJ7axU8HiimcLXS6p78x3/8BzfccAMHDhzA4XCwadMm7rvvPjIzM60OLS2ZmZn8wz/8A8FgkJycHA4dOsT8+fOpqKiwOrQRR0m1iEg/fPDBB9xwww18/PHHTJkyhUAgwN/+7d9aHdaAOP/883n11Vf5xje+AcDTTz/NAw88YHFUo1NzU9NpyfM4w40rFqX7WnUTG4uKCLorCVW3tYHECRQVoby6ay+99BKLFy+mpaWFz3/+89TW1vLFL37R6rAGxFVXXUVtbS2XXXYZJ06c4J577uHFF1+0OqwRRUm1iEiaDh48yI033shHH33E5MmTefXVV/nyl79sdVgDavz48TzzzDPcfvvtADz88MM88cQTFkc12jRS6fNS0XDKwzkuXLZYt0l109oiCkMeKirmkzevnIpCZ/KJeDVFRavVBnKKd955hwULFrQn1L///e+56KKLrA5rQOXm5vL73/+eSy+9lBMnTnDbbbfx1ltvWR3WiKGkWkQkTbfddhvbt28nMzOT1atXM2tWDyt9DGMZGRk89dRTXHPNNQB85zvfIRgMWhvUqBInHu/q8bk88uoy8rt6qnEtRUUhvBXlzMsGyGZeeQWFjtYjVhdRpHJ1u3379nVq+Vi3bh1nn3221WGdEXa7nfXr13P++efz5z//mZtuuomPP/7Y6rBGBCXVIiJpWLlyZfvNPo8++ijXX3+9xRGdWWPHjuWFF15g5syZtLS0sHjx4h6XQZcB1BCgOpLKDo2sLS4i5K2gfF6H2T6y51FeWUgyr45TXaw2kDb33Xdf+02JL7744oirUJ/K6XTy4osvMn78eD766COKi4utDmlEUFItIpKiTz75hPvuuw+Ar33ta9x9990WRzQ4pk6dytNPP81ZZ53F+++/rxlBBlosTKi2ltraWmprN7Fp41pWL7+X6z0lhBJ9P0zj6iKKQj4qy+dx6gR62fPKqfS3lqtj1RSrDYRXXnmFyspKAH784x+PmB7q3uTn5/PDH/4QgFWrVrFhwwaLIxr+tKKiiEiK/uZv/oZf//rXTJ48mZ07d3LhhRdaHdKgKi4uZvny5WRlZbF169YR2/aSur6tqNhJ7RKmuSuSfdF2J4bL0TpddYJEPE40GiWeAHBTHt3M0tzeQljN140SHFVhfjG3mzmpm9Zyq8tHVQzAga86zAujdInFRCLB5z//eXbv3s2VV15JbW3tsJ3lIx3Hjx/nqquu4q233iI3N5edO3cyYcIEq8MatlSpFhFJwY4dO9oXQ/m3f/u3UZdQA/zoRz/ioosuoqWlhdLSUqvDGTncpQQ3b2bz5s1s3ryNbbv2sD8eI1js7uO6MI2sLiom4qukvLuEGiB7PhUV/tY2kBjVRcWsHaXl6qeeeordu3eTmZnJr371q1GVUENyur0nn3ySzMxMGhoa+NWvfmV1SMOakmoRkRT85Cc/wTRNnE4nS5YssTocS0yaNIl/+Zd/AWDt2rXU1dVZHNFQkSDR5e/9MC6HuWVl+J29bdjM9od8FFXb8RXNZVwvW2fPr6CivQ2kiqLitaOuDeT48eM8/PDDANx6661DfpXEM+WKK65oX6Tq5z//OS0tLRZHNHwpqRYR6aM//elPrFq1Ckje2JSVlWVxRNb51re+xbRp0zBNk5/97GdWh2OxZpqbGti+saLDDYUxghVr2d7QRHOPq7P0wTgnhqPr8zY1vsq/LV3KXde7cJeEiBOhsuQhNjU09XDAJhq3BwlGT6b9sapCvEtWU9tw+nzYI9WaNWt4//33AfjHf/xHi6OxVtv883/84x9ZvXq1xdEMX0qqRUT66PHHH+fYsWNMnTp1xCzwkq5x48axdOlSILkC3f79+y2OaPBtWjKd8ePHM36KA4fTwOOvIIwdu92O3W4jWlWIx3DicExJbjf+66xN60x2DJ8HV6cekCZWX2/Hnnsd3//Fk6wOxbHZk+dOhMrwugzure36aLX3GjjdfiojtMZqx24nGa/LgT0jg2lLNqUV6XCyfPlyAK6//nouv/xyi6Ox1uWXX47X6wVOXhdJnW5UFBHpo7/4i79gz5493H///fz0pz+1OhzL7d+/n5ycHI4dO8ZTTz3FHXfcYXVIw0/HGxW9lcQ3LDptxo6eNK3+Ou5QCbse6XK2aulGQ0MDTqcTgHXr1nHDDTdYG9AQsH79em688UYA3n//faZPn25xRMOPKtUiIn2wdetW9uzZA8DChQstjmZomDJlCtdeey2Q/CpdBl8kGMZpuKwOY9hp+/dqt9v5yle+YnE0Q8NXvvIV7HY7oPGcLiXVIiJ90PYm43Q6+cIXvmBxNEPHN7/5TQBefvnlUdkCYq1aqgLgcqVS2xY4OZ59Ph9jx461OJqhYezYscyfPx9QUp0uJdUiIn0QCAQAuOWWWyyOZGjx+XxkZmZy7NgxLV0+yBpXl1IZc6JCdWr27dvHG2+8AWg8n6rtemzdupW9e/daHM3wo6RaRKQXBw4c4J133gHA4/FYG8wQY7fb22/yqqmpsTiaYSjNefeaah/CVxQgbnehQnVqampqME2Ts846i2uuucbqcIaUa665hoyMDABCoZDF0Qw/SqpFRHqxefNmTpw4AcDVV19tcTRDT0FBAaCkOlXNTQ1srA4lb1IEiIYIN3UzoV1zM02NdWzfuJqHbr0Cl7uEUBxwGTgHJ9wR4/XXXwfgsssuIztbn0g6stvtXHrppYDGczpG7ySrIiJ91Pbm4nK5mDp1qsXRDD0FBQU89thjvPnmmxw9elQ9qr1Ye+t4fFVdlKgjFXjsFSkdy+FyMToXGE9f23ieM2eOxZEMTQUFBezYsUNJdRpUqRYR6UVb68eVV15pcSRDU9t1aW5uZvfu3RZHM/TNX3UE0zQH5Od/fjHX6pcz7Gg896ztuuzYscPiSIYfJdUiIr2or68H4JJLLrE4kqHpL/7iL8jMzAROXiuRoWjfvn3s27cP0HjuzsyZMwH45JNPaGrqaWVOOZXaP0REemCaZnv1te3NplfNjWwPRYincT67082s3HEANDVsJxxN9Sg2HC6DvJxx7Y801dUSjiU6b2Pkk9faTnr6eU4/Rk/GjBlDbm4u77//vpJqGdLefffd9t/7Op57HYd2By5nHjk9tWc3N1IXjtBpGNqdGLNyT1nsp4m62nDn7WwOjPy8Ttv1/W+DDbvLYFYfxzJ0vi719fWaQjQVpoiIdOuDDz4wARMw33jjjT7tEyp2tu+T8o+90AyYpmnGK02vLc1juErMcFswkTLT1dU2RpkZMU3TjFWanq7O4ygygylcp3nz5pmAedddd6VyeUUG1dNPP20C5sSJE/u2Q7yqj+PQbrp8JWZ1NNHlYUJFji72sZneqnin7SJlRpfHN8qjHWJK8W+DvdAMdB1Wl06cOGGOHz/eBMxVq1b1fUcxVakWEelBx7lac3L6dktYPNY6n4PdhdtwYGt7IhEjEooQA+wuN4aj/RkSsQihSAwSMeLNQLYbf6GPRCRGNBQimgCb08Bw2k8e7xSJWJhQJA6x2MkqucNDkd9LdTRCOBQlDticHnyFnuSsETluCv1eYtUBIsknMdwuXG4fqUx/3HZt2r5aFxmK2sZzX8cy2QaFhT4S4Qjh1m+fHIYblz05ChOJOLFIhGg8TqS6DF8wSEkgwLL8zvVnp68QXyRIOBwiGgccLjyGh0LjlO08hfi9VYRDoeR4dLjwGG78HkeHmNr+NpysVCfiEcLhGAlsON1unO1/JGzYDR9G3wvVZGRkcN555/HHP/5R4zlVVmf1IiJD2e9///v2is/+/fv7tE/AbzMB0+YPnPJM0Cy0t1WoTikdBQtNB5jYvGbnp6JmuTt5fldZpMfzJqq8pq21MnV6lTlmVnptp1eyTdM04wHT72g9R0n4tD374u677zYB0+v1prW/yGD40Y9+ZALmrFmzUtsx0VaxdphFpw2uhBkJlJgeR1tl2GtWRrs6SIeKtbvc7GYT0zRDZrGziwp1T8Ilrd9Iuc2+7tKTSy+91ATMsrKy/h9sFNGNiiIiPTh48GD775MmTTqDZ+qu/pzGMbo8VA6LyoqT1edIOSUrG9ufqasspToG2H2UFs9K68yTJ08G4NChQ2ntLzIY2sbzwI7lceTNW8aroUp8DiAeoLhoNY1dbGl4PdgBwgFC3d0DWBckGAVw4nHnDmCcfafxnB4l1SIiPWh7E7bZbGRl9a1jzvD5MVwGfp/R9xO5vPjcLgyfH3cKX9V2NM7tw2e4cPu6ad2YVUKZ3w4kCJSWsqkZaN5IWVmIBOAqKmVhmpMet70Jd/wQIjLUtP37bPv3OqByF1FZ4SOZV5dQVnv6JuPcXgwbkAgRCHW90E9jKEAEwO7Bm8KfkIGk8ZweJdUiIj1oq9Sk8iacs3AF23ZtY0UqGWrOfH6xeRfbVi0i7dpU7iJWbdvF5l/M72ZBkGzml5bitgHRSkoq6mioLKWqrUpdkl6VGvQmLF1oaqSxmwUirZLOeE5F9vwyig2AKFWVmzjt5ee48boA4oSCkS6O0EwoECYB2NzetD9g95fGc3qUVIuI9OCMVrb6rZm6TatZvanh9Dfv7uQVUVboBBKESn14SztUqfuxYnPb1+n6ulja1FV4cRd3kVha6MyP5zx8/mR5ORaoJtzF8x6PE4BIMEjDac+HCQSTNyAaXjdWLaKu8ZweJdUiIj0Y0kl1YyVFHj9+j5/Krho4uzSOuaWleG1APEJkAKrUoMqWnC6vsBhXdTHldVZHctJgjOc8T+vMOtEQ4S7GpeF1d99XXRckFANw4fFY008NGs/p0pR6IiI9OHLkCAATJkywOBKIVZfxYLzD1FrxULL3kgTxOHTT83G6nEWUFZcRKEvubfSzSg0nr8+RI8kluDMyMvp3QBn+chZRXlqJp/AhvMHvMcuiVoaOBmU8uwxcQJQo4Sinjctxbi9uWxWBRIhAuJmFc09emPZ+akdbm4g12q7P4cOHrQtiGFJSLSLSg/HjxwND480lHqqkLDQwx3J5DOxlEeLYcbqd/T5eW7Iyfvx4JdTSLu+uKiqCbnx+B4GqReRZnFgPynjOdmC3AYl48sPuac978LogEI4TCkRgbtu3RJ37qVOZW3qgDaViwnCipFpEpAdtvYVD4WtQu7uQIk/nSnVlRZBYykdqoKK0unWBmDjVJWVsn7+M/jSAnJmpymT4y2H+qiCJW7143EHKqspZlGdVp/AgjmcbkOjuyVzcHieEo6191bNab04Odein9ljWTw0az+lSUi0i0oOhNF+rw1fCsu/lnXyg8QlCFUFi2LDb+36c5o2llIUSYHPgsMWIRSooWVnMhkVpzqfHUOk9b2bjEhf+ylj3+UwqbNnMvmIsOzd/0v/jmcc5euw4GZljGJPZv0r+iWPNHDuRyZhxWf2+McrMOE5Gy1nQz5j6IpGIUOiqprwkQGhZPlYUYgdlPDfFWivU9m7HpeF1Yy+PEg8HCTUtJTcbqAud7Kd2pz8WB8LQGM/Dj5JqEZEeDOkbdnIKqQjYCePG1+f34AYqSquIAc7CKqqdxRgl4eS81f5fMDfNTGdovAmPw11cQYWnq+/c02Hnws/CB38aiOM1sXtrlDEzZyUTqH44/NF2dsYvYNal5zKmn1Ed+/RP7B3zWRxntCyaIBYoo6QyhquwjPJiaxJqGKTxHAm33uvgxHB2vUlXfdWNwUBythCHB2//7hvut6ExnocfJdUiIj1oe1M5cuQILS0tfV4AZnCMI2/eQvJ637DdySq1m5KSucyyl+Iv91EVraSkooTNS9ObcaCt8mf118XZefNYmMoFGUwLh9yBBkXjxjvwBOwUBYI8Ms/aCuxgJNV1wQBRAKcbo7uXm51c2CUQirX2VbsIBZMT8NncXtxnLLq+GSrjebjRlHoiIj3oWKkZCi0gvWmqfYIlt97B8tqu1kCua69SO/ylFOYC2fMpLXFjI0GorIS13S2d3AtVtqRLdcvxFUYoHAIJNQxCUt1cS0VFa53a6ye/2w1z8bTeIBwJhmggTDCU/EbE7XVbVslvo/GcHiXVIiI96FipGZItIKcIVZRQUVVJSfnp04Q0tVWpMSgumdf+xp1XVIrfAcSqKCnbntZ59SYsp6vjocIy7GXVfG8ozKfHmb9RsaGyhIoogAt/UfcpNYDL6zk5X/X2EKHW/bwe6z98aDynR0m1iEgPpk6d2v57Y2OfV1gZAk69ta6OypJqkmu9lFDUsUVi3LzWajVEKkpYmcbL/PjjjwGYMmVKmvHKSNO0toRySijvxw2wA61tPLf9ex1ITZvuxVccJAE4/OX0tp5Ssq8aSIQJVJzsp3Zb3L5kmiaffPIJoPGcKiXVIiI9uOCCC7DZbADs3r27fwdr7pjopjGfRLy3fZq7PWzT2lLKwgnARWHpwtOm68otKktWq+MBSktTX1q6vr4egBkzZqS4p4xUCZub0vKilHr+z7SLL74YSLZyxWIpTEbZaVx1GB3NTTTWbWLlvV/C5SknOcSKqKyY1/uUeNluvAZAlOqqEAnA7rG+n/rDDz9sn6da4zlFpoiI9Oiyyy4zAfMHP/hBGntHzHKP3QS6/rG5zJJQF7slAmaR09b9fr382PzVpmmaZrTCazpsp57TYfqr4yfPFa82/Y5Tj2EzHd4KM9qHV3j06FEzKyvLBMwXXnghjWskMjg++eST9n/jr732Wu87JIJmkavv49BmFJnVfRk0rcIlrk5jzlMZ60NMqf1tsBtlZrjvIZmvvPJK+7779+9PYU9RpVpEpBczZ84E4N13303zCDZs3T7V7TN0v1Nv7LjdPa1xfPqBbd3E0Zd6+p49e2hpaQFOXiuRoejcc8/F3jp5dN/Hcy8D0ebAaXgpqggSCf2C+SlMoDPL76N9pNo8FHr70ipj6/nvxqnbpqjtW6eO10r6JsM0TdPqIEREhrJ/+Zd/4Uc/+hF/+Zd/yc6dO60OZ8hZtWoVt912G2PHjuXAgQOMGzc0bkoT6co111zD73//e5YsWcLjjz9udTg0NWwnHE1gdxnMyrF+7Nx111388pe/ZO7cuQSDQavDGVZUqRYR6UVBQQEAkUiEffv2WRzN0FNTUwPA7NmzlVDLkNc2ntv+3VotO3cWc+fmD4mEGk5el6uvvtriSIafobSKgcigSVYGTq6SZnMa5He3zFlTA9vDUeInN8bIzyWbZhq3h4n0evPYqey43LPo7e9nU+0TlJQHidsc+ErKWJjXww7NjdSFI8Q6hmJ3YszKPeVmmSbqasOdt7M5MPLzkts11VEbTn2JZ5vDID/vjC7JZqmrr76ajIwMTNNk8+bN3HDDDVaHNKS0vQm3JSsiQ9mcOXMA+MMf/sCBAwc4++yzLY5o6Ghqamr/Nk7jOQ0W93SLDL54pek97cYtj1nR5f0hcbPKe/oNIe7yqJkI+E17mjeR2QuDvQQZNcuNDje/+KrMeA9bh4ocXZzHZnqrOu8VKTO6jMcoj5qmGTHLjPReD7jN8hRuzhmOPve5z5mAef/991sdypASj8fbb1J89tlnrQ5HpFcdb1ZcxJDTMAAAIABJREFUt26d1eEMKevWrWu/Np988onV4Qw7qlTL6JPtxu93E6kKEU3YcbkNnC4/7i7vx8jGKCzEl4gQCQeJxMHh9lPocTDO7qfQFyccixIORYgDDsONy97djSEJYpEQkRgk4jGaoftVs5qCBCId9gwFCLOQud1s7vQV4osECYdDROOAw4XH8FBodK4eOz2F+L1VhEMhIu3bufF7HAB4igrxVkWJRUKEYwmwO3Ebzu5vdUlECYWiJIgTiwPprXA9LHi9Xt555x2ef/55fvrTn1odzpCxdu3a9uXbv/SlL1kdjkivzj33XL7whS+wdetWnn/+eX3z1MFzzz0HJFu5zj33XIujGYaszupFrBE1K9ypVFjjZqUXEwyzLHLKU4mq1sq3wyzqpQAdLLS3V54TPWyXCBQmq+BOl+myYYLLLDn1vF1or1i7y3uYCi1kFjs7VqhP1z7Nk6fC7HGCp2i56aY1vlTmbBqGamtr2ys4W7dutTqcIeOGG24wAXPevHlWhyLSZw899JAJmFOmTDGPHj1qdThDwtGjR80pU6aYgLls2TKrwxmWdKOijFK5OJ12IEok2pftW7ezOXE6z2BYrSLBEHHA7i6mqHVxgFCo92XujI7L3jZ1s1FdkGAUwInH3d/Sctpzvg07V111Fbm5yev1zDPPWBzN0BCPx/mv//ovABYsWGBxNCJ91/bvdf/+/bz88ssWRzM0vPzyy+zfvx+Ab3zjGxZHMzwpqZZRy2k4gTjRWHfZZwfNUaJRwOHE2Y8btF0+P26Xgc/n7r71g0ZCoWTvh8vjxe12AgnCgXCvq9yNc3sxbEAiRCDU9daNoQARALundTWvfsh14/e6cHl8eHuaFnmE+OY3vwnAihUr2lccG82efPJJjh49ypgxY/D5fFaHI9Jn06dP54tf/CLAkJhWbyh47LHHgGTrh1ZSTI+Sahm1nE4nNhJEw31YqjYWJZoAnC6c/ThnzvxfsHnXNlYt6qFC3BwiGAZw4jZyMTwGNiAeDhLpfq/WE7hbk9s4oWBXWzcTCoRJADa3F3e/Z3CaxdINu9j16jLmDo3ZoM6ou+++m6ysLD755BNWrFhhdTiWOnr0KOXl5QDcfvvtTJ061eKIRFKzdOlSANavX8+OHTssjsZa77zzDr/97W8B+O53v2txNMOXkmoZtcY5nTiAWDTaawWYaIQoYHe66Mt6Vyc1sGn1ajbW9aEa3iYcJBQHbAYeA8YZHgyASJDeO0Dy8HicJDcP0nD6wQkEk5MDGl436UyC11S3kdWra+m9GWXkcTqdLFy4EICf/exnHD9+3OKIrPP000/z4YcfkpGRwf333291OCIpW7hwIbm5uZimyU9+8hOrw7HUT37yE0zT5MILL+S2226zOpxhS0m1jF6tVed4tMMc1ADNjTQ0dk6Cm6JRYoDT5UzpFM1ri/H6/Xh9ZWzv4z4NoRBRAJcHYxyQa2A4AMIEu2np6Mjwurvvq64LEooBuPB40umnrqPC58Xv91C0uvdYRqIHHngASC7N/cQTT1gcjTX+/Oc/88Mf/hCAG2+8kcsuu8ziiERSl5WVxX333QfAf/7nf/L2229bHJE13n77bVatWgXAvffey5gxYyyOaPjSlHoyeuU4cdqBWJgoJCvQjav5uuGnOmbDXR5m89I8AKLJuxRxuhw9HDBOqOJBHgycfCQRTrZakEj0cUGVZkLJ3g8cbqN1hjoDj2GjIpBIPjc/v8cjjHN7cduqCCRCBMLNLOzQl9HeT+1w960HOlpN6YNRTs42GCMYA0iQSCToYVLAEevyyy9n4cKFrF69mgcffBCfz8dnPvMZq8MaVN///veJRqNkZmZSWlpqdTgiafv2t7/NI488wp49e7jzzjvZvHkzZ501euqNJ06c4Nvf/jYtLS1ceOGF/N3f/Z3VIQ1rSqplFHPicgKRKNFmyB8HTYFKAq1JY6g6SOPSPHJoJhqNtm7fUxKZIFxVRrhfMYUJhhKADcPddhdhNobHBYEw0VCIBvJ7ng4624PXBYFwnFAgAnNntT7RuZ/a6Es+HA1QURbofbtRZvny5WzcuJF4PM7f//3ft8/tOhq8+eabLF++HEj2pM6ePdviiETSN378eCoqKpg3bx5btmzhscce4+///u+tDmvQPProo7zxxhtA8kbFSZMmWRzR8DZ6Po6JnMaJy2mDRCw5swfNhIIhEjhwOEj2NjcDxIhGE4CDnrs/bBj+EkpKTv4Ue3vc4XTt7RlODPfJjmenYbS2dAS7nyqvXS7uLvuqQx36qT1966d2eikq6fiaCrtZJOfMaG4emi0mOTk57QvAPP/88/zyl7+0OKLBsX//fm6//XaOHz9Obm4uP/jBD6wOSaTfrrvuOm6//XYAHnzwQd566y2LIxocb775Jv/8z/8MJKfQ+9rXvmZxRMOfKtUyio1rbedonYM6L0IwFAe7D583REVliGAE5s9qfd7hwtljJmrHXbSMZR2WPWxeG6EiECVhs/VpRuemthk+7G5a8+JkpIYHg0qCieTMIAu7W1qxleF1Yy+PEg8HCTUtJTcbqAud7Kd29/F2S6eP0mV3dbg5s46HqisJxW3YbGd4jurmTZQYPqrtHrweD27Did1G8kNQOEQgECBRFObVu1K7dXSgLF68mGeffZaNGzdyzz334HQ6ue666yyJZTAcO3aMm2++mbq6OjIzM/nVr37FxIkTrQ5LZECUl5cTDAb58MMPuemmm6itreXCCy+0Oqwz5k9/+hM33ngjhw8fJicnh0cffdTqkEYEJdUyqiVvPAwSjTZCU5hQFDA8FHkSVFYGCIcawRklGgPcqU+nN25+OYEqPwnDy6zeNyfc2p6BLUp16UOE26rC8Qjx1oQyFKqDuXk9n7eLvurGYCDZmuLw4O1LMF3Ko6iqGkfEgXfhGe6nHjeXR3ZFKdoUIBgKEQqEiMUTEI8QCEZI4KKkrx8OzoCMjAxWr17NnDlz2LFjBwsWLOD111/nc5/7nGUxnSmmaXLnnXcSDAaBZALyla98xdqgRAbQueeey7p167jmmmv46KOPuPHGG/nv//5vJk+ebHVoA+7AgQPccMMNxGIxxo8fz4svvsi0adOsDmtksHhFRxFrBYtMB5jO4pCZCBaaDjAdRSEzESkzXWDa/QEzES4xXWDa/NVdLy2ewjLlPYuYJS7al8Lu7sfmrTTjvR4rapa7k9u7SsKmaSbMan/bEundvI4O+rxM+WCLBcwil83E7jDt9kIz0NsLGQQNDQ2mw5FcHv6cc84xX3vtNatDGlCJRMK89dZb2//9LV261OqQRM6Y9evXm5mZmSZgGoZhfvDBB1aHNKD+9Kc/mZdffrkJmBkZGeZzzz1ndUgjinqqZXRrnVYvFo0SCYWJYcPtMRjnNHDbIR4OE4lGiZKco7j/tdlm6lbey613PMTGUyd6bgwlK+XYcfuLO/Vml5SUUOxLTteRCAX7cDNkLh63E0gued5AONnaAri9Pa3mmIbGTTx0x60sWbm99/m++3WejSzx+KhM+KmuKsTpcOAYApOPXHTRRaxfv55zzz2Xffv2ce211/L0009bHdaA2Lt3L3/913/dPt3Wrbfeys9//nOLoxI5c7761a/yy1/+kszMTMLhMPn5+Wzbts3qsAbEW2+9RX5+Pm+//TZnnXUW/+f//B9uvvlmq8MaWazO6kUslag2/TZMjBKzzGczwTDLo6ZpmnGz0mMzsXnNshK3CTbTW9VNfTilSnW4vRrtrex8vETAb9rBxOY1uzxVpMw0wASXWRLuw0sLFLYez2dWhctNd+u+ZZHe902lUp2o8po2MHEWm6HeD52e1gq1zVloVsdM04yWmW6jxOzDZRg09fX15iWXXNJe0b3nnnvMpqYmq8NK28svv2xOnz69/fU8+OCD5okTJ6wOS2RQrFu3zpw0aZIJmBMnTjT//d//3Tx+/LjVYaXl+PHj5mOPPWZOnDjRBMwJEyaYzz//vNVhjUiqVMvoNs6J0wlEg1RHEuBw484FyMbtdkIiQnUwCthx9nyXYp8lWiesPnXm6kgwlFyExuXB6OpUee7WRWCihMK9r2eY7KsGEmECFSf7qd09t2OnLNH60/7CBlqHCnVVaAXzcwC7A3ss1nnRHovNmDGDzZs3c8011wDJ6akuvfRSqqurLY4sNXv37qWwsJBrr72WPXv2MGbMGFasWMGPf/xjMjIyrA5PZFDccMMN/Pd//zcXXHABf/7zn/nOd77DnDlz+MMf/mB1aCl55513mDNnDvfccw9//vOfmTZtGq+99hpf//rXrQ5tRFJSLaOcE8Npg3iYcBRs7tYlwYE8rxs7UcLhWOt23RyiUy7ZWwNEd4lnI6FgFACH4abrvDe5CAwkCAfCvbdaZLvxGgBRqqtCJAC7x4u7t/0gtQT5DOXSQNcJNUC2gcseJlB3Bs+dhnPOOYff/e53/PCHP2TcuHF8+OGHfP3rX+fLX/4yL730ktXh9ejTTz+ltLSUSy65hJUrVwJw5ZVXUltbS2FhobXBiVjAMAy2bdvWvmx3KBRi9uzZ3HHHHezcudPi6Hq2a9cuFi9ezOzZswmFQgD4/X62bdvGlVdeaXF0I5jVpXIRq4WKHO1fcbuTvR9J8ba2DkzshWbgtB1LTMPe+42F3f14KuOmacbNar/j9OftbrOsQ29DIlBkOm2nHsNmukpCPd502N7G0bq9p7KnZo6YWeVzJFs50vlxFA1s+8epLR+dJMxgkbPz/19DTF1dnTl37txO18gwDLOysnJItYVs27bN/M53vmNOmDChPc6JEyeaP//5z82WlharwxMZEjZs2GA6nc72MZKRkWHedNNN5oYNG8yjR49aHZ5pmqZ57Ngxc+PGjeb8+fPNjIyM9lidTqf529/+1urwRgVVqmXUc3ndyYVVbG783g5rFWZ78LmTczF3rGB3luZczXYDt6u1x6OLOay7Oupp00L3Ye7rWX4f7auR2zwUenuZgi7tuadtONyelKcc7FZ3Fep245hbWkGR6wzPld0Pl1xyCa+++iovvPAC+fnJpeXD4TCFhYWcd9553HTTTaxcuZIPP/xwUOM6duwYtbW1/NM//RMzZ87kiiuu4N///d85fPgwkydP5r777uPdd9/l3nvvJTMzc1BjExmqvF4vO3fuZPny5Vx00UWYpslvfvMbrr/+ehwOB4sXL2b9+vUcOHBgUOM6ePAgGzZs4M4778ThcDBv3jzWrl2LaZrk5uayfPlydu7cyfXXXz+ocY1WGaZpmlYHIWKtZhrrwsRsBrNyT5lOormB7eE4dmMWpz41XDQ1bCccTWB3GczKGQYvoteEenjatGkTDz/8MIFAgGPHjnV6Ljc3l4KCAq666iry8vKYOXMmTqeTrKz+LSWwf/9+du/eTX19PW+//TabN2/mjTfe4MiRI6ed/6677mLJkiXY7YO4ZKbIMNTS0sKqVat49NFH2bp1a6fnzjrrLD73uc9RUFDA7NmzueSSS5gxYwaf+cxn+n1PwkcffcTu3bt59913eeutt6ipqeEPf/gDJ06c6LTdF7/4RZYuXcrChQv7/TdEUqOkWkSGjhGaUHe0f/9+qqurWbNmDb/73e84evRol9tlZWXhcDiYPHkykydPZtKkSZ1+nzRpEseOHePgwYMcOnSIgwcPdvp937597N+/v9s4pk+fzi233MKCBQu46qqrztTLFRnR3n//fZ599lnWrFnDm2++SXcp1YQJEzj//PPbx/Gp43nChAkcOXLktHHc9r8ff/wxhw8f7vLYGRkZfOELX2DBggV84xvfYPr06WfyJUsPlFSLyNAwChLqUx05coQ33niDmpoaampq2LZtGx9++GG3b8zpmjhxInl5ebjdbubMmUNBQQFOp3NAzyEy2u3du5fNmzfz+uuvU1NTw44dO9i7d++An2fq1Knt1fC2n3POOWfAzyOpU1ItItYbhQl1d44cOcJ7771HfX09jY2N3VaiDx06xJgxY9qrXadWv84++2ymT5/OzJkz+cxnPmP1yxIZlfbv3099fT3vvfce+/bt63Y8HzlyhPHjx59WwW77/ZxzzuHiiy9m5syZTJkyxeqXJd1QUi0i1mpLqPFTFRzdCbWIiAxfmv1DRKyjhFpEREYIJdUiYg0l1CIiMoIoqRaRwaeEWkRERhgl1SIyuJRQi4jICKSkWkQGjxJqEREZoZRUi8jgUEItIiIjmJJqETnzlFCLiMgIp6RaRM4sJdQiIjIKKKkWkTNHCbWIiIwSSqpF5MxQQi0iIqOIkmoRGXhKqEVEZJRRUi0iA0sJtYiIjEJKqkVk4CihFhGRUUpJtYgMDCXUIiIyimWYpmlaHYSIDHcNPPElF8UxJdQiIjI6KakWkQHRsGkjMdc88pVQi4jIKKSkWkRERESkn9RTLSIiIiLST0qqRURERET6SUm1iIiIiEg/KakWEREREemnLKsDEBlJ9u/fT319PXv27OHAgQMcPHiQgwcPcujQoU6/Hz16lEmTJjFp0iQmT57c/tP23zk5OcycOZPc3FyysjRMRUREhjq9W4uk6aOPPmLz5s3U1NQQCoWoq6tj7969A3qOrKwspk+fzhVXXEFBQQEFBQUYhsGYMWMG9DwiIiLSP5pSTyQF27dvZ82aNTz77LPU1dV1u53NZmPKlCmdqs8dq9Fjx47l0KFDnSrYHSva+/bto7uhOX78eLxeLwsWLODGG29k8uTJZ+rlioiISB8pqRbpxcGDB/nlL39JRUUFu3fv7vRcVlYWl19+OQUFBVx++eXMnDmTGTNmcMEFF5CRkZH2OY8cOcLu3bupr6/n3XffZcuWLdTU1NDY2NhpO5vNxk033cR9991Hfn5+2ucTERGR/lFSLdKNxsZGHn30UR5//HHi8Xj74xdccAG33HIL8+fPJz8/n4kTJw5aTO+//z6/+93vWLNmDa+++iotLS3tz82dO5cHHniAr371q4MWj4iIiCQpqRY5hWmaVFRUUFJSwoEDBwAYO3Ysf/M3f8Pf/u3fUlBQ0K8q9EDZu3cvzz33HMuXL2fnzp3tj1977bVUVFRw8cUXWxidiIjI6KKkWqSDHTt28Hd/93fU1NQAcPbZZ1NUVMTSpUv5zGc+Y3F0XTNNk3Xr1vHQQw/x+uuvA8m+6+9///vcf//9mj1ERERkECipFmn1zDPPsGjRIhKJBADf/OY3Wb58OQ6Hw+LI+u6ZZ57hu9/9bnvv9dy5c3n++ec555xzLI5MRERkZNPiLyJAWVkZfr+fRCLBZz/7WdavX8/q1auHVUINyQ8Cu3btYvHixQBs2rQJt9tNfX29xZGJiIiMbKpUy6hXVFTEE088AYDb7Wbt2rWcf/75FkfVf08++SRLliyhpaWFc845h9/+9reaIUREROQMUaVaRrX//b//d3tCvXDhQl599dURkVADfPvb32bDhg1kZ2ezb98+brrpJvbs2WN1WCIiIiOSKtUyav3Hf/wHixYtAmDRokWsWLFiSMzqMdC2bdvGX/3VX3Ho0CH+8i//kpqaGux2u9VhiYiIjChKqmVUqqmp4Utf+hJHjx7F4/Hw0ksvjeilv9etW4fP5+P48eNce+21vPTSSyPyA4SIiIhV1P4ho05zczOLFy/m6NGjXHLJJTz//PMjOqEGuPHGG3nkkUcAePnll/nVr35lcUQiIiIjiyrVMup8//vf54c//CGZmZmEQiG+8IUvWB3SoLnppptYt24d2dnZ7Nq1i2nTplkdkoiIyIigSrWMKjt37uShhx4C4Lvf/e6oSqgBHn/8cSZNmkRTUxNLly61OhwREZERQ5VqGVW++c1vsmbNGi666CJ27tzJxIkTrQ5p0D366KPtCfW2bdswDMPiiERERIY/Vapl1Hjvvfd47rnngGQLyGhMqAHuvvtucnNzAfjpT39qcTQiIiIjg5JqGTV++tOfcuLECaZNm8a3vvUtq8OxTFZWFvfddx+QXNY8Go1aG5CIiMgIoKRaRoWmpiZWrlwJQHFxMWPHjrU4ImstXryYqVOn0tLSwuOPP251OCIiIsOekmoZFdauXUsikWDMmDHceeedVodjuQkTJnDHHXcAyWq1iIiI9I+SahkV2hLH6667jilTplgczdCwYMECABoaGtiyZYvF0YiIiAxvSqplxGtqauK//uu/gJOJpMBVV12F0+kEYM2aNdYGIyIiMswpqZYR75VXXuHo0aNkZmYyf/58q8MZUm6++WYAXnrpJYsjERERGd6UVMuI9/rrrwNgGAZ2u93iaIaWuXPnAvDOO+9w4MABi6MREREZvpRUy4jXllQXFBRYHMnQc/XVVwNw4sQJamtrLY5GRERk+FJSLSNac3Mzb731FgBz5syxOJqh57zzzmPmzJkA1NTUWByNiIjI8KWkWka0d999l6NHjwJw5ZVXWhzN0NR2XXbs2GFxJCIiIsOXkmoZ0err6wEYM2ZM+0wX0llbpbrtWomIiEjqlFTLiPbuu+8CMH36dLKysiyOZmhqS6p3795tcSQiIiLDl7IMGdHee+894GTi2KvmRurCEWKJ1v+22XEZs8gZ1+XGNNaFiZzcGLvLYFbOuNOP01c2J0Z+LtldHr+bXRxOXHlt+6Su7docOnSIWCyGw+FI80giIiKjl5JqGdH27t0LQE5OTp+2ry1x4y6PdnrMURTkf34x9/SNt5fgNsrptLW9kOD+Fdi6OE7f2PBVxXhhYTbUleNxlRDp025OPEVllJctZFaXHwC61/Ha7Nu3T0m1iIhIGpRUy4h28OBBACZPntyn7V0+P75ABdWRODaHgdtw4va5ut7Y6aPIHyEQiRAKR0nYXXgLfbgAm68IfyRANBohFIkBdlxuA4etmxMn4kTCYWKJBLF4AsgGh4civ5fqaJRwKEIcsLvcGB0PkogTi0aIxKIEy/24AyECoUeYm0LZetKkSe2/t10vERERSZEpMoLl5+ebgPnP//zPfd8pWGjawbQXBvq2fajYdIJp81WbiVOfCySPhc1nVvd4kLBZ4sIETHdF7JTnqk2/DRNspr/LkBJmNFBiuu3J/R3+gBnvW+SmaZrmkSNHTEju+/LLL6ewp4iIiLTRjYoyoqVaqQbAaeAE4tEojX3YvDkaJQY4XU5S7LwYIOPInbeMQIUPOxCrLqO6L4G3stls7TdxqlItIiKSHiXVMqIdOnQISDGpdjhx2oBohFgfNo9GoyRIJtXpc+L1eXAZXvzuvvV/nyrb68dtAxIRQn1qxD6p7fooqRYREUmPeqplREurUj3OicsJRKNEm+n1xr9oJAo4cDrTnX8DIJu5y15l17J+HIIEiQSADVt3vdvdmDRpEvv372//ECIiIiKpUaVaRrS0kmpak+pElGivpepGotH4yX1S0VjL2tVr2d6U4n7daKisIATg8OA1UttXlWoREZH+UVItI1ZLSwstLS0ATJgwIYU9s3E6HUCMcLTj4800NTTQ2NzxsSiRKGB34kpxJrpNpT58fh/ekk2p7XiaZhpW34G3JEQCB96yUual2Nzddn0OHz7cz1hERERGJ7V/yIiVlZVFVlYWLS0tKSeLyf7oENFoE8n56ZrZ/qAbd1mYhKOQQHRFMnFtbq1mO504e0pkExEqH3wwWUluFQnGAYjH+7pCTIJwxb3cG+jwSDxKJBQkGImD3aCwooqKRbkpvNKkI0eOAKl++BAREZE2SqplRJs0aRLxeDzltgaHy4mdELFIFJgFhKmsCpMAiAWoDsG8uST7rhNgcxr0XKiOUF1Wlt6L6HiU6vKuF4OxufCXVVC2KC+tGUjark/HOatFRESk75RUy4g2efJk4vF4yjfgjXM6cZC8CbGZWYxrCBGKgs3hwBaLEQrVwdw8iEaIkkzCe75N0YWvJLkwTJtIdTnVkdTWMXf5yyg8pV86HosQDlRTVeSmutxPRXUli/JSS63T6z0XERGRNkqqZURL+wY8h4HTBpFYcg5qRzhIGHD5fNgqKggHwzR9L49ENEocMHq7S9HmonDZMuZ3eGhTvJLqSAx7n6fqsGEUfo/vzeviqUfK2fSgB29ZFYUesIdXMT+FmfmUVIuIiPSPblSUES3tpDq79cbD1kp0OBgmgR3D58fthERrkp2cTs+O05n63NJzS6uprqymumxuyvt2ETBzl1VT5rZBrIri0lqae98JgObm5vYbOtX+ISIikh4l1TKipT9VXOsUebEo0aZGwqEoYOAx3HgMG8RChBuaiCbvUkx9Oj2AnHzmL5pPfnprvXQhF3+hG4BooIpwH/fqeG1UqRYREUmPkmoZ0doqr6kn1Tk4nXYgSiQSIhgBXG6MnHEYHgOIEAxFiSbvUkwvqT5NA2sfvINb711NQ5pHsDsc2ABiMeJ93EdJtYiISP8pqZYRberUqQA0NjamvG9yWr0o0WCQcBzshgcXkOs2cJIgEgok56h29DKdXl81VFNWVklVeRlVdekdIhJqnaHE4ehlNpKTPv744/bfp0yZkt6JRURERjkl1TKiXXzxxQDs3r075X2dLic2EkSqQ0QBw2Mkp6szvBg2kkl1HHAaOAcu5PTVPUFJRXLCPafX32mmkZ7U19cDMHHiRKZNm3aGghMRERnZlFTLiDZz5kwA3n//fY4fP57Svm3T6kXCYRK4cLtbm5/HGXgMIBwiDDic3U+n19ztf6Sg436JUw/STFPjdjY+sYSr3UUE4oDdS2lpfp/nq25LqmfMmJFmgCIiIqIp9WREa0uqjx07RjQaba9c90lrBTqaSIDdjae99JuLx+2EUJQE4DScp+1a98SXcBcHaV8sMVGNz5aRWvCNK/m6UUR1rP0gVPlsVPW0j91NSXUVi1K4+bEtqW67ViIiIpI6VaplRMvLy2PMmDEAvPnmm6ntnG3gbk2kHV4/7g6lX5fP29ry4cTt7npZ8L7OPn3afk4Do68N0a1nsjvd+IorCEY2s2xuz8vQnKrtulx22WWqte6oAAAgAElEQVQp7SciIiInZZimaVodhMiZlJ+fz5YtW1i6dCnl5eWp7dzUwPZIAmd+3mktHk11tURwkZ+XWhI7lHz66aecd955AAQCAebN62plGREREemNKtUy4s2ZMweA119/PfWds3OZ1UVCDZCdlz+sE2qAzZs3A5CRkUF+fr7F0YiIiAxfSqplxGtLqsPhME1NTRZHM7S89tprQLL1w263WxyNiIjI8KWkWka8L3/5y4wZM4aWlhZefPFFq8MZUp577jkArrvuOosjERERGd6UVMuIN2XKFK699loAnnnmGYujGTq2bt3Knj17AFiwYIHF0YiIiAxvSqplVGhLGl966SW1gLRas2YNAJ/97GfVTy0iItJPSqplVPD5fIwdO5ajR4/y5JNPWh2O5Y4cOcKKFSuA5AeOjIwU59AWERGRTpRUy6gwZcoU/tf/+l8APPLIIxw9etTiiKz11FNP8cknn5CZmcndd99tdTgiIiLDnpJqGTX+8R//kbPOOosPP/yQX//611aHY5njx4/z8MMPA3DLLbektsqkiIiIdElJtYwal1xyCT6fD4Af/OAHHD582OKIrPHEE0+036D4wAMPWBzN/2fv/uObqu/Fj78qYE8RJIizcfq1QcHGuY2IPxrwoY2bG+GKI+oYUTYJul3CdKNeNwmPu127X5dwN7W46wy6zbDpCPMHwfkj7OoIm4ODvwg6Z7qqpBu6VCakVCGBwuf7R9pAoU2T/jpteT8fjzwIyTmf8z6n/fS8z+d8zucjhBBCDA+SVIvjSm1tLSNHjiSRSHDnnXcaHc6Ae/fdd1m6dCmQ7Wd+4YUXGhyREEIIMTxIUi2OK5/61Kf49re/DWT7Vm/dutXgiAbWLbfcwp49exg7diw//elPjQ5HCCGEGDYkqRbHnf/6r/9i0qRJHDx4kHnz5pFKpYwOaUDcf//9rFu3DoBly5Zx5plnGhyREEIIMXyUKKWU0UEIMdD++Mc/8tnPfpbW1lY++9nP8uyzzzJq1Cijw+o3kUiEWbNmcfDgQRwOB88//zwnnCDX1EIIIURfkbOqOC5dfvnlBAIBAJ5//nkWLVpkcET9Z9u2bXzpS1/i4MGDnHvuuTz++OOSUAshhBB9TM6s4rh188035x7a+8UvfsGXv/zlYTd+9caNG7niiitoaWlhwoQJPP3005xyyilGhyWEEEIMO5JUi+Paj370I2666SYAHnnkEa688ko++OADg6PqG7/+9a/5/Oc/z+7duzGZTDz55JNMmjTJ6LCEEEKIYUmSanFcKykp4Re/+AXf+973APjTn/7ExRdfzPPPP29wZD3X0tLCrbfeyo033sj+/fs5++yz2bx5M9OnTzc6NCGEEGLYkgcVhWjzyCOPcNNNN+W6gNx4443cddddnHrqqQZHVrh169Zx6623smPHDgCmT59OOBzmYx/7mMGRCSGEEMObtFQL0WbevHm8+OKLXHTRRQD86le/4txzz+XOO+9k586dBkeX33PPPceVV16Jy+Vix44dlJaWUltby4YNGyShFkIIIQaAtFQLcZRDhw5x77338p3vfIePPvoIgLKyMhYsWMDNN9/M1KlTDY4wq6WlhXA4fMwkNtXV1axcuZLKykoDoxNCCCGOL5JUC9GF9957j7vvvpsHHniAlpaW3Odnn302c+bMYfbs2Vx44YWceOKJAxbTP//5T5577jkee+wx1q9fTyaTyX1nt9tZsmQJs2fPpqSkZMBiEkIIIYQk1UJ0K5VK8bOf/YyVK1fy97//vcN3mqZx0UUXMW3aNKZMmcLkyZOZNGlSr4eta21tpbGxkYaGBurr63nppZfYtGkT27dv77DcqFGjmDlzJrfffjuXX355r7YphBBCiJ6TpFqIImzZsoXHHnuMxx57jEQi0eVyJpOJCRMmMGbMGMaOHcvYsWM7vB81ahQfffQRLS0ttLS08OGHH+bet7S00NTUxIEDBzot+8QTT+TKK6/MtZaPHz++n/ZWCCGEEIWSpFqIHkokEvz5z39m06ZN6LpOPB5n7969fbqNkpISzjjjDC644AIuvfRSpk+fzkUXXURZWVmfbkcIIYQQvSNJtRB96L333qOhoYHt27ezZ8+eTluiP/zwQ/bv38+YMWM6tF4f2ZpdXl7O5MmTOeeccySBFkIIIYYASaqFEEIIIYToJRmnWgghhBBCiF6SpFoIIYQQQohekqRaCCGEEEKIXpKkWgghhBBCiF6SpFoIIYQQQohekqRaCCGEEEKIXpKkWgjRBxpZecVEpi3dSLPRoQghhBAGkKRaCNEHKnB67ST9Thy3SWIthBDi+CNJtRCiT1TMXU005CJVJ4m1EEKI448k1UKIPiOJtRBCiOOVJNVCiD4libUQQojjkSTVQog+J4m1EEKI440k1UKIfiGJtRBCiOOJJNVCiH4jibUQQojjhSTVQoh+JYm1EEKI44Ek1UKIfieJtRBCiOFOkmohxICQxFoIIcRwJkm1EGLASGIthBBiuJKkWggxoCSxFkIIMRxJUi2EGHCSWAshhBhuJKkWQhhCEmshhBDDiSTVQgjDSGIthBBiuChRSimjgxBCHN8a11yPwx3GVBMhek8144wOyECtra00NjbS0NBAU1MTLS0tfPjhh7S0tHR4/+GHHzJq1CjGjh2be40ZMyb3/uSTT2bixIlMnjyZ8ePHG71bQhyX9u7dy9tvv81bb73F7t27u6zPe/fuZfTo0R3q8JHvx48fz6RJk5g0aRJlZWVG75bogiTVQohB4XhMrA8cOMDWrVvZtGkTmzZtIhaLsX37dlpbW/t0OxMmTMBqtWK325k+fTrTpk3j9NNP79NtCHG827NnDy+++GKuPr/xxhu8++679GWaVVJSwhlnnMEnP/lJpk2bxvTp06mqqmLs2LF9tg3Rc5JUCyEGjeMhsW5paeF3v/sdjz76KOvXr2ffvn1dLnvKKad02RI9ZswYDhw4kGvxOroFLJVK5S27srKSOXPmMGfOHD796U/3x64KMezt2LGDxx9/nEcffZTNmzdz6NChTpcbOXIkp5xySoc6fGSdHj16NPv27euyPu/atavLi+0TTjiB6dOnM2fOHK677jrOOOOM/txlkYck1UKIQaVxzTU43JFhl1jrus5dd93F7373OzKZTIfvTjvtNKZNm8Yll1xCZWUlkydPZtKkSYwePbrH21NK8c9//pOGhgYaGhp47bXX2Lx5M7FY7JiT8+TJk1m0aBFf+9rXGDNmTI+3KcTx4NChQzz++OOsWLGCTZs2HdMSPWnSJKZPn86FF16Yq8sTJ05k5MiRPd5ma2sriUSCt956i4aGBl555RU2bdpEQ0NDh+VKSkq49NJLWbx4Mddeey0nnCCPzg0kSaqFEINOYYl1hkymlNLSAQ6uSM888wzLly/nj3/8Y+6zESNG4HA4mDNnDldeeSXnnHPOgMWzd+9eXnzxRdatW8djjz3Gjh07ct+ZTCa+/vWv881vfpPy8vIBi0mIoSCdThMMBvnJT37C22+/nft87NixzJo1i2uvvZbq6mo+9rGPDVhM//rXv/jjH//IE088we9+9zv27NmT+27SpEl861vfYv78+WiaNmAxHdeUEEIMQomQS1nQlK0mqlKdfR9wKGuNPuBxFertt99WV155pQJyL6vVqu6//361c+dOo8NTSil16NAhtWnTJvXVr35VlZaW5uI8+eST1X333acOHjxodIhCDArPP/+8mjRpUof6fOWVV6q1a9eqffv2GR2eUkqpdDqt1q1bpz7/+c93iHPSpEnqueeeMzq844K0VIshp7lxC7FEuvgVNTO2qsr83Qma1rPcF0RPa1g9tSybUZFn4QxN22LEU+2xmLDYp1BxVMtppqmeWDzJkRFrZhtVlXkiaa5nfThMVE+QMmUfMHM4q6gohcZ1S/HrdnzLZlPRYZUtxJKdHRcNi62KikL6UTTXsyXWMdZCdLs/PdR1i3UjK6bZ0WsTrJ4xuJqqW1tbueeee7jzzjtzfZqnT5/OkiVLuPrqqykpKTE4ws7985//ZMWKFdx///251i673c4DDzzApz71KYOjE8IYu3bt4lvf+hYPPfQQkL3LNGfOHO644w4uuOACg6PrWiwW48c//jFr1qzh4MGDAMyfP5+77rqLCRMmGBzdMGZ0Vi9EUVJB5dTocBVezMtel8hbvF5jOby82aOi6TwLR73KfFT5ms2v4h1LVDWWzmKxKX+8s0LTKhZwK2sn+6iZHaom4FMOrW39I3clUafs+fbdXqfy77lSSsWV39bTY2tX3RzaHuu0xTodVm6zS4U6a8I20O7du9VnPvOZ3HEpLy9Xq1evNjqsoiSTSTV37tzcPpSWlqpHHnnE6LCEGHCvv/66Ouuss3J1YerUqerll182OqyivPLKK2rq1Km5fTjzzDPV1q1bjQ5r2Op5r3khjJBMkm2M1bDY7FhMh79KJ2LoiVS2RdpmxZTrQpYmEdNJpCCVTEGH9t0j1RONJo7Ylk4kDtVTuljc6sLjSqAn4uixBGkgHaujbmMN91e3t55acXndxCNx4nqMRNqE1W7DYnXjsBxdYDNbbnPgqIuRBkw2Fx63E6sWJxoMEopFqfNGj9jhI1Y1O/B4nGiJFMmYTjwFmKzYbWY0NCxuB+YuduMwCw6vB2coQTKuZ1u9TRbsNgtd9sZLJ9D1BGlS5D20vVAxdy1RrsHhduKgrcU6mSBhsmAZRE8xbt++nauuuoo333wTgJtvvpkf//jHQ26M6PLyckKhEDfeeCNer5d//OMfzJs3j4aGBu68806jwxNiQPz+979nzpw57Nmzh7KyMn7wgx9QU1PDiBEjjA6tKFOnTuXFF19kxYoVfOc732HHjh1cdtllrF69mlmzZhkd3vBjdFYvRFHifmXroqU3GbBnr8atPhXr+I0K2Nv6tPo6ftNBKtTWCm5VVmt2eUcgWUBMPmUFhcWiLKBMnog6toG7vRXYqYJdtK4mQy5lAgUmZfdFVcctJ1XEc0Qrepct3UpF3Fq2Zdsd7j72LsR81ux2HAGV9wjkWsitKt+h7QtHtlgn435lO+bnbJytW7eq0047TQFq1KhR6he/+IXRIfWJpqYmVVVVlfu9+/KXvyz9rMWwt2rVKjVy5EgFKLPZrF588UWjQ+oTW7ZsUeXl5QpQJ5xwgrr//vuNDmnYkbFWxNByxBPMRT3MXMiysQixNGBxUOO0Zj+K6mTyr3V4E1Y3bhukwkEixc633byOmpowKcDsDhJeVk3HsRfKmREIUWMtstx+N3BPlFfMXUs05CRZ58Thi5JOJUkN2Na7tmPHDq666iref/99xo8fTyQS4aabbjI6rD5x2mmnsWHDBr74xS8C8PDDD3PHHXcYHJUQ/ef3v/89N998M62trXzqU59iy5YtXHzxxUaH1ScuueQStmzZwvnnn8+hQ4e45ZZbePLJJ40Oa1iRpFoMLWY7bocVq8ONvfv+DG3KsbucWK0OXE5Ll0vVR3SSgGZz4HLaMAEpPUqs0M1oNjweO1oqTKDIrLox6CeUBEwu6upm0+lgZqVV1HjtRZXb7yrsuJ1WrA4Xzv5M+Jsbqd+2hYTZi99rJRGOEE8miDf14zYL0NLSwqxZs3jvvfcYO3YsGzZs4DOf+YyxQfWxsrIyfvvb3zJv3jwA7rrrLlauXGlwVEL0vb/85S/MmTMnl1C/8MILnHXWWUaH1acqKip44YUX+MQnPsGhQ4e44YYbePXVV40Oa9iQpFoMLaVVLNnwJm9uWEJVEYM+TFn8LG++uYFl1V11wm1C1xMAWB12ym0ObAAJHb2x8O1Y3F7sWppoIEzh+V49oaAOgNldw9w8wwNXOBwMrsbqKSx+9k3e3LCM6j4fhKOJ9cuvZ9rE8ZRZHLi9Pmpr/QRjacwmAJ1wtNhbAn3rhhtuYNu2bYwYMYI1a9YwZUpXHfCHtpKSEn75y19y2WWXAXDrrbcSjUaNDUqIPrRr1y6uuuoq9uzZg9ls5qmnnuLkk082Oqx+YTKZePrppznttNP46KOPuPrqq3n//feNDmtYkKRaCIBMjEgsDZix2yqg3IbNAhAjqhfaAQQod+F1aKT1AOFCk/GmKJEYgBmXuzr/slM81Na4cdf4cFUWHlZfaq5fz5o1W4q4aOipNJic1IbjpHZvZ+vmDWzYsIENm99k++40yViYGqtxExqsWrWKp556CoB7772XmTNnGhbLQDjxxBNZu3YtkydPprW1lZtvvjnvNOhCDCW33347f//73ykrK+PJJ58cdi3UR7NYLDz55JOUlZXx3nvvUVNTY3RIw4Ik1UIAxKPEUoBmw24DsOGwaUAaPVpwBxBgHE6vE1NaJ1BgVp2JtXUx0Ww4bN0tXcnce1az+p65GJNT1xNwOXG7HXjXFHGx0SMVzFg4nxlTyjm2EbyU8ikzmDHFmDGqd+7cye233w7AF77wBb7+9a8bEsdAmzBhAg8//DAnnHAC77zzDt/73veMDkmIXvvDH/5AMBgE4L//+7+HTR/q7lRVVfGDH/wAgNWrV/Pss88aHNHQJ0m1EECTHiUOYLFhHwdQiq0tw03qUeqLKGuc04vTBLFAoKD1Usm2B+7M1kE1RBwAiTC1S5eyNPfyE04CpEmnezABzzBx22238cEHHzB27Fjuu+8+o8MZUJdccgnf+MY3gGz/6m3bthkckRA9l06nWbhwIQAXXnhh7nf7eFFTU8PUqVMBWLRoEXv37jU4oqFNkmohyORao002B5a2TyvstuzYzvEosWK67pY68LrMEA8RKCDfyI6dDZjMmPIvOvASEQJ+P/7cK4g+GIbcMNAbb7zBb37zGwB+9KMfceaZZxoc0cD74Q9/yFlnnUVrayu1tbVGhyNEj/3yl7/krbfeYsSIETz44INDbhzq3hoxYgQ///nPGTFiBI2NjTz44INGhzSkSVItBDGierbV1eawHe5qYHWQ7QESa+vzXKhSqr1uLCQIB7Z0u7TWPjZgehBmqxYnXp8PX+7lwT7oMv+B9T//8z8opbBYLCxatMjocAwxZswYvvvd7wKwbt066uuLuZcjxOBw8OBB7rrrLgCuv/76QT3teH+64IILcLvdANx99920trYaHNHQJUm1EI062YE/LNhsRwy9Mc6GwwqQRNeLTBqqPLitkAgH2NhN12OTqS1LTaW6GHe5iTXXn8fp48soKzviNX4iV6zo51vvFhe1y5axLPfy4TIDaIcvBo4j//jHP1i9ejWQfbBp5Mjjd1Lar3zlK5x++ukopfjJT35idDhCFO3RRx/lnXfeAeDb3/62wdEYq338+b///e+sWbPG4GiGLkmqxXGv+YixqOOh5Sxf3v4K0taATSKiFznaxRQ8HhskwwSi+bPqcRZLtptJMk6s042kSSWTJFPZfsy5VypJIjHQ/Zor8YbCBENRAnONeUjQSD/72c84cOAAEyZMGDYTvPRUaWkpixcvBuBXv/oVu3fvNjgiIYqzYsUKAGbOnMmnP/1pg6Mx1qc//WmcTidw+LiI4klSLY57sahONjVNEKk7squDn3A8u0w6FiFW5GAXlW4PdlJEAmHydsm2ObBr0PXwfRUs3LAblU6TCrvb+l1b8cVSbL+nqrig+sC4KbOZP7eq8wlqhrn2FpwFCxYwevRog6Mx3r//+78zatQo9u/fTzgcNjocIQrW2NiIrmfnB7jlllsMjmZwuPXWWwF46aWX2L59u8HRDE2SVIvjXD26ngTA7PBS06H/sA+f15l9cDEVIxovsugKNx6HRioSJJyvmXucA5ddA1JEgpGuE/DSUlKJRFsXEQ2T1suW4uaNrFhwPYtWbil4KvZONW1k+YLrWbRqW+/KGeRefvnl3Ilm7ty5BkczOIwfP54rr7wSyN5KF2KoaP99NZlMfO5znzM4msHhc5/7XK47otTnnpGkWhzfmvW2ZNmE01fHPR36Dy9j2f21OLNDgKDrxU53Uo7L40BLRwlmx6HrejmvMzsteriWQJfdtxuJhIp6YjKvTLQOXzBEwBdA71U5fmqDIQK1wcKndB+C2k8yFouFiy66yOBoBo8vfelLADz33HPSBUQMGe312eVyceKJJxoczeBw4oknMnv2bECS6p6SpFoc1zJ6NNtvWrPhsHfW8mvFke2bQSyqF90SW+7y4NTSRANB8jV0j5vrx2fTgBi1nuVs62RDmY211Or904e6N6Wm29cf5uNWRyIRAK677jqDIxlcXC4XI0aM4MCBAzJ1uRgSdu3axUsvvQRIfT5a+/F4+eWX+eCDDwyOZuiRpFoMGz3J6eJRPdudwmLH1unEK+OwZ4cAIXXEA40dN3zUvx1Wd+JxmSAWyvXP7lwlNcEabBqkdR9O53I2HtEwntm2ErcnSL727rYlD4eRJv9FQL7jVczBHN65NAB79uzhL3/5CwAOh8PYYAYZk8mUe8hr06ZNBkcjRPc2bdqEUooTTjiByy67zOhwBpXLLruMkpISgFyfc1E4SarFkNa8fgETy0ooKSnBUtP2ByDux1ZSQklJGadfs6rTUTsaV81kfEkJNn/8iHVOZ+aqI6YWb1rDNaeXYalpS6UTddhLShg/bUV2psT6FUwbX0KJzU8cSEfcaCVlTFyw7oh+0eNwelyYSZNKAxp0NRBd6ZRlREIerBokoz4cltO54IqZzJw2EbPNSzgBmEydr9+8jusnllFSouEKZbPcdNiFVpI9Np29NHf4qHy4iTXXnE5ZSQm2ukT2o6gXc54ySkpKMHkiXezR8LF582YOHToEwLRp0wyOZvCZPn06IEm1GBr+/Oc/A3D++eczbtxgm8bWWCaTiU984hOA1OeekKRaDHE9Hyv5mGGWOynq2KGYtQ6faQVsv3SGj1qnBQ3QrA6sef6Gl89+iJgexGM3o6WTxKIRInqCFCasrjqiegi3RUOz2LCZu910Qcx2O9b2//R47GkNs/3wbJTDTfvJxWq1MmHCBIOjGXzak+pXXnmF/fv3GxyNEPm11+dLL73U4EgGJ7lI7rkSpZQyOgghxLGaG7cQiyVJaSYsNjtTyo+/caEHi+uuu44nnniCefPm8fDDDxsdzqBTX1+P1Zq9NHvjjTdyLV1CDEYTJkxg165dPPjgg3z1q181OpxBZ+XKlXi9Xj72sY/x/vvvGx3OkHL8TgcmxCA3rqKK6gqjoxAADQ0NAJx77rkGRzI4nX322YwYMYKDBw/S0NAgSbUYtHbt2sWuXbsAqc9dmTx5MgA7d+6kublZusgUQZJqIYTIQynFW2+9BRw+2XQr00R9LE4y30OcmgmzxUpl0XcgMmxb5cMfToLZgc+/kCnFnPMyjWwMh4nocZIpMFttWK02HM4qKkqheeMKfGETXv98phQY2qhRo6ioqOCdd97JXYAIMRj97W9/y70vtD5nmrYRi6c6fyZbM2E2W6is6K4SZmjaFiOeKvbJbhNW+xRyfyYyTWyLxemsGM1kxTalnN7e0zzyuDQ0NMgQosVQQgghurRjxw4FKEC99NJLBa2j11hy63T3MlmdyheOq3ShASWDyqkdXt8eSBS4YlrFAm5lNXURi2ZV7rqgqrGhwKy80UIDypoxY4YC1MKFC4tbUYgB9PDDDytAnXTSSQWuEVGerurMES/NbFduf0QluqjI6YhbmQr8m3DM3wjP4coY9ZjyLGtSnkjBf0m6dOjQIVVWVqYAtXr16l6XdzyRlmohhMjjyLFay8sLm5zd6vLijkdIJOLo8STZ1iYb5vbnQNNpUsk48USKVDyC32Uj4g0TuX9Gt9O/Z2IRjhyuPBbRaV5YQf52sgzbljuw+3TSaJjtTlwOBzaLRjoRIxIOEYnHCdV4cmsU257Wfmzab60LMRi11+dC6zLYcHlcJGMJYnqMZBpMFjs2iwakSaWSJOIJUkmdkM9JJFRDOHoP1UdVyFKrG48rRSyZIKbHSQFmmx2rqauHw9Mk4zrxJKRTSTJAKWB1e3EldVLJBHosQRoNi82OxQSayYbL1vtnb0pKSvjYxz7G3//+d6nPxTI6qxdCiMHshRdeyLUE7d69u7iVI55s65TmUuFOvk4noqrOZVFaWyuTo4BW51hbK7jJalVmUJi9qttG5ZhPWcm2QDsDnbWKp5TudxzRkmZWniJbqr/+9a8rQDmdzuJWFGIA/fCHP1SAmjJlSpFrxlSNJVs/HIFkx6/SCRWtcytr2x0kkyOouqzJ6VDbnabu7wa1t0prrtCxdTbuVzZQYFP+eJG7UoBPfOITClB+v7/vCx/GZEg9IYTIo6WlJfd+zJgxfVp2aUU1i9fqBF1mIEW0tpb1eWfsaULXE4CG3VuDXQOSOnqXU9tnbWmb0dPkChBaWNlJn8txVC0JEXCZerorjB07FoAPP/ywx2UI0d/a63Of1uXSCqoXryYacmMGUlEf/o3Fzr87uEh97hlJqoUQIo/2k7CmaYwc2R895sqZW+fDBpCMEMo3iVlGJxIDsGBzOMhO9hknqjfnWamJWDw7F6fNZc/TTaQcV42Lng5/3n4SPvIiRIjBpv33s/33tS+Vz66lJluRiUbyTqFbEKvLjd1qw+Wy9/rhw2JJfe4ZSaqFECKP9paa/jgJ51TYcVgAkiQSeRLkWIRYGjDZcFgrsdnNQBo9queZkl5Da5vUJxnPP9F9qc2Zbf1Go8uunl2Qk7A4RnMTTYOswbZ/67MZS9uDE6lUqtellc++n81vbmX1/IEfW1Xqc89IUi2EEHn0Z8tWTiZF9hys5Z3UslHXSQDYHNhKwWa3oQEpPUrX7WLjcDhtAMQDNaysz5PljHNRFw4SCIXwVRW3C+230+V2sWhXH3Bir9mY54Jv4PVrfW7WCceyj/harJYeFNDIxjVrWF+f787TwJD63DOSVAshRB4DkVQ3R4NEUgBWHLauOmg0o7fdUrbYbJQD49qnho/r6E1dl1/hqcWT7eyJ125nwYr1bOu0CbGUihnzWVvv4YQAACAASURBVDi3qttRSI4mLVviaJWeGqzhGuq66fM/kPqvPjeyzusllAQ0Bx5X8a3LmXU1ON1unC4/2/o4umJJfe4ZGVJPCCHy2LdvHwCjR4/ul/IzjWvweEIkAc3uxV3Z1ZIxorE0oGFzZFuesdiwmyCeihGNZVg4o4uel+NmEIj4STh8RFMxgjVOgjWgmW3YHXbsDidOh4Pqyp7PnNZ+fPbt24dSipKSkh6XJYaJ8vnU1QZxeJbjjC4peDKh/tQX9TmVSFDfmEYjTTqVJK5HCNYFCMdTgAm7P8DCbnPqFHpgKUsjhz9Jx2LZoSzT6aKHtOxr7cdn7969BkcytEhSLYQQeZSVlQG9PLmk0yTrG2k8apxqPRKkLhAmngI0O/6ghy7PxfU6ehLAhqN9LNpSG3YbBKOpbCv2jCldhlA6ZQkb4nZW+Hz4QzrJNKSTMaKhGNFQAD9gsrrw1dVRM6Oi6Aej2pOVsrIySahFTuXCEIGoHZfbTCQ0n0qDE+u+qM8xvx2rv5MvNAuuujChhV1eGR8hTSzkJ9bjKPpXfzcmDFeSVAshRB7tfQt7dxs0gjdfH0uzA384zOI8GUdze79psw1bLvMux263QDRBQtdpYkr+bhvl1Sx+aDOLA03U6zpRPUI0qqPrMRIpSMXD+JxRwv4I0SVVRSXW/TJUmRgGypm9Okr6eicOexR/qI75vbgj0lt9UZ81kxlz25O86XSKZLLtocR0mjSFPuGrYXPX4LQc/iQdC1EXSfQ4rr4k9blnJKkWQog8+ma8Vg2T2dxxRA3NhNlsxe72UOOZQUXeDDaDHtVJA5rNge2Ib6x2OyYSpGIR9MxCZheSCZeWU1k9m8rq2Sxcki2/cX2AWl8twVgK3efGa4vx0IzCk58BeaCzWxnWL7LiDib75va5No6pF5zIXzfv7H156iD7DxykZMQoRo3oXUv+oQMZDhwawajSkb1+MEqVHKSk9QToZUyFSKfjeKxh6nwR9GXFXbT1lb6oz3Z/jA0LD1++Zho3Eqjx4AsniHhd1NrfZFnXN43amLB7l7Gs+vAnmXVxApEEaU0rODXvL4OjPg89klQLIUQeffLAjuYk+M+1zO5xAXGierY1TEtF8C9P0D5NSyqRzJ6A0zEiMZhd5KgdWaVUzFjMQzOc2K+w440mCPlD1M5Y2HV3lKMMjpNwKfaaAAFH74czyzJx5v+DHf/oi/KaeevlBKMmT6Gilw21e9/bxl9TZzDlE6cyqpdRHfjXP/hg1P/D3K+Nx2mSET++YBKrx09djTEJNfTPA3jZSZzCJM+z4Y/HCQY2suz+6u5XPLqc2XVEQm7SNifd5uT9bHDU56FHkmohhMij/aSyb98+Wltb+2kCmG406ehtY+al9CD+TieISaDrjVB1bBrcuGYRNcE0Tn+AhXmfFqtkod+D315HIhoi2ryQ+QUmW+0tf0bfLh5XOYO5hXRpNcLcQVfQgGhavwBHxIQ3EuWeGcWOK9O3+m9Uiyk47Wb88SSpRJIM9ODCoYLquQM/JnVnBkt9HmokqRZCiDyObKn58MMPMZl6PpV3T2X0aPaBJs2Ky+vC2uHecJpEJEAoliYe0WleXHHUrImNROoChHWI22pYOKWbNjCbHasGiXSKZBLyTMHYgbRsiU7Vr8DlieOJRFkyCIb/6M+h4tonWUqTHb2j93uboX6Vj9qoGY9/CT29Hqlfcxu1EQ137TJmF5izS33uGUmqhRAijyNbalpaWgxJqmNRnRSAzUvdPYuP6ZLRZIkR8kZJx6LEmMvRN57b+wMnYjGamZI/T04mSaYBzYy5iDnL5SQsjlXPco8fkz82KBJq6KsHj7twTEfoDM1NMK68p/seJ+ivIxSHlMPLjEJvG3VQT7g2W0bC7mV292P9AVKfe0omfxFCiDwmTJiQe9/UlGeGlX7TiK4nALDY7Z32cS6327ECJHX0PBNtpCN+ajfmm60tw5a6OmKAZnPiKOIc/v777wMwfvz4wlcSw1rzOh91+Kibb2yXjyO11+f239e+1N5SnR0FJMPGBRZMZhPTVjT2uMx02xVxz0euTpM6/LYgSil27twJSH0uliTVQgiRxxlnnJE7Wb711ltFrZvp8j9FaNaJZvt+YLPbOl/G6sBmguwDjfmS5jh1TjvXr1hP4zHxNLFxuRNXXQIw467NM2Z2JxoaGgCYNGlSEWuJ4Syt2amt8zKYurifc845QLYrVzKZLGLN7jNSs6Xt1k48RiKTQI8lgTTp9BHrdiimuz8KxkwB8+677+bGqZb6XCQlhBAir/PPP18B6vvf/35By8cDDmXSUHDUy2RX/liBG01HVY1FO6YMzVqjounDi+k+m9KO3o5mUZ5Iqm2JhKqzdxILJmWxOZTT5VIup11ZTYc/t/t1le40qM7t379fjRw5UgFq7dq1RawpxMDauXNnrg788Y9/LGCNmPLbTMfWH82sXMFkx0UTAeXQUKAps82qTKDAomp0pZTuUzZTZ/WwsJcjmK3PMb+9rdziX/a6REHH6A9/+ENund27dxd3gI9z0lIthBDdmDx5MgB/+9vfCl6ns3Fmix57Vjt2jU7LPfrDDh+YMGkaYMWnJ4jWeXBYTUCKRCxKJBwmHNGJp0CzOPGFY0VP/LJ9+3ZaW1uBw8dKiMHo1FNPzT0XUXB91gqsuxULCQScmEmTjMVJoWH1BqjNDXPZw9GnTTbs1iP6YvWkGM2K3VbYQxLtd52OPFaiMCVKKWV0EEIIMZh997vf5Yc//CHnnXcef/3rX40Op2iZxo1EEmac1ZW5ZDnTVE8sniCZTJHWTFisdmyV43o0YsHq1au54YYbOPHEE9mzZw+lpYPjoTQhOnPZZZfxwgsvsGjRIn72s5/1efmZxi1EY0mw2HFMKTdsTO6eWrhwIQ888ADV1dVEo1GjwxlSZPQPIYToxvTp0wGIx+Ps2rWLU045xeCIilNaUX3MUFql5ZVUlfdNb9dNmzYBMHXqVEmoxaA3ffp0XnjhhdzvbV8rrahixuAYbrpH2o/LtGnTDI5k6JHuH0II0Y1p06ZRUlKCUorNmzcbHc6g034Sbr/4EGIwu/TSSwF4/fXX2bNnj8HRDC7Nzc25u3FSn4snSbUQQnTDZDJx/vnnA8jt0KM0Nzfz2muvAXISFkND++/poUOH+NOf/mRwNIPLCy+8wKFDhwBpqe4JSaqFEKIATqcTgCeeeMLgSAaXdevW5aZvv+KKK4wOR4hunXrqqVx00UWA1OejPf7440C2K9epp55qcDRDjyTVQghRgDlz5gDwzjvv8MorrxgczeDx29/+FoDPfvazQ66vuTh+tdfntWvXcuDAAYOjGRwOHDhAOBwGDh8fURxJqoUQogCXXHIJFRXZp4/aE8njXSqV4v/+7/8AOQmLoaX993X37t0899xzBkczODz33HPs3r0bgC9+8YsGRzM0SVIthBAF+tKXvgTAQw89lJtx7Hj285//nP379zNq1ChcLpfR4QhRsIkTJ3LxxRcD9MuwekPRfffdB2S7fshMij0jSbUQQhTo61//OiNHjmTnzp089NBDRodjqP3791NXVwfAvHnzmDBhgsER9Y9M/Xo21vd0jvlOyuu7ojqW29cFNm9j/cbGvi93EFm8eDEATz/9NG+88YbB0RjrL3/5C8888wwA3/zmNw2OZuiSyV+EEKIIX/7yl3nkkUeYOHEiDQ0NjBgxwuiQDPHLX/6Sm2++mZKSEl5//fXc6Cj9rXnbOsKxVGELaybMZgtW2xQqxnW/+LEaWXGBhRr8xLcuoWejejexcWUt/kCEeErDpEEqDWabE6+vlvlV46B5PQscYTxb76e6kCIzTWwJhwiGQkT1OMk0aKRJYcHmdOGtqWF+VXnbwvWsvMJLKrCBJUXswJbbJmIPWAkmnmV+effLZ+OqZ304RlrTAK3jxJ7pNOm2f012F9UVxo9n3trayqRJk2hsbOTGG29k1apVRodkmBtvvJFf//rXnHnmmbzzzjuMGjXK6JCGJGmpFkKIItxxxx1AdmrulStXGhyNMT766CN+8IMfADBr1qwBS6gBUskE8VgMPRKk1uvB4/Hg8XipDUWJxeLE422vWAw9EqKuxonVVMbEKxaxcmNTcRurDxGIAbEgwfoeBNu8kdumWXGHTHhDcbZvf5Otb77J9u0xwj4bMZ+dK5auY02Nl2CiLenMXyDb1tzGFRYLdm+ApNVLIJoguXs3/9y9j1QiQsBjQfc5mLZoHY1A/XIPNdEkBV6GZGU2EgwlIB0lGC7imKVTJGI60UiYYK0bp9PZ9nLjC4SIRKNE9RiJooLpPyNHjuT2228H4De/+U1uaMjjzWuvvcbq1asBuO222ySh7g0lhBCiKHPnzlWAOvnkk9W7775rdDgD7j/+4z8UoEaMGKFeeeUVw+LQaywKUGBXgWTXy6X0OuU0o8Ck7DVRlSqw/JjP2lY+yuqLFRldXAUcJqXZfCqW7mqZhAq5zNltmDwqkq+4dEKFPFalgTI7fCqaZ3+VSind71BWu0NZNRRYlS9eeOTpiEeZ2/Ybe51KFL7qYYk6ZW8rQ3OFVZeHwGB79+5VEydOVIC65JJL1MGDB40OaUAdPHhQXXzxxQpQZ555pmppaTE6pCFNWqqFEKJIK1aswGQysWfPHr7xjW8YHc6AeuWVV1ixYgWQ7ZM6depUw2LRcv0LtLzLjataTDhcg5UUep0T54pCmp23EAynMJuy/4uHgmwpIrbmdbX4ouCqrWVKlz0dKpgbDOA2d1daI6tcdtzBOJrdTySyjOq8XTLGUbUkTMCWJN598/dRMkSDUXI7rgcJ9aSVXtNyPxXNZML4zh6dKysrIxAIAPDiiy/mHtY7Xtx777289NJLQPZBxTFjxhgc0dAmSbUQQhSpvLycH//4x0B28ogHHnjA4IgGxu7du5k3bx4HDx6koqKC73//+0aHVLDSKi8eG0AavdbHmub8y2c2BolY/AS91uwHiRDBjYU+tpchGoqQwoLd1k06OW42tTW2vGVtWerCG0mC5qAuvCRPkt6hYKrrAngtBYbcrjlCMOYgEHCRzfVjBHvU92Xo+PznP8+8efMAWLp0Ka+++qrBEQ2MV155hf/8z/8EskPofeELXzA4oqFPkmohhOiBm2++mRkzZgBwyy238Pvf/97giPrXgQMHuPbaa6mvr2fEiBE8+OCDnHTSSUaHVQQLFnNb22kqSljPlyBnW2utHhczPB6yKW+ScDBa4GgYSRKJFJAikex+6UqnE2tXX26rxeOPkQasNXWFPzQIUFqNr8ZexArQHAkSc3hwOj242lrQ46EA24oqZeipq6vjjDPO4KOPPuLqq69mx44dRofUr/7xj38wa9Ys9u7dS3l5Offee6/RIQ0LklQLIUQPlJSUsGbNGs4//3xaW1uZM2cOf/nLX4wOq18opfja175GNBoFsgnI5z73OWOD6oHDo1GkSefrFpGJEoza8DjHQaW7rYUbkuEgkYKy6uwoH5AgHNzYfSJudWAzdfZFM+tqA8QBsOP1Tilk4x1UuNzY8/eOOUIT4WAch6ea0tJqPG5L9uNEmGAxfV+GoFNPPZWnnnqKMWPG8N577zFr1ixaWlqMDqtf7Nmzh6uuuopkMklZWRlPPvkkp59+utFhDQuSVAshRA+NGzeOZ555BrPZzJ49e6iuruZPf/qT0WH1qUwmw7x583LDjS1evJhbb73V4Kh6IkUy2Z5JW3Hk6ZbRHAmgOzw4xwFU4PLas/2DUxGC4W76jQBQjt2ZzcQTATfuVfX5E+tSB7WhGo5pU24OE4i0DZVhdeCoKGDTR6uwYzcXmFU3hQkmnHiqsv+t8rjbWtAThAq5OBjibDYba9asYcSIEWzbto3LL7+cd9991+iw+tSOHTu47LLLeP311ykpKeHhhx/mkksuMTqsYUOSaiGE6IWzzjqLp59+mlNPPZVdu3Zx5ZVX8vDDDxsdVp/44IMP+OxnP5sbbuv666/n7rvvNjiqHmqKEI5l35rdtXi6TFCbiQTjODyO3MN1FS5PW2tvikgwQiFpdaWnBqcJIEnYY8My7XqWrlzDxm1NnSSnpVRWTeHoobQzegS97TpAs9q77iKSVxXeQC3tjc75NIaCpFweqto/mOLp0EofHe5ZNfBv//ZvPPDAA4wYMYJYLEZVVRVbt241Oqw+8eqrr1JVVcVrr73GCSecwE9/+lOuvfZao8MaXowefkQIIYaDhoYGde655+aGYLvllltUc3Oz0WH12HPPPZcbagxQS5cuVYcOHTI6rA4OD3nnyDuknkrHVcCZHbrOZPcpPd+Yesmgclq9Ktrhw5QKOrXstjSHCuYdzu6wRMilLO1D0x35MlmUzelRvkBExfPEEvfbcutYavTCNtpjceW325T/qKH3EnXtMZiUO1zEwHjJgHK0xW7yRLtffpB56qmn1JgxYxSgTjrpJPW///u/Q3a4vYMHD6r77rtPnXTSSQpQo0ePVk888YTRYQ1LklQLIUQf+eCDD9Rll12WS4TOOOMMtXbtWqPDKsq//vUvNX/+/Nw+jBo1Sj300ENGh9Wpw0m1TfmiMRWLdXzp0bAK+r3KYdEUJqty+SIq0U1emAw4lLWTBDYVcikNFGjKHih85OZk1K+cFu3YxLr9pVmVJxjvdBznw+Nw92Sc7CLFfcrW2ZjUiYCya23JsStU8BjfQz2pVkqprVu3qjPOOCP3M7Db7eq1114zOqyivP7668put+f24fTTT1cvv/yy0WENW5JUCyFEH9q/f7/6wQ9+oEpLS3MnsiuuuEKtX7/e6NDy2rlzp7rzzjvVKaeckov7wgsvVK+++qrRoXXpcFJtUjanW3k8nqNeXlXjq1PBiK6SBTWyJlSd3aY6zV9TYeU29XRClLRK6GEV8HmUy25VJu3o5NqsnMFjS+zd5DPFifmsylHX2V4lVcDR3krvVMFCs+phkFQrpdT777+vbrjhhtzPYeTIkcrj8ag33njD6NDy+utf/6puuukmNWrUqFzsbrdbJZMF3mYRPSJJtRBC9IP6+npVXV3dIXmy2WwqGAwOqm4hW7duVbfeeqsaPXp0Ls6TTjpJ3X333aq1tdXo8PI6nHQWN2Ngl+J+Zbf5VedFpVXEbcq1jB/dTaIo6ZSK62FV53UcnrlQcx7TrSQZcOR+JmZvfyamuqqxdt2FJhV05lrpHYX2fRkmSXW7Z599Vlksh+8clJSUqKuvvlo9++yzav/+/UaHp5RS6sCBA2r9+vVq9uzZqqSk5HDXIYtFPfPMM0aHd1yQpFoIIfrJoUOH1Nq1a1VVVVWH5PrEE09Us2bNUsFgUO3YsWNAY9q/f7/SdV0tXbpUTZo0qUNcY8eOVbfffvuQmXq9r5PquM+qNJNF2Wy2Tl9W8+FuHH3VcpyKetumEkfZjs7U9ZrDfbIdwcK7XhwlGY3kmSpdqXTUq8yaWVm72G+b1dyWVKM0e6CwVvqeJNWxgPIG++LqqH/s3btXrVixQp111lkd6s0pp5yibrrpJvXUU08N+AXznj171DPPPKO++tWvqgkTJnSIq6KiQq1YsULt3bt3QGM6npUopVQhDzQKIYTouY0bN3LXXXcRiUQ4cOBAh+8qKiqYPn06l1xyCZWVlUyePBmLxcLIkSN7tc3du3fz1ltv0dDQwGuvvcbmzZt56aWX2Ldv3zHbX7hwIYsWLcJk6nTA5EFp29LzsPnjgBVf/E2WVfaqNG47z4sWDOHtctrwGH6Hi0ACsNSgb7/n8EgZHTSzbmkA87IlXXx/pAxbFlmxBxJoziDJZ+cfHgUks5FFFgeBJGD2EE08RHXR8303s2qmk1RgM4s7HfEkw/oFVursYQLOrn72aaI1djzhFGCjLrG1i7KO0LSSK8xeooDJE2X3Q9XdRtq0ciauVB2bl/TqB9nvWltbWb16Nffeey8vv/xyh+9OOOEEPvnJTzJ9+nSmTp3Kueeey6RJk/j4xz9OSUlJr7b73nvv8dZbb/G3v/2NV199lU2bNvH6669z6NChDstdfPHFLF68mLlz5/b6b4gojhxtIYQYANXV1VRXV7N7927C4TCPPvoozz//PPv376exsZHGxsbc0HUAI0eOxGw2M3bsWMaOHcuYMWM6vB8zZgwHDhygpaWFDz/8kJaWlg7vd+3axe7du7uMZ+LEiVx33XXMmTNHxqkF2BIkYvYQraqg60kLK/C6rQT88bYJUe6hqtOsOUk8GiHZtISqbmdALKXK48QSCJBIpUjB4aS6tJqaGhsBXwySEUJ6huqis+o4saQFR1cXCpkIwagNb90UKo4e0+8Ibq8LXzhIkhjBUD2L+yHxTcQTmO1dXtEMGiNHjuQrX/kKX/nKV3jnnXd47LHHePTRR3nllVc4dOgQr732Gq+99lqHdUaPHs1pp52Wq8dH1+fRo0ezb9++Y+px+7/vv/8+e/fu7TSekpISLrroIubMmcMXv/hFJk6cOBCHQXRCkmohhBhA48ePZ8GCBSxYsIB9+/bx0ksvsWnTJjZt2sTWrVt59913UUrR2traZ1Mln3TSSVRWVmK327n00kuZPn06FoulT8oeHjJsDEaweHx5EuqsKR4XVr+fOAnCgY3UVVXTaZqbjhONZVg4o4Ak2GzFDCRNZo5uK670+vHUOQkmk4T8IWqr53cbYwdbQkQtLmq7CKM5HES3ewnmSagBSh0eXOYggSTEgkG2LVlG8fM75lNPNJrC7OomkEHm7LPP5o477uCOO+7ggw8+YPPmzfz5z39m06ZNvPHGG3zwwQcA7N27l0Qi0SfbnDBhQq41vP11yimn9EnZonckqRZCCIOUlZVx+eWXc/nll+c+27dvH2+//TYNDQ00NTV12RL94YcfMmrUqFxr19GtXyeffDITJ05k8uTJfPzjHzdwL4eATJRgxIrHX0C6WunBY/Pji0EyHCAaqKbzvDlJuC5M04y53SfByTgJwOa0HzMBDONmUBeqQXfWEY/4qFnvYvWMQhPPRlbW6jhq/ceWC2Qnuonh8Dk6vzA4Utu05YG6BMRDBLcs457u+7YULLOxjkDcnKfrzeA3YcIEZs2axaxZs3Kf7d69m4aGBt5++2127drVZX3et28fZWVlx7Rgt78/5ZRTOOecc5g8eTLjx483cC9FXgb36RZCCCF6pMODir14bjAZdCpTEcPkJerax/01KVe4s8cH48pvyw6V5wp1N1pGWkU8ZoXJpfItmgi2TSRjsit/vqcOjyhX9zuUvSba9QOO8TplN7lUqNA5XWKHH5w0e6Odjq2dU8yDismw8lhQ4FShnj6NKcQgINOUCyGEGHoyjcRiybb/JInHmnpQRhPb1izC6Y2QigXxr2/sZArxozWTSmtoAKSI+P1s6Wreck0jXuvgmhUbaeyi4MY1HrxBcAUCzM3TpF0xfy161IcdHZ/dxvUrt3Q9XXrzNlYtcFAT9xK6p7qTVuoMjVtWcr3Lh56KUle3kaYCpiBvSpHrnpIM+QnWd71Sc0wn0fY+nUx0GmumaRvrVy5imtVFMAGYzZiHVu8PITqQ0T+EEEIMGduWXoAzmIR0mvTRX2oaGmY8ka0s66bDb+OKK7D5dNC0tk/SpNOA2UNk+/0cO1ZFhnXXW/CEU6S19qS647ZtPp0NiyuAepZfYCPk1tFrNEI1HnyhFDa3B5fDisWsQTJBNFRHIKrhDoSpm1vRfRcMgOZtrKn14QtESJrsuNwunHYbZlOaZFxH13WiehpHbQD//CnHJtRblnKes44E7fvQtt9YqY1tpbPnDxtXzsTui2YvJo7dcTRHHfG1cxnXuJKZdh96KkXq6B+OZsJ0xLrpdKptu0ew+YlvXcLgHvtDiK5JUi2EEEL0qWY2rgxj8sxnSnum3LyN9eEoUT1GIpUGzYzN4cTlmkFlT1pnM01si0aIRmPEk0lSaQ2TxYrd4cTpmEJ50UPvCSF6S5JqIYQQQgghekn6VAshhBBCCNFLklQLIYQQQgjRS5JUCyGEEEII0UuSVAshhBBCCNFLklQLIYQQQgjRS5JUCyGEEEII0UuSVAshhBBCCNFLklQLIYQQQgjRS5JUCyGEEEII0UuSVAshhBBCCNFLklQLIYQQQgjRS5JUCyGEEEII0UuSVAshhBBCCNFLklQLIYQQQgjRS5JUCyGEEEII0UuSVAshhBBCCNFLklQLIYQQQgjRS5JUCyGEEEII0UuSVAshhBBCCNFLklQLIYQQQgjRS5JUCyGEEEII0UuSVAshhBBCCNFLklQLIYQQQgjRS5JUCyGEEEII0UuSVAshhBBCCNFLklQLIYQQQgjRS5JUCyGEEEII0UuSVAshhBBCCNFLklQLIYQQQgjRS5JUCyGEEEII0UuSVAshhBBCCNFLklQLIYQQQgjRS5JUCyGEEEII0UuSVAshhBBCCNFLI40OoHsZMhmgtJRSo0MZiprWs9wXJGGrwb+4inFGxyPEMNfcuAU9liCZApPZgtVuo3Kc/PUaCjJN9eh6jCRmrHY7U8rbfm6ZDJm2ZUpL5WcphOhc/7VUN61hwXmnM378+MJfp1/AovXNh8vYspTzyjQ0TUMrGc8VKxv7LdzhqHnbCmbanPiCIQI+P5FM9+v0ty23TaSkpKSbVxmnTzyPadfcxop122gyOuii1LP8gux+lF2zjkFwyMUAyTSu47YrTsdsseN0ufF43LicdqzO4BD7HT4eNbJmwXmYzFYcLjdulwOb+/DPbWONJXse0mwsrT927dzftdMXsXFA4xZCDCb911IdCxOOJ0kVtxKRSAJmTAGgOa4TT7d/lyIWjcPCij4Nc1hp3sb6SIxEIkY0EiYcTZA7fOk06TQMpuZ+k8WKWTvqw3SKZDJJMhEnmYijh+vwWV34AwEWV5cbEqcQ3WpchcvmIZICTFYcDhtmLU0yHiN29O+4GGQybFzkwB1MgGbB7rRhSsWJGR2WEGLI6dfuH+kO/9PQaQiPFAAAGtdJREFU2k8u6fRR37UzY3dYui5QTk55NLPGbccd6fzIDj4mXIE3eWhG5982168nHKijNhAhEQ9T49CJBKKEF1YOpusCIYAmVnm9RFJgdofQg3OpOPKXNDM471c0N24jljjc7KFZbFRVdNFBrLmRbbHE4UYSzYKtqoJxnZRTGA2z1UZlrntFI9v0RP5GGM2E2WI9vE5faQzgCyYAKzXRGPdUZcvPZDK5vzVmmxOXKwVYsMl5SAjRhYHrU+0IkNwwv/M+ve391Y7qNz3O5sRu0tFTaTTNgtNpG5BQh6Zx2L0eXOkEaVO2P2A67CWgGx1Xz4yrnMH8e2bgrlmD1+khGE8S8dpxEeNZuVshBpPGEHWRNGDH5z8qoQYYjH1wm1fhtnrocA2uOQgkNrDwmBtCzaxxW4+5YLfXJdjsiR5bTqGsPmJvLmMKGda5rbjChRSiYbK5qK2r67M7V42REHoasHnwVh3+WR3Zd7py4UOsXdgnmxNCDGOD40HFrh5CnLKEzbuXDHQ0Q1bF7PtZO7v9fxnW6TUEurgnMFSUVszloagJHE6C8RSRGjfLHZtZUml0ZEJkZWJR4gCaBctQud4bZ8ftthMP6STSJqx2GxarG7up04WxeTy40nHisSjxFJjtbjwOc7Ycj4t0PElC10mksy3eNoupyxuL6WQMPZ6CZHv3wFJsHi+udIxEXCeWLQSb3cLhcNKkU0nisQSpWIgaR5RIMMqz83v/hyChJ7JvTGbMvS5NCHE8GxxJtRD5lM8gEKxBt9cRT+vUelbi3ryQoZK/iOEtnUoNwUvXSuY/FCIdt+DVrXhDG1icp0JVzr2ftXObWTXThCdioya4moWVbeXcv5b5NLJimoUaHSzeEJvzXPVm1szE5I50OGYVs+9h7WyoX34BVl8MrF5CG5ZwTCnN21jldeENJYh4Paywb2ZxL/PqVLrYritCCNE5GafaMBmam5poah6c/S0Hm9KqWvzubLtVWvfj3yLHTQwOQy+hbleBxWICEsQThSzftpxmwWLpzXa1Dv8UZdwU5gfD1FiBtE5d3ZbeBCKEEH1qkCfVjaxfvoDrr7mG6xetYEtz50tlGtezfMFMLpg4nrKy8UycNpNFq7bR3LyeRRPLskMdjZ/Gig5DIWWoX3MbC66/hmuuX8TKTgtvZN3Stu0vWM7Gpo7rb1k+kwvOm8h5F8xkRVuSl2lcz/LrpzFx/Hhmrjq6zGa2rLqNay6YyPgy7f+3d7ZQchvZHv8/NPWQtch6yPWQ9dBoUbTIMrKCoiD3ImtRFJQOisyGWUZR0LZRFJQ2iowio2hQ1CgatBqmQatGq0arRvcBqXv6Q93TMz2f3vs7R+fYI3WpVHWr6l+fF4qqQlUE/vt//owvX7/HKevELTyC1e9BAgAKDIP4Vo6rm5ydYjQ6xvHxCCdnGwzwQTDF5OwEo+NjfDw+xujkFOOdEnCK8Wnzu+PRCa6cBAvn/Hbf3h6Z6fgUJ6NjHI92jffVmE7O2vec4PQmX3QJbtIGpS4BVCjKHcKdFigKAKqE3GOZ+IFhw9Y1GLYN7UoBHKJnSQBAkWcP8LjC87I4OjnjYzcZ5lOCboq4RwIgzC4zpOqyYeQ+6fMwBFnhegjFsEdSLLxn4XnDtkgu/G359wk56vk9YQ+pXg086y/93hyUizepL8/vaV5OdT4gayFMY/H5OqPAVDviuRAHvU/JpRNpEzVFtlgI36KO5Lt10r5s46OQE1/yx3VMjtJ+j+pQsnq/ismzTDJNk5yw2BBIToNe84zlJet5TkRUZjT0eqSrYi2PFL1HQbotIXPy9ZlNRd3h70xJQ9dq4tqPNpaf1G+eMe2Aso4w0sAho+NbAIWk0SNvmK/Fs8oj8h2D1LWypZBm+xSXay/qiH5CgWORLpXmt0IhzXIpTHPK4gF5jkWGprb1hEmDjjCrdECOoS7XJUIlww0pu0Z7LpOAHEMuvweCVKNHflx05GNBodPYkaG13weVNLP5W5Nn8eXrvHmE9rHB3amHNom2/rqQIiADIJgDWs+qggKjrQv9HcLaQO7rzXfqPm0LJXWbulRcpV0hIioj6rd1hTarsxWNjA35V0YuWaZJpuVR0lGo5/Wa6q7XS3NqyocumXIlTxWdekHakaYMwzw07reozjzSFkVtuFztVIm7JHqFZlMQpZTnKUW+RepKY7QsqmPqKQv3rY74pe5SGEawKNTSFVE9JF8X542xbpGfzmrfkqLegqBWLQqSpqGuy5RCR5unldrbLJ4uxycoqqmi0Jp9j07+qm6uQjLn+bEuL9sYkKtu6Ugt3AdAQpGkGSZZpr7QeZPkRJuawOsU1edhwegSMg1Rr81nZbWjUVHintuWIg2ybJtsy1wQsx0iaaUzq6ga6aZFliFJmduwTRv7LURUZwGZs3QUCklNdgh0kBAKKapKiiLJXYp8TXloL5Q/haRukL4Qb6F7lO6XwERUUeoZ598FQapmLKcPBOn9eCX9M/K0zR3kK9d5RLS/DV7mVc3AgdKLL7bVpKkPFadLNm4T1TXlyZCGSVfnZJmdRHUVtwMiYqVOvgSzDsLW/DsvF0VgtLZs0fBKorqkaKGeh1BJNwzS1PM2Q3P36IQxDHMvuD1RLVTSdJ30DZfZC9YbyK2iekFwAATFomXNXVPqyqVK8iZFtapppECQ1hvQ6iBSnS6OeGvUX/vQhW8RBg2u2E6svPUTFNVEsXM+KrjWtl+LqM7J11Uy3AHFxUqClTH1Zx0nxaaoMz3vkaguAjJEk9bmYH00mqqc4sChXrCSVuWATFWnXhBRvvKNVeqT2ZYbYQ6o01Tr87KhWsF5eagLivp6Uy8Ig7bpoXreYRYk7WCpTFVZSE6bD6qzgxjcQh4YbT2lkO6sjH7XBcWe2dYBgnQvW3hXTWWRU55nlHjGvKPnJRnled5cq/aze6z2tMFLUA6aMrNqX3VJRbkceBVaBID0td4s0VZRPXsHjM7ZiEUuFNVVSn474ye0/h6dqoqKvMm/wGrTUzoUZXln/u0nqmvK/NbuoZLpLXbQaiqiPhlKY4P2kMerGeYhc3ui+sJLUj9dCWObqF65J/sdIipxlkTxTYpqAKTYww7hUy8IwWa6sqvanDcmG5a5XJ5PU1Sf/15QL1q5eS2imqiqtrTUCx0ks1Mh3B9RXQ+tVsDaFF0qIhVVW2ylCGa2qlHXqoFq9l6l1yH6Cgr0WZldLfAzzkeBFXPQLa7KIdkKCKJ72chO5D7pokswrzwWmO1ItkZdZlWGZpsee8Rlhf1s8DK0S6qkS/PcKIdkz0eCz1M/8zQCBNmdxnQuqhXDIc/zzi931jHR6aKVIfN6UDXI6fepP7tch3qW3s52CJKmR8k1pfW8/Ghex/Kp9uv2EdXzzu1mO5vPul6w7IVhmPvN7W1UFApUKSE3XLrZg32JXStnSXs2LABAhWUfrj+kbD4r9frR4fkvse6OIEOcnB/ZpNlmxzOA1LU2rjXyLO94ggGAup6dtbDgofOaefRoyy6sz2yY7WG2aZLe701GswSqdz3dYcYjPNrgWA8AnphWu8EsR5qub3BL4xQ1AGHYMNfCeQLTan5dJCnOOsKffvQxyAEIA0fhV+vHqgHA45c4cjWgThElV9m8N8VHP0BWA5AOgqPDjZ46n34TwNUAIMfg6D1uY7vq7dmghCYBlAWKNqBJHCIuAaBGGiXtRsApiqJon9++S7FKQ/i+f34NEpSXjVaZIgwCBLNrEGIYZyhrQDX7CAZHuCbfLzfOKAga5zKai/BNt509eubBMwSQRYi7CgXDMA+C2zun2giQb/KoeAWKrFj4n4R+pW3k14hmwe5q/Sf5kqARZY7RaL2JqYsaAs3xXFXF56Z2M0VZztJGhXonnhoUqAqAEqjL5nzie+gvDwBwoFswRISkzuCZz1Ec9eFaJg43uaLeFfXcKUdVlsBSqZ6irtqOjyI6y7uitr+uG+cfT1bup1HSOAXRbZhigskGFasaBlTkyJIMePnsct8wTTCMmnKoWg6ebc3EQ/RsDb6fo0qGSKYv8cWdZvp12qCEJgWQlc3JHk+nSJMUNVSoaokyS5BOv8IXByWKogagNiJ8W+wMB665UDirFOFlhbVqwu1bWHpVVaLIU0SxD1sLYXpDRG+eXVubcjOcIIoLAIC0bKiTyYZOmYBmSCDNkGRTfLPmlpNhmIfAA3X+Ml0WnkKB0uUJrKxwa/JUat3euKrlOKS+BcPfHpSisF+vbjKkWSvYhAbjtjtS0ykmVYX6oRxM/MRBcDSA4WWoywQDN8EAgFA06IYB2+nDfXl4OVEynWBSbitVB1ClCqBAXRQ4w7poLtpeplC7yswYed7Kr9SDrnoXRkmUJaa4pLAsMmTtZ2g7GJKmaxDIUVcZkhz4omNi7Fa4dhs8gNSa/MoLAE9zJGkFKDZsK8UgTNvvbe+rGuQFBqPaHt4sOn8Zv0M6SFBCdNfTnYFY6H/X4fwFQHD6E3qmg8i3YCop0u82zzLcOdPzWaIiMKEGF/+kGTh4IMPwDMMs8UBF9Sqic5nHtL49T2dCdMdh5SmYfgRP3/aICt24qxb7nnOaICmafwrDhnGjLekEpx8jRFGMOM2QFwXK6qGo6RkHOPwuQar04R6FSFutWlc50jhHGofwAw9R9KZ7Kn16huOoSYM0y5AXJXZJAr1nQwYBijTE4MTFm8OFjJp8QBCVAASMntUhHSrM+stCGjDkDqVK21WpLb6maEdOBZQd1hEdKKKdSapQlQBupYjejg1KTQJIUBRjYJIhLQDoJlyzRhjGyNIxIAsUJQBDWx493oXHDgaxggwG7GvQigdPXyEME2hWiOyoj6HzG17dVw1aVW2ZEVB1AxebqtjhGYZh7isPVFQfQFFmiyUA1G3FtSKy7oX74JV13Ypm4sWLezuuco+ZYhQMkAEAFFh9+4bGcqY4++DB6Q+QFLNRcQWq1GGaElKpkUXRfJTz/vMIh1/9iN8dHydpgjROkGQpkqRZn1qlPuyeRPbbotv3MY7funCPIuTzJewqNM2EoalQUSAephun8w8+68MzArhpBt80UflHcAwFdZ4g8I4QlYDQ+wicrhw8n3VSrAC//f2z60yMc4SCZgVF3c56bbemybwuERA3Lnpu1wYfSQ0qEhR5gWmWIK/RCECjhkSMLMkwNXIUAISU3TNyWznA0xcvu9fGXzXOLxzYaohBmWIYT/Dq1T1dBKIomDVV5lGMn+923RDDMDfMPfeouBm5tIg6R5qtP5Ole274uw5F/kiDNm+F6vnUN3NJTgfoh0Xzb83F0Rc304ie/WRDtwMkBaDZHoZpgerf/8I///E7fvvlZ/z44xGsh7g65+AxDp+9xFdv/o6ff/0D/ywzhD0JAKgSH+fensf48FcDphchh4TVD5HkFejf/8Q//vgNv/78M34MnO2e8M5iDLNm9gZVioFrwdANmD0PUVFD0fuI4jc47NQXj6G1BabMujcyXgtSw2wQPEuzCzf75UneVgcadHlTkWq4dRuUzehzWRTI0wwlBAxTx4HUYShAlTWj5AUAKeW1LLWYjN7h67/+DT9scpN7ISqkCgA1yvLS2yBvjwOtXYNe798eMQxz73mwovqJaS407CWi8HilYRwhiverbCdFcQ1rsnXY5vnQVh4nF7jV3e7O+T+SyQive16zgx4S7sC7+uz7tNqyhOEYvhejAiDdGNkvb/Dysyf3fCPUBNVVlgQ8OsSrMIAtAKBAlrVWeRrAGxYAVPSGGX79/hWePV1PgW1vHMchklpFLypRJCH8vouebcN2+giiDMUf3+PFloFhw7aajZBpiOHp5T9tJx5ZsI1GVVdxiK0HiEyPEUbFLHKwbnSpwR3YoCohBVAXGeI0B6DBNA6AAwOmLoAiQZwWqCFat+b7kw48DIYhvCC9WgCTDI1GFe0a/vvK07lL9Xw4wIgrd4b5pHmwohqHfXjWuVgtQwfOT6etIJ1g9NrFoNgWgGim5WbU9YpQmCCJ0msYrD6A6fbmU6Z1EsDfVLOOP+LbP2twPt5NzTs+fofXr1/j9evXePvT6FaODruI6dlHfGua8LMagIDuRwiebZYYsyzdtJFrmkZIN/WUpiVme/CkoXWPyE3LZm3prbC4Tn/VPlsmCaJNumQ6xngnUxIQs8JQlu2yDhW6tiGdi3zrSQ7FbKMhBJ48e4Xvvv87fv7lF/zy4/f45ouLN0YevOjD1QEgg+/+gNNt3zA9w8nWBzbxGI7XlstyiL53vMHepxgd9RGWAKCg5zlrGy+vlbuwwQMJKQEUCaK8BlQDxhMAeATDkECdI0oKAArkRbsUL81VatgJjr0jRM25jbDXz228Vxz2PZgCQBHCPRptHTSZnp3g9D5UvAzDXImHK6rxGK/CEI42kx0Fho4G5U//i//5kwLDL2H1rC2bB7XlY/iKZs3gjMnoCEcpcB3LJw+eHSGYdwByBHZvZdpzgpP3r/G5YSPIioVj467AdIzxeIzxuES5pCxrVOVZc2/SXa1ng/78bFnvaIi7nKycnH7ET99+Dk2zEGQ1AAWmnyDZttNfKPOOUplnayJpevYBrjtYyucl5lO1QHLk4f3ZcjpNxyO8c1wMb2099cKpNkWGfDXbpqf4yXERbYjPNO5Dk8/x9buPHQ31GB+9I8Q1AOiwjFaYaEY7A5Qh8N7hZOV3k5P3+HpbGgKQuoRAiaHbw9v3H/Hx+BjHC9fo5HSjDTYc4mjgQRdAlfRhWm9xvNo7mI4xev8an2saerNR5Ety8MJH6EgAQD6wYP7tp+XvnZziw7cmLD9DDUC1BwhuaNnReaTuwgYldCmAKkNWAMIwMdtL/dQyoKBAlpXtczsEd+HMyfRqWno6wdnoPd5+qcMaNLWT5vroXJp/n3jyFQa+CQU1Mt+C+e2H9Y7i5AQf3v4Vum4hWF3KePIDPn/+HM+fP8fX77fPczIMc8fcmFuZVY+KXR4LL2LNo2JHCFVKA8doPW3NLoWMfkxF3Gs9oXV5VCQqh/bCfUGa3acgCMh3LZKKRm7okbGjR8ULvedVKXmGshBHQYrUSde1pbgL2aPhFd2U18miO/Rtl0JWuO6OLO4teGCUfdrk724fzj0igoQqScqVS1VJEcvxFdIiPy528E5YUmiKefpKyyHPD8j3+uTYjY0IaZC+xaNiMTAW7FYhaZhk2TZZhpz/fX7f7LLp6/SouOhpE6RoNrmeT77vketYzXcoGhm60ulRcfG3M3szTJNMUye54E1UuslCPEsa2gt2KlTSTYts2yJDa/8uxDwN9C4XeVVEPfUiGxSkaBa5g2Sjp8gickgTi88bTV6Y+kKZEaT7m/zg7UCdU2jLtXTSpbJUf6nWgLINmXndHhX3t8HLk7pqdz1XDcmapbXi0JoT1DomV4oL8nrzJXoREdWUetpSXb3LJe2Q8n0LGN2CR0UiIqoo6esL36iQ1E2ybYtMXS78XZK7GkDszO/rwRUbB4ZhboWbE9VFSLYq5hWIcZWGr07InTXkikFbg6hLytOE4jihrGhrvSVRLchaqw0rSn2L5IqIg9DIGeZU1yl5+swFtE5eWi/9NnLaRk6oZA52cS5bUOz35qJuqXFRdbK94X6NROaToezQIAlJTrTe+icLDeu2BmYfFkX15vgppEqdDLtPQZRReYk0qfMBWV3pK01ygpiK+txNdreb8oIiR1vuELZ5rFkuhWlGA/P2RDXVKflLnbGZwNHIcgeUlPV5mq6IaqoLSgZ9snV1/XtaO7e8eF3UVgn1N7zTdAJKiiHZYpOorikLrNYt9W6XagYbBWudD6lvyY74C5KmQ8FOna2LqCgLXTI7xKFQDXIH6Vbhev1uyve1wctTRe0AgzAoWMrSkgZtR1VY4bqt1DG52lVFtUJmkFMjqvWdRLVQVNJMh/wov4Z8b7gdUU1EVFMRe2RrHWVLqKT3PIryjtxkUc0wD4b/IiLCJ8r0w5dQ7KidaVTgxP/Cjy+6HhzjNMtRlBVqoUI3P8NNO7Sajk+R5wXKWkCRGvSnj++vA4OHxnSMkzRFXgJCUSA1A4eXzNDJ2QhpVqCCAlWV0PSneHxnGTTF2ShBVlTN0Wqafnl7mZzhJC9QliWq1uYM/Sk2e8M+f2ctVEhtNxudHn8NzRyggAKjH8B3TWjLmxdQlQXyLEU08BG2C9x1P8cf320+dG06PkWW5SgrQKgSmn6IfR1DdrwF49MMWV6igoAqdRiHd1cub9cGm28vhb5eVqZnOMkqKPrhjdeL/ylMTkfIihJlLaCqEvrWssgwzEPhkxbVZ+/+AunOdnEZCIrf8c2TO40Sw3zCTPD+SxW9qIawhih+fXnB6c9nePdcg5vUgBGg+P2bm90EyDAMwzA3yAPeqAhMRh/w8WzThqcxkmhhx4fRg80tNsPcIBXKspkXUjW5g3OeJzCtdrdwteF0E4ZhGIZ5IDxoUZ0P+7A0ib/87S3eH58uHB82wegHB148a6ZV9I5u+CgshvmP50lzBBuAYujj/UWeW8Yf4A+ajq9qGpd3f80wDMMw94gHvfzj9O3/QfOWD34TQgFQLZxTLKD3YyTfP7vnTjwY5hNgcoyvDQuDvAaEhOX04fRM6FKFqgjUVYmyyJFGIYIwQl4BkA7i9MetDmEYhmEY5r7zoEU1MMHJhxCDQYg4yVAszR8LqLoF5yjA0RdPeBMgw9wWkxO86zvwwuwCj6QKtN4RwsE3+Ix7vAzDMMwD54GL6kWmmIxLlGWFWihQVRWPeTs1w9wZ0/EIcRQhTtoTNeoaQihQpQbNtNCzbXzGx0kwDMMwnwifkKhmGIZhGIZhmLvhQW9UZBiGYRiGYZj7AItqhmEYhmEYhtkTFtUMwzAMwzAMsycsqhmGYRiGYRhmT1hUMwzDMAzDMMyesKhmGIZhGIZhmD1hUc0wDMMwDMMwe8KimmEYhmEYhmH2hEU1wzAMwzAMw+wJi2qGYRiGYRiG2RMW1QzDMAzDMAyzJyyqGYZhGIZhGGZPWFQzDMMwDMMwzJ6wqGYYhmEYhmGYPWFRzTAMwzAMwzB7wqKaYRiGYRiGYfaERTXDMAzDMAzD7AmLaoZhGIZhGIbZExbVDMMwDMMwDLMnLKoZhmEYhmEYZk9YVDMMwzAMwzDMnrCoZhiGYRiGYZg9YVHNMAzDMAzDMHvCopphGIZhGIZh9oRFNcMwDMMwDMPsyf8Dk6FoZniKdb8AAAAASUVORK5CYII=" /></p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="n">figure</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">figcaption</span><span class="o">&gt;</span>
+
+<span class="n">a</span> <span class="n">mermaid</span> <span class="n">homage</span> <span class="n">to</span> <span class="n">the</span> <span class="n">dual</span> <span class="n">usage</span> <span class="n">of</span> <span class="n">the</span> <span class="n">WEB</span> <span class="n">file</span> <span class="nb">format</span> <span class="n">being</span> <span class="n">translated</span> <span class="n">to</span> <span class="n">a</span> <span class="n">document</span> <span class="ow">and</span> <span class="n">programming</span> <span class="n">language</span><span class="o">.</span>
+
+<span class="o">&lt;/</span><span class="n">figcaption</span><span class="o">&gt;</span> 
+
+<span class="err">```</span><span class="n">mermaid</span>
+<span class="n">flowchart</span> <span class="n">LR</span>
+    <span class="n">WEB</span><span class="o">--</span><span class="n">WEAVE</span><span class="o">--&gt;</span><span class="n">TEX</span><span class="o">--</span><span class="n">TeX</span><span class="o">--&gt;</span><span class="n">DVI</span>
+    <span class="n">WEB</span><span class="o">--</span><span class="n">TANGLE</span><span class="o">--&gt;</span><span class="n">PAS</span><span class="o">--</span><span class="n">PASCAL</span><span class="o">--&gt;</span><span class="n">REL</span>
+<span class="err">```</span>
+<span class="o">&lt;/</span><span class="n">figure</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="n">figure</span> <span class="n">markdown</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">figcaption</span><span class="o">&gt;</span><span class="n">knuth</span><span class="s1">&#39;s rational for choosing Pascal; the same motivation applies to python.&lt;/figcaption&gt;</span>
+
+<span class="o">&gt;</span> <span class="n">I</span> <span class="n">chose</span> <span class="n">PASCAL</span> <span class="k">as</span> <span class="n">the</span> <span class="n">programming</span> <span class="n">language</span> <span class="n">because</span> <span class="n">it</span> <span class="n">has</span>
+<span class="n">received</span> <span class="n">such</span> <span class="n">widespread</span> <span class="n">support</span> <span class="kn">from</span> <span class="nn">educational</span>  <span class="ow">in</span><span class="o">-</span>
+<span class="n">stitutions</span> <span class="nb">all</span> <span class="n">over</span> <span class="n">the</span> <span class="n">world</span><span class="p">;</span> <span class="n">it</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">my</span> <span class="n">favorite</span> <span class="n">language</span> <span class="k">for</span> <span class="n">system</span> <span class="n">programming</span><span class="p">,</span> <span class="n">but</span> <span class="n">it</span> <span class="n">has</span> <span class="n">become</span> <span class="n">a</span>
+<span class="s2">&quot;second language&quot;</span> <span class="k">for</span> <span class="n">so</span> <span class="n">many</span> <span class="n">programmers</span> <span class="n">that</span> <span class="n">it</span>
+<span class="n">provides</span> <span class="n">an</span> <span class="n">exceptionally</span> <span class="n">effective</span> <span class="n">medium</span> <span class="n">of</span> <span class="n">communication</span><span class="o">.</span>
+<span class="o">&lt;/</span><span class="n">figure</span><span class="o">&gt;</span>
+</code></pre></div>
+<figure>
+<figcaption>
+
+a mermaid homage to the dual usage of the WEB file format being translated to a document and programming language.
+
+</figcaption> 
+
+<pre class="mermaid"><code>flowchart LR
+    WEB--WEAVE--&gt;TEX--TeX--&gt;DVI
+    WEB--TANGLE--&gt;PAS--PASCAL--&gt;REL</code></pre>
+</figure>
+
+<figure>
+<figcaption>knuth's rational for choosing Pascal; the same motivation applies to python.</figcaption>
+<blockquote>
+<p>I chose PASCAL as the programming language because it has
+received such widespread support from educational  in-
+stitutions all over the world; it is not my favorite language for system programming, but it has become a
+"second language" for so many programmers that it
+provides an exceptionally effective medium of communication.</p>
+</blockquote>
+</figure>
+<div class="highlight"><pre><span></span><code><span class="c1">## reactive `jinja2` templates</span>
+
+<span class="o">&lt;</span><span class="n">label</span> <span class="k">for</span><span class="o">=</span><span class="s2">&quot;deck&quot;</span><span class="o">&gt;</span><span class="nb">open</span><span class="o">&lt;/</span><span class="n">label</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">button</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;deck&quot;</span> <span class="n">data</span><span class="o">-</span><span class="n">commandlinker</span><span class="o">-</span><span class="n">command</span><span class="o">=</span><span class="s2">&quot;deck:toggle&quot;</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">jupyterlab</span><span class="o">-</span><span class="n">deck</span><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">button</span><span class="o">&gt;</span>
+
+<span class="err">`</span><span class="n">pidgy</span><span class="err">`</span> <span class="n">relies</span> <span class="n">on</span> <span class="n">a</span> <span class="err">`</span><span class="n">midgy</span><span class="err">`</span> <span class="n">to</span> <span class="n">tangle</span> <span class="n">markdown</span> <span class="n">to</span> <span class="n">code</span><span class="p">,</span> <span class="n">it</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">doing</span> <span class="nb">any</span> <span class="n">work</span> <span class="n">on</span> <span class="n">displaying</span> <span class="n">the</span> <span class="nb">input</span> <span class="n">markdown</span><span class="o">.</span> <span class="n">including</span> <span class="n">the</span> <span class="n">templating</span> <span class="n">language</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">innovation</span> <span class="n">of</span> <span class="err">`</span><span class="n">pidgy</span><span class="err">`</span> <span class="n">that</span> <span class="n">inlines</span> <span class="n">live</span> <span class="n">computation</span><span class="o">.</span>
+
+
+<span class="err">`</span><span class="n">pidgy</span><span class="err">`</span> <span class="n">templates</span> <span class="n">are</span> <span class="n">asynchronous</span> <span class="n">reactive</span> <span class="n">display</span> <span class="n">objects</span> <span class="n">that</span> <span class="n">place</span> <span class="n">live</span> <span class="n">computation</span> <span class="n">directly</span> <span class="n">into</span> <span class="n">the</span> <span class="n">narrative</span><span class="o">.</span>
+</code></pre></div>
+<h2 id="reactive-jinja2-templates">reactive <code>jinja2</code> templates<a class="headerlink" href="#reactive-jinja2-templates" title="Permanent link">¤</a></h2>
+<p><label for="deck">open</label>
+<button id="deck" data-commandlinker-command="deck:toggle"><code>jupyterlab-deck</code></button></p>
+<p><code>pidgy</code> relies on a <code>midgy</code> to tangle markdown to code, it does not doing any work on displaying the input markdown. including the templating language is the innovation of <code>pidgy</code> that inlines live computation.</p>
+<p><code>pidgy</code> templates are asynchronous reactive display objects that place live computation directly into the narrative.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">### worrydream&#39;s cookies demo[^inventing]</span>
+
+<span class="o">&lt;</span><span class="err">!</span><span class="o">---</span><span class="err">!</span><span class="p">[](</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">media3</span><span class="o">.</span><span class="n">giphy</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">BsUORZkF3gBqg</span><span class="o">/</span><span class="n">giphy</span><span class="o">.</span><span class="n">gif</span> <span class="s2">&quot;cookie monster happy as fuck eating cookies&quot;</span><span class="p">)</span><span class="o">---&gt;</span>
+
+<span class="o">&lt;</span><span class="n">blockquote</span> <span class="n">cite</span><span class="o">=</span><span class="s2">&quot;https://worrydream.com/Tangle/&quot;</span><span class="o">&gt;</span>
+
+<span class="p">[</span><span class="n">Tangle</span><span class="p">]</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">JavaScript</span> <span class="n">library</span> <span class="k">for</span> <span class="n">creating</span> <span class="n">reactive</span> <span class="n">documents</span><span class="o">.</span> <span class="n">Your</span> <span class="n">readers</span> <span class="n">can</span> <span class="n">interactively</span> <span class="n">explore</span> <span class="n">possibilities</span><span class="p">,</span> <span class="n">play</span> <span class="k">with</span> <span class="n">parameters</span><span class="p">,</span> <span class="ow">and</span> <span class="n">see</span> <span class="n">the</span> <span class="n">document</span> <span class="n">update</span> <span class="n">immediately</span><span class="o">.</span> <span class="n">Tangle</span> <span class="ow">is</span> <span class="nb">super</span><span class="o">-</span><span class="n">simple</span> <span class="ow">and</span> <span class="n">easy</span> <span class="n">to</span> <span class="n">learn</span><span class="o">.</span>
+
+<span class="o">&lt;/</span><span class="n">blockquote</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="n">figure</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">figcaption</span><span class="o">&gt;</span>
+
+<span class="n">the</span> <span class="n">source</span> <span class="n">code</span> <span class="k">for</span> <span class="n">the</span> <span class="n">first</span> <span class="p">[</span><span class="n">TangleJs</span><span class="p">][</span><span class="n">tangle</span><span class="p">]</span> <span class="n">demo</span>
+
+<span class="o">&lt;/</span><span class="n">figcaption</span><span class="o">&gt;</span>
+
+<span class="err">```</span><span class="n">html</span>
+<span class="n">When</span> <span class="n">you</span> <span class="n">eat</span> <span class="o">&lt;</span><span class="n">span</span> <span class="n">data</span><span class="o">-</span><span class="n">var</span><span class="o">=</span><span class="s2">&quot;cookies&quot;</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;TKAdjustableNumber&quot;</span><span class="o">&gt;</span> <span class="n">cookies</span><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="n">you</span> <span class="n">consume</span> <span class="o">&lt;</span><span class="n">span</span> <span class="n">data</span><span class="o">-</span><span class="n">var</span><span class="o">=</span><span class="s2">&quot;calories&quot;</span><span class="o">&gt;</span> <span class="n">calories</span><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;.</span> 
+<span class="err">```</span>
+
+<span class="err">```</span><span class="n">javascript</span>
+<span class="n">var</span> <span class="n">tangle</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Tangle</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="p">{</span>
+    <span class="n">initialize</span><span class="p">:</span> <span class="n">function</span> <span class="p">()</span> <span class="p">{</span> <span class="n">this</span><span class="o">.</span><span class="n">cookies</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="p">},</span>
+    <span class="n">update</span><span class="p">:</span>     <span class="n">function</span> <span class="p">()</span> <span class="p">{</span> <span class="n">this</span><span class="o">.</span><span class="n">calories</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">cookies</span> <span class="o">*</span> <span class="mi">50</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="err">```</span>
+<span class="o">&lt;/</span><span class="n">figure</span><span class="o">&gt;</span>
+
+<span class="p">[</span><span class="n">tangle</span><span class="p">]:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">worrydream</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Tangle</span><span class="o">/</span>
+<span class="p">[</span><span class="n">inventing</span> <span class="n">on</span> <span class="n">principle</span><span class="p">]:</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">youtube</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">watch</span><span class="err">?</span><span class="n">v</span><span class="o">=</span><span class="n">PUv66718DII</span>
+<span class="p">[</span><span class="o">^</span><span class="n">inventing</span><span class="p">]:</span> <span class="n">many</span> <span class="n">folks</span> <span class="n">working</span> <span class="n">on</span> <span class="n">computational</span> <span class="n">interfaces</span> <span class="n">are</span> <span class="n">inspired</span> <span class="n">by</span> <span class="n">Bret</span> <span class="n">Victor</span><span class="s1">&#39;s [inventing on principle]</span>
+</code></pre></div>
+<h3 id="worrydreams-cookies-demo3">worrydream's cookies demo<sup id="fnref:inventing"><a class="footnote-ref" href="#fn:inventing">3</a></sup><a class="headerlink" href="#worrydreams-cookies-demo3" title="Permanent link">¤</a></h3>
+<!---![](https://media3.giphy.com/media/BsUORZkF3gBqg/giphy.gif "cookie monster happy as fuck eating cookies")--->
+
+<blockquote cite="https://worrydream.com/Tangle/">
+
+[Tangle] is a JavaScript library for creating reactive documents. Your readers can interactively explore possibilities, play with parameters, and see the document update immediately. Tangle is super-simple and easy to learn.
+
+</blockquote>
+
+<figure>
+<figcaption>
+
+the source code for the first [TangleJs][tangle] demo
+
+</figcaption>
+
+<div class="highlight"><pre><span></span><code>When you eat <span class="p">&lt;</span><span class="nt">span</span> <span class="na">data-var</span><span class="o">=</span><span class="s">&quot;cookies&quot;</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;TKAdjustableNumber&quot;</span><span class="p">&gt;</span> cookies<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>,
+you consume <span class="p">&lt;</span><span class="nt">span</span> <span class="na">data-var</span><span class="o">=</span><span class="s">&quot;calories&quot;</span><span class="p">&gt;</span> calories<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>. 
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code><span class="kd">var</span><span class="w"> </span><span class="nx">tangle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Tangle</span><span class="p">(</span><span class="nb">document</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">initialize</span><span class="o">:</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">cookies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3</span><span class="p">;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">update</span><span class="o">:</span><span class="w">     </span><span class="kd">function</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">calories</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">cookies</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">50</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div>
+</figure>
+
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="o">%</span> <span class="nb">set</span> <span class="n">calories</span> <span class="o">=</span> <span class="mi">50</span> <span class="o">%</span><span class="p">}</span><span class="o">&lt;</span><span class="err">!</span><span class="o">---</span> <span class="n">we</span> <span class="n">can</span> <span class="n">shield</span> <span class="n">variables</span> <span class="kn">from</span> <span class="nn">the</span> <span class="k">global</span> <span class="n">scope</span> <span class="o">--&gt;</span>
+<span class="n">When</span> <span class="n">you</span> <span class="n">eat</span> <span class="p">{{</span><span class="n">cookies</span><span class="o">.</span><span class="n">value</span><span class="p">}}</span> <span class="n">cookies</span><span class="p">,</span>
+<span class="n">you</span> <span class="n">consume</span> <span class="p">{{</span><span class="n">cookies</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="n">calories</span><span class="p">}}</span> <span class="n">calories</span><span class="o">.</span> 
+
+<span class="o">&lt;</span><span class="n">div</span> <span class="n">hidden</span><span class="o">&gt;&lt;</span><span class="err">!</span><span class="o">--</span><span class="n">indented</span> <span class="n">code</span> <span class="ow">is</span> <span class="n">python</span><span class="o">--&gt;</span>
+
+        <span class="n">display</span><span class="p">(</span><span class="n">cookies</span> <span class="o">:=</span> <span class="n">IntSlider</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;🍪&quot;</span><span class="p">))</span>
+<span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+
+<span class="p">{{</span><span class="s2">&quot;🍪&quot;</span> <span class="o">*</span> <span class="n">cookies</span><span class="o">.</span><span class="n">value</span><span class="p">}}</span>
+
+
+<span class="o">&lt;</span><span class="n">figure</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">figcaption</span><span class="o">&gt;</span>
+
+<span class="err">`</span><span class="n">pidgy</span><span class="err">`</span> <span class="n">source</span> <span class="n">code</span> <span class="n">using</span> <span class="n">html</span><span class="p">,</span> <span class="n">markdown</span><span class="p">,</span> <span class="n">jinja</span><span class="p">,</span> <span class="ow">and</span> <span class="n">ipywidgets</span> <span class="n">to</span> <span class="n">create</span> <span class="n">interactions</span>
+
+<span class="o">&lt;/</span><span class="n">figcaption</span><span class="o">&gt;</span>
+
+<span class="err">```</span><span class="n">markdown</span>
+<span class="p">{</span><span class="o">%</span> <span class="n">raw</span> <span class="o">%</span><span class="p">}</span>
+<span class="p">{</span><span class="o">%</span> <span class="nb">set</span> <span class="n">calories</span> <span class="o">=</span> <span class="mi">50</span> <span class="o">%</span><span class="p">}</span>
+<span class="n">When</span> <span class="n">you</span> <span class="n">eat</span> <span class="p">{{</span><span class="n">cookies</span><span class="o">.</span><span class="n">value</span><span class="p">}}</span> <span class="n">cookies</span><span class="p">,</span>
+<span class="n">you</span> <span class="n">consume</span> <span class="p">{{</span><span class="n">cookies</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="n">calories</span><span class="p">}}</span> <span class="n">calories</span><span class="o">.</span> 
+
+<span class="o">&lt;</span><span class="n">div</span> <span class="n">hidden</span><span class="o">&gt;&lt;</span><span class="err">!</span><span class="o">--</span><span class="n">indented</span> <span class="n">code</span> <span class="ow">is</span> <span class="n">python</span><span class="o">--&gt;</span>
+
+        <span class="n">cookies</span> <span class="o">=</span> <span class="n">IntSlider</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;🍪&quot;</span><span class="p">)</span>
+<span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+<span class="p">{</span><span class="o">%</span> <span class="n">endraw</span> <span class="o">%</span><span class="p">}</span>
+<span class="err">```</span>
+
+<span class="o">&lt;/</span><span class="n">figure</span><span class="o">&gt;</span>
+</code></pre></div>
+<div id="da46a6b9-a2f6-48ef-a249-5fcdcdace153" class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#da46a6b9-a2f6-48ef-a249-5fcdcdace153');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "f016f5bea3b4435ca354c50cabede4bd", "version_major": 2, "version_minor": 0}
+</script>
+</div>
+
+<!--- we can shield variables from the global scope -->
+<p>When you eat 3 cookies,
+you consume 150 calories. </p>
+<div hidden><!--indented code is python-->
+
+        display(cookies := IntSlider(3, description="🍪"))
+</div>
+
+<p>🍪🍪🍪</p>
+<figure>
+<figcaption>
+
+`pidgy` source code using html, markdown, jinja, and ipywidgets to create interactions
+
+</figcaption>
+
+<div class="highlight"><pre><span></span><code>{% set calories = 50 %}
+When you eat {{cookies.value}} cookies,
+you consume {{cookies.value * calories}} calories. 
+
+&lt;div hidden&gt;&lt;!--indented code is python--&gt;
+
+        cookies = IntSlider(3, description=&quot;🍪&quot;)
+&lt;/div&gt;
+</code></pre></div>
+
+</figure>
+
+<div class="highlight"><pre><span></span><code><span class="c1">### live data in your document</span>
+
+<span class="o">&lt;</span><span class="n">details</span> <span class="n">markdown</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">summary</span><span class="o">&gt;</span><span class="n">imports</span> <span class="k">for</span> <span class="n">the</span> <span class="n">pandas</span> <span class="n">matplotlib</span> <span class="n">demo</span><span class="o">&lt;/</span><span class="n">summary</span><span class="o">&gt;</span>
+
+    <span class="kn">import</span> <span class="nn">pandas</span>
+    <span class="kn">from</span> <span class="nn">pidgy</span> <span class="kn">import</span> <span class="n">get_cell_id</span>
+    <span class="o">%</span><span class="n">matplotlib</span> <span class="n">agg</span>
+
+<span class="o">&lt;/</span><span class="n">details</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="n">details</span> <span class="n">markdown</span> <span class="nb">open</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">summary</span><span class="o">&gt;</span><span class="n">supporting</span> <span class="n">methods</span> <span class="k">for</span> <span class="n">the</span> <span class="n">interactive</span> <span class="n">demo</span><span class="o">&lt;/</span><span class="n">summary</span><span class="o">&gt;</span><span class="err">`</span>
+
+    <span class="nd">@functools</span><span class="o">.</span><span class="n">lru_cache</span>
+    <span class="k">def</span> <span class="nf">get_gist</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<span class="p">[</span><span class="n">gather</span> <span class="n">gist</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">github</span> <span class="n">api</span><span class="p">][</span><span class="n">gist</span><span class="p">]</span><span class="o">.</span>
+
+        <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="sa">F</span><span class="s2">&quot;https://api.github.com/users/</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">/gists?per_page=</span><span class="si">{</span><span class="nb">max</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="p">[</span><span class="n">gist</span><span class="p">]:</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">docs</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">en</span><span class="o">/</span><span class="n">rest</span><span class="o">/</span><span class="n">gists</span><span class="err">?</span><span class="n">apiVersion</span><span class="o">=</span><span class="mi">2022</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">28</span>
+
+    <span class="k">def</span> <span class="nf">tidy_gist</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="n">explode</span> <span class="n">the</span> <span class="n">gist</span> <span class="n">repsonse</span> <span class="n">into</span> <span class="n">a</span> <span class="n">dataframe</span> <span class="n">of</span> <span class="n">gist</span> <span class="n">files</span>
+
+        <span class="n">gists</span> <span class="o">=</span> <span class="n">get_gist</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">gists</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">compose_left</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span><span class="o">.</span><span class="n">explode</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gists</span><span class="p">)</span>
+
+<span class="o">&lt;/</span><span class="n">details</span><span class="o">&gt;</span>
+</code></pre></div>
+<h3 id="live-data-in-your-document">live data in your document<a class="headerlink" href="#live-data-in-your-document" title="Permanent link">¤</a></h3>
+<details>
+<summary>imports for the pandas matplotlib demo</summary>
+<pre><code>import pandas
+from pidgy import get_cell_id
+%matplotlib agg
+</code></pre>
+</details>
+<details open="open">
+<summary>supporting methods for the interactive demo</summary>
+<p>`</p>
+<pre><code>@functools.lru_cache
+def get_gist(x, max=100):
+</code></pre>
+<p><a href="https://docs.github.com/en/rest/gists?apiVersion=2022-11-28">gather gist from the github api</a>.</p>
+<pre><code>    return pandas.read_json(F"https://api.github.com/users/{x}/gists?per_page={max}")
+
+def tidy_gist(x):
+</code></pre>
+<p>explode the gist repsonse into a dataframe of gist files</p>
+<pre><code>    gists = get_gist(x).set_index("id")
+    return gists.files.apply(compose_left(dict.values, list)).explode().apply(pandas.Series).join(gists)
+</code></pre>
+</details>
+<div class="highlight"><pre><span></span><code><span class="c1">#### an application in a cell.</span>
+
+<span class="p">{</span><span class="o">%</span> <span class="nb">set</span> <span class="n">gists</span> <span class="o">=</span> <span class="n">tidy_gist</span><span class="p">(</span><span class="n">_github_user</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">%</span><span class="p">}</span>
+<span class="p">{</span><span class="o">%</span> <span class="nb">set</span> <span class="n">lang</span> <span class="o">=</span> <span class="n">gists</span><span class="o">.</span><span class="n">language</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span> <span class="o">%</span><span class="p">}</span>
+
+<span class="n">we</span><span class="s1">&#39;ve found information on {{gists.index.unique().shape[0]}} github gists, and {{len(gists)}} files, for @{{_github_user.value}}.</span>
+<span class="ow">in</span> <span class="n">this</span> <span class="n">collection</span><span class="p">,</span> <span class="n">there</span> <span class="n">are</span> <span class="p">{{</span><span class="nb">len</span><span class="p">(</span><span class="n">lang</span><span class="p">)}}</span> <span class="n">different</span> <span class="n">languages</span> <span class="n">included</span><span class="o">.</span> <span class="n">their</span> <span class="n">most</span> <span class="n">common</span> <span class="n">language</span> <span class="ow">is</span> <span class="p">{{</span><span class="n">lang</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]}}</span><span class="o">.</span>
+
+<span class="p">{{</span><span class="n">gists</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">2</span><span class="p">)}}</span>
+
+    <span class="n">display</span><span class="p">(</span>
+        <span class="n">_github_user</span> <span class="o">:=</span> <span class="n">Text</span><span class="p">(</span><span class="s2">&quot;tonyfast&quot;</span><span class="p">),</span> <span class="n">button</span> <span class="o">:=</span> <span class="n">Button</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;submit&quot;</span><span class="p">))</span>
+    <span class="n">button</span><span class="o">.</span><span class="n">on_click</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">get_cell_id</span><span class="p">():</span> <span class="nb">print</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span> <span class="ow">or</span> <span class="n">shell</span><span class="o">.</span><span class="n">weave</span><span class="o">.</span><span class="n">displays</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">())</span>
+<span class="p">{{</span><span class="n">lang</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="s2">&quot;ct&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">}}</span>
+</code></pre></div>
+<div id="1cbb177a-18bf-4e0f-be7f-0c4cb87d3b26" class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#1cbb177a-18bf-4e0f-be7f-0c4cb87d3b26');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "7d97888f8793458e9b5b1890ed2b0128", "version_major": 2, "version_minor": 0}
+</script>
+</div>
+
+<div id="a5de4859-fe58-47d7-83dc-eb2330671f1e" class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#a5de4859-fe58-47d7-83dc-eb2330671f1e');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "f2f83d66fd4342359aae8d4f64e1cf69", "version_major": 2, "version_minor": 0}
+</script>
+</div>
+
+<h4 id="an-application-in-a-cell">an application in a cell.<a class="headerlink" href="#an-application-in-a-cell" title="Permanent link">¤</a></h4>
+<p>we've found information on 100 github gists, and 121 files, for @tonyfast.
+in this collection, there are 6 different languages included. their most common language is Jupyter Notebook.</p>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>filename</th>
+      <th>type</th>
+      <th>language</th>
+      <th>raw_url</th>
+      <th>size</th>
+      <th>url</th>
+      <th>forks_url</th>
+      <th>commits_url</th>
+      <th>node_id</th>
+      <th>git_pull_url</th>
+      <th>...</th>
+      <th>files</th>
+      <th>public</th>
+      <th>created_at</th>
+      <th>updated_at</th>
+      <th>description</th>
+      <th>comments</th>
+      <th>user</th>
+      <th>comments_url</th>
+      <th>owner</th>
+      <th>truncated</th>
+    </tr>
+    <tr>
+      <th>id</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>89fd5090a964b565e2575e50fd51744f</th>
+      <td>nox-magic.ipynb</td>
+      <td>text/plain</td>
+      <td>Jupyter Notebook</td>
+      <td>https://gist.githubusercontent.com/tonyfast/89...</td>
+      <td>8072</td>
+      <td>https://api.github.com/gists/89fd5090a964b565e...</td>
+      <td>https://api.github.com/gists/89fd5090a964b565e...</td>
+      <td>https://api.github.com/gists/89fd5090a964b565e...</td>
+      <td>MDQ6R2lzdDg5ZmQ1MDkwYTk2NGI1NjVlMjU3NWU1MGZkNT...</td>
+      <td>https://gist.github.com/89fd5090a964b565e2575e...</td>
+      <td>...</td>
+      <td>{'nox-magic.ipynb': {'filename': 'nox-magic.ip...</td>
+      <td>True</td>
+      <td>2021-05-01 03:02:46+00:00</td>
+      <td>2021-05-01 03:02:46+00:00</td>
+      <td></td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>https://api.github.com/gists/89fd5090a964b565e...</td>
+      <td>{'login': 'tonyfast', 'id': 4236275, 'node_id'...</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>3440a5b4c19a257d6164fff93fbef154</th>
+      <td>magics.ipynb</td>
+      <td>text/plain</td>
+      <td>Jupyter Notebook</td>
+      <td>https://gist.githubusercontent.com/tonyfast/34...</td>
+      <td>12759</td>
+      <td>https://api.github.com/gists/3440a5b4c19a257d6...</td>
+      <td>https://api.github.com/gists/3440a5b4c19a257d6...</td>
+      <td>https://api.github.com/gists/3440a5b4c19a257d6...</td>
+      <td>MDQ6R2lzdDM0NDBhNWI0YzE5YTI1N2Q2MTY0ZmZmOTNmYm...</td>
+      <td>https://gist.github.com/3440a5b4c19a257d6164ff...</td>
+      <td>...</td>
+      <td>{'magics.ipynb': {'filename': 'magics.ipynb', ...</td>
+      <td>True</td>
+      <td>2021-05-28 16:15:20+00:00</td>
+      <td>2021-05-28 20:48:01+00:00</td>
+      <td></td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>https://api.github.com/gists/3440a5b4c19a257d6...</td>
+      <td>{'login': 'tonyfast', 'id': 4236275, 'node_id'...</td>
+      <td>False</td>
+    </tr>
+  </tbody>
+</table>
+<p>2 rows × 22 columns</p>
+</div>
+
+<pre><code>display(
+    _github_user := Text("tonyfast"), button := Button(description="submit"))
+button.on_click(lambda x, id=get_cell_id(): print(id) or shell.weave.displays[id].update())
+</code></pre>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Jupyter Notebook</th>
+      <th>Python</th>
+      <th>Text</th>
+      <th>Markdown</th>
+      <th>HTML</th>
+      <th>JSON</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>ct</th>
+      <td>84</td>
+      <td>15</td>
+      <td>9</td>
+      <td>8</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="highlight"><pre><span></span><code><span class="c1">### et `voila`</span>
+
+<span class="p">{</span><span class="o">%</span> <span class="k">if</span> <span class="n">LITE</span> <span class="o">%</span><span class="p">}</span>
+<span class="o">&gt;</span> <span class="err">😞</span> <span class="n">unforntunately</span><span class="p">,</span> <span class="n">this</span> <span class="n">part</span> <span class="n">of</span> <span class="n">the</span> <span class="n">demo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">available</span> <span class="n">on</span> <span class="n">jupyter</span> <span class="n">lite</span><span class="o">.</span>
+<span class="p">{</span><span class="o">%</span> <span class="n">endif</span> <span class="o">%</span><span class="p">}</span>
+
+<span class="o">&lt;</span><span class="n">button</span> <span class="n">data</span><span class="o">-</span><span class="n">commandlinker</span><span class="o">-</span><span class="n">command</span><span class="o">=</span><span class="s2">&quot;notebook:render-with-voila&quot;</span> <span class="p">{</span><span class="o">%</span> <span class="k">if</span>  <span class="n">LITE</span> <span class="o">%</span><span class="p">}</span><span class="n">disabled</span><span class="p">{</span><span class="o">%</span> <span class="n">endif</span> <span class="o">%</span><span class="p">}</span><span class="o">&gt;</span><span class="n">et</span> <span class="o">&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">voila</span><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">button</span><span class="o">&gt;</span>
+</code></pre></div>
+<h3 id="et-voila">et <code>voila</code><a class="headerlink" href="#et-voila" title="Permanent link">¤</a></h3>
+<p><button data-commandlinker-command="notebook:render-with-voila" >et <code>voila</code></button></p>
+<div class="highlight"><pre><span></span><code><span class="c1">## wrap up</span>
+
+<span class="o">*</span> <span class="n">this</span> <span class="n">presentation</span> <span class="n">had</span> <span class="n">a</span> <span class="n">number</span> <span class="n">of</span> <span class="n">incidental</span> <span class="n">demos</span><span class="o">.</span>
+    <span class="o">*</span> <span class="n">jupyterlab</span><span class="o">-</span><span class="n">deck</span>
+    <span class="o">*</span> <span class="n">jupyterlab</span><span class="o">-</span><span class="n">markup</span>
+    <span class="o">*</span> <span class="n">voila</span>
+    <span class="o">*</span> <span class="n">mermaid</span>
+    <span class="o">*</span> <span class="n">midgy</span>
+
+
+<span class="o">*</span> <span class="n">we</span> <span class="n">have</span> <span class="n">on</span> <span class="ow">and</span> <span class="n">off</span> <span class="n">cells</span> <span class="n">now</span> <span class="n">that</span> <span class="nb">all</span> <span class="n">of</span> <span class="n">the</span> <span class="n">sources</span> <span class="n">are</span> <span class="n">markdown</span> 
+<span class="o">*</span> <span class="n">the</span> <span class="n">template</span> <span class="n">syntax</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">powerful</span> <span class="n">way</span> <span class="n">to</span> <span class="n">include</span> <span class="n">python</span> <span class="n">variables</span> <span class="n">inline</span><span class="o">.</span> <span class="n">the</span> <span class="n">traditional</span> <span class="n">notebook</span> <span class="nb">format</span> <span class="n">only</span> <span class="n">allows</span> <span class="k">for</span> <span class="n">block</span> <span class="n">level</span> <span class="n">literate</span> <span class="n">programs</span><span class="o">.</span>
+<span class="o">*</span> <span class="n">since</span> <span class="n">literate</span> <span class="n">programs</span> <span class="n">are</span> <span class="n">pidgin</span> <span class="n">languages</span> <span class="n">we</span> <span class="n">can</span><span class="s1">&#39;t expect them to be formalized. there are a lot of inconsistencies with the languages combined.</span>
+<span class="n">jinja2</span> <span class="n">template</span> <span class="n">implementations</span> <span class="n">vary</span><span class="o">.</span> <span class="n">markdown</span> <span class="n">renderers</span> <span class="n">implementation</span> <span class="n">vary</span><span class="o">.</span> <span class="n">python</span> <span class="n">keeps</span> <span class="n">adding</span> <span class="n">language</span> <span class="n">features</span><span class="o">.</span> 
+
+<span class="p">{</span><span class="o">%</span> <span class="nb">set</span> <span class="n">sz</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">%</span><span class="p">}</span>
+<span class="p">{</span><span class="o">%</span> <span class="nb">set</span> <span class="n">h</span> <span class="o">=</span> <span class="mi">60</span> <span class="o">%</span><span class="p">}</span>
+<span class="o">&lt;</span><span class="n">form</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;font-size: {{sz}}rem; line-height: {{h}}%;&quot;</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">label</span> <span class="k">for</span><span class="o">=</span><span class="s2">&quot;rara&quot;</span><span class="o">&gt;</span><span class="err">🎗🎗🎗🎗🎗🎗🎗🎗</span><span class="o">&lt;/</span><span class="n">label</span><span class="o">&gt;&lt;</span><span class="n">br</span><span class="o">/&gt;&lt;</span><span class="n">button</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;rara&quot;</span> <span class="n">data</span><span class="o">-</span><span class="n">commandlinker</span><span class="o">-</span><span class="n">command</span><span class="o">=</span><span class="s2">&quot;runmenu:restart-and-run-all&quot;</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;font-size: {{sz}}rem; line-height: {{h}}%;&quot;</span><span class="o">&gt;</span><span class="n">restart</span> <span class="ow">and</span> <span class="n">run</span> <span class="nb">all</span><span class="o">&lt;/</span><span class="n">button</span><span class="o">&gt;&lt;</span><span class="n">br</span><span class="o">/&gt;&lt;</span><span class="n">label</span> <span class="k">for</span><span class="o">=</span><span class="s2">&quot;rara&quot;</span><span class="o">&gt;</span><span class="ow">or</span> <span class="n">it</span> <span class="n">didn</span><span class="s1">&#39;t happen&lt;/label&gt;</span>
+<span class="o">&lt;/</span><span class="n">form</span><span class="o">&gt;</span>
+</code></pre></div>
+<h2 id="wrap-up">wrap up<a class="headerlink" href="#wrap-up" title="Permanent link">¤</a></h2>
+<ul>
+<li>
+<p>this presentation had a number of incidental demos.</p>
+<ul>
+<li>jupyterlab-deck</li>
+<li>jupyterlab-markup</li>
+<li>voila</li>
+<li>mermaid</li>
+<li>midgy</li>
+</ul>
+</li>
+<li>
+<p>we have on and off cells now that all of the sources are markdown </p>
+</li>
+<li>the template syntax is a powerful way to include python variables inline. the traditional notebook format only allows for block level literate programs.</li>
+<li>since literate programs are pidgin languages we can't expect them to be formalized. there are a lot of inconsistencies with the languages combined.
+jinja2 template implementations vary. markdown renderers implementation vary. python keeps adding language features. </li>
+</ul>
+<form style="font-size: 3rem; line-height: 60%;">
+<label for="rara">🎗🎗🎗🎗🎗🎗🎗🎗</label><br/><button id="rara" data-commandlinker-command="runmenu:restart-and-run-all" style="font-size: 3rem; line-height: 60%;">restart and run all</button><br/><label for="rara">or it didn't happen</label>
+</form>
+
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<script type="application/vnd.jupyter.widget-state+json">
+{"state": {"049278abfa294c0db4a5587c1f0388cc": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "SliderStyleModel", "state": {"description_width": ""}}, "19a390e5943c408bb0a2fd03d819ac60": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {}}, "624f5c44a24a4fdb86ca8530e9766ec4": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {}}, "7001f7f85ef8452882c868d634f91832": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {}}, "7d97888f8793458e9b5b1890ed2b0128": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "TextModel", "state": {"layout": "IPY_MODEL_624f5c44a24a4fdb86ca8530e9766ec4", "style": "IPY_MODEL_fdbe474d5faf4f2c8e1a0a04125a932e", "value": "tonyfast"}}, "8cd9ea1510f349b4b433f238581ae1bd": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "ButtonStyleModel", "state": {"font_family": null, "font_size": null, "font_style": null, "font_variant": null, "font_weight": null, "text_color": null, "text_decoration": null}}, "a59df83a6d58485bb5d8618256e25abc": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "IntSliderModel", "state": {"behavior": "drag-tap", "description": "show more languages", "layout": "IPY_MODEL_19a390e5943c408bb0a2fd03d819ac60", "max": 6, "min": 1, "style": "IPY_MODEL_bceb7f3a84fc489ba4019921fcdc9df7", "value": 6}}, "bceb7f3a84fc489ba4019921fcdc9df7": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "SliderStyleModel", "state": {"description_width": ""}}, "e7ac690d2a12492ab162dc9503938061": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {}}, "f016f5bea3b4435ca354c50cabede4bd": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "IntSliderModel", "state": {"behavior": "drag-tap", "description": "\ud83c\udf6a", "layout": "IPY_MODEL_7001f7f85ef8452882c868d634f91832", "style": "IPY_MODEL_049278abfa294c0db4a5587c1f0388cc", "value": 3}}, "f2f83d66fd4342359aae8d4f64e1cf69": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "ButtonModel", "state": {"description": "submit", "layout": "IPY_MODEL_e7ac690d2a12492ab162dc9503938061", "style": "IPY_MODEL_8cd9ea1510f349b4b433f238581ae1bd", "tooltip": null}}, "fdbe474d5faf4f2c8e1a0a04125a932e": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "TextStyleModel", "state": {"description_width": "", "font_size": null, "text_color": null}}}, "version_major": 2, "version_minor": 0}
+</script>
+
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:md">
+<p>there is massive adoption of markdown as a tool for programmers. folks can use markdown and jekyll templating languages on github pages. github profiles are written in markdown. markdown is a gateway drug to html, javascript, and css.&#160;<a class="footnote-backref" href="#fnref:md" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:calls">
+<p>jupyter community calls are a monthly series of events to showcase what you are doing in and with jupyter. please consider submitting to or hosting a <a href="https://discourse.jupyter.org/t/jupyter-community-calls/668" title="updating discourse announcement for the jupyter community calls.">future community call</a> sometime&#160;<a class="footnote-backref" href="#fnref:calls" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:inventing">
+<p>many folks working on computational interfaces are inspired by Bret Victor's <a href="https://www.youtube.com/watch?v=PUv66718DII">inventing on principle</a>&#160;<a class="footnote-backref" href="#fnref:inventing" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+          <a href="#" class="md-top md-icon" data-md-component="top" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Back to top
+          </a>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tracking", "navigation.top"], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.ce72ebac.min.js"></script>
+      
+    
+  </body>
+</html>

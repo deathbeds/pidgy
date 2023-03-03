@@ -1,0 +1,174 @@
+{
+  "name": "@jupyterlite/webrtc-docprovider",
+  "version": "0.1.1",
+  "description": "Document collaboration for JupyterLab and JupyterLite, powered by y-webrtc",
+  "license": "BSD-3-Clause",
+  "author": "JupyterLite Contributors",
+  "homepage": "https://github.com/jupyterlite/jupyterlab-webrtc-docprovider",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jupyterlite/jupyterlab-webrtc-docprovider.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jupyterlite/jupyterlab-webrtc-docprovider/issues"
+  },
+  "main": "lib/index.js",
+  "files": [
+    "webpack.config.js",
+    "{lib,style,schema,vendor}/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf,css,html}"
+  ],
+  "scripts": {
+    "build": "jlpm build:schema && jlpm build:lib && jlpm build:labextension:dev",
+    "build:labextension": "jupyter labextension build .",
+    "build:labextension:dev": "jupyter labextension build --development True .",
+    "build:lib": "tsc",
+    "build:prod": "jlpm clean && jlpm build:schema && jlpm build:lib && jlpm build:labextension",
+    "build:schema": "json2ts schema/plugin.json src/_schema.ts",
+    "clean": "jlpm clean:lib",
+    "clean:all": "jlpm clean:lib && jlpm clean:labextension && jlpm clean:lintcache",
+    "clean:labextension": "rimraf jupyterlab_webrtc_docprovider/labextension",
+    "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
+    "clean:lintcache": "rimraf .eslintcache .stylelintcache",
+    "deduplicate": "yarn-deduplicate -s fewer --fail",
+    "eslint": "jlpm eslint:check --fix",
+    "eslint:check": "eslint . --cache --ext .ts,.tsx",
+    "install:extension": "jlpm build",
+    "lint": "jlpm stylelint && jlpm prettier && jlpm eslint",
+    "lint:check": "jlpm stylelint:check && jlpm prettier:check && jlpm eslint:check",
+    "stylelint": "jlpm stylelint:check --fix",
+    "stylelint:check": "stylelint --cache \"style/**/*.css\"",
+    "prettier": "jlpm prettier:package && jlpm prettier:base --write --list-different",
+    "prettier:base": "prettier \"**/*{.ts,.tsx,.js,.jsx,.css,.json,.md,.yml}\"",
+    "prettier:check": "jlpm prettier:base --check",
+    "prettier:package": "prettier-package-json --write package.json",
+    "watch": "jlpm build:schema && run-p watch:src watch:labextension",
+    "watch:labextension": "jupyter labextension watch .",
+    "watch:src": "tsc -w"
+  },
+  "sideEffects": [
+    "style/*.css",
+    "style/index.js"
+  ],
+  "types": "lib/index.d.ts",
+  "dependencies": {
+    "@jupyterlab/application": "^3.1.0",
+    "@jupyterlab/apputils": "^3.1.0",
+    "@jupyterlab/coreutils": "^5.1.0",
+    "@jupyterlab/docprovider": "^3.1.0",
+    "@jupyterlab/settingregistry": "^3.1.0",
+    "@jupyterlab/statusbar": "^3.1.0",
+    "@jupyterlab/translation": "^3.1.0",
+    "@jupyterlab/ui-components": "^3.1.0",
+    "sjcl": "^1.0.8",
+    "y-webrtc": "^10.2.0"
+  },
+  "devDependencies": {
+    "@jupyterlab/builder": "^3.1.0",
+    "@types/sjcl": "^1.0.30",
+    "@typescript-eslint/eslint-plugin": "^4.8.1",
+    "@typescript-eslint/parser": "^4.8.1",
+    "eslint": "^7.14.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-import-resolver-typescript": "^2.7.1",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "json-schema-to-typescript": "^10.1.5",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.1.1",
+    "prettier-package-json": "^2.6.3",
+    "prettier-plugin-sort-json": "^0.0.2",
+    "rimraf": "^3.0.2",
+    "string-replace-loader": "^3.1.0",
+    "stylelint": "^14.3.0",
+    "stylelint-config-prettier": "^9.0.3",
+    "stylelint-config-recommended": "^6.0.0",
+    "stylelint-config-standard": "~24.0.0",
+    "stylelint-prettier": "^2.0.0",
+    "typescript": "~4.1.3",
+    "yarn-deduplicate": "^4.0.0"
+  },
+  "keywords": [
+    "jupyter",
+    "jupyterlab",
+    "jupyterlab-extension"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "jupyter-releaser": {
+    "hooks": {
+      "before-build-npm": [
+        "python -m pip install jupyterlab~=3.1",
+        "jlpm"
+      ],
+      "before-build-python": [
+        "jlpm clean:all"
+      ]
+    }
+  },
+  "jupyterlab": {
+    "extension": "./lib/plugin.js",
+    "outputDir": "jupyterlab_webrtc_docprovider/labextension",
+    "webpackConfig": "./webpack.config.js",
+    "schemaDir": "schema",
+    "sharedPackages": {
+      "sjcl": {
+        "bundled": true
+      },
+      "y-webrtc": {
+        "bundled": true,
+        "singleton": true
+      },
+      "lib0": {
+        "bundled": false,
+        "singleton": true
+      },
+      "y-protocols": {
+        "bundled": false,
+        "singleton": true
+      },
+      "@jupyterlab/application": {
+        "requiredVersion": "^3.1.0",
+        "bundled": false,
+        "singleton": true
+      },
+      "@jupyterlab/apputils": {
+        "requiredVersion": "^3.1.0",
+        "bundled": false,
+        "singleton": true
+      },
+      "@jupyterlab/coreutils": {
+        "requiredVersion": "^5.1.0",
+        "bundled": false,
+        "singleton": true
+      },
+      "@jupyterlab/docprovider": {
+        "requiredVersion": "^3.1.0",
+        "bundled": false,
+        "singleton": true
+      },
+      "@jupyterlab/settingregistry": {
+        "requiredVersion": "^3.1.0",
+        "bundled": false,
+        "singleton": true
+      },
+      "@jupyterlab/statusbar": {
+        "requiredVersion": "^3.1.0",
+        "bundled": false,
+        "singleton": true
+      },
+      "@jupyterlab/translation": {
+        "requiredVersion": "^3.1.0",
+        "bundled": false,
+        "singleton": true
+      },
+      "@jupyterlab/ui-components": {
+        "requiredVersion": "^3.1.0",
+        "bundled": false,
+        "singleton": true
+      }
+    }
+  },
+  "style": "style/index.css",
+  "styleModule": "style/index.js"
+}

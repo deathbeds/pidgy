@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunk_deathbeds_jupyterlab_font_fira_code=self.webpackChunk_deathbeds_jupyterlab_font_fira_code||[]).push([[299],{299:(e,d,f)=>{f.r(d),f.d(d,{default:()=>a});const a=f.p+"e3aa3db06cfb19dfc0b0f1f38355add3e8d1ef45d3af39ce95d9ca7d96114e6c.woff2"}}]);
+//# sourceMappingURL=299.e56d16ea6b87efa7014d.js.map?v=e56d16ea6b87efa7014d
